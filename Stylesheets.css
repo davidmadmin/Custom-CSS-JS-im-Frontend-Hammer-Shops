@@ -1,0 +1,245 @@
+/* Start Custom Schriftarten + Preis Text Stylings */
+
+@import url("https://use.typekit.net/lwl7tyw.css");
+
+.price.h1 {
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 3rem;
+  color: #f20000;
+}
+
+/* Ende Custom Schriftarten + Preis Text Stylings */
+
+/* Start Artikel Preview Card Preis Styling */
+.price {
+color: #f20000 !important;
+font-size: 1.4rem;
+font-family: industry, helvetica, arial, sans-serif;
+}
+/* Ende Artikel Preview Card Preis Styling */
+
+/* Start Trustbadge ausblenden */
+.basket-open .widget_container_overlay,
+.basket-open #trustami-mobile-view,
+.basket-open .back-to-top,
+.basket-open .widget-cookie-bar,
+.basket-open div[id^="trustbadge-container-"],
+.basket-open #web-chat-loader-root,
+#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget_container_overlay,
+#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #trustami-mobile-view,
+#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .back-to-top,
+#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget-cookie-bar,
+#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active div[id^="trustbadge-container-"],
+#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #web-chat-loader-root {
+    display: none !important;
+}
+/* Ende Trustbadge ausblenden */
+
+/* Start Allgemeines Button-Styling für .btn-primary */
+.btn.btn-primary {
+  background-color: #000000 !important;     /* Tiefschwarz – kräftig */
+  color: #ffffff !important;                /* Weißer Text */
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6em 1.2em;
+  border: 2px solid #f20000;   /* SCHRAUBEN-HAMMER blau als Kontrast */
+  border-radius: 6px;                
+  box-shadow: 0 4px 0 #f20000;              /* "Solider" Shadow-Effekt */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover-Effekt für besseren Button-Charakter */
+.btn.btn-primary:hover {
+  background-color: #f20000 !important;
+  color: #000000 !important;
+  box-shadow: 0 4px 0 #000000;
+  transform: translateY(-1px);
+}
+
+/* Ende Allgemeines Button-Styling für .btn-primary */
+
+/* Start Body Top Margin Fix */
+div.widget.widget-grid.widget-two-col.row.mt-5 {
+margin-top: 1rem !important;
+}
+/* Ende Body Top Margin Fix */
+
+
+
+/* Start Mobil Burger Menu Fix */
+@media (max-width: 890px) {
+  .kjv-big-resolution-only .kjv-mega-menu {
+    display: block !important;
+    visibility: hidden !important;
+    margin-left: -90px;
+  }
+}
+/* Ende Mobil Burger Menu Fix */
+
+/* Start Logo + Seachbar Sizing Optimization */
+
+/* Containing element */
+.kjv-navbar-brand-and-search {
+height: auto !important;
+}
+
+/* Logo element */
+.kjv-shop-logo {
+width: auto !important;
+height: 80px !important;
+margin: -20px 0 10px !important;
+}
+
+/* Start Logo + Seachbar Sizing Optimization */
+
+/* Containing element */
+.kjv-navbar-brand-and-search {
+height: auto !important;
+}
+
+/* Logo element */
+.kjv-shop-logo {
+width: auto !important;
+height: 75px !important;
+margin: -20px 0 10px;
+}
+
+/* Search element */
+.kjv-navbar-search {
+margin: 5px 0  10px !important;
+}
+
+@media (max-width: 890px) {
+  .kjv-shop-logo {
+    margin-top: 5px !important;
+  }
+}
+
+/* Ende Logo + Seachbar Sizing Optimization */
+
+.kjv-search-container{
+  display: flex;
+  width: 96%;
+  /* flex-direction: row; /* This is the default for flex, but good to be explicit */
+}
+
+.kjv-search-element {
+  flex-grow: 1; /* Allows this element to grow to fill available space */
+  width: auto; /* Or you might need to unset a previous fixed width */
+  order: 2; /* Sets the visual order */
+}
+
+.kjv-mega-menu-mob {
+  order: 1; /* Sets the visual order, placing it before the other element */
+  /* flex-shrink: 1; /* This was its default, keep if needed */
+}
+
+/* Start Fix Button Suchicon*/
+.search-submit.px-3 {
+  width: 50px !important;
+}
+/* Ende Mini Fix Button Suchicon*/
+
+/*Start Mobile Full Width Navbar */
+@media (max-width: 890px) {
+    .kjv-search-container {
+        width: 100% !important;
+    }
+}
+/*Ende Mobile Full Width Navbar*/
+
+/* --- Anfang Fast Checkout CSS Anpassungen --- */
+
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_header > div > a > picture > img  {
+   min-height: 70px;
+}
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_header > div {
+   padding-bottom: 1.1rem !important;
+   padding-top: 1.1rem !important;
+}
+.after-invoice-address {
+   display: none;
+}
+
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_right > div > div.widget.widget-sticky.mb-2.sticky-element > div > div.mt-2.mb-4 > div > div > span > button {
+   box-shadow: none;
+}
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_bottom > div > div.checkout-validation-wrapper > div:nth-child(2) > div > div > div > button {
+    height: 50px;
+    font-size: medium;
+}
+#addressMultiSelect96 {
+    border-radius: 12px;
+    min-height: auto;
+}
+#addressMultiSelect88 {
+    border-radius: 12px;
+}
+
+#addressMultiSelect88 > div > div > p {
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+}
+#basketListContainer50 {
+    padding-top: 10px;
+}
+#basketListContainer50 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
+    border-top-right-radius: 5px !important;
+}
+#basketListContainer50 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button.btn.qty-btn.flex-fill.d-flex.justify-content-center.p-0.disabled {
+    border-bottom-right-radius: 5px !important;
+}
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_left > div > div.shipping-method-select > div > fieldset > ul > li > label > div.icon > img  {
+    width: 100%;
+}
+/* --- Ende Fast Checkout CSS Anpassungen --- */
+
+
+/* --- Anfang Warenkorb->Weiter einkaufen Button Styling ---*/
+
+/* Button Grunddesign */
+.basket-preview-footer .btn-outline-primary.btn-block {
+    border: 2px solid #de2c2f !important;   /* Rot aus deinem Shop (#de2c2f) */
+    color: #de2c2f !important;
+    background: #fff !important;
+    border-radius: 6px !important;
+    padding: 0.6em 1.6em !important;
+    font-weight: 600 !important;
+    font-size: 0.9em;
+    font-family: 'industry';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: none !important;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+/* Icon anpassen */
+.basket-preview-footer .btn-outline-primary.btn-block i.fa-arrow-left {
+    font-size: 1.2em;
+    margin-right: 0.5em;
+    margin-left: -0.2em;
+}
+
+/* Hover-Effekt */
+.basket-preview-footer .btn-outline-primary.btn-block:hover,
+.basket-preview-footer .btn-outline-primary.btn-block:focus {
+    background: #de2c2f !important;
+    color: #fff !important;
+    border-color: #de2c2f !important;
+    text-decoration: none;
+}
+
+/* Optional: Fokus-Outline */
+.basket-preview-footer .btn-outline-primary.btn-block:focus-visible {
+    outline: 2px solid #222;
+    outline-offset: 2px;
+}
+
+/* --- Ende Warenkorb->Weiter einkaufen Button Styling ---*/
