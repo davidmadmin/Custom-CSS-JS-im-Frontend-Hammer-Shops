@@ -6,14 +6,14 @@
   font-family: "industry", sans-serif;
   font-weight: 600;
   font-size: 3rem;
-  color: #f20000;
+  color: #31a5f0;
 }
 
 /* Ende Custom Schriftarten + Preis Text Stylings */
 
 /* Start Artikel Preview Card Preis Styling */
 .price {
-color: #f20000 !important;
+color: #31a5f0 !important;
 font-size: 1.4rem;
 font-family: industry, helvetica, arial, sans-serif;
 }
@@ -44,9 +44,9 @@ font-family: industry, helvetica, arial, sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.6em 1.2em;
-  border: 2px solid #f20000;   /* SCHRAUBEN-HAMMER blau als Kontrast */
+  border: 2px solid #31a5f0;   /* SCHRAUBEN-HAMMER blau als Kontrast */
   border-radius: 6px;                
-  box-shadow: 0 4px 0 #f20000;              /* "Solider" Shadow-Effekt */
+  box-shadow: 0 4px 0 #31a5f0;              /* "Solider" Shadow-Effekt */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 5px;
@@ -55,7 +55,7 @@ font-family: industry, helvetica, arial, sans-serif;
 
 /* Hover-Effekt für besseren Button-Charakter */
 .btn.btn-primary:hover {
-  background-color: #f20000 !important;
+  background-color: #31a5f0 !important;
   color: #000000 !important;
   box-shadow: 0 4px 0 #000000;
   transform: translateY(-1px);
@@ -173,25 +173,22 @@ margin: 5px 0  10px !important;
     height: 50px;
     font-size: medium;
 }
-#addressMultiSelect96 {
+#addressMultiSelect100 {
     border-radius: 12px;
     min-height: auto;
 }
-#addressMultiSelect88 {
-    border-radius: 12px;
-}
 
-#addressMultiSelect88 > div > div > p {
+#addressMultiSelect100 > div > div > p {
     padding-top: 0.6rem !important;
     padding-bottom: 0.6rem !important;
 }
-#basketListContainer50 {
+#basketListContainer52 {
     padding-top: 10px;
 }
-#basketListContainer50 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
+#basketListContainer52 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
     border-top-right-radius: 5px !important;
 }
-#basketListContainer50 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button.btn.qty-btn.flex-fill.d-flex.justify-content-center.p-0.disabled {
+#basketListContainer52 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button.btn.qty-btn.flex-fill.d-flex.justify-content-center.p-0.disabled {
     border-bottom-right-radius: 5px !important;
 }
 #page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_left > div > div.shipping-method-select > div > fieldset > ul > li > label > div.icon > img  {
@@ -204,8 +201,8 @@ margin: 5px 0  10px !important;
 
 /* Button Grunddesign */
 .basket-preview-footer .btn-outline-primary.btn-block {
-    border: 2px solid #de2c2f !important;   /* Rot aus deinem Shop (#de2c2f) */
-    color: #de2c2f !important;
+    border: 2px solid #31a5f0 !important;   /* Blau aus deinem Shop (#31a5f0) */
+    color: #31a5f0 !important;
     background: #fff !important;
     border-radius: 6px !important;
     padding: 0.6em 1.6em !important;
@@ -230,9 +227,9 @@ margin: 5px 0  10px !important;
 /* Hover-Effekt */
 .basket-preview-footer .btn-outline-primary.btn-block:hover,
 .basket-preview-footer .btn-outline-primary.btn-block:focus {
-    background: #de2c2f !important;
+    background: #31a5f0 !important;
     color: #fff !important;
-    border-color: #de2c2f !important;
+    border-color: #31a5f0 !important;
     text-decoration: none;
 }
 
