@@ -306,14 +306,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // --- Fokus- und Input-Logik ---
-    searchInput.addEventListener("focus", function () {
-      inputFocused = true;
+    function showPlaceholder() {
       stopTyping();
       clearTimeout(inactivityTimer);
-      if (!searchInput.value) {
-        searchInput.placeholder = "Wonach suchen Sie?";
-      }
+      searchInput.placeholder = "Wonach suchen Sie?";
+    }
+
+    function handleFocus() {
+      inputFocused = true;
+      showPlaceholder();
       // Keine Animation starten während Fokus!
+    }
+
+    searchInput.addEventListener("focus", handleFocus);
+    searchInput.addEventListener("click", function () {
+      if (!searchInput.value) handleFocus();
     });
 
     searchInput.addEventListener("input", function () {
@@ -321,6 +328,8 @@ document.addEventListener("DOMContentLoaded", function () {
       clearTimeout(inactivityTimer);
       if (!searchInput.value) {
         searchInput.placeholder = "Wonach suchen Sie?";
+      } else {
+        searchInput.placeholder = "";
       }
       // Keine Animation starten während Fokus!
     });
