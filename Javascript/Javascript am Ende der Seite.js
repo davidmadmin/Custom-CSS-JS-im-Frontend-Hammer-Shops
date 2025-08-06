@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
       stopTyping();
       clearTimeout(inactivityTimer);
       if (!searchInput.value) {
-        searchInput.placeholder = "Wonach suchst du?";
+        searchInput.placeholder = "Wonach suchen Sie?";
       }
       // Keine Animation starten während Fokus!
     });
@@ -320,13 +320,17 @@ document.addEventListener("DOMContentLoaded", function () {
       stopTyping();
       clearTimeout(inactivityTimer);
       if (!searchInput.value) {
-        searchInput.placeholder = "Wonach suchst du?";
+        searchInput.placeholder = "Wonach suchen Sie?";
       }
       // Keine Animation starten während Fokus!
     });
 
     searchInput.addEventListener("blur", function () {
       inputFocused = false;
+      if (!searchInput.value) {
+        // Wenn nichts eingegeben ist, den Standardplatzhalter anzeigen
+        searchInput.placeholder = "Wonach suchen Sie?";
+      }
       resetInactivityTimer(); // Erst nach Verlassen ggf. Animation nach 10s
     });
 
