@@ -239,21 +239,13 @@ document.addEventListener("DOMContentLoaded", function () {
       '"Justierschraube"',
     ];
 
-    let currentSet = [];
+    // Track the current word index in the full word list
     let currentWord = 0;
     let currentChar = 0;
     let isDeleting = false;
     let typingTimer;
     let animationActive = false;
     let inactivityTimer;
-
-    function shuffle(array) {
-      return array.sort(() => Math.random() - 0.5);
-    }
-
-    function getRandomWords(count = 5) {
-      return shuffle([...allWords]).slice(0, count);
-    }
 
     function isInViewport(el) {
       const rect = el.getBoundingClientRect();
@@ -268,36 +260,31 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!animationActive || !isInViewport(searchInput) || inputFocused)
         return;
 
-      const fullWord = currentSet[currentWord];
+      const fullWord = allWords[currentWord];
       const currentText = fullWord.substring(0, currentChar);
       searchInput.placeholder = prefix + currentText;
 
       if (!isDeleting && currentChar < fullWord.length) {
         currentChar++;
-        typingTimer = setTimeout(type, 100);
+        if (animationActive) typingTimer = setTimeout(type, 100);
       } else if (!isDeleting && currentChar === fullWord.length) {
         isDeleting = true;
-        typingTimer = setTimeout(type, 2000);
+        if (animationActive) typingTimer = setTimeout(type, 2000);
       } else if (isDeleting && currentChar > 0) {
         currentChar--;
-        typingTimer = setTimeout(type, 50);
+        if (animationActive) typingTimer = setTimeout(type, 50);
       } else {
         isDeleting = false;
-        currentWord++;
-        if (currentWord >= currentSet.length) {
-          currentSet = getRandomWords(5);
-          currentWord = 0;
-        }
+        currentWord = (currentWord + 1) % allWords.length;
         currentChar = 0;
-        typingTimer = setTimeout(type, 500);
+        prefix = getPrefix();
+        if (animationActive) typingTimer = setTimeout(type, 500);
       }
     }
 
     function startTyping() {
-      if (!animationActive && !inputFocused) {
+      if (!animationActive && !inputFocused && !searchInput.value) {
         prefix = getPrefix();
-        currentSet = getRandomWords(5);
-        currentWord = 0;
         currentChar = 0;
         animationActive = true;
         type();
@@ -312,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function resetInactivityTimer() {
       clearTimeout(inactivityTimer);
       inactivityTimer = setTimeout(() => {
-        if (!inputFocused) {
+        if (!inputFocused && !searchInput.value) {
           startTyping();
         }
       }, 10000);
@@ -322,22 +309,28 @@ document.addEventListener("DOMContentLoaded", function () {
     searchInput.addEventListener("focus", function () {
       inputFocused = true;
       stopTyping();
+      clearTimeout(inactivityTimer);
       if (!searchInput.value) {
-        searchInput.placeholder = "Wonach suchst du?";
+        searchInput.placeholder = "Wonach suchen Sie?";
       }
       // Keine Animation starten während Fokus!
     });
 
     searchInput.addEventListener("input", function () {
       stopTyping();
+      clearTimeout(inactivityTimer);
       if (!searchInput.value) {
-        searchInput.placeholder = "Wonach suchst du?";
+        searchInput.placeholder = "Wonach suchen Sie?";
       }
       // Keine Animation starten während Fokus!
     });
 
     searchInput.addEventListener("blur", function () {
       inputFocused = false;
+      if (!searchInput.value) {
+        // Wenn nichts eingegeben ist, den Standardplatzhalter anzeigen
+        searchInput.placeholder = "Wonach suchen Sie?";
+      }
       resetInactivityTimer(); // Erst nach Verlassen ggf. Animation nach 10s
     });
 
