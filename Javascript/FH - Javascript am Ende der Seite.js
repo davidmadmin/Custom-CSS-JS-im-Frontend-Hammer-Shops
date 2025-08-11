@@ -1,8 +1,6 @@
-// ====================
-// JS für ALLE Seiten
-// ====================
+// Section: Global scripts for all pages
 
-// --- BEGINN: Bestell-Versand Countdown Code ---
+// Section: Bestell-Versand Countdown Code
 (function(){
   function getBerlinTime() {
     const now = new Date();
@@ -111,9 +109,9 @@
   waitForCountdownDiv();
   setInterval(waitForCountdownDiv, 1000);
 })();
-// --- ENDE: Bestell-Versand Countdown Code ---
+// End Section: Bestell-Versand Countdown Code
 
-// --- BEGINN: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout) ---
+// Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
 document.addEventListener('DOMContentLoaded', function () {
   const shippingIcons = {
     'ShippingProfileID1531': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
@@ -140,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
-// --- ENDE: Versand Icons ändern & einfügen ---
+// End Section: Versand Icons ändern & einfügen
 
 // ===============================
 // RESTLICHER JS-Code (ausgeblendet auf Checkout/Kaufabwicklung/Kasse)
@@ -155,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // -- Anfang des restlichen Codes --
   
-// --- Anfang Animierte Suchplatzhalter Vorschläge ---
+// Section: Animierte Suchplatzhalter Vorschläge
 
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.querySelector('input.search-input');
@@ -301,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
   startTyping();
 });
 
-// --- Ende Animierte Suchplatzhalter Vorschläge ---
+// End Section: Animierte Suchplatzhalter Vorschläge
 
 // --- Anfang Custom Header Menü Icons ---
 
@@ -338,7 +336,7 @@ $(document).ready(function () {
 // --- Ende Custom Header Menü Icons ---
 
 
-// --- Start Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion ---
+// Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
 function patchBasketButton() {
   var weiterEinkaufenBtn = document.querySelector('.basket-preview-footer .btn-outline-primary.btn-block');
@@ -394,6 +392,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// --- Ende Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion ---
+// End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
 })();
