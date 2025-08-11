@@ -1,4 +1,4 @@
-/* Start Spezial-Font Test */
+/* Section: Custom Schriftarten + Preis Text Stylings */
 
 @import url("https://use.typekit.net/lwl7tyw.css");
 
@@ -9,49 +9,44 @@
   color: #31a5f0;
 }
 
-/* Ende Spezial-Font Test */
-
-/* Start "Suchvorschläge" Suchleiste */
-
-input.search-input::placeholder {
-  color: #999;
-  transition: opacity 0.3s ease;
+/* Section: Artikel Preview Card Preis Styling */
+.price {
+  color: #31a5f0 !important;
+  font-size: 1.4rem;
+  font-family: industry, helvetica, arial, sans-serif;
 }
+/* End Section: Artikel Preview Card Preis Styling */
 
-/* Ende "Suchvorschläge" Suchleiste */
+/* End Section: Custom Schriftarten + Preis Text Stylings */
 
-@media (max-width: 768px) {
-  body::after {
-    content: "mobile";
-  }
-}
-
-/*Always: Hide any widgets if flyout shopping cart is opened*/
+/* Section: Trustbadge ausblenden */
 .basket-open .widget_container_overlay,
 .basket-open #trustami-mobile-view,
 .basket-open .back-to-top,
 .basket-open .widget-cookie-bar,
 .basket-open div[id^="trustbadge-container-"],
 .basket-open #web-chat-loader-root,
-#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget_container_overlay,
-#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #trustami-mobile-view,
-#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .back-to-top,
-#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget-cookie-bar,
-#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active div[id^="trustbadge-container-"],
-#kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #web-chat-loader-root {
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget_container_overlay,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #trustami-mobile-view,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .back-to-top,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget-cookie-bar,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active div[id^="trustbadge-container-"],
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #web-chat-loader-root {
     display: none !important;
 }
+/* End Section: Trustbadge ausblenden */
 
-/* Start Allgemeines Button-Styling für .btn-primary */
+/* Section: Allgemeines Button-Styling für .btn-primary */
 .btn.btn-primary {
-  background-color: #000000 !important;     /* Tiefschwarz – kräftig */
-  color: #ffffff !important;                /* Weißer Text */
+  background-color: #000000 !important; /* Tiefschwarz – kräftig */
+  color: #ffffff !important; /* Weißer Text */
   font-family: "industry", sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.6em 1.2em;
-  border: 2px solid #31a5f0;                /* Fensterhammer-Blau als Kontrast */
-  box-shadow: 0 4px 0 #31a5f0;              /* "Solider" Shadow-Effekt */
+  border: 2px solid #31a5f0; /* Fensterhammer-Blau als Kontrast */
+  border-radius: 6px;
+  box-shadow: 0 4px 0 #31a5f0; /* "Solider" Shadow-Effekt */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 5px;
@@ -66,63 +61,49 @@ input.search-input::placeholder {
   transform: translateY(-1px);
 }
 
-/* Ende Allgemeines Button-Styling für .btn-primary */
+/* End Section: Allgemeines Button-Styling für .btn-primary */
 
-/* Margin Fix */
-/* Spezifischerer Selektor überschreibt mt-5 */
+/* Section: Body Top Margin Fix */
 div.widget.widget-grid.widget-two-col.row.mt-5 {
   margin-top: 1rem !important;
 }
+/* End Section: Body Top Margin Fix */
 
-/* Start Mega Menü Mobile Highlight Fix*/
-
-/* Ende  Mega Menü Mobile Highlight Fix*/
-
-/* Start Fix Button Suchicon*/
+/* Section: Fix Button Suchicon */
 .search-submit.px-3 {
   width: 50px !important;
 }
-/* Ende Mini Fix Button Suchicon*/
+/* End Section: Fix Button Suchicon */
 
-/* Start Mini Preis Styling */
-.price {
-  color: #31a5f0 !important; 
-  font-size: 1.4rem;
-  font-family: industry, helvetica, arial, sans-serif;
-}
-/* Ende Mini Preis Styling */
-
-/* Start Logo + Seachbar Sizing Optimization */
+/* Section: Logo + Seachbar Sizing Optimization */
 
 /* Containing element */
 .kjv-navbar-brand-and-search {
-height: auto !important;
+  height: auto !important;
 }
 
 /* Logo element */
 .kjv-shop-logo {
-width: auto !important;
-height: 80px !important;
-margin: -20px 0 10px !important;
+  width: auto !important;
+  height: 80px !important;
+  margin: -20px 0 10px !important;
 }
-
-/* Start Logo + Seachbar Sizing Optimization */
 
 /* Containing element */
 .kjv-navbar-brand-and-search {
-height: auto !important;
+  height: auto !important;
 }
 
 /* Logo element */
 .kjv-shop-logo {
-width: auto !important;
-height: 75px !important;
-margin: -20px 0 10px;
+  width: auto !important;
+  height: 75px !important;
+  margin: -20px 0 10px;
 }
 
 /* Search element */
 .kjv-navbar-search {
-margin: 5px 0  10px !important;
+  margin: 5px 0 10px !important;
 }
 
 @media (max-width: 890px) {
@@ -131,7 +112,7 @@ margin: 5px 0  10px !important;
   }
 }
 
-/* Ende Logo + Seachbar Sizing Optimization */
+/* End Section: Logo + Seachbar Sizing Optimization */
 
 .kjv-search-container{
   display: flex;
@@ -150,13 +131,13 @@ margin: 5px 0  10px !important;
   /* flex-shrink: 1; /* This was its default, keep if needed */
 }
 
-/*Start Mobile Full Width Navbar */
+/* Section: Mobile Full Width Navbar */
 @media (max-width: 890px) {
-    .kjv-search-container {
-        width: 100% !important;
-    }
+  .kjv-search-container {
+    width: 100% !important;
+  }
 }
-/*Ende Mobile Full Width Navbar*/
+/* End Section: Mobile Full Width Navbar */
 
 #versandfrei-progress-bar-candy {
     height: 20px;
@@ -197,7 +178,7 @@ margin: 5px 0  10px !important;
 
 /*Ende Versandbalken Styling*/
 
-/* Anfang Versand Icons ändern & einfügen */
+/* Section: Versand Icons ändern & einfügen */
 
 .shipping-icon {
   height: auto;
@@ -206,9 +187,9 @@ margin: 5px 0  10px !important;
   margin: auto;
   object-fit: contain;
 }
-/* Ende Versand Icons ändern & einfügen */
+/* End Section: Versand Icons ändern & einfügen */
 
-/* --- Anfang Fast Checkout CSS Anpassungen --- */
+/* Section: Fast Checkout CSS Anpassungen */
 
 #page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_header > div > a > picture > img  {
    min-height: 70px;
@@ -246,54 +227,53 @@ margin: 5px 0  10px !important;
     border-bottom-right-radius: 5px !important;
 }
 
-/* --- Ende Fast Checkout CSS Anpassungen --- */
+/* End Section: Fast Checkout CSS Anpassungen */
 
-
-/* --- Anfang Warenkorb->Weiter einkaufen Button Styling ---*/
+/* Section: Warenkorb->Weiter einkaufen Button Styling */
 
 /* Button Grunddesign */
 .basket-preview-footer .btn-outline-primary.btn-block {
-    border: 2px solid #de2c2f !important;   /* Rot aus deinem Shop (#de2c2f) */
-    color: #de2c2f !important;
-    background: #fff !important;
-    border-radius: 999px !important;
-    padding: 0.6em 1.6em !important;
-    font-weight: 600 !important;
-    font-size: 1.05em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: none !important;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  border: 2px solid #31a5f0 !important; /* Blau aus deinem Shop (#31a5f0) */
+  color: #31a5f0 !important;
+  background: #fff !important;
+  border-radius: 6px !important;
+  padding: 0.6em 1.6em !important;
+  font-weight: 600 !important;
+  font-size: 0.9em;
+  font-family: "industry";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: none !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 /* Icon anpassen */
 .basket-preview-footer .btn-outline-primary.btn-block i.fa-arrow-left {
-    font-size: 1.2em;
-    margin-right: 0.5em;
-    margin-left: -0.2em;
+  font-size: 1.2em;
+  margin-right: 0.5em;
+  margin-left: -0.2em;
 }
 
 /* Hover-Effekt */
 .basket-preview-footer .btn-outline-primary.btn-block:hover,
 .basket-preview-footer .btn-outline-primary.btn-block:focus {
-    background: ##31a5f0 !important;
-    color: #fff !important;
-    border-color: #de2c2f !important;
-    text-decoration: none;
+  background: #31a5f0 !important;
+  color: #fff !important;
+  border-color: #31a5f0 !important;
+  text-decoration: none;
 }
 
 /* Optional: Fokus-Outline */
 .basket-preview-footer .btn-outline-primary.btn-block:focus-visible {
-    outline: 2px solid #222;
-    outline-offset: 2px;
+  outline: 2px solid #222;
+  outline-offset: 2px;
 }
 
+/* End Section: Warenkorb->Weiter einkaufen Button Styling */
 
-/* --- Ende Warenkorb->Weiter einkaufen Button Styling ---*/
-
-/* --- Anfang doppleten PayPal Express Button Checkout ausblenden --- */
+/* Section: doppleten PayPal Express Button Checkout ausblenden */
 
 .paypal-buttons paypal-buttons-context-iframe
  {
@@ -307,4 +287,4 @@ margin: 5px 0  10px !important;
     padding: 0 !important;
 }
 
-/* --- Ende doppleten PayPal Express Button Checkout ausblenden --- */
+/* End Section: doppleten PayPal Express Button Checkout ausblenden */
