@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // Section: Gratisversand Fortschritt Balken
 document.addEventListener('DOMContentLoaded', function () {
   const THRESHOLD = 150;
+  const path = window.location.pathname;
 
   function getPrimaryColor() {
     const styles = getComputedStyle(document.documentElement);
@@ -208,19 +209,22 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Warenkorbvorschau (Cart preview)
-  const previewObserver = new MutationObserver(() => {
-    const totals = document.querySelector('.cmp-totals');
-    if (totals && !document.getElementById('free-shipping-bar-preview')) {
-      const { wrapper, bar, text } = createBar('free-shipping-bar-preview');
-      totals.parentNode.insertBefore(wrapper, totals);
-      update(bar, text);
-      setInterval(() => update(bar, text), 1000);
-    }
-  });
-  previewObserver.observe(document.body, { childList: true, subtree: true });
+  if (!path.includes('/checkout') &&
+      !path.includes('/kaufabwicklung') &&
+      !path.includes('/kasse')) {
+    const previewObserver = new MutationObserver(() => {
+      const totals = document.querySelector('.cmp-totals');
+      if (totals && !document.getElementById('free-shipping-bar-preview')) {
+        const { wrapper, bar, text } = createBar('free-shipping-bar-preview');
+        totals.parentNode.insertBefore(wrapper, totals);
+        update(bar, text);
+        setInterval(() => update(bar, text), 1000);
+      }
+    });
+    previewObserver.observe(document.body, { childList: true, subtree: true });
+  }
 
   // Checkout
-  const path = window.location.pathname;
   if (path.includes('/checkout') || path.includes('/kaufabwicklung') || path.includes('/kasse')) {
     const checkoutObserver = new MutationObserver(() => {
       const cmp = document.querySelector('.cmp');
