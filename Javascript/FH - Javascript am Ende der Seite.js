@@ -207,23 +207,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  const path = window.location.pathname;
+  const isCheckout =
+    path.includes('/checkout') ||
+    path.includes('/kaufabwicklung') ||
+    path.includes('/kasse');
+
   // Warenkorbvorschau (Cart preview)
-  const previewObserver = new MutationObserver(() => {
-    const totals = document.querySelector('.cmp-totals');
-    if (totals && !document.getElementById('free-shipping-bar-preview')) {
-      const { wrapper, bar, text } = createBar('free-shipping-bar-preview');
-      totals.parentNode.insertBefore(wrapper, totals);
-      update(bar, text);
-      setInterval(() => update(bar, text), 1000);
-    }
-  });
-  previewObserver.observe(document.body, { childList: true, subtree: true });
+  if (!isCheckout) {
+    const previewObserver = new MutationObserver(() => {
+      const totals = document.querySelector('.cmp-totals');
+      if (totals && !document.getElementById('free-shipping-bar-preview')) {
+        const { wrapper, bar, text } = createBar('free-shipping-bar-preview');
+        totals.parentNode.insertBefore(wrapper, totals);
+        update(bar, text);
+        setInterval(() => update(bar, text), 1000);
+      }
+    });
+    previewObserver.observe(document.body, { childList: true, subtree: true });
+  }
 
   // Checkout
-  const path = window.location.pathname;
-  if (path.includes('/checkout') || path.includes('/kaufabwicklung') || path.includes('/kasse')) {
+  if (isCheckout) {
     const checkoutObserver = new MutationObserver(() => {
-      const cmp = document.querySelector('.cmp');
+      const cmp = document.querySelector('.fc-container_right .cmp');
       if (cmp && !document.getElementById('free-shipping-bar-checkout')) {
         const { wrapper, bar, text } = createBar('free-shipping-bar-checkout');
         cmp.parentNode.insertBefore(wrapper, cmp.nextSibling);
