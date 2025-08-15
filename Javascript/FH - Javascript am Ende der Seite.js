@@ -140,6 +140,95 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: Versand Icons ändern & einfügen
 
+// Section: Gratisversand Fortschrittsbalken (Cart Preview & Checkout)
+(function() {
+  const THRESHOLD = 150;
+  const PRIMARY_COLOR = '#31a5f0';
+
+  function parsePrice(text) {
+    return parseFloat(text.replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
+  }
+
+  function formatEuro(amount) {
+    return amount.toFixed(2).replace('.', ',') + '\u00a0€';
+  }
+
+  function updateBar(root, wrapper) {
+    const net = root.querySelector('dd[data-testing="item-sum-net"]');
+    const vat = root.querySelector('dd[data-testing="vat-amount"]');
+    if (!net || !vat) return;
+    const total = parsePrice(net.textContent) + parsePrice(vat.textContent);
+    const percent = Math.min((total / THRESHOLD) * 100, 100);
+    const remaining = Math.max(THRESHOLD - total, 0);
+
+    const bar = wrapper.querySelector('#versandfrei-progress-bar-candy');
+    const label = wrapper.querySelector('#versandfrei-progress-label-candy');
+    bar.style.width = percent + '%';
+    bar.style.background = PRIMARY_COLOR;
+    bar.style.animation = 'none';
+    label.textContent = remaining > 0
+      ? `Noch ${formatEuro(remaining)} bis zum Gratisversand`
+      : 'Gratisversand erreicht!';
+  }
+
+  function createWrapper() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'versandfrei-progress-wrapper';
+    Object.assign(wrapper.style, {
+      position: 'relative',
+      background: '#e9ecef',
+      borderRadius: '10px',
+      overflow: 'hidden',
+      height: '20px',
+      margin: '10px 0'
+    });
+
+    const bar = document.createElement('div');
+    bar.id = 'versandfrei-progress-bar-candy';
+    bar.style.height = '100%';
+    wrapper.appendChild(bar);
+
+    const label = document.createElement('div');
+    label.id = 'versandfrei-progress-label-candy';
+    wrapper.appendChild(label);
+    return wrapper;
+  }
+
+  function initCartPreview() {
+    const totals = document.querySelector('.basket-preview .cmp-totals');
+    if (!totals) return;
+    let wrapper = totals.parentNode.querySelector('.versandfrei-progress-wrapper');
+    if (!wrapper) {
+      wrapper = createWrapper();
+      totals.parentNode.insertBefore(wrapper, totals);
+    }
+    updateBar(document.querySelector('.basket-preview'), wrapper);
+  }
+
+  function initCheckout() {
+    const cmp = document.querySelector('.cmp');
+    if (!cmp) return;
+    let wrapper = cmp.parentNode.querySelector('.versandfrei-progress-wrapper');
+    if (!wrapper) {
+      wrapper = createWrapper();
+      cmp.insertAdjacentElement('afterend', wrapper);
+    }
+    updateBar(cmp.parentNode, wrapper);
+  }
+
+  const observer = new MutationObserver(() => {
+    initCartPreview();
+    initCheckout();
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initCartPreview();
+    initCheckout();
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+})();
+// End Section: Gratisversand Fortschrittsbalken
+
 // ===============================
 // RESTLICHER JS-Code (ausgeblendet auf Checkout/Kaufabwicklung/Kasse)
 // ===============================
