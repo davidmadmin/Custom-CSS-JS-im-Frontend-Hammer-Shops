@@ -296,8 +296,8 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 
 /* Button Grunddesign */
 .basket-preview-footer .btn-outline-primary.btn-block {
-  border: 2px solid #de2c2f !important; /* Rot aus deinem Shop (#de2c2f) */
-  color: #de2c2f !important;
+  border: 2px solid #f20000 !important; /* Rot aus deinem Shop (#f20000) */
+  color: #f20000 !important;
   background: #fff !important;
   border-radius: 6px !important;
   padding: 0.6em 1.6em !important;
@@ -325,9 +325,9 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 /* Hover-Effekt */
 .basket-preview-footer .btn-outline-primary.btn-block:hover,
 .basket-preview-footer .btn-outline-primary.btn-block:focus {
-  background: #de2c2f !important;
+  background: #f20000 !important;
   color: #fff !important;
-  border-color: #de2c2f !important;
+  border-color: #f20000 !important;
   text-decoration: none;
 }
 

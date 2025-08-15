@@ -1,0 +1,290 @@
+/* Section: Custom Schriftarten + Preis Text Stylings */
+
+@import url("https://use.typekit.net/lwl7tyw.css");
+
+.price.h1 {
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 3rem;
+  color: #31a5f0;
+}
+
+/* Section: Artikel Preview Card Preis Styling */
+.price {
+  color: #31a5f0 !important;
+  font-size: 1.4rem;
+  font-family: industry, helvetica, arial, sans-serif;
+}
+/* End Section: Artikel Preview Card Preis Styling */
+
+/* End Section: Custom Schriftarten + Preis Text Stylings */
+
+/* Section: Trustbadge ausblenden */
+.basket-open .widget_container_overlay,
+.basket-open #trustami-mobile-view,
+.basket-open .back-to-top,
+.basket-open .widget-cookie-bar,
+.basket-open div[id^="trustbadge-container-"],
+.basket-open #web-chat-loader-root,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget_container_overlay,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #trustami-mobile-view,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .back-to-top,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget-cookie-bar,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active div[id^="trustbadge-container-"],
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #web-chat-loader-root {
+    display: none !important;
+}
+/* End Section: Trustbadge ausblenden */
+
+/* Section: Allgemeines Button-Styling für .btn-primary */
+.btn.btn-primary {
+  background-color: #000000 !important; /* Tiefschwarz – kräftig */
+  color: #ffffff !important; /* Weißer Text */
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6em 1.2em;
+  border: 2px solid #31a5f0; /* Fensterhammer-Blau als Kontrast */
+  border-radius: 6px;
+  box-shadow: 0 4px 0 #31a5f0; /* "Solider" Shadow-Effekt */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover-Effekt für besseren Button-Charakter */
+.btn.btn-primary:hover {
+  background-color: #31a5f0 !important;
+  color: #000000 !important;
+  box-shadow: 0 4px 0 #000000;
+  transform: translateY(-1px);
+}
+
+/* End Section: Allgemeines Button-Styling für .btn-primary */
+
+/* Section: Body Top Margin Fix */
+div.widget.widget-grid.widget-two-col.row.mt-5 {
+  margin-top: 1rem !important;
+}
+/* End Section: Body Top Margin Fix */
+
+/* Section: Fix Button Suchicon */
+.search-submit.px-3 {
+  width: 50px !important;
+}
+/* End Section: Fix Button Suchicon */
+
+/* Section: Logo + Seachbar Sizing Optimization */
+
+/* Containing element */
+.kjv-navbar-brand-and-search {
+  height: auto !important;
+}
+
+/* Logo element */
+.kjv-shop-logo {
+  width: auto !important;
+  height: 80px !important;
+  margin: -20px 0 10px !important;
+}
+
+/* Containing element */
+.kjv-navbar-brand-and-search {
+  height: auto !important;
+}
+
+/* Logo element */
+.kjv-shop-logo {
+  width: auto !important;
+  height: 75px !important;
+  margin: -20px 0 10px;
+}
+
+/* Search element */
+.kjv-navbar-search {
+  margin: 5px 0 10px !important;
+}
+
+@media (max-width: 890px) {
+  .kjv-shop-logo {
+    margin-top: 5px !important;
+  }
+}
+
+/* End Section: Logo + Seachbar Sizing Optimization */
+
+.kjv-search-container{
+  display: flex;
+  width: 96%;
+  /* flex-direction: row; /* This is the default for flex, but good to be explicit */
+}
+
+.kjv-search-element {
+  flex-grow: 1; /* Allows this element to grow to fill available space */
+  width: auto; /* Or you might need to unset a previous fixed width */
+  order: 2; /* Sets the visual order */
+}
+
+.kjv-mega-menu-mob {
+  order: 1; /* Sets the visual order, placing it before the other element */
+  /* flex-shrink: 1; /* This was its default, keep if needed */
+}
+
+/* Section: Mobile Full Width Navbar */
+@media (max-width: 890px) {
+  .kjv-search-container {
+    width: 100% !important;
+  }
+}
+/* End Section: Mobile Full Width Navbar */
+
+#versandfrei-progress-bar-candy {
+    height: 20px;
+    width: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        rgb(49,165,240) 0px,
+        rgb(49,165,240) 16px,
+        rgb(139,203,255) 16px,
+        rgb(139,203,255) 32px,
+        #f0f0f0 32px,
+        #f0f0f0 40px
+    );
+    background-size: 56px 56px;
+    animation: candystripe-move 1.4s linear infinite;
+    transition: width 0.7s cubic-bezier(.4,2,.4,1);
+    box-shadow: 0 1px 8px #d8e8f6cc;
+    border: none;
+}
+@keyframes candystripe-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 56px 0; }
+}
+#versandfrei-progress-label-candy {
+    font-size: 1em;
+    color: #1a2936;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    font-weight: 500;
+    pointer-events: none;
+    user-select: none;
+}
+
+/*Ende Versandbalken Styling*/
+
+/* Section: Versand Icons ändern & einfügen */
+
+.shipping-icon {
+  height: auto;
+  max-width: 100%;
+  display: block;
+  margin: auto;
+  object-fit: contain;
+}
+/* End Section: Versand Icons ändern & einfügen */
+
+/* Section: Fast Checkout CSS Anpassungen */
+
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_header > div > a > picture > img  {
+   min-height: 70px;
+}
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_header > div {
+   padding-bottom: 1.1rem !important;
+   padding-top: 1.1rem !important;
+}
+.after-invoice-address {
+   display: none;
+}
+
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_right > div > div.widget.widget-sticky.mb-2.sticky-element > div > div.mt-2.mb-4 > div > div > span > button {
+   box-shadow: none;
+}
+#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_bottom > div > div.checkout-validation-wrapper > div:nth-child(2) > div > div > div > button {
+    height: 50px;
+    font-size: medium;
+}
+#addressMultiSelect100 {
+    border-radius: 12px;
+    min-height: auto;
+
+#addressMultiSelect100 > div > div > p {
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+}
+#basketListContainer52 {
+    padding-top: 10px;
+}
+#basketListContainer52 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
+    border-top-right-radius: 5px !important;
+}
+#basketListContainer52 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button.btn.qty-btn.flex-fill.d-flex.justify-content-center.p-0.disabled {
+    border-bottom-right-radius: 5px !important;
+}
+
+/* End Section: Fast Checkout CSS Anpassungen */
+
+/* Section: Warenkorb->Weiter einkaufen Button Styling */
+
+/* Button Grunddesign */
+.basket-preview-footer .btn-outline-primary.btn-block {
+  border: 2px solid #31a5f0 !important; /* Blau aus deinem Shop (#31a5f0) */
+  color: #31a5f0 !important;
+  background: #fff !important;
+  border-radius: 6px !important;
+  padding: 0.6em 1.6em !important;
+  font-weight: 600 !important;
+  font-size: 0.9em;
+  font-family: "industry";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: none !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+/* Icon anpassen */
+.basket-preview-footer .btn-outline-primary.btn-block i.fa-arrow-left {
+  font-size: 1.2em;
+  margin-right: 0.5em;
+  margin-left: -0.2em;
+}
+
+/* Hover-Effekt */
+.basket-preview-footer .btn-outline-primary.btn-block:hover,
+.basket-preview-footer .btn-outline-primary.btn-block:focus {
+  background: #31a5f0 !important;
+  color: #fff !important;
+  border-color: #31a5f0 !important;
+  text-decoration: none;
+}
+
+/* Optional: Fokus-Outline */
+.basket-preview-footer .btn-outline-primary.btn-block:focus-visible {
+  outline: 2px solid #222;
+  outline-offset: 2px;
+}
+
+/* End Section: Warenkorb->Weiter einkaufen Button Styling */
+
+/* Section: doppleten PayPal Express Button Checkout ausblenden */
+
+.paypal-buttons paypal-buttons-context-iframe
+ {
+    display: none !important;
+}
+
+#page-body > div > div > div > div > div:nth-child(1) > d {
+    display: none !important;
+}
+.paypalSmartButtons btn btn-block  {
+    padding: 0 !important;
+}
+
+/* End Section: doppleten PayPal Express Button Checkout ausblenden */
