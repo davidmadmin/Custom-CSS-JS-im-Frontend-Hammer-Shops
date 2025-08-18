@@ -150,33 +150,51 @@
 // End Section: Bestell-Versand Countdown Code
 
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
-document.addEventListener("DOMContentLoaded", function () {
-  const shippingIcons = {
-    ShippingProfileID1331:
-      "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png",
-    ShippingProfileID1345:
-      "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png",
-    ShippingProfileID1310:
-      "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png",
-  };
+const shippingIcons = {
+  'ShippingProfileID1331':
+    'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
+  'ShippingProfileID1345':
+    'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
+  'ShippingProfileID1310':
+    'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png',
+};
 
+function applyShippingIcons() {
   Object.entries(shippingIcons).forEach(([profileId, iconUrl]) => {
     const label = document.querySelector(`label[for="${profileId}"]`);
-    if (label) {
-      const iconContainer = label.querySelector(".icon");
+    if (!label) return;
 
-      if (iconContainer) {
-        // Bestehendes leeren
-        iconContainer.innerHTML = "";
+    const iconContainer = label.querySelector('.icon');
+    if (!iconContainer) return;
 
-        // Neues Icon einfügen
-        const img = document.createElement("img");
-        img.src = iconUrl;
-        img.alt = "Versandart Icon";
-        img.className = "shipping-icon";
-        iconContainer.appendChild(img);
-      }
+    // Bestehendes leeren, um doppelte Icons zu vermeiden
+    iconContainer.innerHTML = '';
+
+    // Neues Icon einfügen
+    const img = document.createElement('img');
+    img.src = iconUrl;
+    img.alt = 'Versandart Icon';
+    img.className = 'shipping-icon';
+    iconContainer.appendChild(img);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  applyShippingIcons();
+
+  // Delegierter Listener für Zahlartenwechsel
+  document.addEventListener('change', function (e) {
+    if (e.target.matches('input[name="paymentId"]')) {
+      setTimeout(applyShippingIcons, 0);
     }
+  });
+
+  // Beobachtet dynamische Änderungen der Versandarten
+  document.querySelectorAll('.shipping-method-select').forEach(function (el) {
+    const observer = new MutationObserver(function () {
+      applyShippingIcons();
+    });
+    observer.observe(el, { childList: true, subtree: true });
   });
 });
 // End Section: Versand Icons ändern & einfügen
