@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  const observer = new MutationObserver(() => {
+  function initBar() {
     const totals = document.querySelector('.cmp-totals');
     if (totals && !document.getElementById('free-shipping-bar')) {
       const { wrapper, bar, text } = createBar('free-shipping-bar');
@@ -215,8 +215,11 @@ document.addEventListener('DOMContentLoaded', function () {
       update(bar, text);
       setInterval(() => update(bar, text), 1000);
     }
-  });
+  }
+
+  const observer = new MutationObserver(initBar);
   observer.observe(document.body, { childList: true, subtree: true });
+  initBar();
 });
 // End Section: Gratisversand Fortschritt Balken
 
