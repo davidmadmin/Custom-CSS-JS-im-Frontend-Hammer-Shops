@@ -243,32 +243,20 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 #basketListContainer50 {
   padding-top: 10px;
 }
-#basketListContainer50
-  > div
-  > div
-  > div
-  > div.meta-container-wrapper
-  > div
-  > div.basket-item-container-right
-  > div.qty-box-container
-  > div
-  > div
-  > button:nth-child(1) {
-  border-top-right-radius: 5px !important;
+/* Section: Quantity Input Styling */
+.qty-input {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
-#basketListContainer50
-  > div
-  > div
-  > div
-  > div.meta-container-wrapper
-  > div
-  > div.basket-item-container-right
-  > div.qty-box-container
-  > div
-  > div
-  > button.btn.qty-btn.flex-fill.d-flex.justify-content-center.p-0.disabled {
-  border-bottom-right-radius: 5px !important;
+
+button[data-testing="quantity-btn-increase"] {
+  border-top-right-radius: 6px;
 }
+
+button[data-testing="quantity-btn-decrease"] {
+  border-bottom-right-radius: 6px;
+}
+/* End Section: Quantity Input Styling */
 #page-body
   > div
   > div
