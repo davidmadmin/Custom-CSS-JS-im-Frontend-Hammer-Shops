@@ -139,44 +139,7 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 }
 /* End Section: Mobile Full Width Navbar */
 
-#versandfrei-progress-bar-candy {
-    height: 20px;
-    width: 0;
-    background: repeating-linear-gradient(
-        45deg,
-        rgb(49,165,240) 0px,
-        rgb(49,165,240) 16px,
-        rgb(139,203,255) 16px,
-        rgb(139,203,255) 32px,
-        #f0f0f0 32px,
-        #f0f0f0 40px
-    );
-    background-size: 56px 56px;
-    animation: candystripe-move 1.4s linear infinite;
-    transition: width 0.7s cubic-bezier(.4,2,.4,1);
-    box-shadow: 0 1px 8px #d8e8f6cc;
-    border: none;
-}
-@keyframes candystripe-move {
-    0% { background-position: 0 0; }
-    100% { background-position: 56px 0; }
-}
-#versandfrei-progress-label-candy {
-    font-size: 1em;
-    color: #1a2936;
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 0;
-    line-height: 20px;
-    text-align: center;
-    letter-spacing: 0.01em;
-    font-weight: 500;
-    pointer-events: none;
-    user-select: none;
-}
 
-/*Ende Versandbalken Styling*/
 
 /* Section: Versand Icons ändern & einfügen */
 

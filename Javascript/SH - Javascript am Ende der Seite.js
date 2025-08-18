@@ -181,6 +181,94 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // End Section: Versand Icons ändern & einfügen
 
+// Section: Gratisversand Fortschritt Balken
+document.addEventListener('DOMContentLoaded', function () {
+  const THRESHOLD = 150;
+
+  function getPrimaryColor() {
+    const styles = getComputedStyle(document.documentElement);
+    return (
+      styles.getPropertyValue('--primary') ||
+      styles.getPropertyValue('--color-primary') ||
+      styles.getPropertyValue('--bs-primary') ||
+      '#f20000'
+    ).trim();
+  }
+
+  const primaryColor = getPrimaryColor();
+
+  function parseEuro(el) {
+    if (!el) return 0;
+    return (
+      parseFloat(
+        el.textContent.replace(/[^0-9,.-]/g, '').replace('.', '').replace(',', '.')
+      ) || 0
+    );
+  }
+
+  function formatEuro(val) {
+    return (
+      val.toLocaleString('de-DE', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }) + '\u00a0€'
+    );
+  }
+
+  function createBar(id) {
+    const wrapper = document.createElement('div');
+    wrapper.id = id;
+    wrapper.style.marginTop = '0px';
+    wrapper.style.marginBottom = '30px';
+
+    const text = document.createElement('div');
+    text.style.fontSize = '0.9rem';
+    text.style.fontWeight = '600';
+    text.style.marginBottom = '0.5rem';
+    wrapper.appendChild(text);
+
+    const bg = document.createElement('div');
+    bg.style.width = '100%';
+    bg.style.height = '8px';
+    bg.style.background = '#e0e0e0';
+    bg.style.borderRadius = '4px';
+    bg.style.overflow = 'hidden';
+    wrapper.appendChild(bg);
+
+    const bar = document.createElement('div');
+    bar.style.height = '100%';
+    bar.style.width = '0%';
+    bar.style.background = primaryColor;
+    bar.style.transition = 'width 0.3s ease';
+    bg.appendChild(bar);
+
+    return { wrapper, bar, text };
+  }
+
+  function update(bar, text) {
+    const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
+    const ratio = Math.min(total / THRESHOLD, 1);
+    bar.style.width = ratio * 100 + '%';
+    if (total < THRESHOLD) {
+      text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`;
+    } else {
+      text.textContent = 'Gratisversand erreicht!';
+    }
+  }
+
+  const observer = new MutationObserver(() => {
+    const totals = document.querySelector('.cmp-totals');
+    if (totals && !document.getElementById('free-shipping-bar')) {
+      const { wrapper, bar, text } = createBar('free-shipping-bar');
+      totals.parentNode.insertBefore(wrapper, totals);
+      update(bar, text);
+      setInterval(() => update(bar, text), 1000);
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+// End Section: Gratisversand Fortschritt Balken
+
 // ===============================
 // RESTLICHER JS-Code (ausgeblendet auf Checkout/Kaufabwicklung/Kasse)
 // ===============================
