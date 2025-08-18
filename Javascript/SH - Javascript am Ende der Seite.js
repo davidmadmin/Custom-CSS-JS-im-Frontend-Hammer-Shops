@@ -181,6 +181,94 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // End Section: Versand Icons ändern & einfügen
 
+// Section: Gratisversand Fortschritt Balken
+document.addEventListener('DOMContentLoaded', function () {
+  const THRESHOLD = 150;
+
+  function getPrimaryColor() {
+    const styles = getComputedStyle(document.documentElement);
+    return (
+      styles.getPropertyValue('--primary') ||
+      styles.getPropertyValue('--color-primary') ||
+      styles.getPropertyValue('--bs-primary') ||
+      '#f20000'
+    ).trim();
+  }
+
+  const primaryColor = getPrimaryColor();
+
+  function parseEuro(el) {
+    if (!el) return 0;
+    return (
+      parseFloat(
+        el.textContent.replace(/[^0-9,.-]/g, '').replace('.', '').replace(',', '.')
+      ) || 0
+    );
+  }
+
+  function formatEuro(val) {
+    return (
+      val.toLocaleString('de-DE', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }) + '\u00a0€'
+    );
+  }
+
+  function createBar(id) {
+    const wrapper = document.createElement('div');
+    wrapper.id = id;
+    wrapper.style.marginTop = '0px';
+    wrapper.style.marginBottom = '30px';
+
+    const text = document.createElement('div');
+    text.style.fontSize = '0.9rem';
+    text.style.fontWeight = '600';
+    text.style.marginBottom = '0.5rem';
+    wrapper.appendChild(text);
+
+    const bg = document.createElement('div');
+    bg.style.width = '100%';
+    bg.style.height = '8px';
+    bg.style.background = '#e0e0e0';
+    bg.style.borderRadius = '4px';
+    bg.style.overflow = 'hidden';
+    wrapper.appendChild(bg);
+
+    const bar = document.createElement('div');
+    bar.style.height = '100%';
+    bar.style.width = '0%';
+    bar.style.background = primaryColor;
+    bar.style.transition = 'width 0.3s ease';
+    bg.appendChild(bar);
+
+    return { wrapper, bar, text };
+  }
+
+  function update(bar, text) {
+    const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
+    const ratio = Math.min(total / THRESHOLD, 1);
+    bar.style.width = ratio * 100 + '%';
+    if (total < THRESHOLD) {
+      text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`;
+    } else {
+      text.textContent = 'Gratisversand erreicht!';
+    }
+  }
+
+  const observer = new MutationObserver(() => {
+    const totals = document.querySelector('.cmp-totals');
+    if (totals && !document.getElementById('free-shipping-bar')) {
+      const { wrapper, bar, text } = createBar('free-shipping-bar');
+      totals.parentNode.insertBefore(wrapper, totals);
+      update(bar, text);
+      setInterval(() => update(bar, text), 1000);
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+// End Section: Gratisversand Fortschritt Balken
+
 // ===============================
 // RESTLICHER JS-Code (ausgeblendet auf Checkout/Kaufabwicklung/Kasse)
 // ===============================
@@ -444,74 +532,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
-  // Section: Doofinder Add-to-Cart
-
-  document.addEventListener("doofinder.cart.add", function (event) {
-    const doofinderVariationId = event.detail.item_id; // Doofinder liefert die Variations-ID als 'item_id'
-    const quantity = event.detail.amount || 1; // Standardmenge ist 1, falls nicht explizit in Doofinder angegeben
-
-    // --- ANGEPASST AN IHREN SHOP (BASIEREND AUF DEM SCREENSHOT) ---
-    // Die exakte URL, die Sie in den Entwicklertools gefunden haben
-    const addUrl = "https://www.schrauben-hammer.de/rest/io/basket/item";
-
-    // Die Payload-Daten, die Ihr Shop erwartet.
-    // Es ist ein JSON-Objekt mit 'variationId' und 'quantity'.
-    const requestBody = {
-      variationId: parseInt(doofinderVariationId), // Konvertieren zu einer Ganzzahl
-      quantity: parseInt(quantity), // Konvertieren zu einer Ganzzahl
-    };
-    // End Section: Anpassung
-
-    fetch(addUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // Wichtig: Wir senden JSON
-        "X-Requested-With": "XMLHttpRequest", // Wird oft bei AJAX-Anfragen erwartet
-      },
-      body: JSON.stringify(requestBody), // Konvertiert unser JavaScript-Objekt in einen JSON-String
-    })
-      .then((response) => {
-        if (!response.ok) {
-          // Wenn der HTTP-Statuscode ein Fehler ist (z.B. 400, 500)
-          return response
-            .json()
-            .then((errorData) => {
-              throw new Error(
-                `Fehler beim Hinzufügen zum Warenkorb: ${response.status} - ${errorData.message || response.statusText}`,
-              );
-            })
-            .catch(() => {
-              // Falls die Fehlerantwort kein JSON ist
-              throw new Error(
-                `Fehler beim Hinzufügen zum Warenkorb: ${response.status} - ${response.statusText}`,
-              );
-            });
-        }
-        return response.json(); // Oder response.text(), je nachdem, was Ihr Shop zurückgibt
-      })
-      .then((data) => {
-        // Erfolg: Artikel wurde hinzugefügt
-        console.log("Artikel erfolgreich zum Warenkorb hinzugefügt:", data);
-
-        // Hier können Sie den Nutzer benachrichtigen oder den Mini-Warenkorb aktualisieren.
-        // Plentymarkets Ceres aktualisiert in der Regel den Warenkorb-Counter automatisch,
-        // wenn die API-Antwort korrekt ist. Eine sichtbare Erfolgsmeldung für den Benutzer ist aber gut.
-
-        // Eine einfache Browser-Benachrichtigung für den Anfang:
-        alert("Artikel erfolgreich zum Warenkorb hinzugefügt!");
-
-        // Optional: Wenn Sie möchten, dass der Warenkorb-Counter sofort aktualisiert wird,
-        // ohne dass die Seite neu geladen wird, können Sie versuchen, ein
-        // 'updated::basket' oder ähnliches Event zu dispatchen, falls Ceres darauf hört.
-        // Beispiel (muss getestet werden, ob Ceres darauf reagiert):
-        // document.dispatchEvent(new CustomEvent('updated::basket', { detail: data }));
-      })
-      .catch((error) => {
-        // Fehlerbehandlung
-        console.error("Fehler beim Hinzufügen zum Warenkorb:", error);
-        alert("Fehler beim Hinzufügen zum Warenkorb: " + error.message);
-      });
-  });
-
-  // End Section: Doofinder Add-to-Cart
 })();
