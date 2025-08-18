@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function createBar(id) {
     const wrapper = document.createElement('div');
     wrapper.id = id;
-    wrapper.style.margin = '1rem 0';
+    wrapper.style.margin = '0 0 30px 0';
 
     const text = document.createElement('div');
     text.style.fontSize = '0.9rem';
@@ -195,9 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function update(bar, text) {
-    const net = parseEuro(document.querySelector('dd[data-testing="item-sum-net"]'));
-    const vat = parseEuro(document.querySelector('dd[data-testing="vat-amount"]'));
-    const total = net + vat;
+    const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const ratio = Math.min(total / THRESHOLD, 1);
     bar.style.width = (ratio * 100) + '%';
     if (total < THRESHOLD) {
