@@ -112,7 +112,10 @@
 // End Section: Bestell-Versand Countdown Code
 
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
-document.addEventListener('DOMContentLoaded', function () {
+function applyShippingIcons() {
+  // Entferne bestehende Custom Icons, um Duplikate zu verhindern
+  document.querySelectorAll('.shipping-icon').forEach(el => el.remove());
+
   const shippingIcons = {
     'ShippingProfileID1531': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
     'ShippingProfileID1545': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
@@ -123,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const label = document.querySelector(`label[for="${profileId}"]`);
     if (label) {
       const iconContainer = label.querySelector('.icon');
-
       if (iconContainer) {
         // Bestehendes leeren
         iconContainer.innerHTML = '';
@@ -137,6 +139,16 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  applyShippingIcons();
+
+  const container = document.querySelector('.widget-shipping-profile');
+  if (container) {
+    const observer = new MutationObserver(applyShippingIcons);
+    observer.observe(container, { childList: true, subtree: true });
+  }
 });
 // End Section: Versand Icons ändern & einfügen
 
