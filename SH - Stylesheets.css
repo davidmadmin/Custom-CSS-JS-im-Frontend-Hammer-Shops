@@ -349,3 +349,9 @@ button[data-testing="quantity-btn-decrease"] {
   margin-right: 0px !important;
 }
 /* End Section: Warenkorb Vorschau Icon Margin Fix */
+
+/* Section: Availability info in basket hide */
+.kjv-availability-basket-item {
+  display: none !important;
+}
+/* End Section: Availability info in basket hide */

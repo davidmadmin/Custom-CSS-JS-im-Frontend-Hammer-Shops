@@ -265,3 +265,9 @@ button[data-testing="quantity-btn-decrease"] {
 }
 
 /* End Section: doppleten PayPal Express Button Checkout ausblenden */
+
+/* Section: Availability info in basket hide */
+.kjv-availability-basket-item {
+  display: none !important;
+}
+/* End Section: Availability info in basket hide */
