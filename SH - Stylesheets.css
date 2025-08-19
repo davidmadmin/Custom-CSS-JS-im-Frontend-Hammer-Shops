@@ -234,6 +234,7 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 }
 #addressMultiSelect88 {
   border-radius: 12px;
+  min-height: auto;
 }
 
 #addressMultiSelect88 > div > div > p {
@@ -243,20 +244,12 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 #basketListContainer50 {
   padding-top: 10px;
 }
-/* Section: Quantity Input Styling */
-.qty-input {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
+
+#basketListContainer50 > div > div > div > div.meta-container-wrapper > div > div.meta-container {
+  padding-right: 5px;
 }
 
-button[data-testing="quantity-btn-increase"] {
-  border-top-right-radius: 6px;
-}
 
-button[data-testing="quantity-btn-decrease"] {
-  border-bottom-right-radius: 6px;
-}
-/* End Section: Quantity Input Styling */
 #page-body
   > div
   > div
