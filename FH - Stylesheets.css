@@ -154,34 +154,94 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 
 /* Section: Fast Checkout CSS Anpassungen */
 
-#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_header > div > a > picture > img  {
-   min-height: 70px;
+#page-body
+  > div
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > div
+  > div
+  > div.fc-container_header
+  > div
+  > a
+  > picture
+  > img {
+  min-height: 70px;
 }
-#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_header > div {
-   padding-bottom: 1.1rem !important;
-   padding-top: 1.1rem !important;
+#page-body
+  > div
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > div
+  > div
+  > div.fc-container_header
+  > div {
+  padding-bottom: 1.1rem !important;
+  padding-top: 1.1rem !important;
 }
 .after-invoice-address {
-   display: none;
+  display: none;
 }
 
-#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_right > div > div.widget.widget-sticky.mb-2.sticky-element > div > div.mt-2.mb-4 > div > div > span > button {
-   box-shadow: none;
+#page-body
+  > div
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > div
+  > div
+  > div.fc-container_right
+  > div
+  > div.widget.widget-sticky.mb-2.sticky-element
+  > div
+  > div.mt-2.mb-4
+  > div
+  > div
+  > span
+  > button {
+  box-shadow: none;
 }
-#page-body > div > div > div > div > div:nth-child(1) > div > div > div > div.fc-container_bottom > div > div.checkout-validation-wrapper > div:nth-child(2) > div > div > div > button {
-    height: 50px;
-    font-size: medium;
+#page-body
+  > div
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > div
+  > div
+  > div.fc-container_bottom
+  > div
+  > div.checkout-validation-wrapper
+  > div:nth-child(2)
+  > div
+  > div
+  > div
+  > button {
+  height: 50px;
+  font-size: medium;
 }
-#addressMultiSelect100 {
-    border-radius: 12px;
-    min-height: auto;
+#addressMultiSelect96 {
+  border-radius: 12px;
+  min-height: auto;
+}
+#addressMultiSelect88 {
+  border-radius: 12px;
+}
 
-#addressMultiSelect100 > div > div > p {
-    padding-top: 0.6rem !important;
-    padding-bottom: 0.6rem !important;
+#addressMultiSelect88 > div > div > p {
+  padding-top: 0.6rem !important;
+  padding-bottom: 0.6rem !important;
 }
-#basketListContainer52 {
-    padding-top: 10px;
+#basketListContainer50 {
+  padding-top: 10px;
 }
 /* Section: Quantity Input Styling */
 .qty-input {
@@ -197,7 +257,27 @@ button[data-testing="quantity-btn-decrease"] {
   border-bottom-right-radius: 6px;
 }
 /* End Section: Quantity Input Styling */
-
+#page-body
+  > div
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > div
+  > div
+  > div.fc-container_left
+  > div
+  > div.shipping-method-select
+  > div
+  > fieldset
+  > ul
+  > li
+  > label
+  > div.icon
+  > img {
+  width: 100%;
+}
 /* End Section: Fast Checkout CSS Anpassungen */
 
 /* Section: Warenkorb->Weiter einkaufen Button Styling */
@@ -243,19 +323,3 @@ button[data-testing="quantity-btn-decrease"] {
 }
 
 /* End Section: Warenkorb->Weiter einkaufen Button Styling */
-
-/* Section: doppleten PayPal Express Button Checkout ausblenden */
-
-.paypal-buttons paypal-buttons-context-iframe
- {
-    display: none !important;
-}
-
-#page-body > div > div > div > div > div:nth-child(1) > d {
-    display: none !important;
-}
-.paypalSmartButtons btn btn-block  {
-    padding: 0 !important;
-}
-
-/* End Section: doppleten PayPal Express Button Checkout ausblenden */
