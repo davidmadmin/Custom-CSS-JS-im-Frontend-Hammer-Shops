@@ -246,7 +246,7 @@ button[data-testing="quantity-btn-decrease"] {
 
 /* Section: Warenkorb Vorschau Icon Margin Fix */
 #controlsList .fa  {
-  margin: none !important;
+  margin-right: 0px !important;
 }
 /* End Section: Warenkorb Vorschau Icon Margin Fix */
 
