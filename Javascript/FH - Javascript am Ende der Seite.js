@@ -209,8 +209,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function toggleFreeShippingBar() {
     const bar = document.getElementById('free-shipping-bar');
     const pickup = document.getElementById('ShippingProfileID1510');
-    if (!bar || !pickup) return;
-    bar.style.display = pickup.checked ? 'none' : '';
+    const express = document.getElementById('ShippingProfileID1545');
+    if (!bar) return;
+    const hide = (pickup && pickup.checked) || (express && express.checked);
+    bar.style.display = hide ? 'none' : '';
   }
 
   const observer = new MutationObserver(() => {
