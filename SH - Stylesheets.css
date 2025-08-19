@@ -271,7 +271,23 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   > img {
   width: 100%;
 }
+
 /* End Section: Fast Checkout CSS Anpassungen */
+
+/* Section: Quantity Input Styling */
+.qty-input {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+button[data-testing="quantity-btn-increase"] {
+  border-top-right-radius: 6px;
+}
+
+button[data-testing="quantity-btn-decrease"] {
+  border-bottom-right-radius: 6px;
+}
+/* End Section: Quantity Input Styling */
 
 /* Section: Warenkorb->Weiter einkaufen Button Styling */
 
