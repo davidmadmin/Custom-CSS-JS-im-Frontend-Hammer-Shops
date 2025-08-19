@@ -206,6 +206,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function toggleFreeShippingBar() {
+    const bar = document.getElementById('free-shipping-bar');
+    const pickup = document.getElementById('ShippingProfileID1510');
+    if (!bar || !pickup) return;
+    bar.style.display = pickup.checked ? 'none' : '';
+  }
+
   const observer = new MutationObserver(() => {
     const totals = document.querySelector('.cmp-totals');
     if (totals && !document.getElementById('free-shipping-bar')) {
@@ -214,8 +221,15 @@ document.addEventListener('DOMContentLoaded', function () {
       update(bar, text);
       setInterval(() => update(bar, text), 1000);
     }
+    toggleFreeShippingBar();
   });
   observer.observe(document.body, { childList: true, subtree: true });
+
+  document.body.addEventListener('change', function (e) {
+    if (e.target.matches('input[type="radio"][id^="ShippingProfileID"]')) {
+      toggleFreeShippingBar();
+    }
+  });
 });
 // End Section: Gratisversand Fortschritt Balken
 
