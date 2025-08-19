@@ -447,9 +447,12 @@ function patchBasketButton() {
       spinner.remove();
     });
 
-    if (!weiterEinkaufenBtn.classList.contains('weiter-einkaufen-patched')) {
-      // Button-Text und Custom-Icon setzen (ohne Spinner!)
+    // Arrow-Icon und Text sicherstellen
+    if (!weiterEinkaufenBtn.querySelector('i.fa-arrow-left')) {
       weiterEinkaufenBtn.innerHTML = '<i class="fa fa-arrow-left" aria-hidden="true" style="margin-right:8px"></i>Weiter einkaufen';
+    }
+
+    if (!weiterEinkaufenBtn.classList.contains('weiter-einkaufen-patched')) {
       weiterEinkaufenBtn.addEventListener('click', function(e) {
         e.preventDefault();
         // Spinner sofort entfernen!

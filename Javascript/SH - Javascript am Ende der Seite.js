@@ -485,12 +485,14 @@ document.addEventListener('DOMContentLoaded', function () {
           spinner.remove();
         });
 
-      // Nur einmal patchen, solange der Button lebt
-      if (!weiterEinkaufenBtn.classList.contains("weiter-einkaufen-patched")) {
-        // Button-Text und Arrow setzen (kein Spinner!)
+      // Arrow-Icon und Text sicherstellen
+      if (!weiterEinkaufenBtn.querySelector("i.fa-arrow-left")) {
         weiterEinkaufenBtn.innerHTML =
           '<i class="fa fa-arrow-left" aria-hidden="true" style="margin-right:8px"></i>Weiter einkaufen';
+      }
 
+      // Nur einmal patchen, solange der Button lebt
+      if (!weiterEinkaufenBtn.classList.contains("weiter-einkaufen-patched")) {
         weiterEinkaufenBtn.addEventListener("click", function (e) {
           e.preventDefault();
 
