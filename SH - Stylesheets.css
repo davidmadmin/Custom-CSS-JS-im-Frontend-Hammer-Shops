@@ -329,7 +329,8 @@ button[data-testing="quantity-btn-decrease"] {
 
 /* Section: Retourenformular Styling */
 .retourenformular {
-  background-color: #e0e0e0;
+  background-color: #fdfdfd;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   font-family: "industry", sans-serif;
 }
