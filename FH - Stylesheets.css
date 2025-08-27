@@ -326,29 +326,12 @@ button[data-testing="quantity-btn-decrease"] {
 
 /* Section: Retourenformular Styling */
 .retourenformular {
-  background-color: #f7f7f7;
-  border-radius: 8px;
+  background-color: #e0e0e0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   font-family: "industry", sans-serif;
 }
 
 .retourenformular label {
   font-weight: 600;
-}
-
-.retourenformular input,
-.retourenformular select,
-.retourenformular textarea {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.95rem;
-}
-
-.retourenformular input:focus,
-.retourenformular select:focus,
-.retourenformular textarea:focus {
-  outline: none;
-  border-color: #31a5f0;
-  box-shadow: 0 0 0 2px rgba(49, 165, 240, 0.2);
 }
 /* End Section: Retourenformular Styling */
