@@ -323,3 +323,45 @@ button[data-testing="quantity-btn-decrease"] {
 }
 
 /* End Section: Warenkorb->Weiter einkaufen Button Styling */
+
+/* Section: Retourenformular Styling */
+.retourenformular {
+  background-color: #f7f7f7;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: "industry", sans-serif;
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
+.retourenformular label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.retourenformular input,
+.retourenformular select,
+.retourenformular textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.retourenformular input:focus,
+.retourenformular select:focus,
+.retourenformular textarea:focus {
+  outline: none;
+  border-color: #31a5f0;
+  box-shadow: 0 0 0 2px rgba(49, 165, 240, 0.2);
+}
+
+.retourenformular button[type="submit"] {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+/* End Section: Retourenformular Styling */
