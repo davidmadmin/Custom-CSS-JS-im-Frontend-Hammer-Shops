@@ -185,6 +185,19 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener('DOMContentLoaded', function () {
   const THRESHOLD = 150;
 
+  // IDs for country selectors whose value determines the visibility of the
+  // free shipping bar. Extend this array when new country select IDs appear.
+  const COUNTRY_SELECT_PATTERNS = ['shipping-country-select', 'country-id-select'];
+
+  function isGermanySelected() {
+    const selector = COUNTRY_SELECT_PATTERNS.map(
+      (p) => `select[id*="${p}"]`
+    ).join(', ');
+    const selects = document.querySelectorAll(selector);
+    if (!selects.length) return true; // default to showing the bar
+    return Array.from(selects).every((sel) => sel.value === '1');
+  }
+
   function getPrimaryColor() {
     const styles = getComputedStyle(document.documentElement);
     return (
@@ -258,8 +271,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function toggleFreeShippingBar() {
     const bar = document.getElementById('free-shipping-bar');
     const pickup = document.getElementById('ShippingProfileID1310');
-    if (!bar || !pickup) return;
-    bar.style.display = pickup.checked ? 'none' : '';
+    if (!bar) return;
+    const germanySelected = isGermanySelected();
+    const hide = (pickup && pickup.checked) || !germanySelected;
+    bar.style.display = hide ? 'none' : '';
   }
 
   const observer = new MutationObserver(() => {
@@ -275,7 +290,12 @@ document.addEventListener('DOMContentLoaded', function () {
   observer.observe(document.body, { childList: true, subtree: true });
 
   document.body.addEventListener('change', function (e) {
-    if (e.target.matches('input[type="radio"][id^="ShippingProfileID"]')) {
+    if (
+      e.target.matches('input[type="radio"][id^="ShippingProfileID"]') ||
+      e.target.matches(
+        COUNTRY_SELECT_PATTERNS.map((p) => `select[id*="${p}"]`).join(', '),
+      )
+    ) {
       toggleFreeShippingBar();
     }
   });
