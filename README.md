@@ -1,11 +1,32 @@
 ### Makeshift solutions for our Shop Design
 
-All included styling and functions should ideally eventually be created into standalone plugins for Plentymarkets that then can be more resource effiencent, easier configurable and better to maintain then having all pack in a set of text blocks to copy-paste.
+All included styling and functions should ideally eventually be created into
+standalone plugins for Plentymarkets that then can be more resource efficient,
+easier configurable and better to maintain than having all packed in a set of
+text blocks to copy-paste.
 
-### Free shipping progress bar
-The progress bar for free shipping is now displayed only when the selected
-country is Germany (value `1`). The script watches every `<select>` element
-whose ID contains `shipping-country-select` or `country-id-select`. If any of
-these selects has a value other than `1`, the bar is hidden. To support new
-country selectors, simply add the ID fragment to the `COUNTRY_SELECT_PATTERNS`
-array inside the JavaScript files.
+### Features
+
+#### Bestell-Versand Countdown
+Shows how long customers can still order for same-day shipping. The timer
+updates every second and appears wherever a `#cutoff-countdown` element exists.
+
+#### Shipping option icons
+Replaces the default icons for shipping profile radio buttons with custom
+graphics. The icons are applied wherever the corresponding shipping profiles are rendered.
+
+#### Free shipping progress bar
+Displays a progress bar toward the €150 free-shipping threshold near the order
+totals. The bar is only visible when any `.address-country` element contains
+“Deutschland” or “Germany”; it remains hidden for other countries or when the
+self-pickup shipping profile is selected.
+
+#### Animated search placeholder
+Cycles through a set of suggestion texts in the search field placeholder when
+the input is visible and unfocused. The animation stops while typing or when
+the field is out of view.
+
+#### “Weiter einkaufen” button in basket preview
+Renames the cart overlay’s “Warenkorb” button to “Weiter einkaufen” with an
+arrow icon. Clicking it closes the overlay instead of loading the cart page,
+and the button stays enabled without showing a loading spinner.
