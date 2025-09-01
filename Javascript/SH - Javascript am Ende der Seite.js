@@ -259,7 +259,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const bar = document.getElementById('free-shipping-bar');
     const pickup = document.getElementById('ShippingProfileID1310');
     if (!bar || !pickup) return;
-    bar.style.display = pickup.checked ? 'none' : '';
+
+    const countrySelects = document.querySelectorAll(
+      'select[id*="shipping-country-select"], select[id*="country-id-select"]'
+    );
+    let show = true;
+    countrySelects.forEach((sel) => {
+      if (sel.value && sel.value !== '1') {
+        show = false;
+      }
+    });
+
+    bar.style.display = pickup.checked || !show ? 'none' : '';
   }
 
   const observer = new MutationObserver(() => {
@@ -275,7 +286,11 @@ document.addEventListener('DOMContentLoaded', function () {
   observer.observe(document.body, { childList: true, subtree: true });
 
   document.body.addEventListener('change', function (e) {
-    if (e.target.matches('input[type="radio"][id^="ShippingProfileID"]')) {
+    if (
+      e.target.matches(
+        'input[type="radio"][id^="ShippingProfileID"], select[id*="shipping-country-select"], select[id*="country-id-select"]'
+      )
+    ) {
       toggleFreeShippingBar();
     }
   });
