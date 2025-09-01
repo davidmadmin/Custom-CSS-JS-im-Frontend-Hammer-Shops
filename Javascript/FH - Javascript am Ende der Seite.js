@@ -151,6 +151,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function isCheckoutPage() {
+    const path = window.location.pathname;
+    return (
+      path.includes('/checkout') ||
+      path.includes('/kaufabwicklung') ||
+      path.includes('/kasse')
+    );
+  }
+
   function getPrimaryColor() {
     const styles = getComputedStyle(document.documentElement);
     return (styles.getPropertyValue('--primary') ||
@@ -217,7 +226,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const bar = document.getElementById('free-shipping-bar');
     const pickup = document.getElementById('ShippingProfileID1510');
     if (!bar) return;
-    const hide = (pickup && pickup.checked) || !isGermanAddress();
+    const hide =
+      (pickup && pickup.checked) ||
+      (isCheckoutPage() && !isGermanAddress());
     bar.style.display = hide ? 'none' : '';
   }
 

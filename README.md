@@ -17,9 +17,10 @@ graphics. The icons are applied wherever the corresponding shipping profiles are
 
 #### Free shipping progress bar
 Displays a progress bar toward the €150 free-shipping threshold near the order
-totals. The bar is only visible when any `.address-country` element contains
-“Deutschland” or “Germany”; it remains hidden for other countries or when the
-self-pickup shipping profile is selected.
+totals. It is always visible outside the checkout. On checkout-related pages
+(`/checkout`, `/kaufabwicklung`, `/kasse`) the bar is shown only when an
+`.address-country` element contains “Deutschland” or “Germany”; otherwise the
+bar stays hidden. Selecting the self-pickup shipping profile hides it as well.
 
 #### Animated search placeholder
 Cycles through a set of suggestion texts in the search field placeholder when
