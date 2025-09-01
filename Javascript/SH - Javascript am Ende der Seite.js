@@ -182,8 +182,30 @@ document.addEventListener("DOMContentLoaded", function () {
 // End Section: Versand Icons ändern & einfügen
 
 // Section: Gratisversand Fortschritt Balken
-document.addEventListener('DOMContentLoaded', function () {
-  const THRESHOLD = 150;
+  document.addEventListener('DOMContentLoaded', function () {
+    const THRESHOLD = 150;
+
+    const COUNTRY_SELECT_ID_FRAGMENTS = [
+      'shipping-country-select',
+      'invoice-country-select',
+      'country-id-select'
+    ];
+
+    function isGermanySelected() {
+      return COUNTRY_SELECT_ID_FRAGMENTS.some((fragment) => {
+        const select = document.querySelector(`select[id*="${fragment}"]`);
+        return select && select.value === '1';
+      });
+    }
+
+  function isCheckoutPage() {
+    const path = window.location.pathname;
+    return (
+      path.includes('/checkout') ||
+      path.includes('/kaufabwicklung') ||
+      path.includes('/kasse')
+    );
+  }
 
   function getPrimaryColor() {
     const styles = getComputedStyle(document.documentElement);
@@ -255,12 +277,15 @@ document.addEventListener('DOMContentLoaded', function () {
       text.textContent = 'Gratisversand erreicht!';
     }
   }
-  function toggleFreeShippingBar() {
-    const bar = document.getElementById('free-shipping-bar');
-    const pickup = document.getElementById('ShippingProfileID1310');
-    if (!bar || !pickup) return;
-    bar.style.display = pickup.checked ? 'none' : '';
-  }
+    function toggleFreeShippingBar() {
+      const bar = document.getElementById('free-shipping-bar');
+      const pickup = document.getElementById('ShippingProfileID1310');
+      if (!bar) return;
+      const hide =
+        (pickup && pickup.checked) ||
+        (isCheckoutPage() && !isGermanySelected());
+      bar.style.display = hide ? 'none' : '';
+    }
 
   const observer = new MutationObserver(() => {
     const totals = document.querySelector('.cmp-totals');
@@ -274,11 +299,18 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
-  document.body.addEventListener('change', function (e) {
-    if (e.target.matches('input[type="radio"][id^="ShippingProfileID"]')) {
-      toggleFreeShippingBar();
-    }
-  });
+    const countrySelectors = COUNTRY_SELECT_ID_FRAGMENTS.map(
+      (frag) => `select[id*="${frag}"]`
+    ).join(', ');
+
+    document.body.addEventListener('change', function (e) {
+      if (
+        e.target.matches('input[type="radio"][id^="ShippingProfileID"]') ||
+        e.target.matches(countrySelectors)
+      ) {
+        toggleFreeShippingBar();
+      }
+    });
 });
 // End Section: Gratisversand Fortschritt Balken
 
