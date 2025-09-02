@@ -199,7 +199,7 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   > div
   > div.fc-container_right
   > div
-  > div.widget.widget-sticky.mb-2.sticky-element
+> div.widget.widget-sticky.mb-2.sticky-element
   > div
   > div.mt-2.mb-4
   > div
@@ -207,6 +207,28 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   > span
   > button {
   box-shadow: none;
+  color: #4e4e4e !important;
+}
+#page-body
+  > div
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > div
+  > div
+  > div.fc-container_right
+  > div
+> div.widget.widget-sticky.mb-2.sticky-element
+  > div
+  > div.mt-2.mb-4
+  > div
+  > div
+  > span
+  > button:hover {
+  color: #212529 !important;
+  border-color: #bcbcbc;
 }
 #page-body
   > div
