@@ -229,8 +229,8 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   font-size: medium;
 }
 [id^="addressMultiSelect"] {
-  border-radius: 12px;
-  min-height: auto !importnant;
+  border-radius: 12px !important;
+  min-height: auto !important;
 }
 
 [id^="addressMultiSelect"] > div > div > p {
@@ -238,7 +238,7 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   padding-bottom: 0.6rem !important;
 }
 [id^="basketListContainer"] {
-  padding-top: 10px;
+  padding-top: 10px !important;
 }
 /* Section: Quantity Input Styling */
 .qty-input {
