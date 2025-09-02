@@ -240,6 +240,9 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 [id^="basketListContainer"] {
   padding-top: 10px !important;
 }
+[id^="basketListContainer"] > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.meta-container {
+  padding-right: 5px !important;
+}
 /* Section: Quantity Input Styling */
 .qty-input {
   border-top-left-radius: 6px !important;
