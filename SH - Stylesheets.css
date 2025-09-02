@@ -255,7 +255,7 @@ button[data-testing="quantity-btn-increase"],
 }
 
 button[data-testing="quantity-btn-decrease"],
-#basketListContainer48 > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
+#basketListContainer48 > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(2) {
   border-bottom-right-radius: 6px !important;
 }
 /* End Section: Quantity Input Styling */
