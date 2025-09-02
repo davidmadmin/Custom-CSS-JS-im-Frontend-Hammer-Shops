@@ -249,11 +249,13 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   border-bottom-left-radius: 6px !important;
 }
 
-button[data-testing="quantity-btn-increase"] {
+button[data-testing="quantity-btn-increase"],
+#basketListContainer50 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
   border-top-right-radius: 6px !important;
 }
 
-button[data-testing="quantity-btn-decrease"] {
+button[data-testing="quantity-btn-decrease"],
+#basketListContainer50 > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(2) {
   border-bottom-right-radius: 6px !important;
 }
 /* End Section: Quantity Input Styling */
