@@ -245,16 +245,16 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 }
 /* Section: Quantity Input Styling */
 .qty-input {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
 }
 
 button[data-testing="quantity-btn-increase"] {
-  border-top-right-radius: 6px;
+  border-top-right-radius: 6px !important;
 }
 
 button[data-testing="quantity-btn-decrease"] {
-  border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 6px !important;
 }
 /* End Section: Quantity Input Styling */
 #page-body
