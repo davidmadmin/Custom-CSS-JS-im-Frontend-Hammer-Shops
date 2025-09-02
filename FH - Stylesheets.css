@@ -324,6 +324,12 @@ button[data-testing="quantity-btn-decrease"] {
 
 /* End Section: Warenkorb->Weiter einkaufen Button Styling */
 
+/* Section: Controls List Icon Margin */
+#controlsList .fa {
+  margin-right: 0px !important;
+}
+/* End Section: Controls List Icon Margin */
+
 /* Section: Retourenformular Styling */
 .retourenformular {
   background-color: #fdfdfd;
