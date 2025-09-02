@@ -347,3 +347,15 @@ button[data-testing="quantity-btn-decrease"],
   font-weight: 600;
 }
 /* End Section: Retourenformular Styling */
+
+/* Section: Input Unit Border Radius */
+.input-unit {
+  border-radius: 6px;
+}
+/* End Section: Input Unit Border Radius */
+
+/* Section: Method list item label padding */
+.cmp-method-list .method-list-item label {
+  padding-right: 0px;
+}
+/* End Section: Method list item label padding */
