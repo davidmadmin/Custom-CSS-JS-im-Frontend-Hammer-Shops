@@ -228,20 +228,17 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   height: 50px;
   font-size: medium;
 }
-#addressMultiSelect94 {
-  border-radius: 12px;
-}
-#addressMultiSelect86 {
-  border-radius: 12px;
-  min-height: auto !importnant;
+[id^="addressMultiSelect"] {
+  border-radius: 12px !important;
+  min-height: auto !important;
 }
 
-#addressMultiSelect86 > div > div > p {
+[id^="addressMultiSelect"] > div > div > p {
   padding-top: 0.6rem !important;
   padding-bottom: 0.6rem !important;
 }
-#basketListContainer48 {
-  padding-top: 10px;
+[id^="basketListContainer"] {
+  padding-top: 10px !important;
 }
 /* Section: Quantity Input Styling */
 .qty-input {
@@ -250,12 +247,12 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 }
 
 button[data-testing="quantity-btn-increase"],
-#basketListContainer48 > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
+[id^="basketListContainer"] > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(1) {
   border-top-right-radius: 6px !important;
 }
 
 button[data-testing="quantity-btn-decrease"],
-#basketListContainer48 > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(2) {
+[id^="basketListContainer"] > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(2) {
   border-bottom-right-radius: 6px !important;
 }
 /* End Section: Quantity Input Styling */
