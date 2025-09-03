@@ -281,9 +281,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const bar = document.getElementById('free-shipping-bar');
       const pickup = document.getElementById('ShippingProfileID1310');
       if (!bar) return;
+      const path = window.location.pathname;
+      const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
       const hide =
         (pickup && pickup.checked) ||
-        (isCheckoutPage() && !isGermanySelected());
+        (isCheckoutPage() && !isGermanySelected()) ||
+        (path.includes('/bestellbestaetigung') && total < THRESHOLD);
       bar.style.display = hide ? 'none' : '';
     }
 
