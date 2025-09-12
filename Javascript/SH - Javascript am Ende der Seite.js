@@ -1,5 +1,55 @@
 // Section: Global scripts for all pages
 
+// Section: REST Add-To-Cart Buttons
+(function () {
+  async function addToCartREST(variationId, quantity) {
+    const res = await fetch('/rest/io/basket/items', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ variationId, quantity })
+    });
+    if (!res.ok) throw new Error('Basket API ' + res.status);
+    return res.json();
+  }
+
+  function refreshMiniCart() {
+    fetch('/rest/io/basket')
+      .then(r => r.json())
+      .then(b => {
+        const badge = document.querySelector('[data-basket-count]');
+        if (badge) badge.textContent = b?.itemQuantityTotal ?? 0;
+      })
+      .catch(() => {});
+  }
+
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.df-add-to-cart');
+    if (!btn) return;
+
+    e.preventDefault();
+    const variationId = Number(btn.getAttribute('data-id'));
+    const quantity = 1;
+    if (!variationId || Number.isNaN(variationId)) return;
+
+    btn.disabled = true; btn.setAttribute('aria-busy', 'true');
+    try {
+      await addToCartREST(variationId, quantity);
+      // TODO: toast/snackbar here
+      refreshMiniCart();
+    } catch (err) {
+      console.error(err);
+      // TODO: error toast
+    } finally {
+      btn.disabled = false; btn.removeAttribute('aria-busy');
+    }
+  });
+})();
+// End Section: REST Add-To-Cart Buttons
+
+
 // Section: Bestell-Versand Countdown Code
 (function () {
   function getBerlinTime() {
