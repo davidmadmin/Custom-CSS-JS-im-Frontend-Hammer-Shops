@@ -1,5 +1,10 @@
 I want to built &amp; maintain an awesome Footer and Header in PlentyLTS with ChatGPT Codex from scratch for SH and FH both shops. I plan to do this with just HTML and inline CSS that do not itself include any scripts but rather utilize scripts that are already in use in the PlentyLTS system.
 
+# Repository Rules
+
+- Do not place `<style>` or `<script>` tags inside any `.html` document within this repository. Inline `style` attributes are acceptable when needed, but standalone blocks belong in the platform’s existing assets.
+- The PlentyShop LTS storefront already ships with the frameworks listed below. Reuse those building blocks instead of recreating large parts of their functionality from scratch.
+
 # plentyShop LTS Technology Stack (2025)
 
 | Layer / Area        | Framework / Tool        | Version / Note                                               | Purpose                                                                 |
