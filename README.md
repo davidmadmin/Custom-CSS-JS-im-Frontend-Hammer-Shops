@@ -25,7 +25,8 @@ Changing the selection to a different country hides the bar, and switching back
 to Germany shows it again. To support additional country selectors, add the
 relevant ID fragment to the `COUNTRY_SELECT_ID_FRAGMENTS` array in the
 JavaScript. Selecting the self-pickup shipping profile hides the bar regardless
-of country.
+of country. On the order confirmation page (`/bestellbestaetigung`), the bar is
+displayed only if the free-shipping threshold has been reached.
 
 #### Animated search placeholder
 Cycles through a set of suggestion texts in the search field placeholder when
