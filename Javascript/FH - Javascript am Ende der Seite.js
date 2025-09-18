@@ -532,6 +532,130 @@ $(document).ready(function () {
 // --- Ende Custom Header Menü Icons ---
 
 
+// Section: Basket preview toggle handling
+document.addEventListener('DOMContentLoaded', function () {
+  var layer = document.querySelector('[data-fh-basket-layer]');
+  var wrapper = document.querySelector('[data-fh-basket-wrapper]');
+  var overlay = document.querySelector('[data-fh-basket-overlay]');
+  if (!layer || !wrapper || !overlay) {
+    return;
+  }
+
+  var toggleButtons = document.querySelectorAll('.toggle-basket-preview');
+  var closeButton = wrapper.querySelector('.basket-preview-header .close');
+  var isOpen = false;
+  var previousBodyOverflow = '';
+
+  var payPalScriptSrc = 'https://s3-eu-central-1.amazonaws.com/plentymarkets-public-92/nteqnk1xxnkn/plugin/60/paypal/js/smartPaymentScript.min.js';
+  var payPalAttributes = {
+    'data-client-id': 'AfslQana4f4CQjHvRBnUc6vBJg5jgJuZFwM-SbrTiGKUAqB7MrxQv3QWFdQ6U1h7ogMDokT1DNBzRxMw',
+    'data-user-id-token': '',
+    'data-merchant-id': 'U5MW2L5YW9ZSC',
+    'data-currency': 'EUR',
+    'data-append-trailing-slash': '',
+    'data-locale': 'de_DE',
+    sandbox: '',
+    googlePayComponent: '0',
+    applePayComponent: '0',
+    logToken: 'b18c3a94dce145b867feb8f9c4e4c293'
+  };
+  var payPalInitHandlerRegistered = false;
+
+  function renderPayPalButtonsSafe() {
+    if (typeof renderPayPalButtons === 'function') {
+      renderPayPalButtons('68cc23a4ecf83', 'paypal', 'checkout', 'pill', 'gold');
+    }
+  }
+
+  function payPalInitHandler() {
+    document.removeEventListener('payPalScriptInitialized', payPalInitHandler);
+    payPalInitHandlerRegistered = false;
+    renderPayPalButtonsSafe();
+  }
+
+  function ensurePayPalScript() {
+    var script = document.getElementById('paypal-smart-payment-script');
+    if (!script) {
+      script = document.createElement('script');
+      script.type = 'module';
+      script.id = 'paypal-smart-payment-script';
+      document.body.appendChild(script);
+    }
+
+    script.src = payPalScriptSrc;
+    Object.keys(payPalAttributes).forEach(function (key) {
+      script.setAttribute(key, payPalAttributes[key]);
+    });
+
+    if (typeof paypal_plenty_sdk === 'undefined' || typeof renderPayPalButtons !== 'function') {
+      if (!payPalInitHandlerRegistered) {
+        document.addEventListener('payPalScriptInitialized', payPalInitHandler);
+        payPalInitHandlerRegistered = true;
+      }
+    } else {
+      renderPayPalButtonsSafe();
+    }
+  }
+
+  function openPreview() {
+    if (isOpen) {
+      return;
+    }
+    isOpen = true;
+    previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    layer.style.pointerEvents = 'auto';
+    wrapper.style.transform = 'translateX(0)';
+    overlay.style.opacity = '1';
+    overlay.style.visibility = 'visible';
+    overlay.style.pointerEvents = 'auto';
+    document.body.classList.add('fh-basket-preview-open');
+    ensurePayPalScript();
+  }
+
+  function closePreview() {
+    if (!isOpen) {
+      return;
+    }
+    isOpen = false;
+    document.body.style.overflow = previousBodyOverflow;
+    wrapper.style.transform = 'translateX(100%)';
+    overlay.style.opacity = '0';
+    overlay.style.visibility = 'hidden';
+    overlay.style.pointerEvents = 'none';
+    layer.style.pointerEvents = 'none';
+    document.body.classList.remove('fh-basket-preview-open');
+  }
+
+  toggleButtons.forEach(function (btn) {
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (isOpen) {
+        closePreview();
+      } else {
+        openPreview();
+      }
+    });
+  });
+
+  if (closeButton) {
+    closeButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      closePreview();
+    });
+  }
+
+  overlay.addEventListener('click', closePreview);
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closePreview();
+    }
+  });
+});
+
+// End Section: Basket preview toggle handling
+
+
 // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
 function patchBasketButton() {
