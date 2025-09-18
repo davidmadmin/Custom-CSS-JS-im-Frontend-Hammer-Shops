@@ -465,17 +465,19 @@ $(document).ready(function () {
 
 
 // Section: Warenkorb Vorschau programmatisch öffnen
-  const BASKET_PREVIEW_TOGGLE_SELECTORS = [
+(function() {
+  const NATIVE_TOGGLE_SELECTORS = [
     '[data-testing="header-basket"]',
-    '.basket-preview-toggle',
     '[data-trigger="basket-preview"]',
-    '.toggle-basket-preview'
+    '.basket-preview-toggle',
+    'button[aria-controls="basket-preview"]'
   ];
-  const CUSTOM_PREVIEW_TRIGGER_SELECTOR = "[data-open-basket-preview], #openMiniCart";
-  let hasWarnedMissingBasketToggle = false;
+  const CUSTOM_TRIGGER_SELECTOR = '#openCartPreviewBtn, [data-open-basket-preview], #openMiniCart';
+  let hasWarnedMissingToggle = false;
+  let pendingToggleObserver = null;
 
-  function findBasketPreviewToggle() {
-    for (const selector of BASKET_PREVIEW_TOGGLE_SELECTORS) {
+  function findNativeCartToggle() {
+    for (const selector of NATIVE_TOGGLE_SELECTORS) {
       const element = document.querySelector(selector);
       if (element) {
         return element;
@@ -484,40 +486,92 @@ $(document).ready(function () {
     return null;
   }
 
-  function openBasketPreview() {
-    const toggle = findBasketPreviewToggle();
+  function triggerNativeClick(element) {
+    if (typeof element.click === 'function') {
+      element.click();
+    } else {
+      element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    }
+  }
+
+  function openBasketPreview(options) {
+    const toggle = findNativeCartToggle();
     if (!toggle) {
-      if (!hasWarnedMissingBasketToggle) {
-        console.warn('[HammerShops] Kein Element gefunden, um die Warenkorbvorschau zu öffnen.');
-        hasWarnedMissingBasketToggle = true;
+      if (!options || options.silent !== true) {
+        if (!hasWarnedMissingToggle) {
+          console.warn('[HammerShops] Kein nativer Warenkorb-Trigger gefunden, um die Vorschau zu öffnen.');
+          hasWarnedMissingToggle = true;
+        }
       }
       return false;
     }
 
-    if (typeof toggle.click === 'function') {
-      toggle.click();
-    } else {
-      toggle.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-    }
-
+    triggerNativeClick(toggle);
     return true;
   }
 
-  window.hmOpenBasketPreview = openBasketPreview;
-
-  document.addEventListener('click', function(event) {
-    if (!event.target || typeof event.target.closest !== 'function') {
+  function waitForNativeToggleAndOpen() {
+    if (pendingToggleObserver) {
       return;
     }
 
-    const trigger = event.target.closest(CUSTOM_PREVIEW_TRIGGER_SELECTOR);
+    const root = document.body || document.documentElement;
+    if (!root) {
+      return;
+    }
+
+    pendingToggleObserver = new MutationObserver((_, observer) => {
+      if (openBasketPreview({ silent: true })) {
+        observer.disconnect();
+        pendingToggleObserver = null;
+      }
+    });
+
+    pendingToggleObserver.observe(root, { childList: true, subtree: true });
+
+    setTimeout(() => {
+      if (pendingToggleObserver) {
+        pendingToggleObserver.disconnect();
+        pendingToggleObserver = null;
+      }
+    }, 10000);
+  }
+
+  function handleTriggerClick(event) {
+    const trigger = event.target.closest(CUSTOM_TRIGGER_SELECTOR);
     if (!trigger || trigger.hasAttribute('disabled') || trigger.getAttribute('aria-disabled') === 'true') {
       return;
     }
 
     event.preventDefault();
-    openBasketPreview();
+    if (!openBasketPreview()) {
+      waitForNativeToggleAndOpen();
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    if (!event.target || typeof event.target.closest !== 'function') {
+      return;
+    }
+    handleTriggerClick(event);
   });
+
+  function init() {
+    const defaultButton = document.querySelector('#openCartPreviewBtn');
+    if (defaultButton && !defaultButton.hasAttribute('data-open-basket-preview')) {
+      defaultButton.setAttribute('data-open-basket-preview', '');
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.hmOpenBasketPreview = () => openBasketPreview();
+  window.openCeresCartPreview = () => openBasketPreview();
+})();
 
 // End Section: Warenkorb Vorschau programmatisch öffnen
 

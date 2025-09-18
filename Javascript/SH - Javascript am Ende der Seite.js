@@ -494,67 +494,113 @@ document.addEventListener("DOMContentLoaded", function () {
   // End Section: Animierte Suchplatzhalter Vorschläge
 
   // Section: Warenkorb Vorschau programmatisch öffnen
-  const BASKET_PREVIEW_TOGGLE_SELECTORS = [
-    '[data-testing="header-basket"]',
-    '.basket-preview-toggle',
-    '[data-trigger="basket-preview"]',
-    '.toggle-basket-preview'
-  ];
-  const CUSTOM_PREVIEW_TRIGGER_SELECTOR = "[data-open-basket-preview], #openMiniCart";
-  let hasWarnedMissingBasketToggle = false;
+  (function () {
+    const NATIVE_TOGGLE_SELECTORS = [
+      '[data-testing="header-basket"]',
+      '[data-trigger="basket-preview"]',
+      '.basket-preview-toggle',
+      'button[aria-controls="basket-preview"]'
+    ];
+    const CUSTOM_TRIGGER_SELECTOR = '#openCartPreviewBtn, [data-open-basket-preview], #openMiniCart';
+    let hasWarnedMissingToggle = false;
+    let pendingToggleObserver = null;
 
-  function findBasketPreviewToggle() {
-    for (const selector of BASKET_PREVIEW_TOGGLE_SELECTORS) {
-      const element = document.querySelector(selector);
-      if (element) {
-        return element;
+    function findNativeCartToggle() {
+      for (const selector of NATIVE_TOGGLE_SELECTORS) {
+        const element = document.querySelector(selector);
+        if (element) {
+          return element;
+        }
       }
-    }
-    return null;
-  }
-
-  function openBasketPreview() {
-    const toggle = findBasketPreviewToggle();
-    if (!toggle) {
-      if (!hasWarnedMissingBasketToggle) {
-        console.warn(
-          "[HammerShops] Kein Element gefunden, um die Warenkorbvorschau zu öffnen.",
-        );
-        hasWarnedMissingBasketToggle = true;
-      }
-      return false;
+      return null;
     }
 
-    if (typeof toggle.click === "function") {
-      toggle.click();
+    function triggerNativeClick(element) {
+      if (typeof element.click === 'function') {
+        element.click();
+      } else {
+        element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      }
+    }
+
+    function openBasketPreview(options) {
+      const toggle = findNativeCartToggle();
+      if (!toggle) {
+        if (!options || options.silent !== true) {
+          if (!hasWarnedMissingToggle) {
+            console.warn('[HammerShops] Kein nativer Warenkorb-Trigger gefunden, um die Vorschau zu öffnen.');
+            hasWarnedMissingToggle = true;
+          }
+        }
+        return false;
+      }
+
+      triggerNativeClick(toggle);
+      return true;
+    }
+
+    function waitForNativeToggleAndOpen() {
+      if (pendingToggleObserver) {
+        return;
+      }
+
+      const root = document.body || document.documentElement;
+      if (!root) {
+        return;
+      }
+
+      pendingToggleObserver = new MutationObserver((_, observer) => {
+        if (openBasketPreview({ silent: true })) {
+          observer.disconnect();
+          pendingToggleObserver = null;
+        }
+      });
+
+      pendingToggleObserver.observe(root, { childList: true, subtree: true });
+
+      setTimeout(() => {
+        if (pendingToggleObserver) {
+          pendingToggleObserver.disconnect();
+          pendingToggleObserver = null;
+        }
+      }, 10000);
+    }
+
+    function handleTriggerClick(event) {
+      const trigger = event.target.closest(CUSTOM_TRIGGER_SELECTOR);
+      if (!trigger || trigger.hasAttribute('disabled') || trigger.getAttribute('aria-disabled') === 'true') {
+        return;
+      }
+
+      event.preventDefault();
+      if (!openBasketPreview()) {
+        waitForNativeToggleAndOpen();
+      }
+    }
+
+    document.addEventListener('click', function (event) {
+      if (!event.target || typeof event.target.closest !== 'function') {
+        return;
+      }
+      handleTriggerClick(event);
+    });
+
+    function init() {
+      const defaultButton = document.querySelector('#openCartPreviewBtn');
+      if (defaultButton && !defaultButton.hasAttribute('data-open-basket-preview')) {
+        defaultButton.setAttribute('data-open-basket-preview', '');
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
     } else {
-      toggle.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true }),
-      );
+      init();
     }
 
-    return true;
-  }
-
-  window.hmOpenBasketPreview = openBasketPreview;
-
-  document.addEventListener("click", function (event) {
-    if (!event.target || typeof event.target.closest !== "function") {
-      return;
-    }
-
-    const trigger = event.target.closest(CUSTOM_PREVIEW_TRIGGER_SELECTOR);
-    if (
-      !trigger ||
-      trigger.hasAttribute("disabled") ||
-      trigger.getAttribute("aria-disabled") === "true"
-    ) {
-      return;
-    }
-
-    event.preventDefault();
-    openBasketPreview();
-  });
+    window.hmOpenBasketPreview = () => openBasketPreview();
+    window.openCeresCartPreview = () => openBasketPreview();
+  })();
 
   // End Section: Warenkorb Vorschau programmatisch öffnen
 
