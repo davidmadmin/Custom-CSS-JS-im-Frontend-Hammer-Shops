@@ -111,6 +111,74 @@
 })();
 // End Section: Bestell-Versand Countdown Code
 
+// Section: Header account menu toggle
+document.addEventListener('DOMContentLoaded', function () {
+  var containers = document.querySelectorAll('[data-fh-account-menu-container]');
+  if (!containers.length) {
+    return;
+  }
+
+  containers.forEach(function (container) {
+    var toggle = container.querySelector('[data-fh-account-menu-toggle]');
+    var menu = container.querySelector('[data-fh-account-menu]');
+
+    if (!toggle || !menu) {
+      return;
+    }
+
+    var isOpen = false;
+
+    function openMenu() {
+      if (isOpen) {
+        return;
+      }
+
+      isOpen = true;
+      menu.style.display = 'block';
+      menu.setAttribute('aria-hidden', 'false');
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+      if (!isOpen) {
+        return;
+      }
+
+      isOpen = false;
+      menu.style.display = 'none';
+      menu.setAttribute('aria-hidden', 'true');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    toggle.addEventListener('click', function () {
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    menu.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        closeMenu();
+      });
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!container.contains(event.target)) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        closeMenu();
+      }
+    });
+  });
+});
+// End Section: Header account menu toggle
+
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
 document.addEventListener('DOMContentLoaded', function () {
   const shippingIcons = {

@@ -17,19 +17,29 @@
         <path d="M20.8 4.6a4.6 4.6 0 0 0-6.6 0L12 6.8l-2.2-2.2a4.6 4.6 0 1 0-6.6 6.6l2.2 2.2L12 21l6.6-6.6 2.2-2.2a4.6 4.6 0 0 0 0-6.6z"></path>
       </svg>
     </a>
-    <div class="dropdown" style="position:relative;justify-self:end;">
-      <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #d9d9d9;border-radius:50%;color:#1a1a1a;text-decoration:none;">
+    <div class="fh-account-menu-container" data-fh-account-menu-container style="position:relative;justify-self:end;">
+      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #d9d9d9;border-radius:50%;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
           <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
           <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
         </svg>
-      </a>
-      <div class="dropdown-menu dropdown-menu-right" style="min-width:220px;padding:20px;border:1px solid #e2e2e2;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,0.08);">
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Anmelden</a>
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Registrieren</a>
-        <div style="height:1px;background-color:#e8e8e8;margin:10px 0;"></div>
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Bestellungen</a>
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Einstellungen</a>
+      </button>
+      <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" style="position:absolute;top:calc(100% + 16px);right:0;display:none;background-color:#ffffff;border:1px solid #e2e2e2;border-radius:16px;padding:20px;width:240px;box-shadow:0 18px 36px rgba(15,23,42,0.12);z-index:50;">
+        <div style="position:absolute;top:-10px;right:24px;width:20px;height:20px;background-color:#ffffff;border-top:1px solid #e2e2e2;border-left:1px solid #e2e2e2;transform:rotate(45deg);pointer-events:none;"></div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:12px;color:#1a1a1a;">Ihr Konto</div>
+        <a href="#" style="display:block;text-align:center;padding:12px 16px;background-color:#1f2937;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:15px;">Anmelden</a>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0;font-size:13px;color:#6b7280;">
+          <span>oder</span>
+          <a href="#" style="padding:4px 12px;background-color:#e7f2fb;color:#1f2937;border-radius:999px;font-weight:600;text-decoration:none;font-size:13px;">registrieren</a>
+        </div>
+        <div style="height:1px;background-color:#ececec;margin:12px 0 16px;"></div>
+        <nav style="display:flex;flex-direction:column;gap:8px;">
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Übersicht</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Persönliches Profil</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Adressen</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Zahlungsarten</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Bestellungen</a>
+        </nav>
       </div>
     </div>
     <a href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background-color:#31a5f0;color:#ffffff;text-decoration:none;justify-self:end;">
