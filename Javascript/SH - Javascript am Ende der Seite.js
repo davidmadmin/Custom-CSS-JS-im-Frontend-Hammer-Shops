@@ -493,6 +493,71 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // End Section: Animierte Suchplatzhalter Vorschläge
 
+  // Section: Warenkorb Vorschau programmatisch öffnen
+  const BASKET_PREVIEW_TOGGLE_SELECTORS = [
+    '[data-testing="header-basket"]',
+    '.basket-preview-toggle',
+    '[data-trigger="basket-preview"]',
+    '.toggle-basket-preview'
+  ];
+  const CUSTOM_PREVIEW_TRIGGER_SELECTOR = "[data-open-basket-preview], #openMiniCart";
+  let hasWarnedMissingBasketToggle = false;
+
+  function findBasketPreviewToggle() {
+    for (const selector of BASKET_PREVIEW_TOGGLE_SELECTORS) {
+      const element = document.querySelector(selector);
+      if (element) {
+        return element;
+      }
+    }
+    return null;
+  }
+
+  function openBasketPreview() {
+    const toggle = findBasketPreviewToggle();
+    if (!toggle) {
+      if (!hasWarnedMissingBasketToggle) {
+        console.warn(
+          "[HammerShops] Kein Element gefunden, um die Warenkorbvorschau zu öffnen.",
+        );
+        hasWarnedMissingBasketToggle = true;
+      }
+      return false;
+    }
+
+    if (typeof toggle.click === "function") {
+      toggle.click();
+    } else {
+      toggle.dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true }),
+      );
+    }
+
+    return true;
+  }
+
+  window.hmOpenBasketPreview = openBasketPreview;
+
+  document.addEventListener("click", function (event) {
+    if (!event.target || typeof event.target.closest !== "function") {
+      return;
+    }
+
+    const trigger = event.target.closest(CUSTOM_PREVIEW_TRIGGER_SELECTOR);
+    if (
+      !trigger ||
+      trigger.hasAttribute("disabled") ||
+      trigger.getAttribute("aria-disabled") === "true"
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    openBasketPreview();
+  });
+
+  // End Section: Warenkorb Vorschau programmatisch öffnen
+
   // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
   function patchBasketButton() {
