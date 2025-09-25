@@ -43,15 +43,15 @@
       </div>
     </div>
     <div class="fh-basket-preview" style="position:relative;justify-self:end;display:flex;align-items:center;justify-content:center;">
-      <a v-toggle-basket-preview href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background-color:#31a5f0;color:#ffffff;text-decoration:none;position:relative;">
-        <span style="position:absolute;top:-6px;right:-6px;display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+      <a v-toggle-basket-preview href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:50%;background-color:#ffffff;border:1px solid #d7d7d7;color:#111111;text-decoration:none;position:relative;box-shadow:0 6px 16px rgba(17,24,39,0.12);">
+        <span style="position:absolute;top:-4px;right:-4px;display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;border:2px solid #ffffff;box-shadow:0 6px 12px rgba(17,24,39,0.2);" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
           <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
           <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
           <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
         </svg>
-        <span style="position:absolute;bottom:-6px;right:-6px;display:flex;align-items:center;justify-content:center;padding:0 6px;height:20px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00</span>
-        <span style="position:absolute;bottom:-6px;right:-6px;display:flex;align-items:center;justify-content:center;padding:0 6px;height:20px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00</span>
+        <span style="position:absolute;bottom:-12px;right:-10px;display:flex;align-items:center;justify-content:center;padding:0 10px;height:24px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:12px;font-weight:600;letter-spacing:0.2px;white-space:nowrap;box-shadow:0 8px 16px rgba(17,24,39,0.22);" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00</span>
+        <span style="position:absolute;bottom:-12px;right:-10px;display:flex;align-items:center;justify-content:center;padding:0 10px;height:24px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:12px;font-weight:600;letter-spacing:0.2px;white-space:nowrap;box-shadow:0 8px 16px rgba(17,24,39,0.22);" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00</span>
         <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00</span>
         <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00</span>
       </a>
@@ -89,7 +89,7 @@
               <p style="margin:0;color:#4b5563;font-size:14px;line-height:1.6;">Ob Haus-, Wohnungs-, Zimmer- oder Garagentür – hier findest du das passende Schloss für jede Anwendung. Von Einsteck- bis Rohrrahmenschlössern und elektrischen Türöffnern bieten wir geprüfte Qualität und hohe Sicherheit. Ergänzt durch Profilzylinder, Schließbleche und Türdrücker erhältst du alles aus einer Hand für eine sichere Türlösung.</p>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="/schloesser" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle SCHLÖSSER sehen</a>
+              <a href="/schloesser" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle SCHLÖSSER</a>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Beschläge sehen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Beschläge</a>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sicherungen sehen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sicherungen</a>
             </div>
           </div>
         </div>
@@ -209,7 +209,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sichtschutz sehen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sichtschutz</a>
             </div>
           </div>
         </div>
@@ -249,7 +249,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Fenstermontage sehen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Fenstermontage</a>
             </div>
           </div>
         </div>
@@ -289,7 +289,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Chemische Befestigung sehen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Chemische Befestigung</a>
             </div>
           </div>
         </div>
@@ -329,7 +329,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Aktionen sehen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Aktionen</a>
             </div>
           </div>
         </div>
