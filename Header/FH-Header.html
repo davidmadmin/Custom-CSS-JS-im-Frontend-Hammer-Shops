@@ -1,4 +1,4 @@
-<header style="max-width:1600px;width:100%;margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;">
+<header class="fh-header" style="max-width:1600px;width:100%;margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
   <div style="display:flex;align-items:center;justify-content:space-between;background-color:#f7f7f7;padding:8px 32px;font-size:14px;letter-spacing:0.2px;">
     <div style="flex:1;text-align:left;">4,88 auf Trusted Shops</div>
     <div style="flex:1;text-align:center;">Schneller Versand</div>
@@ -10,29 +10,39 @@
       <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
     </a>
     <form action="#" method="get" style="width:100%;display:flex;align-items:center;">
-      <input type="search" name="q" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:12px 48px 12px 20px;border:1px solid #cfcfcf;border-radius:999px;font-size:15px;line-height:1.4;color:#333;background-color:#fafafa;">
+      <input type="search" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:12px 48px 12px 20px;border:1px solid #cfcfcf;border-radius:999px;font-size:15px;line-height:1.4;color:#333;background-color:#fafafa;">
     </form>
     <a href="/wish-list" aria-label="Merkzettel" style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #d9d9d9;border-radius:50%;color:#1a1a1a;text-decoration:none;justify-self:end;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
         <path d="M20.8 4.6a4.6 4.6 0 0 0-6.6 0L12 6.8l-2.2-2.2a4.6 4.6 0 1 0-6.6 6.6l2.2 2.2L12 21l6.6-6.6 2.2-2.2a4.6 4.6 0 0 0 0-6.6z"></path>
       </svg>
     </a>
-    <div class="dropdown" style="position:relative;justify-self:end;">
-      <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #d9d9d9;border-radius:50%;color:#1a1a1a;text-decoration:none;">
+    <div class="fh-account-menu-container" data-fh-account-menu-container style="position:relative;justify-self:end;">
+      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #d9d9d9;border-radius:50%;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
           <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
           <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
         </svg>
-      </a>
-      <div class="dropdown-menu dropdown-menu-right" style="min-width:220px;padding:20px;border:1px solid #e2e2e2;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,0.08);">
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Anmelden</a>
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Registrieren</a>
-        <div style="height:1px;background-color:#e8e8e8;margin:10px 0;"></div>
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Bestellungen</a>
-        <a class="dropdown-item" href="#" style="display:block;padding:10px 0;color:#1a1a1a;text-decoration:none;font-size:15px;">Einstellungen</a>
+      </button>
+      <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" style="position:absolute;top:calc(100% + 16px);right:0;display:none;background-color:#ffffff;border:1px solid #e2e2e2;border-radius:16px;padding:20px;width:240px;box-shadow:0 18px 36px rgba(15,23,42,0.12);z-index:50;">
+        <div style="position:absolute;top:-10px;right:12px;width:20px;height:20px;background-color:#ffffff;border-top:1px solid #e2e2e2;border-left:1px solid #e2e2e2;transform:rotate(45deg);pointer-events:none;"></div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:12px;color:#1a1a1a;">Ihr Konto</div>
+        <a href="/login" style="display:block;text-align:center;padding:12px 16px;background-color:#1f2937;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:15px;">Anmelden</a>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0;font-size:13px;color:#6b7280;">
+          <span>oder</span>
+          <a href="/registration" style="padding:4px 12px;background-color:#e7f2fb;color:#1f2937;border-radius:999px;font-weight:600;text-decoration:none;font-size:13px;">registrieren</a>
+        </div>
+        <div style="height:1px;background-color:#ececec;margin:12px 0 16px;"></div>
+        <nav style="display:flex;flex-direction:column;gap:8px;">
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Übersicht</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Persönliches Profil</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Adressen</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Zahlungsarten</a>
+          <a href="#" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Bestellungen</a>
+        </nav>
       </div>
     </div>
-    <a href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background-color:#ff7f32;color:#ffffff;text-decoration:none;justify-self:end;">
+    <a href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background-color:#31a5f0;color:#ffffff;text-decoration:none;justify-self:end;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
         <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
         <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
@@ -44,48 +54,44 @@
     <div style="max-width:1600px;width:100%;margin:0 auto;position:relative;">
       <ul class="nav" style="display:flex;list-style:none;margin:0;padding:0 32px;justify-content:space-between;font-size:15px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;">
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
-        <a class="nav-link" href="#" data-toggle="dropdown" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Schützen</a>
-        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:1600px;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:20;">
-          <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;">
+        <a class="nav-link" href="/schloesser" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">SCHLÖSSER</a>
+        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px;">
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 1</h6>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Einsteckschlösser für Metalltore</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">elektrische Türöffner</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">FH-Schlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Garagentorschlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Haustürschlösser</a>
             </div>
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 2</h6>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Kastenschlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Korridortürschlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Rohrrahmenschlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Rosetten und Schilder</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Schließbleche</a>
             </div>
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 3</h6>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">WC-Tür-Schlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Wohnungstürschlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Zimmertürschlösser</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">Zubehör für Schloss und Tor</a>
             </div>
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 4</h6>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <p style="margin:0;color:#4b5563;font-size:14px;line-height:1.6;">Ob Haus-, Wohnungs-, Zimmer- oder Garagentür – hier findest du das passende Schloss für jede Anwendung. Von Einsteck- bis Rohrrahmenschlössern und elektrischen Türöffnern bieten wir geprüfte Qualität und hohe Sicherheit. Ergänzt durch Profilzylinder, Schließbleche und Türdrücker erhältst du alles aus einer Hand für eine sichere Türlösung.</p>
             </div>
-            <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 5</h6>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
-              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
+              <a href="/schloesser" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">See all "SCHLÖSSER"</a>
             </div>
           </div>
         </div>
       </li>
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
-        <a class="nav-link" href="#" data-toggle="dropdown" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Pistolenjäger</a>
-        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:1600px;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:20;">
+        <a class="nav-link" href="#" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Beschläge</a>
+        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
           <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;">
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 1</h6>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Platzhalter Menu 2</h6>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
@@ -113,16 +119,19 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">See all "Beschläge"</a>
             </div>
           </div>
         </div>
       </li>
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
-        <a class="nav-link" href="#" data-toggle="dropdown" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Waffen</a>
-        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:1600px;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:20;">
+        <a class="nav-link" href="#" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Sicherungen</a>
+        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
           <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;">
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 1</h6>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Platzhalter Menu 3</h6>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
@@ -150,16 +159,19 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">See all "Sicherungen"</a>
             </div>
           </div>
         </div>
       </li>
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
-        <a class="nav-link" href="#" data-toggle="dropdown" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Zubehör</a>
-        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:1600px;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:20;">
+        <a class="nav-link" href="#" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Sichtschutz</a>
+        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
           <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;">
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 1</h6>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Platzhalter Menu 4</h6>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
@@ -187,16 +199,19 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">See all "Sichtschutz"</a>
             </div>
           </div>
         </div>
       </li>
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
-        <a class="nav-link" href="#" data-toggle="dropdown" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Werkstatt</a>
-        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:1600px;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:20;">
+        <a class="nav-link" href="#" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Fenstermontage</a>
+        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
           <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;">
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 1</h6>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Platzhalter Menu 5</h6>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
@@ -224,16 +239,19 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">See all "Fenstermontage"</a>
             </div>
           </div>
         </div>
       </li>
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
-        <a class="nav-link" href="#" data-toggle="dropdown" style="display:block;padding:18px 12px;color:#ff7f32;text-decoration:none;">Sale</a>
-        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:1600px;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:20;">
+        <a class="nav-link" href="#" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">Chemische Befestigung</a>
+        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
           <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;">
             <div>
-              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 1</h6>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Platzhalter Menu 6</h6>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
@@ -261,6 +279,49 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">See all "Chemische Befestigung"</a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
+        <a class="nav-link" href="#" style="display:block;padding:18px 12px;color:#31a5f0;text-decoration:none;">Aktionen</a>
+        <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
+          <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;">
+            <div>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Platzhalter Menu 7</h6>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 2</h6>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 3</h6>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 4</h6>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div>
+              <h6 style="font-size:16px;font-weight:700;margin:0 0 12px;text-transform:none;color:#1a1a1a;">Kategorie 5</h6>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+              <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
+            </div>
+            <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">See all "Aktionen"</a>
             </div>
           </div>
         </div>
