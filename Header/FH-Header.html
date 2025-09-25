@@ -24,13 +24,13 @@
     <form action="#" method="get" style="width:100%;display:flex;align-items:center;">
       <input type="search" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:14px 52px 14px 24px;border:1px solid #d5d5d5;border-radius:18px;font-size:15px;line-height:1.4;color:#1f2937;background-color:#f8fafc;box-shadow:inset 0 1px 2px rgba(15,23,42,0.08);">
     </form>
-    <a href="/wish-list" aria-label="Merkzettel" style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;color:#1a1a1a;text-decoration:none;justify-self:end;transition:all .2s ease;background-color:#ffffff;box-shadow:0 4px 12px rgba(15,23,42,0.08);">
+    <a href="/wish-list" aria-label="Merkzettel" style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;color:#1a1a1a;text-decoration:none;justify-self:end;transition:all .2s ease;background-color:#ffffff;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
         <path d="M20.8 4.6a4.6 4.6 0 0 0-6.6 0L12 6.8l-2.2-2.2a4.6 4.6 0 1 0-6.6 6.6l2.2 2.2L12 21l6.6-6.6 2.2-2.2a4.6 4.6 0 0 0 0-6.6z"></path>
       </svg>
     </a>
     <div class="fh-account-menu-container" data-fh-account-menu-container style="position:relative;justify-self:end;">
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;box-shadow:0 4px 12px rgba(15,23,42,0.08);transition:all .2s ease;">
+      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
           <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
           <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="fh-basket-preview" style="position:relative;justify-self:end;display:flex;align-items:center;justify-content:center;">
-      <a v-toggle-basket-preview href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;gap:16px;padding:0 24px;min-width:120px;height:62px;border-radius:20px;background:linear-gradient(135deg,#0f172a,#1f2937);color:#ffffff;text-decoration:none;position:relative;box-shadow:0 12px 24px rgba(15,23,42,0.22);">
+      <a v-toggle-basket-preview href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;gap:14px;padding:0 18px;min-width:132px;height:46px;border:1px solid #31a5f0;border-radius:14px;background-color:#31a5f0;color:#ffffff;text-decoration:none;position:relative;">
         <span style="position:absolute;top:-8px;right:-8px;display:flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
           <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
@@ -64,6 +64,8 @@
         </svg>
         <span style="display:inline-flex;align-items:center;font-size:16px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
         <span style="display:inline-flex;align-items:center;font-size:16px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+        <span aria-hidden="true" style="position:absolute;bottom:-8px;right:-8px;display:flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+        <span aria-hidden="true" style="position:absolute;bottom:-8px;right:-8px;display:flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
         <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
         <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
       </a>
@@ -101,7 +103,7 @@
               <p style="margin:0;color:#4b5563;font-size:14px;line-height:1.6;">Ob Haus-, Wohnungs-, Zimmer- oder Garagentür – hier findest du das passende Schloss für jede Anwendung. Von Einsteck- bis Rohrrahmenschlössern und elektrischen Türöffnern bieten wir geprüfte Qualität und hohe Sicherheit. Ergänzt durch Profilzylinder, Schließbleche und Türdrücker erhältst du alles aus einer Hand für eine sichere Türlösung.</p>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="/schloesser" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle SCHLÖSSER</a>
+              <a href="/schloesser" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle SCHLÖSSER sehen</a>
             </div>
           </div>
         </div>
@@ -141,7 +143,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Beschläge</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Beschläge sehen</a>
             </div>
           </div>
         </div>
@@ -181,7 +183,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sicherungen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sicherungen sehen</a>
             </div>
           </div>
         </div>
@@ -221,7 +223,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sichtschutz</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Sichtschutz sehen</a>
             </div>
           </div>
         </div>
@@ -261,7 +263,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Fenstermontage</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Fenstermontage sehen</a>
             </div>
           </div>
         </div>
@@ -301,7 +303,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Chemische Befestigung</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Chemische Befestigung sehen</a>
             </div>
           </div>
         </div>
@@ -341,7 +343,7 @@
               <a href="#" style="display:block;color:#555;text-decoration:none;padding:6px 0;">[Platzhalter]</a>
             </div>
             <div style="grid-column:1 / -1;margin-top:16px;padding-top:16px;border-top:1px solid #eaeaea;">
-              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Aktionen</a>
+              <a href="#" style="display:inline-block;color:#1f2937;font-weight:600;text-decoration:none;">Alle Aktionen sehen</a>
             </div>
           </div>
         </div>
