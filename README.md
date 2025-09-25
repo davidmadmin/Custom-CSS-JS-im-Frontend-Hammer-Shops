@@ -1,39 +1,48 @@
-### Makeshift solutions for our Shop Design
+# Custom CSS & JS for Hammer Shops
 
-All included styling and functions should ideally eventually be created into
-standalone plugins for Plentymarkets that then can be more resource efficient,
-easier configurable and better to maintain than having all packed in a set of
-text blocks to copy-paste.
+Dieses Repository sammelt alle CSS- und JavaScript-Anpassungen, mit denen wir die Hammer-Shop-Instanzen auf Basis von [plentyShop LTS (Plugin »Ceres«)](https://github.com/plentymarkets/plugin-ceres.git) individualisieren. Die Anpassungen ergänzen bzw. ersetzen das Standardlayout – insbesondere Header und Footer – und liefern zusätzliche Funktionen, solange noch keine eigenständigen Plugins zur Verfügung stehen.
 
-### Features
+## Bezug zu plentyShop LTS
 
-#### Bestell-Versand Countdown
-Shows how long customers can still order for same-day shipping. The timer
-updates every second and appears wherever a `#cutoff-countdown` element exists.
+* **Technische Grundlage:** Alle Templates, Slots und Komponenten stammen aus dem Ceres-Plugin des plentyShop LTS-Projekts. Für neue Aufgaben müssen daher immer die Originaldateien und Twig-Strukturen aus `plentymarkets/plugin-ceres` berücksichtigt werden.
+* **Empfohlener Workflow:**
+  1. Repository clonen: `git clone https://github.com/plentymarkets/plugin-ceres.git plentyshop-lts`.
+  2. In der lokalen Arbeitskopie dieses Projekts liegt das Subverzeichnis `plentyshop-lts/`, sodass Header- und Footer-Strukturen, Vue-Komponenten und SCSS-Dateien leicht nachgeschlagen werden können.
+  3. Änderungen an diesem Repository müssen mit den jeweiligen Twig- und Vue-Komponenten aus Ceres abgeglichen werden, damit IDs, Klassen und Slots korrekt angesprochen werden.
+* **Priorität:** Wenn Entscheidungen zwischen Inline-Anpassungen hier und nativen Ceres-Funktionen zu treffen sind, gilt: Header- und Footer-Neubauten haben Vorrang, danach greifen zusätzliche Styles oder Skripte.
 
-#### Shipping option icons
-Replaces the default icons for shipping profile radio buttons with custom
-graphics. The icons are applied wherever the corresponding shipping profiles are rendered.
+## Arbeitsweise für Header- und Footer-Neubau
 
-#### Free shipping progress bar
-Displays a progress bar toward the €150 free-shipping threshold near the order
-totals. Outside checkout it is always visible. During checkout (`/checkout`,
-`/kaufabwicklung`, `/kasse`) the bar appears only when one of the country
-`<select>` elements with an ID containing `shipping-country-select`,
-`invoice-country-select`, or `country-id-select` has the value `1` (Germany).
-Changing the selection to a different country hides the bar, and switching back
-to Germany shows it again. To support additional country selectors, add the
-relevant ID fragment to the `COUNTRY_SELECT_ID_FRAGMENTS` array in the
-JavaScript. Selecting the self-pickup shipping profile hides the bar regardless
-of country. On the order confirmation page (`/bestellbestaetigung`), the bar is
-displayed only if the free-shipping threshold has been reached.
+* Der Header und Footer werden in PlentyLTS vollständig neu aufgebaut. Verwende dieses Repository, um die benötigten HTML-Gerüste (innerhalb der zulässigen Content-Boxen), CSS-Overrides und unterstützenden JavaScript-Hooks vorzubereiten.
+* Inline-CSS darf keine eigenen Skripte einbinden; dynamisches Verhalten wird über bestehende oder hier gepflegte JavaScript-Dateien gelöst.
+* Achte darauf, dass Anpassungen für **SH** und **FH** Shops parallel gepflegt werden und konsistent mit den Ceres-Vorlagen sind.
 
-#### Animated search placeholder
-Cycles through a set of suggestion texts in the search field placeholder when
-the input is visible and unfocused. The animation stops while typing or when
-the field is out of view.
+## Ergänzende Features über Custom JS/CSS
 
-#### “Weiter einkaufen” button in basket preview
-Renames the cart overlay’s “Warenkorb” button to “Weiter einkaufen” with an
-arrow icon. Clicking it closes the overlay instead of loading the cart page,
-and the button stays enabled without showing a loading spinner.
+Neben Header und Footer stellen wir temporäre Funktions-Erweiterungen bereit. Diese sollen später in dedizierte Plugins überführt werden, dienen aber aktuell als Referenzimplementierung.
+
+### Bestell-Versand Countdown
+Zeigt an, wie lange Bestellungen für den Versand am gleichen Tag aufgegeben werden können. Aktualisiert sich jede Sekunde und erscheint überall dort, wo ein Element mit der ID `cutoff-countdown` existiert.
+
+### Versandarten-Icons
+Ersetzt die Standard-Icons der Versandprofile durch eigene Grafiken, sofern die entsprechenden Profile gerendert werden.
+
+### Fortschrittsbalken für Gratisversand
+Visualisiert den Fortschritt zur Versandkostenbefreiung ab 150 € Einkaufswert. Außerhalb der Kaufabwicklung immer sichtbar; im Checkout abhängig vom ausgewählten Land (aktuell Deutschland) und dem Versandprofil.
+
+### Animierter Suchplatzhalter
+Variiert den Platzhaltertext im Suchfeld, solange das Feld sichtbar, aber nicht fokussiert ist. Während der Eingabe oder wenn das Feld unsichtbar ist, pausiert die Animation.
+
+### „Weiter einkaufen“-Button im Warenkorb-Overlay
+Benennt die Schaltfläche „Warenkorb“ im Overlay um, ergänzt ein Pfeil-Icon und sorgt dafür, dass der Klick das Overlay schließt, statt auf die Warenkorbseite zu wechseln.
+
+## Weiterer Fahrplan
+
+* Bestehende Skripte dienen nur als Zwischenlösung – langfristig sollen daraus eigenständige, wartbare Plugins entstehen.
+* Halte die Dokumentation aktuell, wenn neue Komponenten dazukommen oder bestehende Features durch Ceres-Updates ersetzt werden.
+
+## Mitwirken
+
+1. Lies die Hinweise in `AGENTS.md` vollständig.
+2. Prüfe bei allen Änderungen, ob plentyShop LTS an der betreffenden Stelle bereits Funktionen oder Klassen liefert.
+3. Ergänze Tests oder manuelle Prüfschritte im PR, insbesondere wenn Header/Footer betroffen sind.
