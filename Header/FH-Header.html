@@ -1,11 +1,11 @@
-<header class="fh-header" style="max-width:1600px;width:100%;margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
+<header class="fh-header sticky-top d-print-none" style="max-width:1600px;width:100%;margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:sticky;top:0;z-index:1050;background-color:#ffffff;">
   <div style="display:flex;align-items:center;justify-content:space-between;background-color:#f7f7f7;padding:8px 32px;font-size:14px;letter-spacing:0.2px;">
     <div style="flex:1;text-align:left;">4,88 auf Trusted Shops</div>
     <div style="flex:1;text-align:center;">Schneller Versand</div>
     <div style="flex:1;text-align:center;">Hilfreicher Kundenservice mit &lt;24h Rückmeldung</div>
     <div style="flex:1;text-align:right;">Große Auswahl</div>
   </div>
-  <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:20px 32px;border-bottom:1px solid #e2e2e2;background-color:#ffffff;column-gap:32px;">
+  <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:20px 32px;border-bottom:1px solid #e2e2e2;background-color:#ffffff;column-gap:32px;position:relative;">
     <a href="/" style="display:flex;align-items:center;">
       <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
     </a>
@@ -42,13 +42,22 @@
         </nav>
       </div>
     </div>
-    <a href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background-color:#31a5f0;color:#ffffff;text-decoration:none;justify-self:end;">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
-        <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
-        <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
-        <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
-      </svg>
-    </a>
+    <div class="fh-basket control-basket" style="position:relative;justify-self:end;">
+      <a v-toggle-basket-preview href="#" class="toggle-basket-preview nav-link fh-basket-button" aria-label="Warenkorb" data-testing="basket-preview-button" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:0 18px;height:48px;border-radius:999px;background-color:#31a5f0;color:#ffffff;text-decoration:none;font-weight:600;">
+        <span style="font-size:15px;" class="fh-basket-quantity" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+        <icon icon="shopping-cart" class-loading="fa-refresh" :loading="$store.state.basket.isBasketLoading" style="font-size:20px;"></icon>
+        <span class="fh-basket-sum" style="font-size:15px;" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00&nbsp;€</span>
+        <span class="fh-basket-sum" style="font-size:15px;" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00&nbsp;€</span>
+      </a>
+      <basket-preview :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="typeof $ceresConfig !== 'undefined' && $ceresConfig.basket && $ceresConfig.basket.previewData ? $ceresConfig.basket.previewData : ['itemName','quantity','itemSum','basketTotals']" style="min-width:320px;">
+        <template #before-basket-item>
+          <!-- Platz für zusätzliche Inhalte vor den Artikeln -->
+        </template>
+        <template #after-basket-totals>
+          <!-- Platz für zusätzliche Inhalte nach der Summierung -->
+        </template>
+      </basket-preview>
+    </div>
   </div>
   <nav style="background-color:#ffffff;">
     <div style="max-width:1600px;width:100%;margin:0 auto;position:relative;">
