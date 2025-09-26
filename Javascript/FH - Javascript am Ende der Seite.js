@@ -526,3 +526,83 @@ document.addEventListener("DOMContentLoaded", function() {
 // End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
 })();
+
+// Section: plenty auth modal triggers from custom header
+(function() {
+  function resolveCeresStore() {
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') {
+      return window.ceresStore;
+    }
+
+    if (window.ceresApp && window.ceresApp.$store && typeof window.ceresApp.$store.dispatch === 'function') {
+      return window.ceresApp.$store;
+    }
+
+    if (window.App && window.App.store && typeof window.App.store.dispatch === 'function') {
+      return window.App.store;
+    }
+
+    return null;
+  }
+
+  function attemptLoad(componentName, retries, onComplete) {
+    var store = resolveCeresStore();
+
+    if (store) {
+      store.dispatch('loadComponent', componentName);
+
+      if (typeof onComplete === 'function') {
+        onComplete(true);
+      }
+
+      return;
+    }
+
+    if (retries <= 0) {
+      if (typeof onComplete === 'function') {
+        onComplete(false);
+      }
+
+      return;
+    }
+
+    setTimeout(function() {
+      attemptLoad(componentName, retries - 1, onComplete);
+    }, 150);
+  }
+
+  function bindAuthTrigger(element, componentName) {
+    if (!element) {
+      return;
+    }
+
+    var isLoading = false;
+    var isLoaded = false;
+
+    function ensureComponentLoaded() {
+      if (isLoaded || isLoading) {
+        return;
+      }
+
+      isLoading = true;
+
+      attemptLoad(componentName, 20, function(success) {
+        isLoading = false;
+
+        if (success) {
+          isLoaded = true;
+        }
+      });
+    }
+
+    ['click', 'mouseenter', 'focus', 'touchstart'].forEach(function(eventName) {
+      element.addEventListener(eventName, ensureComponentLoaded);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    bindAuthTrigger(document.querySelector('[data-fh-login-modal-trigger]'), 'login-modal');
+    bindAuthTrigger(document.querySelector('[data-fh-register-modal-trigger]'), 'register-modal');
+  });
+})();
+// End Section: plenty auth modal triggers from custom header
