@@ -48,6 +48,27 @@
 }
 /* End Section: FH Header Navigation Hover Behaviour */
 
+/* Section: FH Header search input adjustments */
+.fh-header input.search-input {
+  -webkit-appearance: textfield;
+  appearance: textfield;
+}
+
+.fh-header input.search-input::-webkit-search-decoration,
+.fh-header input.search-input::-webkit-search-cancel-button,
+.fh-header input.search-input::-webkit-search-results-button,
+.fh-header input.search-input::-webkit-search-results-decoration {
+  display: none;
+}
+
+.fh-header input.search-input::-ms-clear,
+.fh-header input.search-input::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+/* End Section: FH Header search input adjustments */
+
 /* Section: Trustbadge ausblenden */
 .basket-open .widget_container_overlay,
 .basket-open #trustami-mobile-view,
