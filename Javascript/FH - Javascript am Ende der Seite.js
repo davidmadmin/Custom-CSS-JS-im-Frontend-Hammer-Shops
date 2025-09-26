@@ -2,6 +2,24 @@
 
 // Section: FH account menu toggle behaviour
 document.addEventListener('DOMContentLoaded', function () {
+  const greeting = document.querySelector('.fh-account-greeting');
+
+  if (greeting) {
+    const defaultGreeting = greeting.getAttribute('data-default-greeting') || greeting.textContent || '';
+    const hour = new Date().getHours();
+    let message = defaultGreeting;
+
+    if (hour >= 0 && hour < 10) {
+      message = 'Guten Morgen,';
+    } else if (hour < 16) {
+      message = 'Guten Tag,';
+    } else if (hour < 24) {
+      message = 'Guten Abend,';
+    }
+
+    greeting.textContent = message;
+  }
+
   const container = document.querySelector('[data-fh-account-menu-container]');
 
   if (!container) {
