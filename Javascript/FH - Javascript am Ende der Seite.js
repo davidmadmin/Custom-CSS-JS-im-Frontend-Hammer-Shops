@@ -110,6 +110,24 @@ document.addEventListener('DOMContentLoaded', function () {
   let hasLoadedOnce = false;
   let hasSubscribedToStore = false;
 
+  function applyWishlistMenuSizing() {
+    if (!menu) {
+      return;
+    }
+
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+    const horizontalPadding = 32;
+    const maxWidth = 480;
+    const availableWidth = Math.max(280, viewportWidth - horizontalPadding);
+    const width = Math.min(maxWidth, availableWidth);
+
+    menu.style.width = width + 'px';
+    menu.style.maxWidth = width + 'px';
+  }
+
+  applyWishlistMenuSizing();
+  window.addEventListener('resize', applyWishlistMenuSizing);
+
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) {
       return window.vueApp.$store;
@@ -433,17 +451,19 @@ document.addEventListener('DOMContentLoaded', function () {
       const image = getPrimaryImage(item);
       const li = document.createElement('li');
       li.style.display = 'flex';
-      li.style.alignItems = 'flex-start';
-      li.style.gap = '14px';
-      li.style.padding = '12px 0';
+      li.style.alignItems = 'center';
+      li.style.gap = '12px';
+      li.style.padding = '8px 0';
       li.style.borderBottom = '1px solid #f1f5f9';
 
       const imageLink = document.createElement('a');
       imageLink.href = url;
-      imageLink.style.display = 'block';
-      imageLink.style.flex = '0 0 72px';
-      imageLink.style.height = '72px';
-      imageLink.style.borderRadius = '12px';
+      imageLink.style.display = 'flex';
+      imageLink.style.alignItems = 'center';
+      imageLink.style.justifyContent = 'center';
+      imageLink.style.flex = '0 0 64px';
+      imageLink.style.height = '64px';
+      imageLink.style.borderRadius = '10px';
       imageLink.style.overflow = 'hidden';
       imageLink.style.backgroundColor = '#f8fafc';
 
@@ -471,27 +491,30 @@ document.addEventListener('DOMContentLoaded', function () {
       const details = document.createElement('div');
       details.style.flex = '1';
       details.style.minWidth = '0';
+      details.style.display = 'flex';
+      details.style.flexDirection = 'column';
+      details.style.gap = '4px';
 
       const nameLink = document.createElement('a');
       nameLink.href = url;
       nameLink.textContent = item && item.texts && item.texts.name1 ? item.texts.name1 : 'Artikel';
       nameLink.style.display = 'block';
-      nameLink.style.fontSize = '14px';
+      nameLink.style.fontSize = '13px';
       nameLink.style.fontWeight = '600';
       nameLink.style.color = '#1f2937';
       nameLink.style.textDecoration = 'none';
-      nameLink.style.lineHeight = '1.4';
+      nameLink.style.lineHeight = '1.35';
       nameLink.style.wordBreak = 'break-word';
 
       const priceLine = document.createElement('div');
       priceLine.style.display = 'flex';
       priceLine.style.alignItems = 'baseline';
-      priceLine.style.gap = '8px';
-      priceLine.style.marginTop = '6px';
+      priceLine.style.gap = '6px';
+      priceLine.style.marginTop = '0';
 
       const priceValue = document.createElement('strong');
       priceValue.textContent = formatPrice(getUnitPrice(item));
-      priceValue.style.fontSize = '14px';
+      priceValue.style.fontSize = '13px';
       priceValue.style.color = '#1f2937';
 
       priceLine.appendChild(priceValue);
@@ -501,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (basePriceText) {
         const basePrice = document.createElement('span');
         basePrice.textContent = basePriceText;
-        basePrice.style.fontSize = '12px';
+        basePrice.style.fontSize = '11px';
         basePrice.style.color = '#64748b';
         priceLine.appendChild(basePrice);
       }
@@ -509,13 +532,23 @@ document.addEventListener('DOMContentLoaded', function () {
       const actionRow = document.createElement('div');
       actionRow.style.display = 'flex';
       actionRow.style.flexWrap = 'wrap';
-      actionRow.style.gap = '8px';
-      actionRow.style.marginTop = '10px';
+      actionRow.style.alignItems = 'center';
+      actionRow.style.gap = '10px';
+      actionRow.style.columnGap = '10px';
+      actionRow.style.rowGap = '6px';
+      actionRow.style.marginTop = '6px';
+      actionRow.style.width = '100%';
 
       const addToCartButton = document.createElement('button');
       addToCartButton.type = 'button';
       addToCartButton.textContent = 'In den Warenkorb';
       addToCartButton.className = 'btn btn-primary btn-appearance mobile-width-button';
+      addToCartButton.style.flex = '1 1 140px';
+      addToCartButton.style.minWidth = '120px';
+      addToCartButton.style.whiteSpace = 'nowrap';
+      addToCartButton.style.padding = '6px 12px';
+      addToCartButton.style.fontSize = '13px';
+      addToCartButton.style.order = '2';
 
       const quantityDefaults = getQuantityDefaults(item);
       let currentQuantity = quantityDefaults.quantity;
@@ -542,25 +575,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const quantityWrapper = document.createElement('div');
       quantityWrapper.style.display = 'flex';
-      quantityWrapper.style.alignItems = 'stretch';
-      quantityWrapper.style.gap = '6px';
+      quantityWrapper.style.alignItems = 'center';
+      quantityWrapper.style.gap = '4px';
+      quantityWrapper.style.flex = '0 0 auto';
+      quantityWrapper.style.order = '1';
 
       const qtyBox = document.createElement('div');
       qtyBox.className = 'qty-box d-flex h-100';
-      qtyBox.style.maxWidth = '112px';
+      qtyBox.style.maxWidth = '96px';
 
       const quantityInput = document.createElement('input');
       quantityInput.className = 'qty-input text-center';
       quantityInput.type = 'text';
       quantityInput.setAttribute('aria-label', 'Menge wählen');
       quantityInput.disabled = !isSaleable(item);
+      quantityInput.style.height = '34px';
+      quantityInput.style.fontSize = '13px';
 
       const qtyButtonContainer = document.createElement('div');
       qtyButtonContainer.className = 'qty-btn-container d-flex flex-column';
+      qtyButtonContainer.style.marginLeft = '4px';
+      qtyButtonContainer.style.gap = '4px';
 
       const increaseButton = document.createElement('button');
       increaseButton.type = 'button';
       increaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
+      increaseButton.style.padding = '4px 0';
 
       const increaseIcon = document.createElement('i');
       increaseIcon.className = 'fa fa-plus default-float';
@@ -570,6 +610,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const decreaseButton = document.createElement('button');
       decreaseButton.type = 'button';
       decreaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
+      decreaseButton.style.padding = '4px 0';
 
       const decreaseIcon = document.createElement('i');
       decreaseIcon.className = 'fa fa-minus default-float';
@@ -756,7 +797,12 @@ document.addEventListener('DOMContentLoaded', function () {
       removeButton.className = 'btn btn-sm text-danger p-0';
       removeButton.style.display = 'inline-flex';
       removeButton.style.alignItems = 'center';
-      removeButton.style.gap = '6px';
+      removeButton.style.gap = '4px';
+      removeButton.style.fontSize = '13px';
+      removeButton.style.whiteSpace = 'nowrap';
+      removeButton.style.flex = '0 0 auto';
+      removeButton.style.padding = '0';
+      removeButton.style.order = '3';
 
       const removeLabel = document.createElement('span');
       removeLabel.textContent = 'Löschen';
@@ -1474,6 +1520,120 @@ $(document).ready(function () {
 });
 
 // --- Ende Custom Header Menü Icons ---
+
+
+// Section: Basket preview attribute cleanup
+document.addEventListener('DOMContentLoaded', function () {
+  const REMOVE_LABEL_KEYWORDS = ['inhalt', 'abmessung', 'abmessungen', 'länge', 'breite', 'höhe', 'tiefe'];
+
+  function shouldRemoveByText(text) {
+    if (!text) {
+      return false;
+    }
+
+    const normalized = text.replace(/\s+/g, ' ').trim();
+
+    if (!normalized) {
+      return false;
+    }
+
+    const colonIndex = normalized.indexOf(':');
+
+    if (colonIndex === -1) {
+      return false;
+    }
+
+    const label = normalized.slice(0, colonIndex).toLowerCase();
+
+    return REMOVE_LABEL_KEYWORDS.some(function (keyword) {
+      return label.indexOf(keyword) !== -1;
+    });
+  }
+
+  function pruneAttributes(container) {
+    if (!container) {
+      return;
+    }
+
+    const items = container.querySelectorAll('.basket-preview-item');
+
+    items.forEach(function (item) {
+      const candidates = item.querySelectorAll('li, p, span, small, div');
+
+      candidates.forEach(function (candidate) {
+        if (!(candidate instanceof HTMLElement)) {
+          return;
+        }
+
+        if (candidate.matches('.basket-preview-item')) {
+          return;
+        }
+
+        if (candidate.closest('a, button, input')) {
+          return;
+        }
+
+        if (shouldRemoveByText(candidate.textContent)) {
+          candidate.remove();
+        }
+      });
+    });
+  }
+
+  let cleanupQueued = false;
+
+  function scheduleCleanup() {
+    if (cleanupQueued) {
+      return;
+    }
+
+    cleanupQueued = true;
+
+    window.requestAnimationFrame(function () {
+      cleanupQueued = false;
+
+      document.querySelectorAll('.basket-preview').forEach(function (preview) {
+        pruneAttributes(preview);
+      });
+    });
+  }
+
+  const observer = new MutationObserver(function (mutations) {
+    for (let i = 0; i < mutations.length; i += 1) {
+      const mutation = mutations[i];
+
+      if (mutation.type === 'childList') {
+        const added = Array.prototype.slice.call(mutation.addedNodes || []);
+
+        if (added.some(function (node) {
+          return node instanceof HTMLElement && node.closest('.basket-preview');
+        })) {
+          scheduleCleanup();
+          return;
+        }
+
+        if (mutation.target instanceof HTMLElement && mutation.target.closest('.basket-preview')) {
+          scheduleCleanup();
+          return;
+        }
+      }
+
+      if (mutation.type === 'characterData') {
+        const parent = mutation.target && mutation.target.parentElement;
+
+        if (parent && parent.closest('.basket-preview')) {
+          scheduleCleanup();
+          return;
+        }
+      }
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+  scheduleCleanup();
+});
+// End Section: Basket preview attribute cleanup
 
 
 // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
