@@ -87,6 +87,36 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH account greeting based on local time
+document.addEventListener('DOMContentLoaded', function () {
+  const greetingElements = document.querySelectorAll('[data-fh-account-greeting]');
+
+  if (!greetingElements.length) {
+    return;
+  }
+
+  const hour = new Date().getHours();
+  let greeting = 'Guten Tag';
+
+  if (hour < 10) {
+    greeting = 'Guten Morgen';
+  } else if (hour >= 16) {
+    greeting = 'Guten Abend';
+  }
+
+  greetingElements.forEach(function (element) {
+    if (!element || !element.textContent) {
+      return;
+    }
+
+    const originalText = element.textContent.trim();
+    const suffix = originalText.endsWith(',') ? ',' : '';
+
+    element.textContent = greeting + suffix;
+  });
+});
+// End Section: FH account greeting based on local time
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
