@@ -29,6 +29,10 @@
   background-color: #ffffff !important;
 }
 
+#page-header .fh-header {
+  width: 1600px;
+}
+
 #page-header > div {
   max-width: 1600px;
   margin-left: auto;
