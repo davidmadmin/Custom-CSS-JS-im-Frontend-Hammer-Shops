@@ -77,8 +77,8 @@
         <div v-else>
           <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
             <div style="font-size:16px;font-weight:700;">
-              <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak>Hallo, <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
-              <span v-else v-cloak>Hallo</span>
+              <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span data-fh-greeting data-fh-greeting-suffix=",">Guten Tag,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
+              <span v-else v-cloak><span data-fh-greeting>Guten Tag</span></span>
             </div>
             <div style="font-size:13px;color:#6b7280;">Schön, dass Sie wieder da sind!</div>
           </div>
@@ -389,3 +389,13 @@
     </div>
   </nav>
 </div>
+<script>
+  (function() {
+    var hour = new Date().getHours();
+    var greeting = hour < 10 ? "Guten Morgen" : hour < 16 ? "Guten Tag" : "Guten Abend";
+    document.querySelectorAll('[data-fh-greeting]').forEach(function(element) {
+      var suffix = element.getAttribute('data-fh-greeting-suffix') || '';
+      element.textContent = greeting + suffix;
+    });
+  })();
+</script>
