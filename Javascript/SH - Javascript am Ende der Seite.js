@@ -340,6 +340,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.querySelector("input.search-input");
     if (!searchInput) return;
 
+    const clearButton = document.querySelector('[data-search-clear]');
+
+    const toggleClearButton = () => {
+      if (!clearButton) return;
+      clearButton.style.display = searchInput.value ? "flex" : "none";
+    };
+
+    if (clearButton) {
+      clearButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        searchInput.value = "";
+        searchInput.dispatchEvent(new Event("input"));
+        searchInput.focus();
+        toggleClearButton();
+      });
+    }
+
     let inputFocused = false;
 
     // CSS-based device detection
@@ -446,6 +463,7 @@ document.addEventListener("DOMContentLoaded", function () {
       stopTyping();
       clearTimeout(inactivityTimer);
       searchInput.placeholder = "Wonach suchen Sie?";
+      toggleClearButton();
     }
 
     function handleFocus() {
@@ -467,6 +485,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         searchInput.placeholder = "";
       }
+      toggleClearButton();
       // Keine Animation starten während Fokus!
     });
 
@@ -477,6 +496,7 @@ document.addEventListener("DOMContentLoaded", function () {
         searchInput.placeholder = "Wonach suchen Sie?";
       }
       resetInactivityTimer(); // Erst nach Verlassen ggf. Animation nach 10s
+      toggleClearButton();
     });
 
     window.addEventListener("scroll", function () {
@@ -489,6 +509,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Beim Start direkt Animation starten
     startTyping();
+    toggleClearButton();
   });
 
   // End Section: Animierte Suchplatzhalter Vorschläge
