@@ -2,7 +2,52 @@
 
 // Section: FH account menu toggle behaviour
 document.addEventListener('DOMContentLoaded', function () {
+  function resolveGreeting(defaultGreeting) {
+    const hour = new Date().getHours();
+
+    if (hour >= 0 && hour < 10) {
+      return 'Guten Morgen,';
+    }
+
+    if (hour < 16) {
+      return 'Guten Tag,';
+    }
+
+    if (hour < 24) {
+      return 'Guten Abend,';
+    }
+
+    return defaultGreeting;
+  }
+
+  function applyGreeting(root) {
+    const elements = (root || document).querySelectorAll('.fh-account-greeting');
+
+    elements.forEach(function (element) {
+      const defaultGreeting = element.getAttribute('data-default-greeting') || element.textContent || '';
+      const nextGreeting = resolveGreeting(defaultGreeting);
+
+      if (element.textContent !== nextGreeting) {
+        element.textContent = nextGreeting;
+      }
+    });
+  }
+
+  applyGreeting();
+
   const container = document.querySelector('[data-fh-account-menu-container]');
+
+  if (container) {
+    const observer = new MutationObserver(function () {
+      applyGreeting(container);
+    });
+
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+  }
 
   if (!container) {
     return;
