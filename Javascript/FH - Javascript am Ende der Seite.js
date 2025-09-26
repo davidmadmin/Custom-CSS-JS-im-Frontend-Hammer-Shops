@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('click', handleDocumentClick);
     document.addEventListener('keydown', handleKeydown);
     isOpen = true;
+
+    if (window.fhAccountGreeting && typeof window.fhAccountGreeting.update === 'function') {
+      window.fhAccountGreeting.update();
+    }
   }
 
   function closeMenu() {
@@ -86,6 +90,361 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 // End Section: FH account menu toggle behaviour
+
+// Section: FH account greeting handling
+document.addEventListener('DOMContentLoaded', function () {
+  const accountMenu = document.querySelector('[data-fh-account-menu]');
+
+  if (!accountMenu) {
+    return;
+  }
+
+  let greetingController = null;
+  let storeSubscriptionRegistered = false;
+
+  function getTimeGreeting(date) {
+    const reference = date instanceof Date ? date : new Date();
+    const hour = reference.getHours();
+
+    if (hour < 10) {
+      return 'Guten Morgen';
+    }
+
+    if (hour < 18) {
+      return 'Guten Tag';
+    }
+
+    return 'Guten Abend';
+  }
+
+  function normalizeSalutation(rawValue) {
+    if (!rawValue) {
+      return null;
+    }
+
+    if (typeof rawValue === 'object') {
+      if (rawValue.displayName) {
+        return normalizeSalutation(rawValue.displayName);
+      }
+
+      if (rawValue.name) {
+        return normalizeSalutation(rawValue.name);
+      }
+
+      if (rawValue.value) {
+        return normalizeSalutation(rawValue.value);
+      }
+    }
+
+    const value = String(rawValue).trim();
+
+    if (value.length === 0) {
+      return null;
+    }
+
+    const lower = value.toLowerCase();
+
+    if (lower === '1' || lower === 'm' || lower === 'mr' || lower === 'male' || lower === 'herr' || lower === 'herr.' || lower === 'hr' || lower === 'salutation_mr' || lower === 'salutation_male') {
+      return 'Herr';
+    }
+
+    if (lower === '2' || lower === 'f' || lower === 'ms' || lower === 'mrs' || lower === 'female' || lower === 'frau' || lower === 'frau.' || lower === 'fr' || lower === 'salutation_mrs' || lower === 'salutation_female') {
+      return 'Frau';
+    }
+
+    if (lower.indexOf('herr') !== -1) {
+      return 'Herr';
+    }
+
+    if (lower.indexOf('frau') !== -1) {
+      return 'Frau';
+    }
+
+    if (lower.indexOf('company') !== -1 || lower.indexOf('firma') !== -1 || lower.indexOf('divers') !== -1 || lower.indexOf('neutral') !== -1) {
+      return null;
+    }
+
+    return value;
+  }
+
+  function collectCandidates() {
+    const store = window.ceresApp && window.ceresApp.$store;
+
+    if (!store) {
+      return [];
+    }
+
+    const candidates = [];
+    const visited = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+    function addCandidate(candidate) {
+      if (!candidate || typeof candidate !== 'object') {
+        return;
+      }
+
+      if (visited) {
+        try {
+          if (visited.has(candidate)) {
+            return;
+          }
+
+          visited.add(candidate);
+        } catch (error) {
+          // Ignore errors from WeakSet when candidate is not extensible.
+        }
+      }
+
+      candidates.push(candidate);
+
+      if (candidate.data) {
+        addCandidate(candidate.data);
+      }
+
+      if (candidate.contact) {
+        addCandidate(candidate.contact);
+      }
+
+      if (candidate.customer) {
+        addCandidate(candidate.customer);
+      }
+
+      if (candidate.account) {
+        addCandidate(candidate.account);
+      }
+
+      if (candidate.user) {
+        addCandidate(candidate.user);
+      }
+
+      if (candidate.billingAddress) {
+        addCandidate(candidate.billingAddress);
+      }
+
+      if (candidate.deliveryAddress) {
+        addCandidate(candidate.deliveryAddress);
+      }
+
+      if (candidate.address) {
+        addCandidate(candidate.address);
+      }
+
+      if (Array.isArray(candidate.addresses)) {
+        candidate.addresses.forEach(function (address) {
+          addCandidate(address);
+        });
+      }
+    }
+
+    const state = store.state || {};
+    addCandidate(state.customer);
+    addCandidate(state.customerData);
+    addCandidate(state.currentCustomer);
+    addCandidate(state.user);
+    addCandidate(state.account);
+    addCandidate(state.session);
+    addCandidate(state.auth && state.auth.customer);
+
+    const getters = store.getters || {};
+    addCandidate(getters.customer);
+    addCandidate(getters.currentCustomer);
+    addCandidate(getters.customerData);
+    addCandidate(getters['customer/getCustomer']);
+    addCandidate(getters['customer/getCustomerData']);
+    addCandidate(getters['customer/currentCustomer']);
+    addCandidate(getters['account/customer']);
+
+    return candidates;
+  }
+
+  function extractCustomerDetails() {
+    const candidates = collectCandidates();
+    let salutation = null;
+    let lastName = null;
+
+    function updateValues(candidate) {
+      if (!candidate || typeof candidate !== 'object') {
+        return;
+      }
+
+      if (!salutation) {
+        const possibleSalutation = normalizeSalutation(
+          candidate.salutation ||
+            candidate.formOfAddress ||
+            candidate.title ||
+            candidate.gender ||
+            (candidate.options && candidate.options.salutation)
+        );
+
+        if (possibleSalutation) {
+          salutation = possibleSalutation;
+        }
+
+        if (!salutation && Array.isArray(candidate.options)) {
+          candidate.options.some(function (option) {
+            if (!option) {
+              return false;
+            }
+
+            const normalized = normalizeSalutation(
+              (option && typeof option === 'object' && (option.value || option.name || option.label || option.optionValue)) ||
+                (typeof option === 'string' ? option : null)
+            );
+
+            if (normalized) {
+              salutation = normalized;
+              return true;
+            }
+
+            return false;
+          });
+        }
+      }
+
+      if (!lastName) {
+        const possibleLastName =
+          (typeof candidate.lastName === 'string' && candidate.lastName.trim()) ||
+          (typeof candidate.lastname === 'string' && candidate.lastname.trim()) ||
+          (typeof candidate.last_name === 'string' && candidate.last_name.trim()) ||
+          (typeof candidate.surname === 'string' && candidate.surname.trim()) ||
+          (typeof candidate.name2 === 'string' && candidate.name2.trim()) ||
+          (typeof candidate.contactLastName === 'string' && candidate.contactLastName.trim());
+
+        if (possibleLastName) {
+          lastName = possibleLastName;
+        }
+      }
+    }
+
+    for (let index = 0; index < candidates.length; index += 1) {
+      const candidate = candidates[index];
+      updateValues(candidate);
+
+      if (candidate && typeof candidate === 'object') {
+        if (candidate.contact && typeof candidate.contact === 'object') {
+          updateValues(candidate.contact);
+        }
+
+        if (candidate.billingAddress && typeof candidate.billingAddress === 'object') {
+          updateValues(candidate.billingAddress);
+        }
+
+        if (candidate.deliveryAddress && typeof candidate.deliveryAddress === 'object') {
+          updateValues(candidate.deliveryAddress);
+        }
+
+        if (candidate.address && typeof candidate.address === 'object') {
+          updateValues(candidate.address);
+        }
+      }
+
+      if (salutation && lastName) {
+        break;
+      }
+    }
+
+    return {
+      salutation: salutation || null,
+      lastName: lastName || null,
+    };
+  }
+
+  function setupGreeting(container) {
+    const output = container.querySelector('[data-fh-account-greeting-output]');
+    const fallback = container.querySelector('[data-fh-account-greeting-fallback]');
+    const username = container.querySelector('[data-fh-account-greeting-username]');
+
+    if (!output || !fallback) {
+      return null;
+    }
+
+    function updateGreeting() {
+      const greeting = getTimeGreeting(new Date());
+      const fallbackName = username && typeof username.textContent === 'string' ? username.textContent.trim() : '';
+      const customerDetails = extractCustomerDetails();
+      let displayName = fallbackName;
+
+      if (customerDetails.salutation && customerDetails.lastName) {
+        displayName = customerDetails.salutation + ' ' + customerDetails.lastName;
+      }
+
+      const message = displayName ? greeting + ', ' + displayName : greeting;
+
+      if (message.length > 0) {
+        output.textContent = message;
+        output.style.display = 'inline';
+        output.removeAttribute('aria-hidden');
+        fallback.style.display = 'none';
+        fallback.setAttribute('aria-hidden', 'true');
+      } else {
+        output.textContent = '';
+        output.style.display = 'none';
+        output.setAttribute('aria-hidden', 'true');
+        fallback.style.display = '';
+        fallback.removeAttribute('aria-hidden');
+      }
+    }
+
+    updateGreeting();
+
+    if (!storeSubscriptionRegistered) {
+      const store = window.ceresApp && window.ceresApp.$store;
+
+      if (store && typeof store.subscribe === 'function') {
+        store.subscribe(function (mutation) {
+          if (!mutation || !mutation.type || mutation.type.toLowerCase().indexOf('customer') !== -1 || mutation.type.toLowerCase().indexOf('auth') !== -1) {
+            updateGreeting();
+          }
+        });
+
+        storeSubscriptionRegistered = true;
+      }
+    }
+
+    return {
+      update: updateGreeting,
+    };
+  }
+
+  function ensureController() {
+    const container = accountMenu.querySelector('[data-fh-account-greeting]');
+
+    if (!container) {
+      return null;
+    }
+
+    if (!container.__fhGreetingInitialized) {
+      container.__fhGreetingInitialized = true;
+      greetingController = setupGreeting(container);
+    }
+
+    return greetingController;
+  }
+
+  ensureController();
+
+  const observer = new MutationObserver(function () {
+    const controller = ensureController();
+
+    if (controller && typeof controller.update === 'function') {
+      controller.update();
+    }
+  });
+
+  observer.observe(accountMenu, {
+    childList: true,
+    subtree: true,
+  });
+
+  window.fhAccountGreeting = window.fhAccountGreeting || {};
+  window.fhAccountGreeting.update = function () {
+    const controller = ensureController();
+
+    if (controller && typeof controller.update === 'function') {
+      controller.update();
+    }
+  };
+});
+// End Section: FH account greeting handling
 
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
