@@ -433,16 +433,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const image = getPrimaryImage(item);
       const li = document.createElement('li');
       li.style.display = 'flex';
-      li.style.alignItems = 'stretch';
+      li.style.alignItems = 'flex-start';
       li.style.gap = '12px';
-      li.style.padding = '8px 0';
+      li.style.padding = '6px 0';
       li.style.borderBottom = '1px solid #e2e8f0';
 
       const imageLink = document.createElement('a');
       imageLink.href = url;
       imageLink.style.display = 'block';
-      imageLink.style.flex = '0 0 60px';
-      imageLink.style.height = '60px';
+      imageLink.style.flex = '0 0 56px';
+      imageLink.style.height = '56px';
       imageLink.style.borderRadius = '10px';
       imageLink.style.overflow = 'hidden';
       imageLink.style.backgroundColor = '#f8fafc';
@@ -473,7 +473,13 @@ document.addEventListener('DOMContentLoaded', function () {
       details.style.minWidth = '0';
       details.style.display = 'flex';
       details.style.flexDirection = 'column';
-      details.style.gap = '6px';
+      details.style.gap = '4px';
+
+      const headerRow = document.createElement('div');
+      headerRow.style.display = 'flex';
+      headerRow.style.alignItems = 'flex-start';
+      headerRow.style.gap = '8px';
+      headerRow.style.marginBottom = '2px';
 
       const nameLink = document.createElement('a');
       nameLink.href = url;
@@ -483,14 +489,47 @@ document.addEventListener('DOMContentLoaded', function () {
       nameLink.style.fontWeight = '600';
       nameLink.style.color = '#1f2937';
       nameLink.style.textDecoration = 'none';
-      nameLink.style.lineHeight = '1.35';
+      nameLink.style.lineHeight = '1.3';
       nameLink.style.wordBreak = 'break-word';
+      nameLink.style.flex = '1 1 auto';
+
+      headerRow.appendChild(nameLink);
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'btn btn-link text-danger p-0';
+      removeButton.style.display = 'inline-flex';
+      removeButton.style.alignItems = 'center';
+      removeButton.style.gap = '6px';
+      removeButton.style.padding = '2px 6px';
+      removeButton.style.marginLeft = 'auto';
+      removeButton.style.fontSize = '11px';
+      removeButton.style.fontWeight = '600';
+      removeButton.style.lineHeight = '1';
+      removeButton.style.borderRadius = '10px';
+      removeButton.style.alignSelf = 'flex-start';
+      removeButton.title = 'Von der Merkliste entfernen';
+      removeButton.setAttribute('aria-label', 'Artikel von der Merkliste entfernen');
+
+      const removeIcon = document.createElement('i');
+      removeIcon.className = 'fa fa-trash-o default-float';
+      removeIcon.setAttribute('aria-hidden', 'true');
+      removeIcon.style.fontSize = '12px';
+
+      const removeLabel = document.createElement('span');
+      removeLabel.textContent = 'Löschen';
+
+      removeButton.appendChild(removeIcon);
+      removeButton.appendChild(removeLabel);
+
+      headerRow.appendChild(removeButton);
 
       const priceLine = document.createElement('div');
       priceLine.style.display = 'flex';
       priceLine.style.alignItems = 'baseline';
       priceLine.style.gap = '6px';
       priceLine.style.marginTop = '0';
+      priceLine.style.flexWrap = 'wrap';
 
       const priceValue = document.createElement('strong');
       priceValue.textContent = formatPrice(getUnitPrice(item));
@@ -504,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (basePriceText) {
         const basePrice = document.createElement('span');
         basePrice.textContent = basePriceText;
-        basePrice.style.fontSize = '12px';
+        basePrice.style.fontSize = '11px';
         basePrice.style.color = '#64748b';
         priceLine.appendChild(basePrice);
       }
@@ -513,20 +552,21 @@ document.addEventListener('DOMContentLoaded', function () {
       actionRow.style.display = 'flex';
       actionRow.style.flexWrap = 'nowrap';
       actionRow.style.alignItems = 'center';
-      actionRow.style.gap = '8px';
-      actionRow.style.marginTop = '0';
+      actionRow.style.gap = '10px';
+      actionRow.style.marginTop = '2px';
 
       const addToCartButton = document.createElement('button');
       addToCartButton.type = 'button';
       addToCartButton.textContent = 'In den Warenkorb';
       addToCartButton.className = 'btn btn-primary btn-appearance mobile-width-button';
       addToCartButton.style.flex = '1 1 auto';
-      addToCartButton.style.minWidth = '140px';
-      addToCartButton.style.height = '40px';
-      addToCartButton.style.padding = '0 16px';
-      addToCartButton.style.fontSize = '13px';
+      addToCartButton.style.minWidth = '0';
+      addToCartButton.style.height = '36px';
+      addToCartButton.style.padding = '0 14px';
+      addToCartButton.style.fontSize = '12px';
       addToCartButton.style.fontWeight = '600';
       addToCartButton.style.whiteSpace = 'nowrap';
+      addToCartButton.style.borderRadius = '12px';
 
       const quantityDefaults = getQuantityDefaults(item);
       let currentQuantity = quantityDefaults.quantity;
@@ -554,47 +594,57 @@ document.addEventListener('DOMContentLoaded', function () {
       const quantityWrapper = document.createElement('div');
       quantityWrapper.style.display = 'flex';
       quantityWrapper.style.alignItems = 'center';
-      quantityWrapper.style.gap = '4px';
+      quantityWrapper.style.gap = '6px';
       quantityWrapper.style.flex = '0 0 auto';
+      quantityWrapper.style.marginRight = 'auto';
 
       const qtyBox = document.createElement('div');
       qtyBox.className = 'qty-box d-flex h-100';
-      qtyBox.style.maxWidth = '94px';
-      qtyBox.style.height = '40px';
+      qtyBox.style.maxWidth = '90px';
+      qtyBox.style.height = '34px';
+      qtyBox.style.border = '1px solid #dbe2ea';
+      qtyBox.style.borderRadius = '10px';
+      qtyBox.style.overflow = 'hidden';
 
       const quantityInput = document.createElement('input');
       quantityInput.className = 'qty-input text-center';
       quantityInput.type = 'text';
       quantityInput.setAttribute('aria-label', 'Menge wählen');
       quantityInput.disabled = !isSaleable(item);
-      quantityInput.style.height = '40px';
-      quantityInput.style.fontSize = '13px';
-      quantityInput.style.padding = '0 10px';
+      quantityInput.style.height = '34px';
+      quantityInput.style.fontSize = '12px';
+      quantityInput.style.padding = '0 8px';
+      quantityInput.style.border = 'none';
+      quantityInput.style.backgroundColor = '#ffffff';
 
       const qtyButtonContainer = document.createElement('div');
       qtyButtonContainer.className = 'qty-btn-container d-flex flex-column';
-      qtyButtonContainer.style.width = '32px';
-      qtyButtonContainer.style.gap = '4px';
+      qtyButtonContainer.style.width = '30px';
+      qtyButtonContainer.style.gap = '2px';
       qtyButtonContainer.style.height = '100%';
+      qtyButtonContainer.style.backgroundColor = '#f8fafc';
+      qtyButtonContainer.style.borderLeft = '1px solid #dbe2ea';
 
       const increaseButton = document.createElement('button');
       increaseButton.type = 'button';
       increaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
-      increaseButton.style.height = 'calc(50% - 2px)';
+      increaseButton.style.height = 'calc(50% - 1px)';
 
       const increaseIcon = document.createElement('i');
       increaseIcon.className = 'fa fa-plus default-float';
       increaseIcon.setAttribute('aria-hidden', 'true');
+      increaseIcon.style.fontSize = '12px';
       increaseButton.appendChild(increaseIcon);
 
       const decreaseButton = document.createElement('button');
       decreaseButton.type = 'button';
       decreaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
-      decreaseButton.style.height = 'calc(50% - 2px)';
+      decreaseButton.style.height = 'calc(50% - 1px)';
 
       const decreaseIcon = document.createElement('i');
       decreaseIcon.className = 'fa fa-minus default-float';
       decreaseIcon.setAttribute('aria-hidden', 'true');
+      decreaseIcon.style.fontSize = '12px';
       decreaseButton.appendChild(decreaseIcon);
 
       function formatQuantityDisplay(value) {
@@ -772,25 +822,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       updateQuantity(normalizeQuantity(currentQuantity));
 
-      const removeButton = document.createElement('button');
-      removeButton.type = 'button';
-      removeButton.className = 'btn btn-sm text-danger p-0';
-      removeButton.style.display = 'inline-flex';
-      removeButton.style.alignItems = 'center';
-      removeButton.style.justifyContent = 'center';
-      removeButton.style.gap = '4px';
-      removeButton.style.height = '40px';
-      removeButton.style.padding = '0 10px';
-      removeButton.style.fontSize = '12px';
-
-      const removeLabel = document.createElement('span');
-      removeLabel.textContent = 'Löschen';
-      removeButton.appendChild(removeLabel);
-
-      const removeIcon = document.createElement('i');
-      removeIcon.className = 'fa fa-trash-o default-float';
-      removeIcon.setAttribute('aria-hidden', 'true');
-      removeButton.appendChild(removeIcon);
+      const originalRemoveIconClass = removeIcon.className;
 
       removeButton.addEventListener('click', function (event) {
         event.preventDefault();
@@ -819,6 +851,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const originalLabel = removeLabel.textContent;
         removeButton.disabled = true;
         removeButton.classList.add('disabled');
+        removeButton.style.opacity = '0.6';
         removeLabel.textContent = 'Wird entfernt…';
 
         removeIcon.className = 'fa fa-spinner fa-spin default-float';
@@ -830,16 +863,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }).catch(function () {
           removeButton.disabled = false;
           removeButton.classList.remove('disabled');
+          removeButton.style.opacity = '';
           removeLabel.textContent = originalLabel;
-          removeIcon.className = 'fa fa-trash-o default-float';
+          removeIcon.className = originalRemoveIconClass;
         });
       });
 
       actionRow.appendChild(quantityWrapper);
       actionRow.appendChild(addToCartButton);
-      actionRow.appendChild(removeButton);
 
-      details.appendChild(nameLink);
+      details.appendChild(headerRow);
       details.appendChild(priceLine);
 
       details.appendChild(actionRow);
