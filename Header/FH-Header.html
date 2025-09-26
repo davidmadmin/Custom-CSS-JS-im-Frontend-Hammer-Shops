@@ -1,5 +1,5 @@
 <div class="fh-header" data-fh-header-root style="margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
-  <div style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
+  <div class="fh-top-bar" style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
     <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
       <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
       4,88 Sterne auf Trusted Shops
@@ -17,10 +17,16 @@
       Große Auswahl
     </span>
   </div>
-  <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:26px 32px 22px;border-bottom:1px solid #e2e2e2;background-color:#ffffff;column-gap:20px;">
-    <a href="/" style="display:flex;align-items:center;">
-      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
-    </a>
+  <div class="fh-main-bar">
+    <div class="fh-main-bar__branding">
+      <button type="button" class="fh-mobile-menu-trigger" data-fh-mobile-menu-toggle aria-expanded="false" aria-controls="fh-mobile-menu">
+        <span class="fh-mobile-menu-trigger__icon" aria-hidden="true"><span></span></span>
+        <span class="fh-mobile-menu-trigger__label">Menü</span>
+      </button>
+      <a href="/" style="display:flex;align-items:center;">
+        <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
+      </a>
+    </div>
     <form action="#" method="get" style="width:100%;display:flex;align-items:center;position:relative;">
       <input type="search" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:14px 52px 14px 24px;border:1px solid #d5d5d5;border-radius:18px;font-size:15px;line-height:1.4;color:#1f2937;background-color:#f8fafc;box-shadow:inset 0 1px 2px rgba(15,23,42,0.08);">
       <button type="button" data-search-clear aria-label="Eingabe löschen" style="position:absolute;right:18px;top:50%;transform:translateY(-50%);display:none;align-items:center;justify-content:center;width:24px;height:24px;padding:0;border:none;background:none;color:#94a3b8;cursor:pointer;transition:color .2s ease;">
@@ -30,83 +36,88 @@
         </svg>
       </button>
     </form>
-    <div class="fh-wishlist-menu-container" data-fh-wishlist-menu-container style="position:relative;justify-self:end;">
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle style="position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
-        <span style="position:absolute;top:-6px;right:-6px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background-color:#31a5f0;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;line-height:1;" v-cloak v-text="$store.getters.wishListCount || 0"></span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;display:block;transform:translateX(1px);">
-          <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
-        </svg>
-      </button>
-      <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" style="position:absolute;top:calc(100% + 16px);right:0;display:none;background-color:#ffffff;border:1px solid #e2e2e2;border-radius:16px;padding:20px;width:420px;max-width:calc(100vw - 32px);box-shadow:0 18px 36px rgba(15,23,42,0.12);z-index:3000;">
-        <div style="position:absolute;top:-10px;right:12px;width:20px;height:20px;background-color:#ffffff;border-top:1px solid #e2e2e2;border-left:1px solid #e2e2e2;transform:rotate(45deg);pointer-events:none;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">
-          <div style="font-size:16px;font-weight:700;color:#1a1a1a;">Merkliste</div>
+    <div class="fh-main-bar__actions">
+      <div class="fh-wishlist-menu-container" data-fh-wishlist-menu-container style="position:relative;">
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle style="position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
+          <span style="position:absolute;top:-6px;right:-6px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background-color:#31a5f0;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;line-height:1;" v-cloak v-text="$store.getters.wishListCount || 0"></span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;display:block;transform:translateX(1px);">
+            <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
+          </svg>
+          <span class="fh-main-bar__action-label">Merkliste</span>
+        </button>
+        <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" style="position:absolute;top:calc(100% + 16px);right:0;display:none;background-color:#ffffff;border:1px solid #e2e2e2;border-radius:16px;padding:20px;width:420px;max-width:calc(100vw - 32px);box-shadow:0 18px 36px rgba(15,23,42,0.12);z-index:3000;">
+          <div style="position:absolute;top:-10px;right:12px;width:20px;height:20px;background-color:#ffffff;border-top:1px solid #e2e2e2;border-left:1px solid #e2e2e2;transform:rotate(45deg);pointer-events:none;"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">
+            <div style="font-size:16px;font-weight:700;color:#1a1a1a;">Merkliste</div>
+          </div>
+          <div data-fh-wishlist-menu-loading style="display:none;font-size:14px;color:#6b7280;padding:12px 0;">Wird geladen …</div>
+          <div data-fh-wishlist-menu-error style="display:none;font-size:14px;color:#dc2626;padding:12px 0;">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
+          <div data-fh-wishlist-menu-empty style="display:none;font-size:14px;color:#6b7280;padding:12px 0;">Ihre Merkliste ist leer.</div>
+          <ul data-fh-wishlist-menu-list style="list-style:none;margin:0;padding:0;max-height:340px;overflow:auto;"></ul>
         </div>
-        <div data-fh-wishlist-menu-loading style="display:none;font-size:14px;color:#6b7280;padding:12px 0;">Wird geladen …</div>
-        <div data-fh-wishlist-menu-error style="display:none;font-size:14px;color:#dc2626;padding:12px 0;">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
-        <div data-fh-wishlist-menu-empty style="display:none;font-size:14px;color:#6b7280;padding:12px 0;">Ihre Merkliste ist leer.</div>
-        <ul data-fh-wishlist-menu-list style="list-style:none;margin:0;padding:0;max-height:340px;overflow:auto;"></ul>
       </div>
-    </div>
-    <div class="fh-account-menu-container" data-fh-account-menu-container style="position:relative;justify-self:end;">
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
-          <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
-          <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
-        </svg>
-      </button>
-      <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" style="position:absolute;top:calc(100% + 16px);right:0;display:none;background-color:#ffffff;border:1px solid #e2e2e2;border-radius:16px;padding:20px;width:260px;box-shadow:0 18px 36px rgba(15,23,42,0.12);z-index:3000;">
-        <div style="position:absolute;top:-10px;right:12px;width:20px;height:20px;background-color:#ffffff;border-top:1px solid #e2e2e2;border-left:1px solid #e2e2e2;transform:rotate(45deg);pointer-events:none;"></div>
-        <div v-if="!$store.getters.isLoggedIn">
-          <div style="font-size:16px;font-weight:700;margin-bottom:12px;color:#1a1a1a;">Ihr Konto</div>
-          <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger style="display:block;text-align:center;padding:12px 16px;background-color:#1f2937;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:15px;">Anmelden</a>
-          <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0;font-size:13px;color:#6b7280;">
-            <span>oder</span>
-            <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger style="padding:4px 12px;background-color:#e7f2fb;color:#1f2937;border-radius:999px;font-weight:600;text-decoration:none;font-size:13px;">registrieren</a>
-          </div>
-          <div style="height:1px;background-color:#ececec;margin:12px 0 16px;"></div>
-          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
-            <div style="font-size:14px;font-weight:700;">Vorteile:</div>
-            <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:13px;color:#4b5563;">
-              <li>Schneller kaufen</li>
-              <li>Hammer Punkte sammeln</li>
-              <li>Einfacherer Support</li>
-            </ul>
-          </div>
-        </div>
-        <div v-else>
-          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
-            <div style="font-size:16px;font-weight:700;">
-              <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
-              <span v-else v-cloak>Hallo</span>
+      <div class="fh-account-menu-container" data-fh-account-menu-container style="position:relative;">
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
+            <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
+            <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
+          </svg>
+          <span class="fh-main-bar__action-label">Mein Konto</span>
+        </button>
+        <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" style="position:absolute;top:calc(100% + 16px);right:0;display:none;background-color:#ffffff;border:1px solid #e2e2e2;border-radius:16px;padding:20px;width:260px;box-shadow:0 18px 36px rgba(15,23,42,0.12);z-index:3000;">
+          <div style="position:absolute;top:-10px;right:12px;width:20px;height:20px;background-color:#ffffff;border-top:1px solid #e2e2e2;border-left:1px solid #e2e2e2;transform:rotate(45deg);pointer-events:none;"></div>
+          <div v-if="!$store.getters.isLoggedIn">
+            <div style="font-size:16px;font-weight:700;margin-bottom:12px;color:#1a1a1a;">Ihr Konto</div>
+            <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger style="display:block;text-align:center;padding:12px 16px;background-color:#1f2937;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:15px;">Anmelden</a>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0;font-size:13px;color:#6b7280;">
+              <span>oder</span>
+              <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger style="padding:4px 12px;background-color:#e7f2fb;color:#1f2937;border-radius:999px;font-weight:600;text-decoration:none;font-size:13px;">registrieren</a>
             </div>
-            <div style="font-size:13px;color:#6b7280;">Schön, dass Sie wieder da sind!</div>
+            <div style="height:1px;background-color:#ececec;margin:12px 0 16px;"></div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
+              <div style="font-size:14px;font-weight:700;">Vorteile:</div>
+              <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:13px;color:#4b5563;">
+                <li>Schneller kaufen</li>
+                <li>Hammer Punkte sammeln</li>
+                <li>Einfacherer Support</li>
+              </ul>
+            </div>
           </div>
-          <div style="height:1px;background-color:#ececec;margin:0 0 16px;"></div>
-          <nav style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
-            <a href="/my-account" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Kontoübersicht</a>
-            <a href="/hammer-praemien" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Hammer Prämien</a>
-            <a href="/my-account/addresses" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Adressen</a>
-            <a href="/my-account/orders" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Bestellungen</a>
-          </nav>
-          <a href="#" v-logout data-fh-account-close style="display:block;text-align:center;padding:11px 16px;background-color:#e7f2fb;color:#1f2937;text-decoration:none;border-radius:10px;font-weight:600;font-size:14px;">Abmelden</a>
+          <div v-else>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
+              <div style="font-size:16px;font-weight:700;">
+                <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
+                <span v-else v-cloak>Hallo</span>
+              </div>
+              <div style="font-size:13px;color:#6b7280;">Schön, dass Sie wieder da sind!</div>
+            </div>
+            <div style="height:1px;background-color:#ececec;margin:0 0 16px;"></div>
+            <nav style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+              <a href="/my-account" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Kontoübersicht</a>
+              <a href="/hammer-praemien" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Hammer Prämien</a>
+              <a href="/my-account/addresses" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Adressen</a>
+              <a href="/my-account/orders" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Bestellungen</a>
+            </nav>
+            <a href="#" v-logout data-fh-account-close style="display:block;text-align:center;padding:11px 16px;background-color:#e7f2fb;color:#1f2937;text-decoration:none;border-radius:10px;font-weight:600;font-size:14px;">Abmelden</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="fh-basket-preview" style="position:relative;justify-self:end;display:flex;align-items:center;justify-content:center;">
-      <a v-toggle-basket-preview href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;gap:10px;padding:0 18px;min-width:132px;height:46px;border:1px solid #31a5f0;border-radius:14px;background-color:#31a5f0;color:#ffffff;text-decoration:none;position:relative;">
-        <span style="position:absolute;top:-8px;right:-8px;display:flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
-          <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
-          <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
-          <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
-        </svg>
-        <span style="display:inline-flex;align-items:center;font-size:16px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-        <span style="display:inline-flex;align-items:center;font-size:16px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-        <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-        <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-      </a>
-      <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
+      <div class="fh-basket-preview" style="position:relative;display:flex;align-items:center;justify-content:center;">
+        <a v-toggle-basket-preview href="#" class="toggle-basket-preview" aria-label="Warenkorb" style="display:flex;align-items:center;gap:10px;padding:0 18px;min-width:132px;height:46px;border:1px solid #31a5f0;border-radius:14px;background-color:#31a5f0;color:#ffffff;text-decoration:none;position:relative;">
+          <span style="position:absolute;top:-8px;right:-8px;display:flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background-color:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
+            <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
+            <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
+            <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
+          </svg>
+          <span style="display:inline-flex;align-items:center;font-size:16px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span style="display:inline-flex;align-items:center;font-size:16px;font-weight:700;white-space:nowrap;" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+          <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+          <span class="fh-main-bar__action-label">Warenkorb</span>
+        </a>
+        <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
+      </div>
     </div>
   </div>
   <nav style="background-color:#ffffff;">
@@ -388,4 +399,260 @@
       </ul>
     </div>
   </nav>
+  <div class="fh-mobile-menu" data-fh-mobile-menu id="fh-mobile-menu" aria-hidden="true">
+    <div class="fh-mobile-menu__overlay" data-fh-mobile-menu-overlay></div>
+    <aside class="fh-mobile-menu__drawer" role="dialog" aria-modal="true" aria-labelledby="fh-mobile-menu-title">
+      <header class="fh-mobile-menu__header">
+        <p class="fh-mobile-menu__title" id="fh-mobile-menu-title">Menü</p>
+        <button type="button" class="fh-mobile-menu__close" data-fh-mobile-menu-close aria-label="Menü schließen"></button>
+      </header>
+      <div class="fh-mobile-menu__quick-links">
+        <a href="/my-account" class="fh-mobile-menu__quick-link">Mein Konto</a>
+        <a href="/wish-list" class="fh-mobile-menu__quick-link">Merkliste</a>
+        <a href="/basket" class="fh-mobile-menu__quick-link">Warenkorb</a>
+      </div>
+      <nav class="fh-mobile-menu__nav" aria-label="Mobile Hauptnavigation">
+        <ul class="fh-mobile-menu__list">
+          <li class="fh-mobile-menu__item">
+            <button type="button" class="fh-mobile-menu__accordion" data-fh-mobile-menu-accordion aria-expanded="false">
+              <span>SCHLÖSSER</span>
+              <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="fh-mobile-menu__accordion-panel" hidden>
+              <ul class="fh-mobile-menu__list fh-mobile-menu__list--level2">
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Schlösser &amp; Öffner</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">Einsteckschlösser für Metalltore</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Elektrische Türöffner</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">FH-Schlösser</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Garagentorschlösser</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Haustürschlösser</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Türschlösser</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">Kastenschlösser</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Korridortürschlösser</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Rohrrahmenschlösser</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">WC-Tür-Schlösser</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Wohnungstürschlösser</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Zimmertürschlösser</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Zubehör &amp; Sicherheit</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">Rosetten und Schilder</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Schließbleche</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">Zubehör für Schloss und Tor</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="/schloesser" class="fh-mobile-menu__link">Alle SCHLÖSSER sehen</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="fh-mobile-menu__item">
+            <button type="button" class="fh-mobile-menu__accordion" data-fh-mobile-menu-accordion aria-expanded="false">
+              <span>Beschläge</span>
+              <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="fh-mobile-menu__accordion-panel" hidden>
+              <ul class="fh-mobile-menu__list fh-mobile-menu__list--level2">
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Platzhalter Menu 2</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Kategorie 2</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Kategorie 3</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="#" class="fh-mobile-menu__link">Alle Beschläge sehen</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="fh-mobile-menu__item">
+            <button type="button" class="fh-mobile-menu__accordion" data-fh-mobile-menu-accordion aria-expanded="false">
+              <span>Sicherungen</span>
+              <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="fh-mobile-menu__accordion-panel" hidden>
+              <ul class="fh-mobile-menu__list fh-mobile-menu__list--level2">
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Platzhalter Menu 3</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Kategorie 2</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="#" class="fh-mobile-menu__link">Alle Sicherungen sehen</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="fh-mobile-menu__item">
+            <button type="button" class="fh-mobile-menu__accordion" data-fh-mobile-menu-accordion aria-expanded="false">
+              <span>Sichtschutz</span>
+              <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="fh-mobile-menu__accordion-panel" hidden>
+              <ul class="fh-mobile-menu__list fh-mobile-menu__list--level2">
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Platzhalter Menu 4</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="#" class="fh-mobile-menu__link">Alle Sichtschutz sehen</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="fh-mobile-menu__item">
+            <button type="button" class="fh-mobile-menu__accordion" data-fh-mobile-menu-accordion aria-expanded="false">
+              <span>Fenstermontage</span>
+              <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="fh-mobile-menu__accordion-panel" hidden>
+              <ul class="fh-mobile-menu__list fh-mobile-menu__list--level2">
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Platzhalter Menu 5</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="#" class="fh-mobile-menu__link">Alle Fenstermontage sehen</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="fh-mobile-menu__item">
+            <button type="button" class="fh-mobile-menu__accordion" data-fh-mobile-menu-accordion aria-expanded="false">
+              <span>Chemische Befestigung</span>
+              <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="fh-mobile-menu__accordion-panel" hidden>
+              <ul class="fh-mobile-menu__list fh-mobile-menu__list--level2">
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Platzhalter Menu 6</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="#" class="fh-mobile-menu__link">Alle Chemische Befestigung sehen</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="fh-mobile-menu__item">
+            <button type="button" class="fh-mobile-menu__accordion" data-fh-mobile-menu-accordion aria-expanded="false">
+              <span>Aktionen</span>
+              <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="fh-mobile-menu__accordion-panel" hidden>
+              <ul class="fh-mobile-menu__list fh-mobile-menu__list--level2">
+                <li class="fh-mobile-menu__item">
+                  <button type="button" class="fh-mobile-menu__accordion fh-mobile-menu__accordion--level2" data-fh-mobile-menu-accordion aria-expanded="false">
+                    <span>Platzhalter Menu 7</span>
+                    <span class="fh-mobile-menu__accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="fh-mobile-menu__accordion-panel" hidden>
+                    <ul class="fh-mobile-menu__list fh-mobile-menu__list--level3">
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                      <li><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="#" class="fh-mobile-menu__link">Alle Aktionen sehen</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
 </div>
