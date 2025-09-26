@@ -2152,3 +2152,163 @@ document.addEventListener("DOMContentLoaded", function() {
 // End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
 })();
+
+// Section: FH mobile navigation toggle behaviour
+document.addEventListener('DOMContentLoaded', function () {
+  var menuRoot = document.querySelector('[data-fh-mobile-menu]');
+  var toggleButtons = document.querySelectorAll('[data-fh-mobile-menu-toggle]');
+
+  if (!menuRoot || toggleButtons.length === 0) {
+    return;
+  }
+
+  var closeButton = menuRoot.querySelector('[data-fh-mobile-menu-close]');
+  var overlay = menuRoot.querySelector('[data-fh-mobile-menu-overlay]');
+  var submenuToggles = menuRoot.querySelectorAll('[data-fh-mobile-submenu-toggle]');
+  var sectionToggles = menuRoot.querySelectorAll('[data-fh-mobile-section-toggle]');
+  var activeClass = 'fh-mobile-menu--open';
+  var bodyActiveClass = 'fh-mobile-menu-open';
+  var isOpen = false;
+
+  function resetSections(container) {
+    if (!container) {
+      return;
+    }
+
+    var nestedSectionToggles = container.querySelectorAll('[data-fh-mobile-section-toggle]');
+    var nestedSections = container.querySelectorAll('.fh-mobile-menu__section');
+
+    nestedSectionToggles.forEach(function (toggle) {
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+
+    nestedSections.forEach(function (section) {
+      section.classList.remove('is-open');
+    });
+  }
+
+  function openMenu() {
+    if (isOpen) {
+      return;
+    }
+
+    menuRoot.classList.add(activeClass);
+    menuRoot.setAttribute('aria-hidden', 'false');
+    document.body.classList.add(bodyActiveClass);
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', 'true');
+    });
+
+    if (closeButton) {
+      window.setTimeout(function () {
+        closeButton.focus();
+      }, 60);
+    }
+
+    document.addEventListener('keydown', handleKeydown, true);
+    isOpen = true;
+  }
+
+  function closeMenu() {
+    if (!isOpen) {
+      return;
+    }
+
+    menuRoot.classList.remove(activeClass);
+    menuRoot.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove(bodyActiveClass);
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', 'false');
+    });
+
+    submenuToggles.forEach(function (button) {
+      resetSections(button.nextElementSibling);
+      button.setAttribute('aria-expanded', 'false');
+    });
+
+    document.removeEventListener('keydown', handleKeydown, true);
+    isOpen = false;
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+
+      if (toggleButtons.length) {
+        toggleButtons[0].focus();
+      }
+    }
+  }
+
+  toggleButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+  });
+
+  if (overlay) {
+    overlay.addEventListener('click', closeMenu);
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  }
+
+  menuRoot.addEventListener('click', function (event) {
+    var link = event.target.closest('a');
+
+    if (link && menuRoot.contains(link)) {
+      closeMenu();
+    }
+  });
+
+  submenuToggles.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      var isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      submenuToggles.forEach(function (otherButton) {
+        if (otherButton !== button) {
+          otherButton.setAttribute('aria-expanded', 'false');
+          resetSections(otherButton.nextElementSibling);
+        }
+      });
+
+      var nextState = !isExpanded;
+      button.setAttribute('aria-expanded', String(nextState));
+
+      if (!nextState) {
+        resetSections(button.nextElementSibling);
+      } else {
+        resetSections(button.nextElementSibling);
+      }
+    });
+  });
+
+  sectionToggles.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      var section = button.closest('.fh-mobile-menu__section');
+
+      if (!section) {
+        return;
+      }
+
+      var isExpanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!isExpanded));
+      section.classList.toggle('is-open', !isExpanded);
+    });
+  });
+});
+// End Section: FH mobile navigation toggle behaviour
