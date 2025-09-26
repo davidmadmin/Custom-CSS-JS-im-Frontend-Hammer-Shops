@@ -36,6 +36,29 @@
 }
 /* End Section: Page Header Background */
 
+/* Section: FH search input native control overrides */
+.fh-header .search-input {
+  -webkit-appearance: textfield;
+  appearance: textfield;
+}
+
+.fh-header .search-input::-webkit-search-cancel-button,
+.fh-header .search-input::-webkit-search-decoration,
+.fh-header .search-input::-webkit-search-results-button,
+.fh-header .search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.fh-header .search-input::-ms-clear,
+.fh-header .search-input::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+/* End Section: FH search input native control overrides */
+
 /* Section: FH Header Container Sizing */
 .fh-header {
   width: 1600px;
