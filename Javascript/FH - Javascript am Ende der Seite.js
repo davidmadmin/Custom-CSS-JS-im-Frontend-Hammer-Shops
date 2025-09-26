@@ -401,6 +401,28 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.querySelector('input.search-input');
   if (!searchInput) return;
 
+  const clearButton = document.querySelector('[data-fh-search-clear]');
+
+  function updateClearButtonVisibility() {
+    if (!clearButton) return;
+    clearButton.style.display = searchInput.value ? "flex" : "none";
+  }
+
+  if (clearButton) {
+    clearButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      if (!searchInput.value) {
+        searchInput.focus();
+        return;
+      }
+      searchInput.value = "";
+      const inputEvent = new Event("input", { bubbles: true });
+      searchInput.dispatchEvent(inputEvent);
+      searchInput.focus();
+      updateClearButtonVisibility();
+    });
+  }
+
   let inputFocused = false;
 
   // CSS-based device detection
@@ -514,6 +536,7 @@ document.addEventListener("DOMContentLoaded", function () {
       searchInput.placeholder = "Wonach suchst du?";
     }
     // Keine Animation starten während Fokus!
+    updateClearButtonVisibility();
   });
 
   searchInput.addEventListener("input", function () {
@@ -522,11 +545,13 @@ document.addEventListener("DOMContentLoaded", function () {
       searchInput.placeholder = "Wonach suchst du?";
     }
     // Keine Animation starten während Fokus!
+    updateClearButtonVisibility();
   });
 
   searchInput.addEventListener("blur", function () {
     inputFocused = false;
     resetInactivityTimer(); // Erst nach Verlassen ggf. Animation nach 10s
+    updateClearButtonVisibility();
   });
 
   window.addEventListener("scroll", function () {
@@ -539,6 +564,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Beim Start direkt Animation starten
   startTyping();
+  updateClearButtonVisibility();
 });
 
 // End Section: Animierte Suchplatzhalter Vorschläge
