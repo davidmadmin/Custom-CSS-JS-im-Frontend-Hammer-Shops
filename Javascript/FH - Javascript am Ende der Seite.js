@@ -92,34 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
 
-  function replaceWishlistWord(value) {
-    if (typeof value !== 'string' || value.length === 0) {
-      return value;
-    }
-
-    return value.replace(/Wunschliste|Merkzettel/gi, 'Merkliste');
-  }
-
-  function updateAttribute(target, attribute) {
-    if (!target || !attribute) {
-      return;
-    }
-
-    if (target.hasAttribute(attribute)) {
-      const currentValue = target.getAttribute(attribute);
-      const nextValue = replaceWishlistWord(currentValue);
-
-      if (typeof nextValue === 'string' && nextValue.length > 0) {
-        target.setAttribute(attribute, nextValue);
-        return;
-      }
-    }
-
-    if (attribute === 'aria-label' || attribute === 'title') {
-      target.setAttribute(attribute, 'Merkliste');
-    }
-  }
-
   function enhanceButton(button) {
     if (!button || !(button instanceof HTMLElement)) {
       return;
@@ -156,30 +128,45 @@ document.addEventListener('DOMContentLoaded', function () {
       button.appendChild(labelWrapper);
     }
 
-    labelWrapper.textContent = 'Merkliste';
+    labelWrapper.textContent = 'Merkliste hinzufügen';
 
     button.insertBefore(iconWrapper, button.firstChild);
 
-    updateAttribute(button, 'aria-label');
-    updateAttribute(button, 'title');
+    const tooltipAttributes = [
+      'title',
+      'data-original-title',
+      'data-bs-original-title',
+      'data-title',
+      'data-title-add',
+      'data-title-remove',
+      'data-toggle',
+      'data-placement',
+      'data-bs-toggle',
+      'data-bs-placement'
+    ];
+
+    tooltipAttributes.forEach(function (attribute) {
+      button.removeAttribute(attribute);
+    });
 
     if (button.dataset) {
-      if (button.dataset.originalTitle) {
-        button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
-      }
-
-      if (button.dataset.titleAdd) {
-        button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
-      }
-
-      if (button.dataset.titleRemove) {
-        button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
-      }
+      ['originalTitle', 'bsOriginalTitle', 'title', 'titleAdd', 'titleRemove', 'toggle', 'placement', 'bsToggle', 'bsPlacement']
+        .forEach(function (key) {
+          if (Object.prototype.hasOwnProperty.call(button.dataset, key)) {
+            try {
+              delete button.dataset[key];
+            } catch (error) {
+              button.dataset[key] = '';
+            }
+          }
+        });
     }
+
+    button.setAttribute('aria-label', 'Merkliste hinzufügen');
 
     const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
     srOnlyElements.forEach(function (element) {
-      element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
+      element.textContent = 'Merkliste hinzufügen';
     });
   }
 
@@ -397,7 +384,214 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       pendingWishListUpdateWaiters.push(waiter);
+
+      if (wishListUpdateVersion > versionAtRegistration) {
+        const index = pendingWishListUpdateWaiters.indexOf(waiter);
+
+        if (index !== -1) {
+          pendingWishListUpdateWaiters.splice(index, 1);
+        }
+
+        if (waiter.timeoutId) {
+          window.clearTimeout(waiter.timeoutId);
+        }
+
+        resolve({
+          version: wishListUpdateVersion
+        });
+      }
     });
+  }
+
+  function parseBooleanFlag(value) {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (typeof value === 'number') {
+      return value !== 0;
+    }
+
+    if (typeof value === 'string') {
+      const normalized = value.trim().toLowerCase();
+
+      if (!normalized) {
+        return false;
+      }
+
+      return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'ja';
+    }
+
+    return false;
+  }
+
+  function getVariationIdFromButton(button) {
+    if (!button || !(button instanceof HTMLElement)) {
+      return null;
+    }
+
+    const directAttributes = [
+      'data-variation-id',
+      'data-variationid',
+      'data-variation',
+      'data-item-variation-id',
+      'data-item-variationid',
+      'data-item-id',
+      'data-wish-list-id',
+      'data-wishlist-id'
+    ];
+
+    for (let index = 0; index < directAttributes.length; index++) {
+      const attribute = directAttributes[index];
+      const value = button.getAttribute(attribute);
+
+      if (value && value.length) {
+        const numeric = parseInt(value, 10);
+
+        if (!isNaN(numeric) && isFinite(numeric)) {
+          return numeric;
+        }
+      }
+    }
+
+    if (button.dataset) {
+      const datasetKeys = [
+        'variationId',
+        'variationid',
+        'variation',
+        'itemVariationId',
+        'itemVariationid',
+        'itemId',
+        'wishListId',
+        'wishlistId',
+        'wishListItemId',
+        'wishlistItemId'
+      ];
+
+      for (let index = 0; index < datasetKeys.length; index++) {
+        const key = datasetKeys[index];
+
+        if (Object.prototype.hasOwnProperty.call(button.dataset, key)) {
+          const value = button.dataset[key];
+
+          if (typeof value === 'string' && value.length) {
+            const numeric = parseInt(value, 10);
+
+            if (!isNaN(numeric) && isFinite(numeric)) {
+              return numeric;
+            }
+          }
+        }
+      }
+    }
+
+    const valueAttribute = button.getAttribute('value');
+
+    if (valueAttribute && valueAttribute.length) {
+      const numeric = parseInt(valueAttribute, 10);
+
+      if (!isNaN(numeric) && isFinite(numeric)) {
+        return numeric;
+      }
+    }
+
+    return null;
+  }
+
+  function isWishlistRemovalIntent(button, store) {
+    if (!button || !(button instanceof HTMLElement)) {
+      return false;
+    }
+
+    let storeHasItem = null;
+
+    if (store) {
+      const variationId = getVariationIdFromButton(button);
+
+      if (variationId) {
+        const wishListState = store.state && store.state.wishList ? store.state.wishList : null;
+
+        if (wishListState) {
+          const wishListIds = Array.isArray(wishListState.wishListIds) ? wishListState.wishListIds : [];
+
+          if (wishListIds.some(function (id) { return parseInt(id, 10) === variationId; })) {
+            return true;
+          }
+
+          const wishListItems = Array.isArray(wishListState.wishListItems) ? wishListState.wishListItems : [];
+
+          if (wishListItems.some(function (item) {
+            if (!item) {
+              return false;
+            }
+
+            if (parseInt(item.id, 10) === variationId) {
+              return true;
+            }
+
+            const variation = item.variation || {};
+
+            if (parseInt(variation.id, 10) === variationId) {
+              return true;
+            }
+
+            return false;
+          })) {
+            return true;
+          }
+
+          storeHasItem = false;
+        }
+      }
+    }
+
+    if (storeHasItem === false) {
+      return false;
+    }
+
+    const removalClasses = ['is-added', 'is-on-wish-list', 'is-on-wishlist', 'is-active', 'active'];
+
+    for (let index = 0; index < removalClasses.length; index++) {
+      if (button.classList.contains(removalClasses[index])) {
+        return true;
+      }
+    }
+
+    const ariaPressed = button.getAttribute('aria-pressed');
+
+    if (ariaPressed && parseBooleanFlag(ariaPressed)) {
+      return true;
+    }
+
+    if (button.dataset) {
+      const datasetIndicators = [
+        'isOnWishlist',
+        'isOnWishList',
+        'isInWishlist',
+        'isAdded',
+        'isActive',
+        'wishlistActive',
+        'wishListActive',
+        'wishlistItemActive',
+        'wishListItemActive'
+      ];
+
+      for (let index = 0; index < datasetIndicators.length; index++) {
+        const key = datasetIndicators[index];
+
+        if (Object.prototype.hasOwnProperty.call(button.dataset, key) && parseBooleanFlag(button.dataset[key])) {
+          return true;
+        }
+      }
+    }
+
+    const textContent = button.textContent ? button.textContent.trim().toLowerCase() : '';
+
+    if (textContent && (textContent.indexOf('entfernen') !== -1 || textContent.indexOf('von der merkliste') !== -1)) {
+      return true;
+    }
+
+    return false;
   }
 
   function showLoading(isLoading) {
@@ -1283,26 +1477,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const store = getVueStore();
 
-    if (store) {
-      subscribeToWishList(store);
+    if (isWishlistRemovalIntent(wishlistButton, store)) {
+      return;
     }
 
-    const waitPromise = store
-      ? waitForNextWishListUpdate(4000)
-      : Promise.reject(new Error('wish-list-store-unavailable'));
+    if (!store) {
+      openMenuWithOptions({ refresh: true });
+      return;
+    }
 
-    waitPromise
-      .catch(function () {
+    const versionBeforeClick = wishListUpdateVersion;
+
+    subscribeToWishList(store);
+
+    let waitPromise = null;
+
+    if (wishListUpdateVersion > versionBeforeClick) {
+      waitPromise = Promise.resolve({ version: wishListUpdateVersion });
+    } else {
+      waitPromise = waitForNextWishListUpdate(4000).catch(function () {
         return null;
-      })
-      .then(function () {
-        return loadWishListItems();
-      })
+      });
+    }
+
+    Promise.all([waitPromise, loadWishListItems()])
       .then(function () {
         return openMenuWithOptions({ refresh: false });
       })
       .catch(function () {
-        openMenuWithOptions({ refresh: true });
+        return openMenuWithOptions({ refresh: true });
+      })
+      .catch(function () {
+        // Suppress further unhandled rejections from nested promises
       });
   });
 
