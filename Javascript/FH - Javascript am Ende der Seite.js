@@ -87,6 +87,361 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH account menu dynamic greeting
+document.addEventListener('DOMContentLoaded', function () {
+  const GREETING_SELECTOR = '[data-fh-account-greeting]';
+  const MAX_INTERVAL_RUNS = 40;
+  const INTERVAL_DELAY = 250;
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) {
+      return window.vueApp.$store;
+    }
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') {
+      return window.ceresStore;
+    }
+
+    return null;
+  }
+
+  function getPathValue(source, path) {
+    if (!source || typeof path !== 'string') {
+      return undefined;
+    }
+
+    const segments = path.split('.');
+    let current = source;
+
+    for (let index = 0; index < segments.length; index++) {
+      const key = segments[index];
+
+      if (current && (typeof current === 'object' || typeof current === 'function') && key in current) {
+        current = current[key];
+      } else {
+        return undefined;
+      }
+    }
+
+    if (typeof current === 'function') {
+      try {
+        return current();
+      } catch (error) {
+        return undefined;
+      }
+    }
+
+    return current;
+  }
+
+  function pickValue(sources, paths) {
+    for (let pathIndex = 0; pathIndex < paths.length; pathIndex++) {
+      const path = paths[pathIndex];
+
+      for (let sourceIndex = 0; sourceIndex < sources.length; sourceIndex++) {
+        const source = sources[sourceIndex];
+        const value = getPathValue(source, path);
+
+        if (value !== undefined && value !== null && String(value).trim() !== '') {
+          return value;
+        }
+      }
+    }
+
+    return undefined;
+  }
+
+  function normalizeNamePart(value) {
+    if (value === undefined || value === null) {
+      return '';
+    }
+
+    if (typeof value !== 'string') {
+      value = String(value);
+    }
+
+    return value.trim();
+  }
+
+  function normalizeSalutation(value) {
+    const normalizedValue = normalizeNamePart(value);
+
+    if (!normalizedValue) {
+      return '';
+    }
+
+    const lowerValue = normalizedValue.toLowerCase();
+
+    if (['herr', 'mr', 'mister', 'male', 'männlich', 'm'].includes(lowerValue)) {
+      return 'Herr';
+    }
+
+    if (['frau', 'mrs', 'ms', 'female', 'weiblich', 'f'].includes(lowerValue)) {
+      return 'Frau';
+    }
+
+    if (['divers', 'diverse', 'neutral', 'other', 'firma', 'company', 'none'].includes(lowerValue)) {
+      return normalizedValue.charAt(0).toUpperCase() + normalizedValue.slice(1);
+    }
+
+    return normalizedValue;
+  }
+
+  function collectCustomerData() {
+    const store = getVueStore();
+    const sources = [];
+
+    if (store) {
+      if (store.getters) {
+        sources.push(store.getters);
+      }
+
+      if (store.state) {
+        sources.push(store.state);
+
+        const possibleBranches = [
+          store.state.user,
+          store.state.customer,
+          store.state.contact,
+          store.state.account,
+          store.state.session
+        ];
+
+        possibleBranches.forEach(function (branch) {
+          if (branch) {
+            sources.push(branch);
+
+            if (branch.data) {
+              sources.push(branch.data);
+            }
+
+            if (branch.current) {
+              sources.push(branch.current);
+            }
+          }
+        });
+      }
+    }
+
+    if (window.App) {
+      sources.push(window.App);
+
+      const appBranches = [
+        App.user,
+        App.customer,
+        App.customerData,
+        App.contact,
+        App.session,
+        App.billingAddress,
+        App.shippingAddress,
+        App.defaultShippingAddress,
+        App.defaultBillingAddress
+      ];
+
+      appBranches.forEach(function (branch) {
+        if (branch) {
+          sources.push(branch);
+
+          if (branch.data) {
+            sources.push(branch.data);
+          }
+        }
+      });
+    }
+
+    const SALUTATION_PATHS = [
+      'salutation',
+      'userSalutation',
+      'customerSalutation',
+      'contactSalutation',
+      'user.salutation',
+      'userData.salutation',
+      'user.data.salutation',
+      'userContact.salutation',
+      'customer.salutation',
+      'customer.data.salutation',
+      'customerContact.salutation',
+      'contact.salutation',
+      'contact.data.salutation',
+      'billingAddress.salutation',
+      'shippingAddress.salutation',
+      'defaultBillingAddress.salutation',
+      'defaultShippingAddress.salutation',
+      'addresses.defaultBillingAddress.salutation',
+      'addresses.defaultShippingAddress.salutation'
+    ];
+
+    const LASTNAME_PATHS = [
+      'lastName',
+      'lastname',
+      'userLastname',
+      'userLastName',
+      'user.lastname',
+      'user.lastName',
+      'userData.lastName',
+      'user.data.lastName',
+      'userContact.lastname',
+      'userContact.lastName',
+      'customer.lastname',
+      'customer.lastName',
+      'customer.data.lastname',
+      'customer.data.lastName',
+      'customerContact.lastname',
+      'customerContact.lastName',
+      'contact.lastname',
+      'contact.lastName',
+      'contact.data.lastname',
+      'contact.data.lastName',
+      'billingAddress.lastname',
+      'billingAddress.lastName',
+      'shippingAddress.lastname',
+      'shippingAddress.lastName',
+      'defaultBillingAddress.lastname',
+      'defaultBillingAddress.lastName',
+      'defaultShippingAddress.lastname',
+      'defaultShippingAddress.lastName',
+      'addresses.defaultBillingAddress.lastname',
+      'addresses.defaultBillingAddress.lastName',
+      'addresses.defaultShippingAddress.lastname',
+      'addresses.defaultShippingAddress.lastName'
+    ];
+
+    const USERNAME_PATHS = [
+      'username',
+      'userName',
+      'displayName',
+      'user.displayName',
+      'user.name',
+      'user.fullName',
+      'userData.displayName',
+      'userData.fullName',
+      'customer.displayName',
+      'customer.fullName',
+      'contact.displayName',
+      'contact.fullName',
+      'session.displayName'
+    ];
+
+    return {
+      salutation: normalizeSalutation(pickValue(sources, SALUTATION_PATHS)),
+      lastName: normalizeNamePart(pickValue(sources, LASTNAME_PATHS)),
+      username: normalizeNamePart(pickValue(sources, USERNAME_PATHS))
+    };
+  }
+
+  function getGreetingPrefix() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    if (hour >= 0 && hour < 10) {
+      return 'Guten Morgen';
+    }
+
+    if (hour >= 10 && hour < 18) {
+      return 'Guten Tag';
+    }
+
+    return 'Guten Abend';
+  }
+
+  function ensureOriginalName(element) {
+    if (!element || element.dataset.fhGreetingOriginalName) {
+      return;
+    }
+
+    const nameElement = element.querySelector('[data-fh-account-name]');
+
+    if (nameElement) {
+      const text = normalizeNamePart(nameElement.textContent);
+
+      if (text) {
+        element.dataset.fhGreetingOriginalName = text;
+      }
+    }
+  }
+
+  function buildGreetingText(element) {
+    ensureOriginalName(element);
+
+    const customerData = collectCustomerData();
+    const hasSalutationAndLastName = customerData.salutation && customerData.lastName;
+    const fallbackName = normalizeNamePart(element.dataset.fhGreetingOriginalName);
+    const effectiveName = hasSalutationAndLastName
+      ? customerData.salutation + ' ' + customerData.lastName
+      : customerData.username || fallbackName;
+
+    if (!effectiveName) {
+      return null;
+    }
+
+    return getGreetingPrefix() + ', ' + effectiveName;
+  }
+
+  function applyGreeting(element) {
+    if (!element) {
+      return false;
+    }
+
+    const greetingText = buildGreetingText(element);
+
+    if (!greetingText) {
+      return false;
+    }
+
+    if (element.dataset.fhGreetingText === greetingText) {
+      return false;
+    }
+
+    element.textContent = greetingText;
+    element.dataset.fhGreetingText = greetingText;
+
+    return true;
+  }
+
+  function updateAllGreetings() {
+    let updated = false;
+
+    document.querySelectorAll(GREETING_SELECTOR).forEach(function (element) {
+      if (applyGreeting(element)) {
+        updated = true;
+      }
+    });
+
+    return updated;
+  }
+
+  let intervalRuns = 0;
+
+  const intervalId = window.setInterval(function () {
+    intervalRuns += 1;
+
+    if (updateAllGreetings() || intervalRuns >= MAX_INTERVAL_RUNS) {
+      window.clearInterval(intervalId);
+    }
+  }, INTERVAL_DELAY);
+
+  const observer = new MutationObserver(function () {
+    updateAllGreetings();
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  const store = getVueStore();
+
+  if (store && typeof store.subscribe === 'function') {
+    try {
+      store.subscribe(function () {
+        updateAllGreetings();
+      });
+    } catch (error) {
+      // Ignore subscription errors silently
+    }
+  }
+
+  updateAllGreetings();
+});
+// End Section: FH account menu dynamic greeting
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =

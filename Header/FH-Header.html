@@ -74,7 +74,7 @@
         </div>
         <div v-else>
           <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
-            <div style="font-size:16px;font-weight:700;">Hallo, <span v-text="$store.getters.username" v-cloak></span></div>
+            <div style="font-size:16px;font-weight:700;" data-fh-account-greeting>Hallo, <span data-fh-account-name v-text="$store.getters.username" v-cloak></span></div>
             <div style="font-size:13px;color:#6b7280;">Schön, dass Sie wieder da sind!</div>
           </div>
           <div style="height:1px;background-color:#ececec;margin:0 0 16px;"></div>
