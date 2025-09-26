@@ -1445,7 +1445,14 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    Promise.all([waitPromise, loadWishListItems()])
+    waitPromise
+      .then(function (result) {
+        if (!result || result.version <= versionBeforeClick) {
+          return Promise.reject(new Error('wishlist update not detected'));
+        }
+
+        return loadWishListItems();
+      })
       .then(function () {
         return openMenuWithOptions({ refresh: false });
       })
