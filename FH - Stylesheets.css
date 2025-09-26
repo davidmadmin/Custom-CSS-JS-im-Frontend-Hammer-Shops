@@ -44,8 +44,17 @@
 
 .fh-header .dropdown-menu {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1400px;
 }
+
+/* Section: FH Header Layout Utilities */
+.fh-header__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+/* End Section: FH Header Layout Utilities */
 /* End Section: FH Header Navigation Hover Behaviour */
 
 /* Section: Trustbadge ausblenden */

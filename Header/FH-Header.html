@@ -1,5 +1,6 @@
-<div class="fh-header" data-fh-header-root style="max-width:1600px;width:100%;margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
-  <div style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
+<div class="fh-header" data-fh-header-root style="width:100%;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
+  <div class="fh-header__top-bar" style="background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;">
+    <div class="fh-header__container" style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 0;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
     <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
       <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
       4,88 Sterne auf Trusted Shops
@@ -16,8 +17,10 @@
       <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
       Große Auswahl
     </span>
+    </div>
   </div>
-  <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:26px 32px 22px;border-bottom:1px solid #e2e2e2;background-color:#ffffff;column-gap:20px;">
+  <div class="fh-header__main" style="background-color:#ffffff;border-bottom:1px solid #e2e2e2;">
+    <div class="fh-header__container" style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:26px 0 22px;column-gap:20px;">
     <a href="/" style="display:flex;align-items:center;">
       <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
     </a>
@@ -82,10 +85,11 @@
       </a>
       <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
     </div>
+    </div>
   </div>
-  <nav style="background-color:#ffffff;">
-    <div style="max-width:1600px;width:100%;margin:0 auto;position:relative;">
-      <ul class="nav" style="display:flex;list-style:none;margin:0;padding:0 32px;justify-content:space-between;font-size:15px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;">
+  <nav class="fh-header__nav" style="background-color:#ffffff;">
+    <div class="fh-header__container" style="position:relative;">
+      <ul class="nav" style="display:flex;list-style:none;margin:0;padding:0;justify-content:space-between;font-size:15px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;">
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
         <a class="nav-link" href="/schloesser" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">SCHLÖSSER</a>
         <div class="dropdown-menu" style="position:absolute;top:100%;left:0;right:0;margin:0 auto;width:100%;padding:32px 48px;border:1px solid #e4e4e4;border-top:none;border-radius:0 0 18px 18px;box-shadow:0 24px 48px rgba(0,0,0,0.08);margin-top:0;background-color:#ffffff;z-index:2000;">
