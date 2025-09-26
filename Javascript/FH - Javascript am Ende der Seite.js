@@ -92,34 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
 
-  function replaceWishlistWord(value) {
-    if (typeof value !== 'string' || value.length === 0) {
-      return value;
-    }
-
-    return value.replace(/Wunschliste|Merkzettel/gi, 'Merkliste');
-  }
-
-  function updateAttribute(target, attribute) {
-    if (!target || !attribute) {
-      return;
-    }
-
-    if (target.hasAttribute(attribute)) {
-      const currentValue = target.getAttribute(attribute);
-      const nextValue = replaceWishlistWord(currentValue);
-
-      if (typeof nextValue === 'string' && nextValue.length > 0) {
-        target.setAttribute(attribute, nextValue);
-        return;
-      }
-    }
-
-    if (attribute === 'aria-label' || attribute === 'title') {
-      target.setAttribute(attribute, 'Merkliste');
-    }
-  }
-
   function enhanceButton(button) {
     if (!button || !(button instanceof HTMLElement)) {
       return;
@@ -156,31 +128,42 @@ document.addEventListener('DOMContentLoaded', function () {
       button.appendChild(labelWrapper);
     }
 
-    labelWrapper.textContent = 'Merkliste';
+    const buttonLabel = 'Merkliste hinzufügen';
+    labelWrapper.textContent = buttonLabel;
 
     button.insertBefore(iconWrapper, button.firstChild);
 
-    updateAttribute(button, 'aria-label');
-    updateAttribute(button, 'title');
-
-    if (button.dataset) {
-      if (button.dataset.originalTitle) {
-        button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
-      }
-
-      if (button.dataset.titleAdd) {
-        button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
-      }
-
-      if (button.dataset.titleRemove) {
-        button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
-      }
-    }
-
     const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
     srOnlyElements.forEach(function (element) {
-      element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
+      element.textContent = buttonLabel;
     });
+
+    const tooltipAttributesToRemove = [
+      'title',
+      'data-original-title',
+      'data-bs-original-title',
+      'data-title',
+      'data-title-add',
+      'data-title-remove'
+    ];
+
+    tooltipAttributesToRemove.forEach(function (attribute) {
+      button.removeAttribute(attribute);
+    });
+
+    if (button.dataset) {
+      ['originalTitle', 'bsOriginalTitle', 'title', 'titleAdd', 'titleRemove'].forEach(function (key) {
+        if (Object.prototype.hasOwnProperty.call(button.dataset, key)) {
+          try {
+            delete button.dataset[key];
+          } catch (error) {
+            button.dataset[key] = '';
+          }
+        }
+      });
+    }
+
+    button.setAttribute('aria-label', buttonLabel);
   }
 
   function enhanceWishlistButtons(root) {
@@ -397,6 +380,22 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       pendingWishListUpdateWaiters.push(waiter);
+
+      if (wishListUpdateVersion > versionAtRegistration) {
+        const index = pendingWishListUpdateWaiters.indexOf(waiter);
+
+        if (index !== -1) {
+          pendingWishListUpdateWaiters.splice(index, 1);
+        }
+
+        if (waiter.timeoutId) {
+          window.clearTimeout(waiter.timeoutId);
+        }
+
+        resolve({
+          version: wishListUpdateVersion
+        });
+      }
     });
   }
 
@@ -1274,6 +1273,146 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
   });
 
+  function isRemovalIntent(button) {
+    if (!button) {
+      return false;
+    }
+
+    function hasTrueishValue(value) {
+      if (!value) {
+        return false;
+      }
+
+      const normalized = String(value).toLowerCase().trim();
+
+      if (!normalized) {
+        return false;
+      }
+
+      const negativeIndicators = ['inactive', 'notactive', 'not active', 'not-added', 'notadded', 'disabled', 'false', '0', 'off'];
+
+      for (let index = 0; index < negativeIndicators.length; index++) {
+        if (normalized.indexOf(negativeIndicators[index]) !== -1) {
+          return false;
+        }
+      }
+
+      if (normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on') {
+        return true;
+      }
+
+      if (/(^|\b)(remove|removed|delet(e|ed)|added|active)(\b|$)/.test(normalized)) {
+        return true;
+      }
+
+      return false;
+    }
+
+    if (hasTrueishValue(button.getAttribute('aria-pressed'))) {
+      return true;
+    }
+
+    if (hasTrueishValue(button.getAttribute('aria-checked'))) {
+      return true;
+    }
+
+    const attributeCandidates = [
+      'data-state',
+      'data-status',
+      'data-mode',
+      'data-action',
+      'data-toggle-state',
+      'data-wishlist-action',
+      'data-wish-list-action'
+    ];
+
+    for (let index = 0; index < attributeCandidates.length; index++) {
+      const attributeName = attributeCandidates[index];
+      const attributeValue = button.getAttribute(attributeName);
+
+      if (hasTrueishValue(attributeValue)) {
+        return true;
+      }
+    }
+
+    if (button.dataset) {
+      const datasetKeys = [
+        'state',
+        'status',
+        'mode',
+        'action',
+        'toggleState',
+        'wishlistAction',
+        'wishListAction',
+        'wishlistMode',
+        'wishListMode',
+        'wishlistState',
+        'wishListState'
+      ];
+
+      for (let index = 0; index < datasetKeys.length; index++) {
+        const key = datasetKeys[index];
+
+        if (Object.prototype.hasOwnProperty.call(button.dataset, key) && hasTrueishValue(button.dataset[key])) {
+          return true;
+        }
+      }
+
+      const datasetBooleanKeys = [
+        'added',
+        'isAdded',
+        'active',
+        'selected',
+        'isActive',
+        'checked',
+        'pressed',
+        'isOnWishlist',
+        'isOnWishList'
+      ];
+
+      for (let index = 0; index < datasetBooleanKeys.length; index++) {
+        const key = datasetBooleanKeys[index];
+
+        if (Object.prototype.hasOwnProperty.call(button.dataset, key) && hasTrueishValue(button.dataset[key])) {
+          return true;
+        }
+      }
+
+      const datasetIdKeys = ['wishlistItemId', 'wishListItemId', 'wishlistItem', 'wishListItem'];
+
+      for (let index = 0; index < datasetIdKeys.length; index++) {
+        const key = datasetIdKeys[index];
+
+        if (Object.prototype.hasOwnProperty.call(button.dataset, key) && button.dataset[key]) {
+          return true;
+        }
+      }
+    }
+
+    if (button.classList) {
+      const classCandidates = [
+        'is-on-wish-list',
+        'is-on-wishlist',
+        'on-wish-list',
+        'on-wishlist',
+        'wishlist-added',
+        'wish-list-added',
+        'is-added-to-wish-list',
+        'is-added-to-wishlist',
+        'has-wish-list-entry',
+        'has-wishlist-entry'
+      ];
+
+      for (let index = 0; index < classCandidates.length; index++) {
+        if (button.classList.contains(classCandidates[index])) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   document.addEventListener('click', function (event) {
     const wishlistButton = event.target.closest('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
 
@@ -1281,28 +1420,40 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const store = getVueStore();
-
-    if (store) {
-      subscribeToWishList(store);
+    if (isRemovalIntent(wishlistButton)) {
+      return;
     }
 
-    const waitPromise = store
-      ? waitForNextWishListUpdate(4000)
-      : Promise.reject(new Error('wish-list-store-unavailable'));
+    const store = getVueStore();
 
-    waitPromise
-      .catch(function () {
+    if (!store) {
+      openMenuWithOptions({ refresh: true });
+      return;
+    }
+
+    const versionBeforeClick = wishListUpdateVersion;
+
+    subscribeToWishList(store);
+
+    let waitPromise = null;
+
+    if (wishListUpdateVersion > versionBeforeClick) {
+      waitPromise = Promise.resolve({ version: wishListUpdateVersion });
+    } else {
+      waitPromise = waitForNextWishListUpdate(4000).catch(function () {
         return null;
-      })
-      .then(function () {
-        return loadWishListItems();
-      })
+      });
+    }
+
+    Promise.all([waitPromise, loadWishListItems()])
       .then(function () {
         return openMenuWithOptions({ refresh: false });
       })
       .catch(function () {
-        openMenuWithOptions({ refresh: true });
+        return openMenuWithOptions({ refresh: true });
+      })
+      .catch(function () {
+        // Suppress further unhandled rejections from nested promises
       });
   });
 
