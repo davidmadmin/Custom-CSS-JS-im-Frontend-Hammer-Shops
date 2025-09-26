@@ -25,7 +25,7 @@
       <input type="search" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:14px 52px 14px 24px;border:1px solid #d5d5d5;border-radius:18px;font-size:15px;line-height:1.4;color:#1f2937;background-color:#f8fafc;box-shadow:inset 0 1px 2px rgba(15,23,42,0.08);">
     </form>
     <div class="fh-wishlist-menu-container" data-fh-wishlist-menu-container style="position:relative;justify-self:end;">
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkzettel" data-fh-wishlist-menu-toggle style="position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
+      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle style="position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
         <span style="position:absolute;top:-6px;right:-6px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background-color:#31a5f0;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;line-height:1;" v-cloak v-text="$store.getters.wishListCount || 0"></span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;display:block;">
           <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
@@ -34,11 +34,11 @@
       <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" style="position:absolute;top:calc(100% + 16px);right:0;display:none;background-color:#ffffff;border:1px solid #e2e2e2;border-radius:16px;padding:20px;width:420px;max-width:calc(100vw - 32px);box-shadow:0 18px 36px rgba(15,23,42,0.12);z-index:50;">
         <div style="position:absolute;top:-10px;right:12px;width:20px;height:20px;background-color:#ffffff;border-top:1px solid #e2e2e2;border-left:1px solid #e2e2e2;transform:rotate(45deg);pointer-events:none;"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">
-          <div style="font-size:16px;font-weight:700;color:#1a1a1a;">Merkzettel</div>
+          <div style="font-size:16px;font-weight:700;color:#1a1a1a;">Merkliste</div>
         </div>
         <div data-fh-wishlist-menu-loading style="display:none;font-size:14px;color:#6b7280;padding:12px 0;">Wird geladen …</div>
-        <div data-fh-wishlist-menu-error style="display:none;font-size:14px;color:#dc2626;padding:12px 0;">Merkzettel konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
-        <div data-fh-wishlist-menu-empty style="display:none;font-size:14px;color:#6b7280;padding:12px 0;">Ihr Merkzettel ist leer.</div>
+        <div data-fh-wishlist-menu-error style="display:none;font-size:14px;color:#dc2626;padding:12px 0;">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
+        <div data-fh-wishlist-menu-empty style="display:none;font-size:14px;color:#6b7280;padding:12px 0;">Ihre Merkliste ist leer.</div>
         <ul data-fh-wishlist-menu-list style="list-style:none;margin:0;padding:0;max-height:340px;overflow:auto;"></ul>
       </div>
     </div>

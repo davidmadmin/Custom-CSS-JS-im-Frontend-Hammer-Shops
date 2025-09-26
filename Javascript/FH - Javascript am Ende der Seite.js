@@ -87,6 +87,139 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH Merkliste button enhancements
+document.addEventListener('DOMContentLoaded', function () {
+  const iconMarkup =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
+
+  function replaceWishlistWord(value) {
+    if (typeof value !== 'string' || value.length === 0) {
+      return value;
+    }
+
+    return value.replace(/Wunschliste|Merkzettel/gi, 'Merkliste');
+  }
+
+  function updateAttribute(target, attribute) {
+    if (!target || !attribute) {
+      return;
+    }
+
+    if (target.hasAttribute(attribute)) {
+      const currentValue = target.getAttribute(attribute);
+      const nextValue = replaceWishlistWord(currentValue);
+
+      if (typeof nextValue === 'string' && nextValue.length > 0) {
+        target.setAttribute(attribute, nextValue);
+        return;
+      }
+    }
+
+    if (attribute === 'aria-label' || attribute === 'title') {
+      target.setAttribute(attribute, 'Merkliste');
+    }
+  }
+
+  function enhanceButton(button) {
+    if (!button || !(button instanceof HTMLElement)) {
+      return;
+    }
+
+    button.classList.add('fh-wishlist-button');
+
+    const existingCustomIcons = button.querySelectorAll('.fh-wishlist-button-icon');
+    existingCustomIcons.forEach(function (icon) {
+      icon.remove();
+    });
+
+    const defaultIcons = button.querySelectorAll('i[class*="fa"], i.fa');
+    defaultIcons.forEach(function (icon) {
+      icon.remove();
+    });
+
+    Array.from(button.childNodes).forEach(function (node) {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim().length > 0) {
+        node.parentNode.removeChild(node);
+      }
+    });
+
+    const iconWrapper = document.createElement('span');
+    iconWrapper.className = 'fh-wishlist-button-icon';
+    iconWrapper.setAttribute('aria-hidden', 'true');
+    iconWrapper.innerHTML = iconMarkup;
+
+    let labelWrapper = button.querySelector('.fh-wishlist-button-label');
+
+    if (!labelWrapper) {
+      labelWrapper = document.createElement('span');
+      labelWrapper.className = 'fh-wishlist-button-label';
+      button.appendChild(labelWrapper);
+    }
+
+    labelWrapper.textContent = 'Merkliste';
+
+    button.insertBefore(iconWrapper, button.firstChild);
+
+    updateAttribute(button, 'aria-label');
+    updateAttribute(button, 'title');
+
+    if (button.dataset) {
+      if (button.dataset.originalTitle) {
+        button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
+      }
+
+      if (button.dataset.titleAdd) {
+        button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
+      }
+
+      if (button.dataset.titleRemove) {
+        button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
+      }
+    }
+
+    const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
+    srOnlyElements.forEach(function (element) {
+      element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
+    });
+  }
+
+  function enhanceWishlistButtons(root) {
+    if (!root) {
+      return;
+    }
+
+    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) {
+      enhanceButton(root);
+    }
+
+    if (root.querySelectorAll) {
+      const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+      buttons.forEach(function (button) {
+        enhanceButton(button);
+      });
+    }
+  }
+
+  enhanceWishlistButtons(document);
+
+  if (document.body) {
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
+          if (node.nodeType !== 1) {
+            return;
+          }
+
+          enhanceWishlistButtons(node);
+        });
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+});
+// End Section: FH Merkliste button enhancements
+
 // Section: FH wish list flyout preview
 document.addEventListener('DOMContentLoaded', function () {
   const container = document.querySelector('[data-fh-wishlist-menu-container]');
@@ -109,6 +242,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let isOpen = false;
   let hasLoadedOnce = false;
   let hasSubscribedToStore = false;
+  let wishListUpdateVersion = 0;
+  const pendingWishListUpdateWaiters = [];
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) {
@@ -195,6 +330,74 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     return null;
+  }
+
+  function notifyWishListUpdated(items) {
+    const normalizedItems = Array.isArray(items) ? items : [];
+    hasLoadedOnce = true;
+    wishListUpdateVersion += 1;
+    updateList(normalizedItems);
+
+    if (!pendingWishListUpdateWaiters.length) {
+      return;
+    }
+
+    const currentVersion = wishListUpdateVersion;
+
+    for (let index = pendingWishListUpdateWaiters.length - 1; index >= 0; index--) {
+      const waiter = pendingWishListUpdateWaiters[index];
+
+      if (currentVersion > waiter.version) {
+        pendingWishListUpdateWaiters.splice(index, 1);
+
+        if (waiter.timeoutId) {
+          window.clearTimeout(waiter.timeoutId);
+        }
+
+        try {
+          waiter.resolve({
+            items: normalizedItems,
+            version: currentVersion
+          });
+        } catch (error) {
+          // Ignore errors thrown inside resolver handlers
+        }
+      }
+    }
+  }
+
+  function waitForNextWishListUpdate(timeoutMs) {
+    const versionAtRegistration = wishListUpdateVersion;
+
+    return new Promise(function (resolve, reject) {
+      if (wishListUpdateVersion > versionAtRegistration) {
+        resolve({
+          version: wishListUpdateVersion
+        });
+        return;
+      }
+
+      const waiter = {
+        version: versionAtRegistration,
+        resolve: resolve,
+        reject: reject,
+        timeoutId: null
+      };
+
+      if (typeof timeoutMs === 'number' && timeoutMs > 0) {
+        waiter.timeoutId = window.setTimeout(function () {
+          const index = pendingWishListUpdateWaiters.indexOf(waiter);
+
+          if (index !== -1) {
+            pendingWishListUpdateWaiters.splice(index, 1);
+          }
+
+          reject(new Error('timeout'));
+        }, timeoutMs);
+      }
+
+      pendingWishListUpdateWaiters.push(waiter);
+    });
   }
 
   function showLoading(isLoading) {
@@ -514,7 +717,7 @@ document.addEventListener('DOMContentLoaded', function () {
       removeButton.style.color = '#dc2626';
       removeButton.style.flex = '0 0 auto';
       removeButton.style.transition = 'border-color 0.2s ease, background-color 0.2s ease';
-      removeButton.setAttribute('aria-label', 'Artikel vom Merkzettel entfernen');
+      removeButton.setAttribute('aria-label', 'Artikel von der Merkliste entfernen');
 
       const removeIcon = document.createElement('i');
       removeIcon.className = 'fa fa-trash-o default-float';
@@ -915,60 +1118,62 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
-      updateList(items);
+      notifyWishListUpdated(items);
     });
 
     hasSubscribedToStore = true;
   }
 
   function loadWishListItems() {
-    const store = getVueStore();
+    return new Promise(function (resolve, reject) {
+      const store = getVueStore();
 
-    if (!store) {
-      showLoading(false);
-      showError('Merkzettel konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
-      return;
-    }
-
-    const actionName = getWishListActionName(store);
-
-    if (!actionName) {
-      const items = store.state && store.state.wishList && store.state.wishList.wishListItems
-        ? store.state.wishList.wishListItems
-        : [];
-      updateList(items);
-      hasLoadedOnce = true;
-      showError('');
-      return;
-    }
-
-    showLoading(true);
-    showError('');
-
-    subscribeToWishList(store);
-
-    store.dispatch(actionName)
-      .then(function (result) {
-        hasLoadedOnce = true;
-
-        let documents = [];
-
-        if (Array.isArray(result)) {
-          documents = result;
-        } else if (result && Array.isArray(result.documents)) {
-          documents = result.documents;
-        } else if (store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
-          documents = store.state.wishList.wishListItems;
-        }
-
-        updateList(documents);
-      })
-      .catch(function () {
-        showError('Merkzettel konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
-      })
-      .finally(function () {
+      if (!store) {
         showLoading(false);
-      });
+        showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
+        reject(new Error('wish-list-store-unavailable'));
+        return;
+      }
+
+      const actionName = getWishListActionName(store);
+
+      subscribeToWishList(store);
+
+      showLoading(true);
+      showError('');
+
+      if (!actionName) {
+        const items = store.state && store.state.wishList && store.state.wishList.wishListItems
+          ? store.state.wishList.wishListItems
+          : [];
+        notifyWishListUpdated(items);
+        showLoading(false);
+        resolve(items);
+        return;
+      }
+
+      store.dispatch(actionName)
+        .then(function (result) {
+          let documents = [];
+
+          if (Array.isArray(result)) {
+            documents = result;
+          } else if (result && Array.isArray(result.documents)) {
+            documents = result.documents;
+          } else if (store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
+            documents = store.state.wishList.wishListItems;
+          }
+
+          notifyWishListUpdated(documents);
+          showLoading(false);
+          resolve(documents);
+        })
+        .catch(function (error) {
+          showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
+          showLoading(false);
+          reject(error);
+        });
+    });
   }
 
   function handleDocumentClick(event) {
@@ -999,10 +1204,46 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('click', handleDocumentClick);
     document.addEventListener('keydown', handleKeydown);
     isOpen = true;
+  }
 
-    if (!hasLoadedOnce) {
-      loadWishListItems();
+  function openMenuWithOptions(options) {
+    const config = options || {};
+    const refresh = typeof config.refresh === 'boolean' ? config.refresh : !hasLoadedOnce;
+    const delay = typeof config.delay === 'number' && config.delay > 0 ? config.delay : 0;
+    const focusToggle = config.focusToggle === true;
+
+    function finalizeOpen() {
+      if (!isOpen) {
+        openMenu();
+      } else if (focusToggle) {
+        toggleButton.focus();
+      }
     }
+
+    function executeOpen() {
+      if (refresh) {
+        return loadWishListItems()
+          .catch(function () {
+            return null;
+          })
+          .then(function () {
+            finalizeOpen();
+          });
+      }
+
+      finalizeOpen();
+      return Promise.resolve();
+    }
+
+    if (delay) {
+      return new Promise(function (resolve) {
+        window.setTimeout(function () {
+          executeOpen().then(resolve).catch(resolve);
+        }, delay);
+      });
+    }
+
+    return executeOpen();
   }
 
   function closeMenu() {
@@ -1025,7 +1266,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (isOpen) {
       closeMenu();
     } else {
-      openMenu();
+      openMenuWithOptions();
     }
   });
 
@@ -1033,10 +1274,48 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
   });
 
-window.fhWishlistMenu = window.fhWishlistMenu || {};
+  document.addEventListener('click', function (event) {
+    const wishlistButton = event.target.closest('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+
+    if (!wishlistButton) {
+      return;
+    }
+
+    const store = getVueStore();
+
+    if (store) {
+      subscribeToWishList(store);
+    }
+
+    const waitPromise = store
+      ? waitForNextWishListUpdate(4000)
+      : Promise.reject(new Error('wish-list-store-unavailable'));
+
+    waitPromise
+      .catch(function () {
+        return null;
+      })
+      .then(function () {
+        return loadWishListItems();
+      })
+      .then(function () {
+        return openMenuWithOptions({ refresh: false });
+      })
+      .catch(function () {
+        openMenuWithOptions({ refresh: true });
+      });
+  });
+
+  window.fhWishlistMenu = window.fhWishlistMenu || {};
   window.fhWishlistMenu.close = closeMenu;
   window.fhWishlistMenu.isOpen = function () {
     return isOpen;
+  };
+  window.fhWishlistMenu.open = function (options) {
+    return openMenuWithOptions(options || {});
+  };
+  window.fhWishlistMenu.refresh = function () {
+    return loadWishListItems();
   };
 });
 // End Section: FH wish list flyout preview
