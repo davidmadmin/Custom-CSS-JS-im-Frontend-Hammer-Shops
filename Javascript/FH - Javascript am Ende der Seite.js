@@ -100,6 +100,9 @@ document.addEventListener('DOMContentLoaded', function () {
     return value.replace(/Wunschliste|Merkzettel/gi, 'Merkliste');
   }
 
+  const wishlistTooltipAddText = 'Merkliste hinzufügen';
+  const wishlistTooltipRemoveText = 'Von der Merkliste entfernen';
+
   function updateAttribute(target, attribute) {
     if (!target || !attribute) {
       return;
@@ -115,8 +118,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    if (attribute === 'aria-label' || attribute === 'title') {
+    if (attribute === 'aria-label') {
       target.setAttribute(attribute, 'Merkliste');
+    } else if (attribute === 'title' || attribute === 'data-original-title') {
+      target.setAttribute(attribute, wishlistTooltipAddText);
     }
   }
 
@@ -162,19 +167,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateAttribute(button, 'aria-label');
     updateAttribute(button, 'title');
+    updateAttribute(button, 'data-original-title');
 
     if (button.dataset) {
-      if (button.dataset.originalTitle) {
-        button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
-      }
-
-      if (button.dataset.titleAdd) {
-        button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
-      }
-
-      if (button.dataset.titleRemove) {
-        button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
-      }
+      button.dataset.originalTitle = wishlistTooltipAddText;
+      button.dataset.titleAdd = wishlistTooltipAddText;
+      button.dataset.titleRemove = wishlistTooltipRemoveText;
     }
 
     const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
@@ -1097,29 +1095,92 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function subscribeToWishList(store) {
-    if (!store || typeof store.subscribe !== 'function' || hasSubscribedToStore) {
+    if (!store || hasSubscribedToStore) {
       return;
     }
 
-    store.subscribe(function (mutation, state) {
-      if (!mutation || !mutation.type) {
+    let lastKnownSignature = null;
+
+    function extractWishListItems(state) {
+      if (!state || !state.wishList || !Array.isArray(state.wishList.wishListItems)) {
+        return [];
+      }
+
+      return state.wishList.wishListItems;
+    }
+
+    function createSignature(items) {
+      if (!Array.isArray(items) || !items.length) {
+        return 'empty';
+      }
+
+      return items
+        .map(function (item) {
+          if (!item) {
+            return 'nil';
+          }
+
+          const id = item.id || (item.variation && item.variation.id) || '';
+          const quantity = item.quantity || (item.item && item.item.quantity) || '';
+          return String(id) + '::' + String(quantity);
+        })
+        .join('|');
+    }
+
+    function handleWishListChange(state) {
+      const items = extractWishListItems(state || (store && store.state));
+      const signature = createSignature(items);
+
+      if (signature === lastKnownSignature) {
         return;
       }
 
-      const relevantMutations = [
-        'setWishListItems',
-        'removeWishListItem',
-        'addWishListItemToIndex',
-        'setWishListIds'
-      ];
-
-      if (relevantMutations.indexOf(mutation.type) === -1) {
-        return;
-      }
-
-      const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
+      lastKnownSignature = signature;
       notifyWishListUpdated(items);
-    });
+    }
+
+    if (typeof store.subscribe === 'function') {
+      store.subscribe(function (mutation, state) {
+        if (!mutation || !mutation.type) {
+          return;
+        }
+
+        const mutationType = String(mutation.type);
+        const normalizedType = mutationType.toLowerCase();
+        const relevantMutations = [
+          'setWishListItems',
+          'removeWishListItem',
+          'addWishListItemToIndex',
+          'setWishListIds'
+        ];
+
+        const isExplicitMatch = relevantMutations.indexOf(mutationType) !== -1;
+        const isWishlistMutation = normalizedType.indexOf('wishlist') !== -1;
+
+        if (!isExplicitMatch && !isWishlistMutation) {
+          return;
+        }
+
+        handleWishListChange(state);
+      });
+    }
+
+    if (typeof store.watch === 'function') {
+      try {
+        store.watch(
+          function (state) {
+            const items = extractWishListItems(state);
+            return items ? items.map(function (item) { return item && item.id; }) : [];
+          },
+          function () {
+            handleWishListChange(store.state);
+          },
+          { deep: true }
+        );
+      } catch (error) {
+        // Ignore watch errors silently to avoid breaking wishlist behaviour
+      }
+    }
 
     hasSubscribedToStore = true;
   }

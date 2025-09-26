@@ -144,6 +144,14 @@
 }
 /* End Section: Merkliste Button Styling */
 
+/* Section: FH Header Merkliste Icon Alignment */
+.fh-wishlist-menu-container [data-fh-wishlist-menu-toggle] svg {
+  display: block;
+  margin-left: 1px;
+  transform: translateX(0.5px);
+}
+/* End Section: FH Header Merkliste Icon Alignment */
+
 /* Section: Body Top Margin Fix */
 div.widget.widget-grid.widget-two-col.row.mt-5 {
   margin-top: 1rem !important;
