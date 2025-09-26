@@ -19,6 +19,28 @@
 
 /* End Section: Custom Schriftarten + Preis Text Stylings */
 
+/* Section: FH Header Layout */
+.fh-header {
+  width: 100%;
+}
+
+.fh-header__top-bar,
+.fh-header__main,
+.fh-header__nav {
+  width: 100%;
+}
+
+.fh-header__inner {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.fh-header__nav .fh-header__inner {
+  position: relative;
+}
+/* End Section: FH Header Layout */
+
 /* Section: FH Header Navigation Hover Behaviour */
 .fh-header .nav {
   position: relative;
@@ -44,7 +66,7 @@
 
 .fh-header .dropdown-menu {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1400px;
 }
 /* End Section: FH Header Navigation Hover Behaviour */
 

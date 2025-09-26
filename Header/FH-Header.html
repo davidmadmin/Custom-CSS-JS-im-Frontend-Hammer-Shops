@@ -1,28 +1,31 @@
-<div class="fh-header" data-fh-header-root style="max-width:1600px;width:100%;margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
-  <div style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
-    <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
-      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
-      4,88 Sterne auf Trusted Shops
-    </a>
-    <span style="display:flex;align-items:center;gap:8px;">
-      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
-      Schneller Versand
-    </span>
-    <span style="display:flex;align-items:center;gap:8px;">
-      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
-      Hilfreicher Kundenservice &lt;24h
-    </span>
-    <span style="display:flex;align-items:center;gap:8px;">
-      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
-      Große Auswahl
-    </span>
+<div class="fh-header" data-fh-header-root style="width:100%;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
+  <div class="fh-header__top-bar" style="background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;">
+    <div class="fh-header__inner" style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
+      <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+        4,88 Sterne auf Trusted Shops
+      </a>
+      <span style="display:flex;align-items:center;gap:8px;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+        Schneller Versand
+      </span>
+      <span style="display:flex;align-items:center;gap:8px;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+        Hilfreicher Kundenservice &lt;24h
+      </span>
+      <span style="display:flex;align-items:center;gap:8px;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+        Große Auswahl
+      </span>
+    </div>
   </div>
-  <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:26px 32px 22px;border-bottom:1px solid #e2e2e2;background-color:#ffffff;column-gap:20px;">
-    <a href="/" style="display:flex;align-items:center;">
-      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
-    </a>
-    <form action="#" method="get" style="width:100%;display:flex;align-items:center;">
-      <input type="search" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:14px 52px 14px 24px;border:1px solid #d5d5d5;border-radius:18px;font-size:15px;line-height:1.4;color:#1f2937;background-color:#f8fafc;box-shadow:inset 0 1px 2px rgba(15,23,42,0.08);">
+  <div class="fh-header__main" style="background-color:#ffffff;border-bottom:1px solid #e2e2e2;">
+    <div class="fh-header__inner" style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:26px 32px 22px;column-gap:20px;">
+      <a href="/" style="display:flex;align-items:center;">
+        <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
+      </a>
+      <form action="#" method="get" style="width:100%;display:flex;align-items:center;">
+        <input type="search" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:14px 52px 14px 24px;border:1px solid #d5d5d5;border-radius:18px;font-size:15px;line-height:1.4;color:#1f2937;background-color:#f8fafc;box-shadow:inset 0 1px 2px rgba(15,23,42,0.08);">
     </form>
     <div class="fh-wishlist-menu-container" data-fh-wishlist-menu-container style="position:relative;justify-self:end;">
       <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle style="position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
@@ -82,9 +85,10 @@
       </a>
       <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
     </div>
+    </div>
   </div>
-  <nav style="background-color:#ffffff;">
-    <div style="max-width:1600px;width:100%;margin:0 auto;position:relative;">
+  <nav class="fh-header__nav" style="background-color:#ffffff;">
+    <div class="fh-header__inner">
       <ul class="nav" style="display:flex;list-style:none;margin:0;padding:0 32px;justify-content:space-between;font-size:15px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;">
       <li class="nav-item dropdown" style="position:static;flex:1;text-align:center;">
         <a class="nav-link" href="/schloesser" style="display:block;padding:18px 12px;color:#1a1a1a;text-decoration:none;">SCHLÖSSER</a>
