@@ -2,6 +2,13 @@
 
 @import url("https://use.typekit.net/lwl7tyw.css");
 
+/* Section: Layout Container Width Overrides */
+#page-header > div,
+#vue-app > div.footer.container-max.d-print-none {
+  width: 100vw;
+}
+/* End Section: Layout Container Width Overrides */
+
 .price.h1 {
   font-family: "industry", sans-serif;
   font-weight: 600;
