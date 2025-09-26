@@ -24,6 +24,18 @@
   position: relative;
 }
 
+/* Section: Page Header Background */
+#page-header {
+  background-color: #ffffff !important;
+}
+
+#page-header > div {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* End Section: Page Header Background */
+
 .fh-header .dropdown-menu {
   display: none;
   opacity: 0;
