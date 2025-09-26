@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   menu.addEventListener('click', function (event) {
-    const trigger = event.target.closest('[data-fh-login-trigger], [data-fh-registration-trigger]');
+    const trigger = event.target.closest('[data-fh-login-trigger], [data-fh-registration-trigger], [data-fh-account-close]');
 
     if (trigger) {
       closeMenu();
