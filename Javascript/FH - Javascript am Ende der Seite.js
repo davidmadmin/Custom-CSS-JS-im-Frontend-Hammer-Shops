@@ -1,5 +1,96 @@
 // Section: Global scripts for all pages
 
+// Section: FH header benefits bar injection
+(function () {
+  const BAR_ID = 'fh-header-benefits-bar';
+  const TARGET_SELECTOR = '#page-header';
+  const BENEFITS_MARKUP = `
+<div id="${BAR_ID}" data-fh-header-benefits style="margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#ffffff;position:relative;z-index:1000;">
+  <div style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
+    <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
+      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+      4,88 Sterne auf Trusted Shops
+    </a>
+    <span style="display:flex;align-items:center;gap:8px;">
+      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+      Schneller Versand
+    </span>
+    <span style="display:flex;align-items:center;gap:8px;">
+      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+      Hilfreicher Kundenservice &lt;24h
+    </span>
+    <span style="display:flex;align-items:center;gap:8px;">
+      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
+      Große Auswahl
+    </span>
+  </div>
+</div>
+`.trim();
+
+  function isCheckoutPage() {
+    const path = window.location.pathname || '';
+
+    return (
+      path.includes('/checkout') ||
+      path.includes('/kaufabwicklung') ||
+      path.includes('/kasse')
+    );
+  }
+
+  function insertBar() {
+    if (document.getElementById(BAR_ID)) {
+      return true;
+    }
+
+    const target = document.querySelector(TARGET_SELECTOR);
+
+    if (!target || !target.parentNode) {
+      return false;
+    }
+
+    const template = document.createElement('template');
+    template.innerHTML = BENEFITS_MARKUP;
+
+    const bar = template.content.firstElementChild;
+
+    if (!bar) {
+      return true;
+    }
+
+    target.parentNode.insertBefore(bar, target);
+
+    return true;
+  }
+
+  function init() {
+    if (isCheckoutPage()) {
+      return;
+    }
+
+    if (insertBar()) {
+      return;
+    }
+
+    const observer = new MutationObserver(function () {
+      if (insertBar()) {
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+// End Section: FH header benefits bar injection
+
 // Section: FH account menu toggle behaviour
 document.addEventListener('DOMContentLoaded', function () {
   function resolveGreeting(defaultGreeting) {
