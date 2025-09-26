@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return value;
     }
 
-    return value.replace(/Wunschliste/gi, 'Merkliste');
+    return value.replace(/Wunschliste|Merkzettel/gi, 'Merkliste');
   }
 
   function updateAttribute(target, attribute) {
@@ -242,6 +242,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let isOpen = false;
   let hasLoadedOnce = false;
   let hasSubscribedToStore = false;
+  let wishListUpdateVersion = 0;
+  const pendingWishListUpdateWaiters = [];
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) {
@@ -328,6 +330,74 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     return null;
+  }
+
+  function notifyWishListUpdated(items) {
+    const normalizedItems = Array.isArray(items) ? items : [];
+    hasLoadedOnce = true;
+    wishListUpdateVersion += 1;
+    updateList(normalizedItems);
+
+    if (!pendingWishListUpdateWaiters.length) {
+      return;
+    }
+
+    const currentVersion = wishListUpdateVersion;
+
+    for (let index = pendingWishListUpdateWaiters.length - 1; index >= 0; index--) {
+      const waiter = pendingWishListUpdateWaiters[index];
+
+      if (currentVersion > waiter.version) {
+        pendingWishListUpdateWaiters.splice(index, 1);
+
+        if (waiter.timeoutId) {
+          window.clearTimeout(waiter.timeoutId);
+        }
+
+        try {
+          waiter.resolve({
+            items: normalizedItems,
+            version: currentVersion
+          });
+        } catch (error) {
+          // Ignore errors thrown inside resolver handlers
+        }
+      }
+    }
+  }
+
+  function waitForNextWishListUpdate(timeoutMs) {
+    const versionAtRegistration = wishListUpdateVersion;
+
+    return new Promise(function (resolve, reject) {
+      if (wishListUpdateVersion > versionAtRegistration) {
+        resolve({
+          version: wishListUpdateVersion
+        });
+        return;
+      }
+
+      const waiter = {
+        version: versionAtRegistration,
+        resolve: resolve,
+        reject: reject,
+        timeoutId: null
+      };
+
+      if (typeof timeoutMs === 'number' && timeoutMs > 0) {
+        waiter.timeoutId = window.setTimeout(function () {
+          const index = pendingWishListUpdateWaiters.indexOf(waiter);
+
+          if (index !== -1) {
+            pendingWishListUpdateWaiters.splice(index, 1);
+          }
+
+          reject(new Error('timeout'));
+        }, timeoutMs);
+      }
+
+      pendingWishListUpdateWaiters.push(waiter);
+    });
   }
 
   function showLoading(isLoading) {
@@ -647,7 +717,7 @@ document.addEventListener('DOMContentLoaded', function () {
       removeButton.style.color = '#dc2626';
       removeButton.style.flex = '0 0 auto';
       removeButton.style.transition = 'border-color 0.2s ease, background-color 0.2s ease';
-      removeButton.setAttribute('aria-label', 'Artikel vom Merkzettel entfernen');
+      removeButton.setAttribute('aria-label', 'Artikel von der Merkliste entfernen');
 
       const removeIcon = document.createElement('i');
       removeIcon.className = 'fa fa-trash-o default-float';
@@ -1048,60 +1118,62 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
-      updateList(items);
+      notifyWishListUpdated(items);
     });
 
     hasSubscribedToStore = true;
   }
 
   function loadWishListItems() {
-    const store = getVueStore();
+    return new Promise(function (resolve, reject) {
+      const store = getVueStore();
 
-    if (!store) {
-      showLoading(false);
-      showError('Merkzettel konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
-      return;
-    }
-
-    const actionName = getWishListActionName(store);
-
-    if (!actionName) {
-      const items = store.state && store.state.wishList && store.state.wishList.wishListItems
-        ? store.state.wishList.wishListItems
-        : [];
-      updateList(items);
-      hasLoadedOnce = true;
-      showError('');
-      return;
-    }
-
-    showLoading(true);
-    showError('');
-
-    subscribeToWishList(store);
-
-    store.dispatch(actionName)
-      .then(function (result) {
-        hasLoadedOnce = true;
-
-        let documents = [];
-
-        if (Array.isArray(result)) {
-          documents = result;
-        } else if (result && Array.isArray(result.documents)) {
-          documents = result.documents;
-        } else if (store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
-          documents = store.state.wishList.wishListItems;
-        }
-
-        updateList(documents);
-      })
-      .catch(function () {
-        showError('Merkzettel konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
-      })
-      .finally(function () {
+      if (!store) {
         showLoading(false);
-      });
+        showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
+        reject(new Error('wish-list-store-unavailable'));
+        return;
+      }
+
+      const actionName = getWishListActionName(store);
+
+      subscribeToWishList(store);
+
+      showLoading(true);
+      showError('');
+
+      if (!actionName) {
+        const items = store.state && store.state.wishList && store.state.wishList.wishListItems
+          ? store.state.wishList.wishListItems
+          : [];
+        notifyWishListUpdated(items);
+        showLoading(false);
+        resolve(items);
+        return;
+      }
+
+      store.dispatch(actionName)
+        .then(function (result) {
+          let documents = [];
+
+          if (Array.isArray(result)) {
+            documents = result;
+          } else if (result && Array.isArray(result.documents)) {
+            documents = result.documents;
+          } else if (store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
+            documents = store.state.wishList.wishListItems;
+          }
+
+          notifyWishListUpdated(documents);
+          showLoading(false);
+          resolve(documents);
+        })
+        .catch(function (error) {
+          showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
+          showLoading(false);
+          reject(error);
+        });
+    });
   }
 
   function handleDocumentClick(event) {
@@ -1140,23 +1212,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const delay = typeof config.delay === 'number' && config.delay > 0 ? config.delay : 0;
     const focusToggle = config.focusToggle === true;
 
-    function executeOpen() {
+    function finalizeOpen() {
       if (!isOpen) {
         openMenu();
       } else if (focusToggle) {
         toggleButton.focus();
       }
+    }
 
-      if (refresh || !hasLoadedOnce) {
-        loadWishListItems();
+    function executeOpen() {
+      if (refresh) {
+        return loadWishListItems()
+          .catch(function () {
+            return null;
+          })
+          .then(function () {
+            finalizeOpen();
+          });
       }
+
+      finalizeOpen();
+      return Promise.resolve();
     }
 
     if (delay) {
-      window.setTimeout(executeOpen, delay);
-    } else {
-      executeOpen();
+      return new Promise(function (resolve) {
+        window.setTimeout(function () {
+          executeOpen().then(resolve).catch(resolve);
+        }, delay);
+      });
     }
+
+    return executeOpen();
   }
 
   function closeMenu() {
@@ -1194,7 +1281,29 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    openMenuWithOptions({ refresh: true });
+    const store = getVueStore();
+
+    if (store) {
+      subscribeToWishList(store);
+    }
+
+    const waitPromise = store
+      ? waitForNextWishListUpdate(4000)
+      : Promise.reject(new Error('wish-list-store-unavailable'));
+
+    waitPromise
+      .catch(function () {
+        return null;
+      })
+      .then(function () {
+        return loadWishListItems();
+      })
+      .then(function () {
+        return openMenuWithOptions({ refresh: false });
+      })
+      .catch(function () {
+        openMenuWithOptions({ refresh: true });
+      });
   });
 
   window.fhWishlistMenu = window.fhWishlistMenu || {};
@@ -1203,10 +1312,10 @@ document.addEventListener('DOMContentLoaded', function () {
     return isOpen;
   };
   window.fhWishlistMenu.open = function (options) {
-    openMenuWithOptions(options || {});
+    return openMenuWithOptions(options || {});
   };
   window.fhWishlistMenu.refresh = function () {
-    loadWishListItems();
+    return loadWishListItems();
   };
 });
 // End Section: FH wish list flyout preview
