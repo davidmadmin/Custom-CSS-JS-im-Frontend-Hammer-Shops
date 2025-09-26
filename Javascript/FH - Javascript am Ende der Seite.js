@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    function updateAccountGreeting() {
+    function performAccountGreetingUpdate() {
       const store = getStoreInstance();
 
       if (!store || !store.getters) {
@@ -252,6 +252,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
       greetingElement.textContent = greetingText;
       return true;
+    }
+
+    function updateAccountGreeting() {
+      try {
+        return performAccountGreetingUpdate();
+      } catch (error) {
+        restoreOriginalGreeting();
+        return false;
+      }
     }
 
     updateAccountGreeting();
