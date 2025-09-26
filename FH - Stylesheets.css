@@ -92,6 +92,38 @@
 
 /* End Section: Allgemeines Button-Styling für .btn-primary */
 
+/* Section: Wunschliste Button Styling */
+.widget.widget-add-to-wish-list .btn {
+  border: 2px solid #31a5f0 !important;
+  border-radius: 999px;
+  padding: 0.4rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #0f172a !important;
+  background-color: #f8fbff !important;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(17, 94, 163, 0.15);
+}
+
+.widget.widget-add-to-wish-list .btn .fa {
+  margin-right: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.widget.widget-add-to-wish-list .btn:hover,
+.widget.widget-add-to-wish-list .btn:focus {
+  color: #ffffff !important;
+  background-color: #31a5f0 !important;
+  border-color: #1d7dc0 !important;
+  box-shadow: 0 4px 12px rgba(17, 94, 163, 0.2);
+  text-decoration: none;
+}
+
+.widget.widget-add-to-wish-list .btn:active {
+  transform: translateY(1px);
+}
+/* End Section: Wunschliste Button Styling */
+
 /* Section: Body Top Margin Fix */
 div.widget.widget-grid.widget-two-col.row.mt-5 {
   margin-top: 1rem !important;

@@ -999,9 +999,30 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('click', handleDocumentClick);
     document.addEventListener('keydown', handleKeydown);
     isOpen = true;
+  }
 
-    if (!hasLoadedOnce) {
-      loadWishListItems();
+  function openMenuWithOptions(options) {
+    const config = options || {};
+    const refresh = typeof config.refresh === 'boolean' ? config.refresh : !hasLoadedOnce;
+    const delay = typeof config.delay === 'number' && config.delay > 0 ? config.delay : 0;
+    const focusToggle = config.focusToggle === true;
+
+    function executeOpen() {
+      if (!isOpen) {
+        openMenu();
+      } else if (focusToggle) {
+        toggleButton.focus();
+      }
+
+      if (refresh || !hasLoadedOnce) {
+        loadWishListItems();
+      }
+    }
+
+    if (delay) {
+      window.setTimeout(executeOpen, delay);
+    } else {
+      executeOpen();
     }
   }
 
@@ -1025,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (isOpen) {
       closeMenu();
     } else {
-      openMenu();
+      openMenuWithOptions();
     }
   });
 
@@ -1033,10 +1054,26 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
   });
 
-window.fhWishlistMenu = window.fhWishlistMenu || {};
+  document.addEventListener('click', function (event) {
+    const wishlistButton = event.target.closest('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+
+    if (!wishlistButton) {
+      return;
+    }
+
+    openMenuWithOptions({ refresh: true });
+  });
+
+  window.fhWishlistMenu = window.fhWishlistMenu || {};
   window.fhWishlistMenu.close = closeMenu;
   window.fhWishlistMenu.isOpen = function () {
     return isOpen;
+  };
+  window.fhWishlistMenu.open = function (options) {
+    openMenuWithOptions(options || {});
+  };
+  window.fhWishlistMenu.refresh = function () {
+    loadWishListItems();
   };
 });
 // End Section: FH wish list flyout preview
