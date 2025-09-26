@@ -87,6 +87,212 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH account greeting adjustments
+document.addEventListener('DOMContentLoaded', function () {
+  const greetingElement = document.querySelector('[data-fh-account-greeting]');
+
+  if (!greetingElement) {
+    return;
+  }
+
+  const relevantMutations = ['setUserData', 'user/setUserData', 'logout', 'user/logout'];
+  let storeCheckAttempts = 0;
+  const maxStoreChecks = 50;
+
+  function mapSalutation(value) {
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    if (typeof value === 'number') {
+      if (value === 1) {
+        return 'Herr';
+      }
+
+      if (value === 2) {
+        return 'Frau';
+      }
+
+      return '';
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+
+      if (trimmed.length === 0) {
+        return '';
+      }
+
+      const lower = trimmed.toLowerCase();
+
+      if (['herr', 'mr', 'mister'].includes(lower)) {
+        return 'Herr';
+      }
+
+      if (['frau', 'mrs', 'ms', 'miss'].includes(lower)) {
+        return 'Frau';
+      }
+
+      if (lower === 'male') {
+        return 'Herr';
+      }
+
+      if (lower === 'female') {
+        return 'Frau';
+      }
+
+      return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+    }
+
+    return '';
+  }
+
+  function getStore() {
+    if (window.CeresApp && window.CeresApp.$store) {
+      return window.CeresApp.$store;
+    }
+
+    return null;
+  }
+
+  function extractUserData(store) {
+    if (!store) {
+      return null;
+    }
+
+    if (store.state) {
+      if (store.state.user && store.state.user.userData) {
+        return store.state.user.userData;
+      }
+
+      if (store.state.userData) {
+        return store.state.userData;
+      }
+    }
+
+    if (store.getters && store.getters.userData) {
+      return store.getters.userData;
+    }
+
+    return null;
+  }
+
+  function resolveLastName(userData) {
+    if (!userData || typeof userData !== 'object') {
+      return '';
+    }
+
+    const candidates = [userData.lastName, userData.surname, userData.name2];
+
+    for (let index = 0; index < candidates.length; index += 1) {
+      const value = candidates[index];
+
+      if (typeof value === 'string') {
+        const trimmed = value.trim();
+
+        if (trimmed.length > 0) {
+          return trimmed;
+        }
+      }
+    }
+
+    return '';
+  }
+
+  function resolveSalutation(userData) {
+    if (!userData || typeof userData !== 'object') {
+      return '';
+    }
+
+    const directCandidates = [
+      userData.formOfAddress,
+      userData.salutation,
+      userData.title,
+      userData.academicTitle,
+      userData.gender
+    ];
+
+    for (let index = 0; index < directCandidates.length; index += 1) {
+      const candidate = mapSalutation(directCandidates[index]);
+
+      if (candidate) {
+        return candidate;
+      }
+    }
+
+    if (Array.isArray(userData.options)) {
+      for (let index = 0; index < userData.options.length; index += 1) {
+        const option = userData.options[index];
+
+        if (option && typeof option === 'object') {
+          const optionValue = mapSalutation(option.value);
+
+          if (optionValue) {
+            return optionValue;
+          }
+        }
+      }
+    }
+
+    return '';
+  }
+
+  function buildGreeting() {
+    const store = getStore();
+    const userData = extractUserData(store);
+
+    const lastName = resolveLastName(userData);
+    const salutation = resolveSalutation(userData);
+
+    if (salutation && lastName) {
+      return 'Hallo, '.concat(salutation, ' ', lastName);
+    }
+
+    return 'Hallo';
+  }
+
+  function applyGreeting() {
+    greetingElement.textContent = buildGreeting();
+    greetingElement.removeAttribute('v-cloak');
+  }
+
+  function subscribeToStore(store) {
+    if (!store || typeof store.subscribe !== 'function') {
+      return;
+    }
+
+    store.subscribe(function (mutation) {
+      if (!mutation || typeof mutation.type !== 'string') {
+        return;
+      }
+
+      if (relevantMutations.indexOf(mutation.type) !== -1 || /setUserData$/.test(mutation.type)) {
+        applyGreeting();
+      }
+    });
+  }
+
+  (function waitForStore() {
+    const store = getStore();
+
+    if (!store) {
+      storeCheckAttempts += 1;
+
+      if (storeCheckAttempts >= maxStoreChecks) {
+        applyGreeting();
+        return;
+      }
+
+      window.setTimeout(waitForStore, 100);
+      return;
+    }
+
+    applyGreeting();
+    subscribeToStore(store);
+  })();
+});
+// End Section: FH account greeting adjustments
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
