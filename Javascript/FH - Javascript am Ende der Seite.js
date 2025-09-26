@@ -1891,8 +1891,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.querySelector('input.search-input');
   if (!searchInput) return;
 
+  const searchForm = searchInput.closest('.fh-header__search-form');
   const clearButton = document.querySelector('[data-search-clear]');
   const toggleClearButton = () => {
+    if (searchForm) {
+      if (searchInput.value && searchInput.value.length > 0) {
+        searchForm.setAttribute('data-has-value', 'true');
+      } else {
+        searchForm.removeAttribute('data-has-value');
+      }
+    }
+
     if (!clearButton) return;
     clearButton.style.display = searchInput.value ? 'flex' : 'none';
   };
@@ -2148,6 +2157,257 @@ document.addEventListener("DOMContentLoaded", function() {
   patchBasketButton();
 });
 
+
+// Section: FH Header mobile navigation
+document.addEventListener('DOMContentLoaded', function () {
+  const headerRoot = document.querySelector('[data-fh-header-root]');
+
+  if (!headerRoot) {
+    return;
+  }
+
+  const mobileMenu = headerRoot.querySelector('[data-fh-mobile-menu]');
+  const mobileOverlay = headerRoot.querySelector('[data-fh-mobile-menu-overlay]');
+  const openButtons = headerRoot.querySelectorAll('[data-fh-mobile-menu-toggle]');
+  const closeButton = headerRoot.querySelector('[data-fh-mobile-menu-close]');
+
+  if (!mobileMenu || !mobileOverlay || openButtons.length === 0) {
+    return;
+  }
+
+  const subToggleButtons = mobileMenu.querySelectorAll('[data-fh-mobile-subtoggle]');
+  const htmlEl = document.documentElement;
+  const bodyEl = document.body;
+  let lastFocusedElement = null;
+
+  function escapeSelector(value) {
+    if (window.CSS && typeof window.CSS.escape === 'function') {
+      return window.CSS.escape(value);
+    }
+
+    return value.replace(/[\s#.;?%&,+*~'"^$\[\]()=>|/@\\]/g, '\\$&');
+  }
+
+  function setToggleExpanded(isExpanded) {
+    openButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    });
+  }
+
+  function lockScroll() {
+    htmlEl.classList.add('fh-mobile-menu-open');
+    bodyEl.classList.add('fh-mobile-menu-open');
+  }
+
+  function unlockScroll() {
+    htmlEl.classList.remove('fh-mobile-menu-open');
+    bodyEl.classList.remove('fh-mobile-menu-open');
+  }
+
+  function setVisibility(hidden) {
+    mobileMenu.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+    mobileOverlay.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+  }
+
+  function getFocusableElements() {
+    const focusableSelectors = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled]):not([type="hidden"])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+
+    return Array.prototype.slice.call(
+      mobileMenu.querySelectorAll(focusableSelectors)
+    );
+  }
+
+  function openMenu() {
+    if (mobileMenu.classList.contains('is-open')) {
+      return;
+    }
+
+    lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    mobileMenu.classList.add('is-open');
+    mobileOverlay.classList.add('is-visible');
+    setToggleExpanded(true);
+    setVisibility(false);
+    lockScroll();
+
+    const focusable = getFocusableElements();
+    if (focusable.length > 0) {
+      focusable[0].focus();
+    }
+
+    document.addEventListener('keydown', handleKeydown);
+  }
+
+  function resetSubmenus() {
+    subToggleButtons.forEach(function (button) {
+      const id = button.getAttribute('aria-controls');
+      if (id) {
+        const submenu = mobileMenu.querySelector('#' + escapeSelector(id));
+        if (submenu) {
+          submenu.hidden = true;
+        }
+      }
+
+      button.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function closeMenu() {
+    if (!mobileMenu.classList.contains('is-open')) {
+      return;
+    }
+
+    mobileMenu.classList.remove('is-open');
+    mobileOverlay.classList.remove('is-visible');
+    setToggleExpanded(false);
+    setVisibility(true);
+    unlockScroll();
+    resetSubmenus();
+    document.removeEventListener('keydown', handleKeydown);
+
+    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      setTimeout(function () {
+        lastFocusedElement.focus();
+      }, 0);
+    }
+
+    lastFocusedElement = null;
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const focusable = getFocusableElements();
+    if (focusable.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
+    } else if (document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function closeOtherSubmenus(currentButton) {
+    subToggleButtons.forEach(function (button) {
+      if (button === currentButton) {
+        return;
+      }
+
+      const id = button.getAttribute('aria-controls');
+      if (!id) {
+        return;
+      }
+
+      const submenu = mobileMenu.querySelector('#' + escapeSelector(id));
+      if (!submenu) {
+        return;
+      }
+
+      if (!submenu.hasAttribute('hidden')) {
+        submenu.hidden = true;
+      }
+
+      button.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  resetSubmenus();
+
+  subToggleButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      const targetId = button.getAttribute('aria-controls');
+      if (!targetId) {
+        return;
+      }
+
+      const targetSubmenu = mobileMenu.querySelector('#' + escapeSelector(targetId));
+      if (!targetSubmenu) {
+        return;
+      }
+
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      if (!isExpanded) {
+        closeOtherSubmenus(button);
+      }
+
+      button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+      targetSubmenu.hidden = isExpanded;
+    });
+  });
+
+  openButtons.forEach(function (button) {
+    button.setAttribute('aria-expanded', 'false');
+
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (mobileMenu.classList.contains('is-open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+  });
+
+  if (closeButton) {
+    closeButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  }
+
+  mobileOverlay.addEventListener('click', function (event) {
+    event.preventDefault();
+    closeMenu();
+  });
+
+  mobileMenu.addEventListener('click', function (event) {
+    const directCloseTrigger = event.target.closest('[data-fh-mobile-menu-close]');
+    if (directCloseTrigger) {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    const navLink = event.target.closest('.fh-header__mobile-menu-link');
+    if (navLink) {
+      closeMenu();
+    }
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth >= 993) {
+      closeMenu();
+    }
+  });
+});
+// End Section: FH Header mobile navigation
 
 // End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
