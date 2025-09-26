@@ -1,5 +1,5 @@
 <div class="fh-header" data-fh-header-root style="margin:0 auto;font-family:'Open Sans',Arial,sans-serif;color:#1a1a1a;position:relative;z-index:1000;">
-  <div style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
+  <div class="fh-header-topbar" style="display:flex;align-items:center;justify-content:center;gap:48px;padding:10px 32px;background:linear-gradient(90deg,#1f2937,#0f172a);color:#ffffff;font-size:13px;letter-spacing:0.3px;text-transform:uppercase;">
     <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
       <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background-color:#38bdf8;"></span>
       4,88 Sterne auf Trusted Shops
@@ -17,19 +17,39 @@
       Große Auswahl
     </span>
   </div>
-  <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;padding:26px 32px 22px;border-bottom:1px solid #e2e2e2;background-color:#ffffff;column-gap:20px;">
+  <div class="fh-header-main" style="display:grid;grid-template-columns:auto auto 1fr auto auto auto;align-items:center;padding:26px 32px 22px;border-bottom:1px solid #e2e2e2;background-color:#ffffff;column-gap:20px;">
+    <button type="button" class="fh-header-burger" data-fh-mobile-toggle aria-expanded="false" aria-controls="fh-mobile-drawer" aria-label="Hauptmenü öffnen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <a href="/" style="display:flex;align-items:center;">
       <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER" style="height:64px;width:auto;">
     </a>
-    <form action="#" method="get" style="width:100%;display:flex;align-items:center;position:relative;">
-      <input type="search" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche" style="width:100%;padding:14px 52px 14px 24px;border:1px solid #d5d5d5;border-radius:18px;font-size:15px;line-height:1.4;color:#1f2937;background-color:#f8fafc;box-shadow:inset 0 1px 2px rgba(15,23,42,0.08);">
-      <button type="button" data-search-clear aria-label="Eingabe löschen" style="position:absolute;right:18px;top:50%;transform:translateY(-50%);display:none;align-items:center;justify-content:center;width:24px;height:24px;padding:0;border:none;background:none;color:#94a3b8;cursor:pointer;transition:color .2s ease;">
-        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
-          <line x1="5" y1="5" x2="15" y2="15"></line>
-          <line x1="15" y1="5" x2="5" y2="15"></line>
+    <div class="fh-header-search">
+      <button type="button" class="fh-header-search-toggle" data-fh-search-toggle aria-expanded="false" aria-controls="fh-header-search-panel">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="20" y1="20" x2="16.65" y2="16.65"></line>
         </svg>
+        <span>Suche</span>
       </button>
-    </form>
+      <div class="fh-header-search-panel" id="fh-header-search-panel" data-fh-search-panel hidden>
+        <form action="#" method="get">
+          <label class="fh-header-search-label" for="fh-header-search-input">Suchbegriff eingeben</label>
+          <div class="fh-header-search-field">
+            <input type="search" id="fh-header-search-input" name="q" class="search-input" placeholder="Suchbegriff eingeben" aria-label="Suche">
+            <button type="button" data-search-clear aria-label="Eingabe löschen" class="fh-header-search-clear">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="5" x2="15" y2="15"></line>
+                <line x1="15" y1="5" x2="5" y2="15"></line>
+              </svg>
+            </button>
+          </div>
+          <button type="submit" class="fh-header-search-submit">Suchen</button>
+        </form>
+      </div>
+    </div>
     <div class="fh-wishlist-menu-container" data-fh-wishlist-menu-container style="position:relative;justify-self:end;">
       <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle style="position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #d9d9d9;border-radius:14px;background-color:#ffffff;color:#1a1a1a;cursor:pointer;padding:0;transition:all .2s ease;">
         <span style="position:absolute;top:-6px;right:-6px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background-color:#31a5f0;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.3px;line-height:1;" v-cloak v-text="$store.getters.wishListCount || 0"></span>
@@ -388,4 +408,322 @@
       </ul>
     </div>
   </nav>
+  <div class="fh-mobile-drawer" id="fh-mobile-drawer" aria-hidden="true" data-fh-mobile-drawer>
+    <div class="fh-mobile-drawer__overlay" data-fh-mobile-close></div>
+    <div class="fh-mobile-drawer__panel">
+      <div class="fh-mobile-drawer__header">
+        <span>Menü</span>
+        <button type="button" class="fh-mobile-drawer__close" data-fh-mobile-close aria-label="Menü schließen">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="5" x2="15" y2="15"></line>
+            <line x1="15" y1="5" x2="5" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+      <nav class="fh-mobile-nav" aria-label="Mobile Hauptnavigation">
+        <ul>
+          <li>
+            <button type="button" class="fh-mobile-nav__toggle" aria-expanded="false">SCHLÖSSER</button>
+            <div class="fh-mobile-nav__panel" hidden>
+              <ul>
+                <li><a href="#">Einsteckschlösser für Metalltore</a></li>
+                <li><a href="#">elektrische Türöffner</a></li>
+                <li><a href="#">FH-Schlösser</a></li>
+                <li><a href="#">Garagentorschlösser</a></li>
+                <li><a href="#">Haustürschlösser</a></li>
+                <li><a href="#">Kastenschlösser</a></li>
+                <li><a href="#">Korridortürschlösser</a></li>
+                <li><a href="#">Rohrrahmenschlösser</a></li>
+                <li><a href="#">Rosetten und Schilder</a></li>
+                <li><a href="#">Schließbleche</a></li>
+                <li><a href="#">WC-Tür-Schlösser</a></li>
+                <li><a href="#">Wohnungstürschlösser</a></li>
+                <li><a href="#">Zimmertürschlösser</a></li>
+                <li><a href="#">Zubehör für Schloss und Tor</a></li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Mehr zu SCHLÖSSER</span>
+                  <ul>
+                    <li><a href="/schloesser">Alle SCHLÖSSER sehen</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <button type="button" class="fh-mobile-nav__toggle" aria-expanded="false">Beschläge</button>
+            <div class="fh-mobile-nav__panel" hidden>
+              <ul>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Platzhalter Menu 2</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Kategorie 2</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Kategorie 3</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Kategorie 4</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Kategorie 5</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Alle Beschläge sehen</a></li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <button type="button" class="fh-mobile-nav__toggle" aria-expanded="false">Sicherungen</button>
+            <div class="fh-mobile-nav__panel" hidden>
+              <ul>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Platzhalter Menu 3</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Kategorie 2</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Kategorie 3</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li class="fh-mobile-nav__link-group">
+                  <span>Kategorie 4</span>
+                  <ul>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                    <li><a href="#">[Platzhalter]</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Alle Sicherungen sehen</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div class="fh-header-search-backdrop" data-fh-search-backdrop hidden></div>
 </div>
+<script>
+  (function () {
+    var headerRoot = document.querySelector('[data-fh-header-root]');
+    if (!headerRoot) {
+      return;
+    }
+
+    var body = document.body;
+    var mobileToggle = headerRoot.querySelector('[data-fh-mobile-toggle]');
+    var mobileDrawer = headerRoot.querySelector('[data-fh-mobile-drawer]');
+    var mobileCloseTriggers = headerRoot.querySelectorAll('[data-fh-mobile-close]');
+
+    var searchToggle = headerRoot.querySelector('[data-fh-search-toggle]');
+    var searchPanel = headerRoot.querySelector('[data-fh-search-panel]');
+    var searchBackdrop = headerRoot.querySelector('[data-fh-search-backdrop]');
+    var searchInput = headerRoot.querySelector('#fh-header-search-input');
+    var searchClear = headerRoot.querySelector('[data-search-clear]');
+
+    function shouldLockScroll() {
+      return window.matchMedia('(max-width: 991px)').matches;
+    }
+
+    function lockScroll() {
+      if (shouldLockScroll()) {
+        body.classList.add('fh-no-scroll');
+      }
+    }
+
+    function unlockScroll() {
+      if (
+        !headerRoot.classList.contains('fh-mobile-open') &&
+        !headerRoot.classList.contains('fh-search-open')
+      ) {
+        body.classList.remove('fh-no-scroll');
+      }
+    }
+
+    function openMobileDrawer() {
+      if (!mobileDrawer) return;
+      closeSearch();
+      mobileDrawer.setAttribute('aria-hidden', 'false');
+      headerRoot.classList.add('fh-mobile-open');
+      if (mobileToggle) {
+        mobileToggle.setAttribute('aria-expanded', 'true');
+      }
+      lockScroll();
+    }
+
+    function closeMobileDrawer() {
+      if (!mobileDrawer) return;
+      mobileDrawer.setAttribute('aria-hidden', 'true');
+      headerRoot.classList.remove('fh-mobile-open');
+      if (mobileToggle) {
+        mobileToggle.setAttribute('aria-expanded', 'false');
+      }
+      unlockScroll();
+    }
+
+    function toggleMobileDrawer() {
+      if (!mobileDrawer) return;
+      if (mobileDrawer.getAttribute('aria-hidden') === 'true') {
+        openMobileDrawer();
+      } else {
+        closeMobileDrawer();
+      }
+    }
+
+    function openSearch() {
+      if (!searchPanel) return;
+      closeMobileDrawer();
+      searchPanel.removeAttribute('hidden');
+      headerRoot.classList.add('fh-search-open');
+      if (searchToggle) {
+        searchToggle.setAttribute('aria-expanded', 'true');
+      }
+      if (searchBackdrop) {
+        searchBackdrop.hidden = false;
+      }
+      lockScroll();
+      window.setTimeout(function () {
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 10);
+    }
+
+    function closeSearch() {
+      if (!searchPanel) return;
+      searchPanel.setAttribute('hidden', '');
+      headerRoot.classList.remove('fh-search-open');
+      if (searchToggle) {
+        searchToggle.setAttribute('aria-expanded', 'false');
+      }
+      if (searchBackdrop) {
+        searchBackdrop.hidden = true;
+      }
+      unlockScroll();
+    }
+
+    function toggleSearch() {
+      if (!searchPanel) return;
+      if (searchPanel.hasAttribute('hidden')) {
+        openSearch();
+      } else {
+        closeSearch();
+      }
+    }
+
+    function handleEsc(event) {
+      if (event.key !== 'Escape') return;
+      if (headerRoot.classList.contains('fh-mobile-open')) {
+        closeMobileDrawer();
+      }
+      if (headerRoot.classList.contains('fh-search-open')) {
+        closeSearch();
+      }
+    }
+
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', function () {
+        toggleMobileDrawer();
+      });
+    }
+
+    mobileCloseTriggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        closeMobileDrawer();
+      });
+    });
+
+    if (searchToggle) {
+      searchToggle.addEventListener('click', function () {
+        toggleSearch();
+      });
+    }
+
+    if (searchBackdrop) {
+      searchBackdrop.addEventListener('click', function () {
+        closeSearch();
+      });
+    }
+
+    if (searchClear && searchInput) {
+      searchClear.addEventListener('click', function () {
+        searchInput.value = '';
+        searchInput.focus();
+        updateSearchClearVisibility();
+      });
+
+      ['input', 'change'].forEach(function (evt) {
+        searchInput.addEventListener(evt, updateSearchClearVisibility);
+      });
+    }
+
+    function updateSearchClearVisibility() {
+      if (!searchClear || !searchInput) return;
+      if (searchInput.value) {
+        searchClear.classList.add('is-visible');
+      } else {
+        searchClear.classList.remove('is-visible');
+      }
+    }
+
+    headerRoot.addEventListener('keydown', handleEsc);
+
+    var mobileNavToggles = headerRoot.querySelectorAll('.fh-mobile-nav__toggle');
+    mobileNavToggles.forEach(function (toggle) {
+      toggle.addEventListener('click', function () {
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        var panel = toggle.nextElementSibling;
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        if (panel) {
+          if (expanded) {
+            panel.setAttribute('hidden', '');
+          } else {
+            panel.removeAttribute('hidden');
+          }
+        }
+      });
+    });
+
+    updateSearchClearVisibility();
+  })();
+</script>
