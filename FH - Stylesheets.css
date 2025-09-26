@@ -19,7 +19,13 @@
 
 /* End Section: Custom Schriftarten + Preis Text Stylings */
 
-/* Section: FH Header Navigation Hover Behaviour */
+/* Section: FH Header Layout & Navigation Hover Behaviour */
+.fh-header__container {
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
 .fh-header .nav {
   position: relative;
 }
