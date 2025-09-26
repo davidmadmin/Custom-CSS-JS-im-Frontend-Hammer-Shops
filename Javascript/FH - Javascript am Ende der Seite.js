@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+      window.fhWishlistMenu.close();
+    }
+
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
@@ -74,6 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
       closeMenu();
     }
   });
+
+  window.fhAccountMenu = window.fhAccountMenu || {};
+  window.fhAccountMenu.close = closeMenu;
+  window.fhAccountMenu.isOpen = function () {
+    return isOpen;
+  };
 });
 // End Section: FH account menu toggle behaviour
 
@@ -324,27 +334,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return container.childNodes.length ? container : null;
   }
 
-  function getAvailabilityBadge(item) {
-    if (!item || !item.variation || !item.variation.availability || !item.variation.availability.names) {
-      return null;
-    }
-
-    const availabilityName = item.variation.availability.names.name;
-
-    if (!availabilityName) {
-      return null;
-    }
-
-    const badge = document.createElement('span');
-    badge.className = 'badge availability-' + item.variation.availability.id;
-    badge.textContent = availabilityName;
-    badge.style.fontSize = '11px';
-    badge.style.marginTop = '8px';
-    badge.style.display = 'inline-block';
-
-    return badge;
-  }
-
   function getBasePrice(item) {
     if (!item || !item.prices) {
       return '';
@@ -510,7 +499,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const attributeSummary = createAttributeSummary(item);
-      const availabilityBadge = getAvailabilityBadge(item);
 
       const actionRow = document.createElement('div');
       actionRow.style.display = 'flex';
@@ -521,26 +509,14 @@ document.addEventListener('DOMContentLoaded', function () {
       const addToCartButton = document.createElement('button');
       addToCartButton.type = 'button';
       addToCartButton.textContent = 'In den Warenkorb';
-      addToCartButton.style.display = 'inline-flex';
-      addToCartButton.style.alignItems = 'center';
-      addToCartButton.style.justifyContent = 'center';
-      addToCartButton.style.padding = '8px 12px';
-      addToCartButton.style.backgroundColor = '#31a5f0';
-      addToCartButton.style.color = '#ffffff';
-      addToCartButton.style.border = 'none';
-      addToCartButton.style.borderRadius = '10px';
-      addToCartButton.style.fontSize = '13px';
-      addToCartButton.style.fontWeight = '600';
-      addToCartButton.style.cursor = 'pointer';
-      addToCartButton.style.transition = 'background-color .2s ease';
+      addToCartButton.className = 'btn btn-primary btn-appearance mobile-width-button';
 
       const quantityDefaults = getQuantityDefaults(item);
 
       if (!isSaleable(item)) {
         addToCartButton.disabled = true;
         addToCartButton.textContent = 'Nicht verfügbar';
-        addToCartButton.style.backgroundColor = '#cbd5f5';
-        addToCartButton.style.cursor = 'not-allowed';
+        addToCartButton.classList.add('disabled');
       }
 
       addToCartButton.addEventListener('click', function (event) {
@@ -568,8 +544,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const originalText = addToCartButton.textContent;
         addToCartButton.disabled = true;
+        addToCartButton.classList.add('disabled');
         addToCartButton.textContent = 'Wird hinzugefügt…';
-        addToCartButton.style.backgroundColor = '#1f7ae0';
 
         const payload = {
           variationId: variationId,
@@ -581,47 +557,27 @@ document.addEventListener('DOMContentLoaded', function () {
             addToCartButton.textContent = 'Im Warenkorb';
             setTimeout(function () {
               addToCartButton.disabled = false;
+              addToCartButton.classList.remove('disabled');
               addToCartButton.textContent = originalText;
-              addToCartButton.style.backgroundColor = '#31a5f0';
             }, 1600);
           })
           .catch(function () {
             addToCartButton.textContent = 'Fehler';
-            addToCartButton.style.backgroundColor = '#dc2626';
             setTimeout(function () {
               addToCartButton.disabled = false;
+              addToCartButton.classList.remove('disabled');
               addToCartButton.textContent = originalText;
-              addToCartButton.style.backgroundColor = '#31a5f0';
             }, 2000);
           });
       });
 
-      const viewLink = document.createElement('a');
-      viewLink.href = url;
-      viewLink.textContent = 'Artikel ansehen';
-      viewLink.style.display = 'inline-flex';
-      viewLink.style.alignItems = 'center';
-      viewLink.style.justifyContent = 'center';
-      viewLink.style.padding = '8px 12px';
-      viewLink.style.borderRadius = '10px';
-      viewLink.style.fontSize = '13px';
-      viewLink.style.fontWeight = '600';
-      viewLink.style.color = '#1f2937';
-      viewLink.style.backgroundColor = '#f1f5f9';
-      viewLink.style.textDecoration = 'none';
-
       actionRow.appendChild(addToCartButton);
-      actionRow.appendChild(viewLink);
 
       details.appendChild(nameLink);
       details.appendChild(priceLine);
 
       if (attributeSummary) {
         details.appendChild(attributeSummary);
-      }
-
-      if (availabilityBadge) {
-        details.appendChild(availabilityBadge);
       }
 
       details.appendChild(actionRow);
@@ -733,6 +689,10 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+      window.fhAccountMenu.close();
+    }
+
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
@@ -772,6 +732,12 @@ document.addEventListener('DOMContentLoaded', function () {
   menu.addEventListener('click', function (event) {
     event.stopPropagation();
   });
+
+  window.fhWishlistMenu = window.fhWishlistMenu || {};
+  window.fhWishlistMenu.close = closeMenu;
+  window.fhWishlistMenu.isOpen = function () {
+    return isOpen;
+  };
 });
 // End Section: FH wish list flyout preview
 
