@@ -1,5 +1,82 @@
 // Section: Global scripts for all pages
 
+// Section: FH account menu toggle behaviour
+document.addEventListener('DOMContentLoaded', function () {
+  const container = document.querySelector('[data-fh-account-menu-container]');
+
+  if (!container) {
+    return;
+  }
+
+  const toggleButton = container.querySelector('[data-fh-account-menu-toggle]');
+  const menu = container.querySelector('[data-fh-account-menu]');
+
+  if (!toggleButton || !menu) {
+    return;
+  }
+
+  let isOpen = false;
+
+  function openMenu() {
+    if (isOpen) {
+      return;
+    }
+
+    menu.style.display = 'block';
+    menu.setAttribute('aria-hidden', 'false');
+    toggleButton.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeydown);
+    isOpen = true;
+  }
+
+  function closeMenu() {
+    if (!isOpen) {
+      return;
+    }
+
+    menu.style.display = 'none';
+    menu.setAttribute('aria-hidden', 'true');
+    toggleButton.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleKeydown);
+    isOpen = false;
+  }
+
+  function handleDocumentClick(event) {
+    if (!container.contains(event.target)) {
+      closeMenu();
+    }
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+      toggleButton.focus();
+    }
+  }
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  menu.addEventListener('click', function (event) {
+    const trigger = event.target.closest('[data-fh-login-trigger], [data-fh-registration-trigger]');
+
+    if (trigger) {
+      closeMenu();
+    }
+  });
+});
+// End Section: FH account menu toggle behaviour
+
 // Section: Ensure auth modals load their Vue components before opening
 document.addEventListener('DOMContentLoaded', function () {
   function getVueStore() {
