@@ -92,6 +92,60 @@
 
 /* End Section: Allgemeines Button-Styling für .btn-primary */
 
+/* Section: FH wish list button styling */
+.widget.widget-add-to-wish-list .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  border: 2px solid #31a5f0;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #0f172a !important;
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  text-decoration: none !important;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.widget.widget-add-to-wish-list .btn .fa {
+  font-size: 1rem;
+  color: #31a5f0;
+  transition: color 0.2s ease;
+}
+
+.widget.widget-add-to-wish-list .btn:hover,
+.widget.widget-add-to-wish-list .btn:focus,
+.widget.widget-add-to-wish-list .btn:active {
+  background-color: #31a5f0;
+  color: #ffffff !important;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(49, 165, 240, 0.25);
+}
+
+.widget.widget-add-to-wish-list .btn:hover .fa,
+.widget.widget-add-to-wish-list .btn:focus .fa,
+.widget.widget-add-to-wish-list .btn:active .fa {
+  color: #ffffff;
+}
+
+.widget.widget-add-to-wish-list .btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 165, 240, 0.35);
+}
+
+.widget.widget-add-to-wish-list .btn.disabled,
+.widget.widget-add-to-wish-list .btn[disabled] {
+  border-color: #94a3b8;
+  color: #94a3b8 !important;
+  box-shadow: none;
+  background-color: #f8fafc;
+}
+
+/* End Section: FH wish list button styling */
+
 /* Section: Body Top Margin Fix */
 div.widget.widget-grid.widget-two-col.row.mt-5 {
   margin-top: 1rem !important;

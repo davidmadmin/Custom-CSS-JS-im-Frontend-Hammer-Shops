@@ -921,7 +921,8 @@ document.addEventListener('DOMContentLoaded', function () {
     hasSubscribedToStore = true;
   }
 
-  function loadWishListItems() {
+  function loadWishListItems(options) {
+    const forceReload = !!(options && options.force === true);
     const store = getVueStore();
 
     if (!store) {
@@ -932,6 +933,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const actionName = getWishListActionName(store);
 
+    subscribeToWishList(store);
+
     if (!actionName) {
       const items = store.state && store.state.wishList && store.state.wishList.wishListItems
         ? store.state.wishList.wishListItems
@@ -939,13 +942,23 @@ document.addEventListener('DOMContentLoaded', function () {
       updateList(items);
       hasLoadedOnce = true;
       showError('');
+      showLoading(false);
+      return;
+    }
+
+    if (!forceReload && hasLoadedOnce) {
+      const items = store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)
+        ? store.state.wishList.wishListItems
+        : [];
+      updateList(items);
+      hasLoadedOnce = true;
+      showError('');
+      showLoading(false);
       return;
     }
 
     showLoading(true);
     showError('');
-
-    subscribeToWishList(store);
 
     store.dispatch(actionName)
       .then(function (result) {
@@ -984,25 +997,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function openMenu() {
-    if (isOpen) {
-      return;
+  function openMenu(options) {
+    const shouldForceReload = typeof options === 'boolean'
+      ? options
+      : !!(options && options.forceReload);
+
+    if (!isOpen) {
+      if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+        window.fhAccountMenu.close();
+      }
+
+      menu.style.display = 'block';
+      menu.setAttribute('aria-hidden', 'false');
+      toggleButton.setAttribute('aria-expanded', 'true');
+      document.addEventListener('click', handleDocumentClick);
+      document.addEventListener('keydown', handleKeydown);
+      isOpen = true;
     }
 
-    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
-      window.fhAccountMenu.close();
-    }
-
-    menu.style.display = 'block';
-    menu.setAttribute('aria-hidden', 'false');
-    toggleButton.setAttribute('aria-expanded', 'true');
-    document.addEventListener('click', handleDocumentClick);
-    document.addEventListener('keydown', handleKeydown);
-    isOpen = true;
-
-    if (!hasLoadedOnce) {
-      loadWishListItems();
-    }
+    const shouldForceLoad = shouldForceReload || !hasLoadedOnce;
+    loadWishListItems({ force: shouldForceLoad });
   }
 
   function closeMenu() {
@@ -1025,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (isOpen) {
       closeMenu();
     } else {
-      openMenu();
+      openMenu(true);
     }
   });
 
@@ -1033,11 +1047,35 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
   });
 
-window.fhWishlistMenu = window.fhWishlistMenu || {};
+  window.fhWishlistMenu = window.fhWishlistMenu || {};
+  window.fhWishlistMenu.open = function (options) {
+    openMenu(options);
+  };
   window.fhWishlistMenu.close = closeMenu;
+  window.fhWishlistMenu.refresh = function () {
+    loadWishListItems({ force: true });
+  };
   window.fhWishlistMenu.isOpen = function () {
     return isOpen;
   };
+
+  function scheduleWishlistPreviewOpen() {
+    window.setTimeout(function () {
+      if (window.fhWishlistMenu && typeof window.fhWishlistMenu.open === 'function') {
+        window.fhWishlistMenu.open({ forceReload: true });
+      }
+    }, 280);
+  }
+
+  document.body.addEventListener('click', function (event) {
+    const trigger = event.target.closest('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+
+    if (!trigger || trigger.disabled || trigger.classList.contains('disabled')) {
+      return;
+    }
+
+    scheduleWishlistPreviewOpen();
+  });
 });
 // End Section: FH wish list flyout preview
 
