@@ -1846,6 +1846,28 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.querySelector('input.search-input');
   if (!searchInput) return;
 
+  const clearButton = document.querySelector('[data-search-clear]');
+  const toggleClearButton = () => {
+    if (!clearButton) return;
+    clearButton.style.display = searchInput.value ? 'flex' : 'none';
+  };
+
+  if (clearButton) {
+    clearButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      searchInput.value = '';
+      searchInput.focus();
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      toggleClearButton();
+    });
+
+    searchInput.addEventListener('input', toggleClearButton);
+    searchInput.addEventListener('focus', toggleClearButton);
+    searchInput.addEventListener('blur', toggleClearButton);
+
+    toggleClearButton();
+  }
+
   let inputFocused = false;
 
   // CSS-based device detection
