@@ -65,12 +65,14 @@
             <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger style="padding:4px 12px;background-color:#e7f2fb;color:#1f2937;border-radius:999px;font-weight:600;text-decoration:none;font-size:13px;">registrieren</a>
           </div>
           <div style="height:1px;background-color:#ececec;margin:12px 0 16px;"></div>
-          <nav style="display:flex;flex-direction:column;gap:8px;">
-            <a href="/my-account" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Übersicht</a>
-            <a href="/my-account/profile" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Persönliches Profil</a>
-            <a href="/my-account/addresses" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Adressen</a>
-            <a href="/my-account/orders" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Bestellungen</a>
-          </nav>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
+            <div style="font-size:14px;font-weight:700;">Vorteile:</div>
+            <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:13px;color:#4b5563;">
+              <li>Schneller kaufen</li>
+              <li>Hammer Punkte sammeln</li>
+              <li>Einfacherer Support</li>
+            </ul>
+          </div>
         </div>
         <div v-else>
           <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;color:#1a1a1a;">
@@ -80,7 +82,7 @@
           <div style="height:1px;background-color:#ececec;margin:0 0 16px;"></div>
           <nav style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
             <a href="/my-account" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Kontoübersicht</a>
-            <a href="/my-account/profile" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Persönliche Daten</a>
+            <a href="/hammer-praemien" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Hammer Prämien</a>
             <a href="/my-account/addresses" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Adressen</a>
             <a href="/my-account/orders" style="display:block;padding:4px 0;color:#1a1a1a;text-decoration:none;font-size:14px;font-weight:500;">Bestellungen</a>
           </nav>
