@@ -306,48 +306,56 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  function createAttributeSummary(item) {
-    if (!item || !Array.isArray(item.attributes) || !item.attributes.length) {
-      return null;
-    }
-
-    const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.gap = '2px';
-    container.style.fontSize = '12px';
-    container.style.color = '#475569';
-    container.style.marginTop = '6px';
-
-    item.attributes.slice(0, 3).forEach(function (attribute) {
-      if (!attribute || !attribute.attribute || !attribute.value) {
-        return;
-      }
-
-      const line = document.createElement('div');
-      const attributeName = attribute.attribute.names && attribute.attribute.names.name ? attribute.attribute.names.name : '';
-      const attributeValue = attribute.value.names && attribute.value.names.name ? attribute.value.names.name : '';
-      line.textContent = attributeName && attributeValue ? attributeName + ': ' + attributeValue : attributeValue || attributeName;
-      container.appendChild(line);
-    });
-
-    return container.childNodes.length ? container : null;
-  }
-
   function getBasePrice(item) {
     if (!item || !item.prices) {
       return '';
     }
 
     if (item.prices.specialOffer && item.prices.specialOffer.basePrice) {
-      return item.prices.specialOffer.basePrice;
+      const basePrice = item.prices.specialOffer.basePrice;
+
+      if (typeof basePrice === 'string') {
+        const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
+
+        if (normalized === 'n/a') {
+          return '';
+        }
+      }
+
+      return basePrice;
     }
 
     if (item.prices.default && item.prices.default.basePrice) {
-      return item.prices.default.basePrice;
+      const basePrice = item.prices.default.basePrice;
+
+      if (typeof basePrice === 'string') {
+        const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
+
+        if (normalized === 'n/a') {
+          return '';
+        }
+      }
+
+      return basePrice;
     }
 
     return '';
+  }
+
+  function getRemoveWishListActionName(store) {
+    if (!store || !store._actions) {
+      return null;
+    }
+
+    if (store._actions['wishList/removeWishListItem']) {
+      return 'wishList/removeWishListItem';
+    }
+
+    if (store._actions.removeWishListItem) {
+      return 'removeWishListItem';
+    }
+
+    return null;
   }
 
   function getUnitPrice(item) {
@@ -425,17 +433,17 @@ document.addEventListener('DOMContentLoaded', function () {
       const image = getPrimaryImage(item);
       const li = document.createElement('li');
       li.style.display = 'flex';
-      li.style.alignItems = 'flex-start';
-      li.style.gap = '14px';
-      li.style.padding = '12px 0';
-      li.style.borderBottom = '1px solid #f1f5f9';
+      li.style.alignItems = 'stretch';
+      li.style.gap = '12px';
+      li.style.padding = '8px 0';
+      li.style.borderBottom = '1px solid #e2e8f0';
 
       const imageLink = document.createElement('a');
       imageLink.href = url;
       imageLink.style.display = 'block';
-      imageLink.style.flex = '0 0 72px';
-      imageLink.style.height = '72px';
-      imageLink.style.borderRadius = '12px';
+      imageLink.style.flex = '0 0 60px';
+      imageLink.style.height = '60px';
+      imageLink.style.borderRadius = '10px';
       imageLink.style.overflow = 'hidden';
       imageLink.style.backgroundColor = '#f8fafc';
 
@@ -463,27 +471,30 @@ document.addEventListener('DOMContentLoaded', function () {
       const details = document.createElement('div');
       details.style.flex = '1';
       details.style.minWidth = '0';
+      details.style.display = 'flex';
+      details.style.flexDirection = 'column';
+      details.style.gap = '6px';
 
       const nameLink = document.createElement('a');
       nameLink.href = url;
       nameLink.textContent = item && item.texts && item.texts.name1 ? item.texts.name1 : 'Artikel';
       nameLink.style.display = 'block';
-      nameLink.style.fontSize = '14px';
+      nameLink.style.fontSize = '13px';
       nameLink.style.fontWeight = '600';
       nameLink.style.color = '#1f2937';
       nameLink.style.textDecoration = 'none';
-      nameLink.style.lineHeight = '1.4';
+      nameLink.style.lineHeight = '1.35';
       nameLink.style.wordBreak = 'break-word';
 
       const priceLine = document.createElement('div');
       priceLine.style.display = 'flex';
       priceLine.style.alignItems = 'baseline';
-      priceLine.style.gap = '8px';
-      priceLine.style.marginTop = '6px';
+      priceLine.style.gap = '6px';
+      priceLine.style.marginTop = '0';
 
       const priceValue = document.createElement('strong');
       priceValue.textContent = formatPrice(getUnitPrice(item));
-      priceValue.style.fontSize = '14px';
+      priceValue.style.fontSize = '13px';
       priceValue.style.color = '#1f2937';
 
       priceLine.appendChild(priceValue);
@@ -498,25 +509,207 @@ document.addEventListener('DOMContentLoaded', function () {
         priceLine.appendChild(basePrice);
       }
 
-      const attributeSummary = createAttributeSummary(item);
-
       const actionRow = document.createElement('div');
       actionRow.style.display = 'flex';
-      actionRow.style.flexWrap = 'wrap';
+      actionRow.style.flexWrap = 'nowrap';
+      actionRow.style.alignItems = 'center';
       actionRow.style.gap = '8px';
-      actionRow.style.marginTop = '10px';
+      actionRow.style.marginTop = '0';
 
       const addToCartButton = document.createElement('button');
       addToCartButton.type = 'button';
       addToCartButton.textContent = 'In den Warenkorb';
       addToCartButton.className = 'btn btn-primary btn-appearance mobile-width-button';
+      addToCartButton.style.flex = '1 1 auto';
+      addToCartButton.style.minWidth = '140px';
+      addToCartButton.style.height = '40px';
+      addToCartButton.style.padding = '0 16px';
+      addToCartButton.style.fontSize = '13px';
+      addToCartButton.style.fontWeight = '600';
+      addToCartButton.style.whiteSpace = 'nowrap';
 
       const quantityDefaults = getQuantityDefaults(item);
+      let currentQuantity = quantityDefaults.quantity;
+
+      const minQuantity = Math.max(quantityDefaults.min || quantityDefaults.interval || 1, quantityDefaults.interval || 1);
+      const intervalQuantity = quantityDefaults.interval || 1;
+      const maxQuantity = quantityDefaults.max && quantityDefaults.max > 0 ? quantityDefaults.max : null;
+
+      function getDecimalPlaces(value) {
+        if (typeof value !== 'number' || !isFinite(value)) {
+          return 0;
+        }
+
+        const parts = value.toString().split('.');
+
+        if (parts.length < 2) {
+          return 0;
+        }
+
+        return parts[1].length;
+      }
+
+      const quantityPrecision = Math.min(6, Math.max(getDecimalPlaces(minQuantity), getDecimalPlaces(intervalQuantity)));
+
+      const quantityWrapper = document.createElement('div');
+      quantityWrapper.style.display = 'flex';
+      quantityWrapper.style.alignItems = 'center';
+      quantityWrapper.style.gap = '4px';
+      quantityWrapper.style.flex = '0 0 auto';
+
+      const qtyBox = document.createElement('div');
+      qtyBox.className = 'qty-box d-flex h-100';
+      qtyBox.style.maxWidth = '94px';
+      qtyBox.style.height = '40px';
+
+      const quantityInput = document.createElement('input');
+      quantityInput.className = 'qty-input text-center';
+      quantityInput.type = 'text';
+      quantityInput.setAttribute('aria-label', 'Menge wählen');
+      quantityInput.disabled = !isSaleable(item);
+      quantityInput.style.height = '40px';
+      quantityInput.style.fontSize = '13px';
+      quantityInput.style.padding = '0 10px';
+
+      const qtyButtonContainer = document.createElement('div');
+      qtyButtonContainer.className = 'qty-btn-container d-flex flex-column';
+      qtyButtonContainer.style.width = '32px';
+      qtyButtonContainer.style.gap = '4px';
+      qtyButtonContainer.style.height = '100%';
+
+      const increaseButton = document.createElement('button');
+      increaseButton.type = 'button';
+      increaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
+      increaseButton.style.height = 'calc(50% - 2px)';
+
+      const increaseIcon = document.createElement('i');
+      increaseIcon.className = 'fa fa-plus default-float';
+      increaseIcon.setAttribute('aria-hidden', 'true');
+      increaseButton.appendChild(increaseIcon);
+
+      const decreaseButton = document.createElement('button');
+      decreaseButton.type = 'button';
+      decreaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
+      decreaseButton.style.height = 'calc(50% - 2px)';
+
+      const decreaseIcon = document.createElement('i');
+      decreaseIcon.className = 'fa fa-minus default-float';
+      decreaseIcon.setAttribute('aria-hidden', 'true');
+      decreaseButton.appendChild(decreaseIcon);
+
+      function formatQuantityDisplay(value) {
+        if (Number.isInteger(value)) {
+          return String(value);
+        }
+
+        if (quantityPrecision > 0) {
+          const fixed = value.toFixed(quantityPrecision);
+          const trimmed = parseFloat(fixed).toString();
+          return trimmed.replace('.', ',');
+        }
+
+        return value.toString().replace('.', ',');
+      }
+
+      function normalizeQuantity(value) {
+        let numeric = typeof value === 'number' && isFinite(value)
+          ? value
+          : parseFloat(String(value).replace(',', '.'));
+
+        if (!isFinite(numeric) || numeric <= 0) {
+          numeric = minQuantity;
+        }
+
+        if (numeric < minQuantity) {
+          numeric = minQuantity;
+        }
+
+        if (maxQuantity && numeric > maxQuantity) {
+          numeric = maxQuantity;
+        }
+
+        const steps = Math.ceil((numeric - minQuantity) / intervalQuantity);
+        const adjusted = minQuantity + Math.max(0, steps) * intervalQuantity;
+
+        if (maxQuantity && adjusted > maxQuantity) {
+          const maxSteps = Math.floor((maxQuantity - minQuantity) / intervalQuantity);
+          const limited = maxSteps >= 0 ? minQuantity + maxSteps * intervalQuantity : minQuantity;
+          return quantityPrecision > 0 ? parseFloat(limited.toFixed(quantityPrecision)) : limited;
+        }
+
+        return quantityPrecision > 0 ? parseFloat(adjusted.toFixed(quantityPrecision)) : adjusted;
+      }
+
+      function setButtonState(button, isDisabled) {
+        button.disabled = isDisabled;
+
+        if (isDisabled) {
+          button.classList.add('disabled');
+        } else {
+          button.classList.remove('disabled');
+        }
+      }
+
+      function updateQuantity(newQuantity) {
+        currentQuantity = newQuantity;
+        quantityInput.value = formatQuantityDisplay(currentQuantity);
+
+        const isAtMinimum = currentQuantity - intervalQuantity < minQuantity;
+        const isAtMaximum = maxQuantity ? currentQuantity + intervalQuantity > maxQuantity : false;
+
+        setButtonState(decreaseButton, isAtMinimum || !isSaleable(item));
+        setButtonState(increaseButton, (isAtMaximum && !!maxQuantity) || !isSaleable(item));
+      }
+
+      increaseButton.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        if (!isSaleable(item)) {
+          return;
+        }
+
+        let candidate = currentQuantity + intervalQuantity;
+
+        if (maxQuantity && candidate > maxQuantity) {
+          candidate = maxQuantity;
+        }
+
+        updateQuantity(normalizeQuantity(candidate));
+      });
+
+      decreaseButton.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        if (!isSaleable(item)) {
+          return;
+        }
+
+        let candidate = currentQuantity - intervalQuantity;
+
+        if (candidate < minQuantity) {
+          candidate = minQuantity;
+        }
+
+        updateQuantity(normalizeQuantity(candidate));
+      });
+
+      quantityInput.addEventListener('change', function () {
+        updateQuantity(normalizeQuantity(quantityInput.value));
+      });
+
+      quantityInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          quantityInput.blur();
+        }
+      });
 
       if (!isSaleable(item)) {
         addToCartButton.disabled = true;
         addToCartButton.textContent = 'Nicht verfügbar';
         addToCartButton.classList.add('disabled');
+        setButtonState(decreaseButton, true);
+        setButtonState(increaseButton, true);
       }
 
       addToCartButton.addEventListener('click', function (event) {
@@ -549,7 +742,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const payload = {
           variationId: variationId,
-          quantity: quantityDefaults.quantity
+          quantity: currentQuantity
         };
 
         store.dispatch(actionName, payload)
@@ -571,14 +764,83 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       });
 
+      qtyButtonContainer.appendChild(increaseButton);
+      qtyButtonContainer.appendChild(decreaseButton);
+      qtyBox.appendChild(quantityInput);
+      qtyBox.appendChild(qtyButtonContainer);
+      quantityWrapper.appendChild(qtyBox);
+
+      updateQuantity(normalizeQuantity(currentQuantity));
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'btn btn-sm text-danger p-0';
+      removeButton.style.display = 'inline-flex';
+      removeButton.style.alignItems = 'center';
+      removeButton.style.justifyContent = 'center';
+      removeButton.style.gap = '4px';
+      removeButton.style.height = '40px';
+      removeButton.style.padding = '0 10px';
+      removeButton.style.fontSize = '12px';
+
+      const removeLabel = document.createElement('span');
+      removeLabel.textContent = 'Löschen';
+      removeButton.appendChild(removeLabel);
+
+      const removeIcon = document.createElement('i');
+      removeIcon.className = 'fa fa-trash-o default-float';
+      removeIcon.setAttribute('aria-hidden', 'true');
+      removeButton.appendChild(removeIcon);
+
+      removeButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const store = getVueStore();
+        const actionName = getRemoveWishListActionName(store);
+
+        if (!store || !actionName) {
+          return;
+        }
+
+        const variationId = item && item.variation && item.variation.id ? item.variation.id : null;
+
+        if (!variationId) {
+          return;
+        }
+
+        const stateItems = store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)
+          ? store.state.wishList.wishListItems
+          : [];
+        const itemIndex = stateItems.findIndex(function (stateItem) {
+          return stateItem && stateItem.id === documentItem.id;
+        });
+
+        const originalLabel = removeLabel.textContent;
+        removeButton.disabled = true;
+        removeButton.classList.add('disabled');
+        removeLabel.textContent = 'Wird entfernt…';
+
+        removeIcon.className = 'fa fa-spinner fa-spin default-float';
+
+        store.dispatch(actionName, {
+          id: variationId,
+          wishListItem: documentItem,
+          index: itemIndex
+        }).catch(function () {
+          removeButton.disabled = false;
+          removeButton.classList.remove('disabled');
+          removeLabel.textContent = originalLabel;
+          removeIcon.className = 'fa fa-trash-o default-float';
+        });
+      });
+
+      actionRow.appendChild(quantityWrapper);
       actionRow.appendChild(addToCartButton);
+      actionRow.appendChild(removeButton);
 
       details.appendChild(nameLink);
       details.appendChild(priceLine);
-
-      if (attributeSummary) {
-        details.appendChild(attributeSummary);
-      }
 
       details.appendChild(actionRow);
 
@@ -733,13 +995,215 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
   });
 
-  window.fhWishlistMenu = window.fhWishlistMenu || {};
+window.fhWishlistMenu = window.fhWishlistMenu || {};
   window.fhWishlistMenu.close = closeMenu;
   window.fhWishlistMenu.isOpen = function () {
     return isOpen;
   };
 });
 // End Section: FH wish list flyout preview
+
+// Section: Basket preview attribute cleanup
+document.addEventListener('DOMContentLoaded', function () {
+  const attributeKeywords = ['inhalt', 'abmess', 'länge', 'laenge', 'breite', 'höhe', 'hoehe'];
+  const previewSelectors = ['.basket-preview', '.basket-preview-list', '.basket-preview-items'];
+  const labelSelectors = [
+    '[class*="attribute-name" i]',
+    '[class*="property-name" i]',
+    '[class*="characteristic-name" i]',
+    '[data-attribute-name]',
+    '[data-property-name]'
+  ];
+
+  function normalizeLabel(text) {
+    return text
+      .replace(/[\/:|]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  }
+
+  function shouldHideLabel(text) {
+    if (!text) {
+      return false;
+    }
+
+    const normalized = normalizeLabel(text);
+
+    if (!normalized) {
+      return false;
+    }
+
+    return attributeKeywords.some(function (keyword) {
+      return normalized.startsWith(keyword) || normalized.includes(' ' + keyword);
+    });
+  }
+
+  function hideAttributeNode(node) {
+    if (!node || node.nodeType !== 1) {
+      return;
+    }
+
+    if (node.dataset && node.dataset.fhAttributeHidden === 'true') {
+      return;
+    }
+
+    node.style.display = 'none';
+
+    if (node.dataset) {
+      node.dataset.fhAttributeHidden = 'true';
+    }
+
+    const tagName = node.tagName ? node.tagName.toLowerCase() : '';
+
+    if (tagName === 'dt') {
+      const dd = node.nextElementSibling;
+
+      if (dd && dd.tagName && dd.tagName.toLowerCase() === 'dd') {
+        hideAttributeNode(dd);
+      }
+    } else if (tagName === 'dd') {
+      const prev = node.previousElementSibling;
+
+      if (prev && prev.tagName && prev.tagName.toLowerCase() === 'dt') {
+        hideAttributeNode(prev);
+      }
+    }
+  }
+
+  function suppressAttributeContainer(node) {
+    if (!node) {
+      return;
+    }
+
+    const container = node.closest('li, tr, div, dd, dt') || node;
+    hideAttributeNode(container);
+  }
+
+  function pruneAttributePairs(item) {
+    if (!item || item.nodeType !== 1) {
+      return;
+    }
+
+    const dtNodes = item.querySelectorAll('dt');
+
+    dtNodes.forEach(function (dt) {
+      if (shouldHideLabel(dt.textContent || '')) {
+        hideAttributeNode(dt);
+      }
+    });
+
+    const explicitLabelNodes = item.querySelectorAll(labelSelectors.join(', '));
+
+    explicitLabelNodes.forEach(function (labelNode) {
+      if (shouldHideLabel(labelNode.textContent || '')) {
+        suppressAttributeContainer(labelNode);
+      }
+    });
+
+    const fallbackNodes = item.querySelectorAll('li, div, span, dd');
+
+    fallbackNodes.forEach(function (node) {
+      if (!node || (node.dataset && node.dataset.fhAttributeChecked === 'true')) {
+        return;
+      }
+
+      if (!node.closest('.basket-preview-item, [data-basket-item]')) {
+        return;
+      }
+
+      if (node.dataset) {
+        node.dataset.fhAttributeChecked = 'true';
+      }
+
+      if (node.children && node.children.length > 1 && !node.matches('dd')) {
+        return;
+      }
+
+      const text = node.textContent || '';
+      const separatorIndex = text.indexOf(':');
+
+      if (separatorIndex === -1) {
+        return;
+      }
+
+      const label = text.slice(0, separatorIndex);
+
+      if (shouldHideLabel(label)) {
+        suppressAttributeContainer(node);
+      }
+    });
+  }
+
+  function prunePreview(previewRoot) {
+    if (!previewRoot || previewRoot.nodeType !== 1) {
+      return;
+    }
+
+    const items = previewRoot.querySelectorAll('.basket-preview-item, [data-basket-item]');
+
+    if (items.length) {
+      items.forEach(pruneAttributePairs);
+    } else if (previewRoot.matches('.basket-preview-item, [data-basket-item]')) {
+      pruneAttributePairs(previewRoot);
+    }
+  }
+
+  function bindPreview(previewRoot) {
+    if (!previewRoot || previewRoot.nodeType !== 1) {
+      return;
+    }
+
+    if (previewRoot.dataset && previewRoot.dataset.fhAttributeObserver === 'true') {
+      prunePreview(previewRoot);
+      return;
+    }
+
+    if (previewRoot.dataset) {
+      previewRoot.dataset.fhAttributeObserver = 'true';
+    }
+
+    prunePreview(previewRoot);
+
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (!mutation) {
+          return;
+        }
+
+        mutation.addedNodes.forEach(function (node) {
+          if (!(node instanceof HTMLElement)) {
+            return;
+          }
+
+          if (node.matches('.basket-preview-item, [data-basket-item]')) {
+            pruneAttributePairs(node);
+          } else {
+            prunePreview(node);
+          }
+        });
+      });
+
+      prunePreview(previewRoot);
+    });
+
+    observer.observe(previewRoot, { childList: true, subtree: true });
+  }
+
+  function scanForPreview() {
+    previewSelectors.forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(bindPreview);
+    });
+  }
+
+  const bodyObserver = new MutationObserver(function () {
+    scanForPreview();
+  });
+
+  bodyObserver.observe(document.body, { childList: true, subtree: true });
+  scanForPreview();
+});
+// End Section: Basket preview attribute cleanup
 
 // Section: Ensure auth modals load their Vue components before opening
 document.addEventListener('DOMContentLoaded', function () {
