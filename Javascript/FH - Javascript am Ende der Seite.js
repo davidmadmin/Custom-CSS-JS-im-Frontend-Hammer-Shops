@@ -87,6 +87,218 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH account greeting based on local time
+document.addEventListener('DOMContentLoaded', function () {
+  const greetingElement = document.querySelector('[data-fh-account-greeting]');
+
+  if (!greetingElement) {
+    return;
+  }
+
+  function getTimeBasedGreeting() {
+    const currentHour = new Date().getHours();
+
+    if (currentHour >= 0 && currentHour < 10) {
+      return 'Guten Morgen';
+    }
+
+    if (currentHour >= 10 && currentHour < 18) {
+      return 'Guten Tag';
+    }
+
+    return 'Guten Abend';
+  }
+
+  function normalizeSalutation(value) {
+    if (!value) {
+      return '';
+    }
+
+    const text = String(value).trim();
+
+    if (text.length === 0) {
+      return '';
+    }
+
+    const lower = text.toLowerCase();
+
+    if (['male', 'herr', 'mr', 'm', 'man'].includes(lower)) {
+      return 'Herr';
+    }
+
+    if (['female', 'frau', 'mrs', 'ms', 'f', 'woman', 'w'].includes(lower)) {
+      return 'Frau';
+    }
+
+    if (['diverse', 'neutral', 'none', 'company', 'firma', 'd', 'x'].includes(lower)) {
+      return '';
+    }
+
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  function extractCustomerDetails() {
+    const details = {
+      salutation: '',
+      lastName: '',
+      username: ''
+    };
+
+    const store = window.ceresStore;
+
+    if (!store) {
+      return details;
+    }
+
+    const getters = store.getters || {};
+    const state = store.state || {};
+
+    if (typeof getters.username === 'string' && getters.username.trim().length > 0) {
+      details.username = getters.username.trim();
+    }
+
+    const potentialSources = [];
+
+    function addSource(source) {
+      if (!source || typeof source !== 'object') {
+        return;
+      }
+
+      potentialSources.push(source);
+
+      if (source.data && typeof source.data === 'object') {
+        potentialSources.push(source.data);
+      }
+    }
+
+    addSource(getters.customer);
+    addSource(getters.customerData);
+    addSource(getters.customerInformation);
+    addSource(getters.user);
+    addSource(state.customer);
+    addSource(state.user);
+    addSource(state.account);
+    addSource(state.contact);
+
+    const visited = new Set();
+
+    function addCandidate(candidate) {
+      if (!candidate || typeof candidate !== 'object' || visited.has(candidate)) {
+        return;
+      }
+
+      visited.add(candidate);
+
+      if (!details.salutation) {
+        const salutation =
+          candidate.salutation ||
+          candidate.formOfAddress ||
+          candidate.form_of_address ||
+          candidate.gender;
+
+        if (salutation) {
+          details.salutation = String(salutation);
+        }
+      }
+
+      if (!details.lastName) {
+        const lastName =
+          candidate.lastName ||
+          candidate.lastname ||
+          candidate.surname ||
+          candidate.name2 ||
+          candidate.name_2;
+
+        if (typeof lastName === 'string' && lastName.trim().length > 0) {
+          details.lastName = lastName;
+        }
+      }
+
+      if (!details.username && typeof candidate.username === 'string' && candidate.username.trim().length > 0) {
+        details.username = candidate.username;
+      }
+
+      const nestedKeys = [
+        'contactPerson',
+        'contactPersons',
+        'address',
+        'addresses',
+        'billingAddress',
+        'deliveryAddress',
+        'mainAddress',
+        'primaryAddress',
+        'contact'
+      ];
+
+      nestedKeys.forEach(function (key) {
+        const value = candidate[key];
+
+        if (!value) {
+          return;
+        }
+
+        if (Array.isArray(value)) {
+          value.forEach(addCandidate);
+          return;
+        }
+
+        if (typeof value === 'object') {
+          addCandidate(value);
+        }
+      });
+    }
+
+    potentialSources.forEach(addCandidate);
+
+    details.salutation = typeof details.salutation === 'string' ? details.salutation.trim() : '';
+    details.lastName = typeof details.lastName === 'string' ? details.lastName.trim() : '';
+    details.username = typeof details.username === 'string' ? details.username.trim() : '';
+
+    return details;
+  }
+
+  function updateGreeting() {
+    const timeGreeting = getTimeBasedGreeting();
+    const details = extractCustomerDetails();
+
+    const normalizedSalutation = normalizeSalutation(details.salutation);
+    const lastName = details.lastName;
+
+    let namePart = '';
+    let hasFormalName = false;
+
+    if (normalizedSalutation && lastName) {
+      namePart = normalizedSalutation + ' ' + lastName;
+      hasFormalName = true;
+    } else if (details.username) {
+      namePart = details.username;
+    }
+
+    const finalGreeting = namePart ? timeGreeting + ', ' + namePart : timeGreeting;
+
+    if (greetingElement.textContent.trim() !== finalGreeting) {
+      greetingElement.textContent = finalGreeting;
+    }
+
+    return hasFormalName;
+  }
+
+  let attempts = 0;
+  const maxAttempts = 40;
+
+  const intervalId = window.setInterval(function () {
+    const hasFormalName = updateGreeting();
+    attempts += 1;
+
+    if (hasFormalName || attempts >= maxAttempts) {
+      window.clearInterval(intervalId);
+    }
+  }, 300);
+
+  updateGreeting();
+});
+// End Section: FH account greeting based on local time
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
