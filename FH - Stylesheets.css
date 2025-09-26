@@ -48,6 +48,24 @@
 }
 /* End Section: FH Header Navigation Hover Behaviour */
 
+/* Section: FH Header & Footer Container Alignment */
+#page-header-parent {
+  padding: 0 !important;
+}
+
+#page-header-parent .fh-header {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+#page-footer .fh-footer {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+/* End Section: FH Header & Footer Container Alignment */
+
 /* Section: Trustbadge ausblenden */
 .basket-open .widget_container_overlay,
 .basket-open #trustami-mobile-view,
