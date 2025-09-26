@@ -306,48 +306,56 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  function createAttributeSummary(item) {
-    if (!item || !Array.isArray(item.attributes) || !item.attributes.length) {
-      return null;
-    }
-
-    const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.gap = '2px';
-    container.style.fontSize = '12px';
-    container.style.color = '#475569';
-    container.style.marginTop = '6px';
-
-    item.attributes.slice(0, 3).forEach(function (attribute) {
-      if (!attribute || !attribute.attribute || !attribute.value) {
-        return;
-      }
-
-      const line = document.createElement('div');
-      const attributeName = attribute.attribute.names && attribute.attribute.names.name ? attribute.attribute.names.name : '';
-      const attributeValue = attribute.value.names && attribute.value.names.name ? attribute.value.names.name : '';
-      line.textContent = attributeName && attributeValue ? attributeName + ': ' + attributeValue : attributeValue || attributeName;
-      container.appendChild(line);
-    });
-
-    return container.childNodes.length ? container : null;
-  }
-
   function getBasePrice(item) {
     if (!item || !item.prices) {
       return '';
     }
 
     if (item.prices.specialOffer && item.prices.specialOffer.basePrice) {
-      return item.prices.specialOffer.basePrice;
+      const basePrice = item.prices.specialOffer.basePrice;
+
+      if (typeof basePrice === 'string') {
+        const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
+
+        if (normalized === 'n/a') {
+          return '';
+        }
+      }
+
+      return basePrice;
     }
 
     if (item.prices.default && item.prices.default.basePrice) {
-      return item.prices.default.basePrice;
+      const basePrice = item.prices.default.basePrice;
+
+      if (typeof basePrice === 'string') {
+        const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
+
+        if (normalized === 'n/a') {
+          return '';
+        }
+      }
+
+      return basePrice;
     }
 
     return '';
+  }
+
+  function getRemoveWishListActionName(store) {
+    if (!store || !store._actions) {
+      return null;
+    }
+
+    if (store._actions['wishList/removeWishListItem']) {
+      return 'wishList/removeWishListItem';
+    }
+
+    if (store._actions.removeWishListItem) {
+      return 'removeWishListItem';
+    }
+
+    return null;
   }
 
   function getUnitPrice(item) {
@@ -498,8 +506,6 @@ document.addEventListener('DOMContentLoaded', function () {
         priceLine.appendChild(basePrice);
       }
 
-      const attributeSummary = createAttributeSummary(item);
-
       const actionRow = document.createElement('div');
       actionRow.style.display = 'flex';
       actionRow.style.flexWrap = 'wrap';
@@ -512,11 +518,177 @@ document.addEventListener('DOMContentLoaded', function () {
       addToCartButton.className = 'btn btn-primary btn-appearance mobile-width-button';
 
       const quantityDefaults = getQuantityDefaults(item);
+      let currentQuantity = quantityDefaults.quantity;
+
+      const minQuantity = Math.max(quantityDefaults.min || quantityDefaults.interval || 1, quantityDefaults.interval || 1);
+      const intervalQuantity = quantityDefaults.interval || 1;
+      const maxQuantity = quantityDefaults.max && quantityDefaults.max > 0 ? quantityDefaults.max : null;
+
+      function getDecimalPlaces(value) {
+        if (typeof value !== 'number' || !isFinite(value)) {
+          return 0;
+        }
+
+        const parts = value.toString().split('.');
+
+        if (parts.length < 2) {
+          return 0;
+        }
+
+        return parts[1].length;
+      }
+
+      const quantityPrecision = Math.min(6, Math.max(getDecimalPlaces(minQuantity), getDecimalPlaces(intervalQuantity)));
+
+      const quantityWrapper = document.createElement('div');
+      quantityWrapper.style.display = 'flex';
+      quantityWrapper.style.alignItems = 'stretch';
+      quantityWrapper.style.gap = '6px';
+
+      const qtyBox = document.createElement('div');
+      qtyBox.className = 'qty-box d-flex h-100';
+      qtyBox.style.maxWidth = '112px';
+
+      const quantityInput = document.createElement('input');
+      quantityInput.className = 'qty-input text-center';
+      quantityInput.type = 'text';
+      quantityInput.setAttribute('aria-label', 'Menge wählen');
+      quantityInput.disabled = !isSaleable(item);
+
+      const qtyButtonContainer = document.createElement('div');
+      qtyButtonContainer.className = 'qty-btn-container d-flex flex-column';
+
+      const increaseButton = document.createElement('button');
+      increaseButton.type = 'button';
+      increaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
+
+      const increaseIcon = document.createElement('i');
+      increaseIcon.className = 'fa fa-plus default-float';
+      increaseIcon.setAttribute('aria-hidden', 'true');
+      increaseButton.appendChild(increaseIcon);
+
+      const decreaseButton = document.createElement('button');
+      decreaseButton.type = 'button';
+      decreaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
+
+      const decreaseIcon = document.createElement('i');
+      decreaseIcon.className = 'fa fa-minus default-float';
+      decreaseIcon.setAttribute('aria-hidden', 'true');
+      decreaseButton.appendChild(decreaseIcon);
+
+      function formatQuantityDisplay(value) {
+        if (Number.isInteger(value)) {
+          return String(value);
+        }
+
+        if (quantityPrecision > 0) {
+          const fixed = value.toFixed(quantityPrecision);
+          const trimmed = parseFloat(fixed).toString();
+          return trimmed.replace('.', ',');
+        }
+
+        return value.toString().replace('.', ',');
+      }
+
+      function normalizeQuantity(value) {
+        let numeric = typeof value === 'number' && isFinite(value)
+          ? value
+          : parseFloat(String(value).replace(',', '.'));
+
+        if (!isFinite(numeric) || numeric <= 0) {
+          numeric = minQuantity;
+        }
+
+        if (numeric < minQuantity) {
+          numeric = minQuantity;
+        }
+
+        if (maxQuantity && numeric > maxQuantity) {
+          numeric = maxQuantity;
+        }
+
+        const steps = Math.ceil((numeric - minQuantity) / intervalQuantity);
+        const adjusted = minQuantity + Math.max(0, steps) * intervalQuantity;
+
+        if (maxQuantity && adjusted > maxQuantity) {
+          const maxSteps = Math.floor((maxQuantity - minQuantity) / intervalQuantity);
+          const limited = maxSteps >= 0 ? minQuantity + maxSteps * intervalQuantity : minQuantity;
+          return quantityPrecision > 0 ? parseFloat(limited.toFixed(quantityPrecision)) : limited;
+        }
+
+        return quantityPrecision > 0 ? parseFloat(adjusted.toFixed(quantityPrecision)) : adjusted;
+      }
+
+      function setButtonState(button, isDisabled) {
+        button.disabled = isDisabled;
+
+        if (isDisabled) {
+          button.classList.add('disabled');
+        } else {
+          button.classList.remove('disabled');
+        }
+      }
+
+      function updateQuantity(newQuantity) {
+        currentQuantity = newQuantity;
+        quantityInput.value = formatQuantityDisplay(currentQuantity);
+
+        const isAtMinimum = currentQuantity - intervalQuantity < minQuantity;
+        const isAtMaximum = maxQuantity ? currentQuantity + intervalQuantity > maxQuantity : false;
+
+        setButtonState(decreaseButton, isAtMinimum || !isSaleable(item));
+        setButtonState(increaseButton, (isAtMaximum && !!maxQuantity) || !isSaleable(item));
+      }
+
+      increaseButton.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        if (!isSaleable(item)) {
+          return;
+        }
+
+        let candidate = currentQuantity + intervalQuantity;
+
+        if (maxQuantity && candidate > maxQuantity) {
+          candidate = maxQuantity;
+        }
+
+        updateQuantity(normalizeQuantity(candidate));
+      });
+
+      decreaseButton.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        if (!isSaleable(item)) {
+          return;
+        }
+
+        let candidate = currentQuantity - intervalQuantity;
+
+        if (candidate < minQuantity) {
+          candidate = minQuantity;
+        }
+
+        updateQuantity(normalizeQuantity(candidate));
+      });
+
+      quantityInput.addEventListener('change', function () {
+        updateQuantity(normalizeQuantity(quantityInput.value));
+      });
+
+      quantityInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          quantityInput.blur();
+        }
+      });
 
       if (!isSaleable(item)) {
         addToCartButton.disabled = true;
         addToCartButton.textContent = 'Nicht verfügbar';
         addToCartButton.classList.add('disabled');
+        setButtonState(decreaseButton, true);
+        setButtonState(increaseButton, true);
       }
 
       addToCartButton.addEventListener('click', function (event) {
@@ -549,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const payload = {
           variationId: variationId,
-          quantity: quantityDefaults.quantity
+          quantity: currentQuantity
         };
 
         store.dispatch(actionName, payload)
@@ -571,14 +743,76 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       });
 
+      qtyButtonContainer.appendChild(increaseButton);
+      qtyButtonContainer.appendChild(decreaseButton);
+      qtyBox.appendChild(quantityInput);
+      qtyBox.appendChild(qtyButtonContainer);
+      quantityWrapper.appendChild(qtyBox);
+
+      updateQuantity(normalizeQuantity(currentQuantity));
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'btn btn-sm text-danger p-0';
+      removeButton.style.display = 'inline-flex';
+      removeButton.style.alignItems = 'center';
+      removeButton.style.gap = '6px';
+
+      const removeLabel = document.createElement('span');
+      removeLabel.textContent = 'Löschen';
+      removeButton.appendChild(removeLabel);
+
+      const removeIcon = document.createElement('i');
+      removeIcon.className = 'fa fa-trash-o default-float';
+      removeIcon.setAttribute('aria-hidden', 'true');
+      removeButton.appendChild(removeIcon);
+
+      removeButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const store = getVueStore();
+        const actionName = getRemoveWishListActionName(store);
+
+        if (!store || !actionName) {
+          return;
+        }
+
+        const variationId = item && item.variation && item.variation.id ? item.variation.id : null;
+
+        if (!variationId) {
+          return;
+        }
+
+        const stateItems = store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)
+          ? store.state.wishList.wishListItems
+          : [];
+        const itemIndex = stateItems.findIndex(function (stateItem) {
+          return stateItem && stateItem.id === documentItem.id;
+        });
+
+        const originalLabel = removeLabel.textContent;
+        removeButton.disabled = true;
+        removeButton.classList.add('disabled');
+        removeLabel.textContent = 'Wird entfernt…';
+
+        store.dispatch(actionName, {
+          id: variationId,
+          wishListItem: documentItem,
+          index: itemIndex
+        }).catch(function () {
+          removeButton.disabled = false;
+          removeButton.classList.remove('disabled');
+          removeLabel.textContent = originalLabel;
+        });
+      });
+
+      actionRow.appendChild(quantityWrapper);
       actionRow.appendChild(addToCartButton);
+      actionRow.appendChild(removeButton);
 
       details.appendChild(nameLink);
       details.appendChild(priceLine);
-
-      if (attributeSummary) {
-        details.appendChild(attributeSummary);
-      }
 
       details.appendChild(actionRow);
 
