@@ -8,6 +8,266 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
+  const greetingElement = container.querySelector('[data-fh-account-greeting]');
+
+  if (greetingElement) {
+    const originalGreetingMarkup = greetingElement.innerHTML;
+
+    function getStoreInstance() {
+      if (window.ceresApp && window.ceresApp.$store) {
+        return window.ceresApp.$store;
+      }
+
+      if (window.vueApp && window.vueApp.$store) {
+        return window.vueApp.$store;
+      }
+
+      if (window.App && window.App.$store) {
+        return window.App.$store;
+      }
+
+      if (window.ceresStore) {
+        return window.ceresStore;
+      }
+
+      return null;
+    }
+
+    function computeBaseGreeting() {
+      const now = new Date();
+      const hour = now.getHours();
+
+      if (hour < 10) {
+        return 'Guten Morgen';
+      }
+
+      if (hour < 18) {
+        return 'Guten Tag';
+      }
+
+      return 'Guten Abend';
+    }
+
+    function mapSalutation(value) {
+      if (value === null || typeof value === 'undefined') {
+        return '';
+      }
+
+      if (typeof value === 'number') {
+        if (value === 1) {
+          return 'Herr';
+        }
+
+        if (value === 2) {
+          return 'Frau';
+        }
+
+        return '';
+      }
+
+      const normalized = String(value).trim().toLowerCase();
+
+      if (normalized.length === 0) {
+        return '';
+      }
+
+      const mapping = {
+        herr: 'Herr',
+        herrn: 'Herr',
+        'herr.': 'Herr',
+        mr: 'Herr',
+        mister: 'Herr',
+        frau: 'Frau',
+        'frau.': 'Frau',
+        mrs: 'Frau',
+        ms: 'Frau',
+        madam: 'Frau',
+        madame: 'Frau',
+        male: 'Herr',
+        female: 'Frau'
+      };
+
+      if (Object.prototype.hasOwnProperty.call(mapping, normalized)) {
+        return mapping[normalized];
+      }
+
+      if (normalized === '1') {
+        return 'Herr';
+      }
+
+      if (normalized === '2') {
+        return 'Frau';
+      }
+
+      return '';
+    }
+
+    function resolveCustomerInfo(store) {
+      const result = {
+        salutation: '',
+        lastName: '',
+        fallbackName: ''
+      };
+
+      if (!store) {
+        return result;
+      }
+
+      const getters = store.getters || {};
+      const state = store.state || {};
+
+      const fallbackCandidates = [
+        getters.username,
+        getters.userName,
+        state.username,
+        state.userName
+      ];
+
+      for (let index = 0; index < fallbackCandidates.length; index += 1) {
+        const candidate = fallbackCandidates[index];
+
+        if (typeof candidate === 'string' && candidate.trim().length > 0) {
+          result.fallbackName = candidate.trim();
+          break;
+        }
+      }
+
+      const contactCandidates = [];
+
+      function pushCandidate(candidate) {
+        if (!candidate || typeof candidate !== 'object') {
+          return;
+        }
+
+        contactCandidates.push(candidate);
+
+        if (candidate.contact && typeof candidate.contact === 'object') {
+          contactCandidates.push(candidate.contact);
+        }
+      }
+
+      const getterCandidates = [
+        getters.customerData,
+        getters.userData,
+        getters.customer,
+        getters.currentCustomer,
+        getters.accountContact,
+        getters.account,
+        getters.contactData
+      ];
+
+      const stateCandidates = [
+        state.userData,
+        state.customerData,
+        state.customer,
+        state.currentCustomer,
+        state.account,
+        state.contact,
+        state.profile,
+        state.auth && state.auth.customer
+      ];
+
+      getterCandidates.forEach(pushCandidate);
+      stateCandidates.forEach(pushCandidate);
+
+      for (let index = 0; index < contactCandidates.length; index += 1) {
+        const candidate = contactCandidates[index];
+
+        if (!candidate || typeof candidate !== 'object') {
+          continue;
+        }
+
+        const salutationCandidate =
+          candidate.salutation ||
+          candidate.formattedSalutation ||
+          candidate.salutationName ||
+          candidate.gender ||
+          candidate.title ||
+          candidate.salutationId;
+
+        if (!result.salutation && (typeof salutationCandidate === 'string' || typeof salutationCandidate === 'number')) {
+          result.salutation = salutationCandidate;
+        }
+
+        if (!result.lastName && typeof candidate.lastName === 'string' && candidate.lastName.trim().length > 0) {
+          result.lastName = candidate.lastName.trim();
+        }
+
+        if (!result.fallbackName) {
+          if (typeof candidate.fullName === 'string' && candidate.fullName.trim().length > 0) {
+            result.fallbackName = candidate.fullName.trim();
+          } else if (typeof candidate.name === 'string' && candidate.name.trim().length > 0) {
+            result.fallbackName = candidate.name.trim();
+          } else if (typeof candidate.firstName === 'string' && candidate.firstName.trim().length > 0) {
+            const firstName = candidate.firstName.trim();
+
+            if (typeof candidate.lastName === 'string' && candidate.lastName.trim().length > 0) {
+              result.fallbackName = firstName + ' ' + candidate.lastName.trim();
+            } else if (!result.fallbackName) {
+              result.fallbackName = firstName;
+            }
+          }
+        }
+
+        if (result.salutation && result.lastName && result.fallbackName) {
+          break;
+        }
+      }
+
+      return result;
+    }
+
+    function restoreOriginalGreeting() {
+      if (typeof originalGreetingMarkup === 'string') {
+        greetingElement.innerHTML = originalGreetingMarkup;
+      }
+    }
+
+    function updateAccountGreeting() {
+      const store = getStoreInstance();
+
+      if (!store || !store.getters) {
+        restoreOriginalGreeting();
+        return false;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(store.getters, 'isLoggedIn') && !store.getters.isLoggedIn) {
+        restoreOriginalGreeting();
+        return false;
+      }
+
+      const info = resolveCustomerInfo(store);
+      const baseGreeting = computeBaseGreeting();
+      const salutationLabel = mapSalutation(info.salutation);
+      const lastName = typeof info.lastName === 'string' ? info.lastName : '';
+      const fallbackName = typeof info.fallbackName === 'string' ? info.fallbackName : '';
+
+      let greetingText = baseGreeting;
+
+      if (salutationLabel && lastName) {
+        greetingText += ', ' + salutationLabel + ' ' + lastName;
+      } else if (fallbackName) {
+        greetingText += ', ' + fallbackName;
+      }
+
+      greetingElement.textContent = greetingText;
+      return true;
+    }
+
+    updateAccountGreeting();
+
+    let warmupAttempts = 0;
+    const warmupTimer = window.setInterval(function () {
+      warmupAttempts += 1;
+
+      if (updateAccountGreeting() || warmupAttempts >= 25) {
+        window.clearInterval(warmupTimer);
+      }
+    }, 300);
+
+    window.setInterval(updateAccountGreeting, 60000);
+  }
+
   const toggleButton = container.querySelector('[data-fh-account-menu-toggle]');
   const menu = container.querySelector('[data-fh-account-menu]');
 
