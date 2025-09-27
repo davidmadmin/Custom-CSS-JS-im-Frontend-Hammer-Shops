@@ -1713,6 +1713,145 @@ document.addEventListener('DOMContentLoaded', function () {
   waitForCountdownDiv();
   setInterval(waitForCountdownDiv, 1000);
 })();
+
+// Section: FH mobile navigation toggle
+document.addEventListener('DOMContentLoaded', function () {
+  var header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) {
+    return;
+  }
+
+  var mobileMenu = header.querySelector('[data-fh-mobile-menu]');
+  var backdrop = header.querySelector('[data-fh-mobile-backdrop]');
+  var toggleButtons = header.querySelectorAll('[data-fh-menu-toggle]');
+  var closeButtons = header.querySelectorAll('[data-fh-menu-close]');
+
+  if (!mobileMenu || !backdrop || toggleButtons.length === 0) {
+    return;
+  }
+
+  var desktopQuery = window.matchMedia('(min-width: 1200px)');
+  var isOpen = false;
+  var lastFocusedElement = null;
+
+  function applyState() {
+    if (desktopQuery.matches) {
+      header.classList.remove('fh-header--menu-open');
+      document.body.classList.remove('fh-header-mobile-menu-open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      backdrop.setAttribute('aria-hidden', 'true');
+      toggleButtons.forEach(function (button) {
+        button.setAttribute('aria-expanded', 'false');
+      });
+      return;
+    }
+
+    if (isOpen) {
+      header.classList.add('fh-header--menu-open');
+      document.body.classList.add('fh-header-mobile-menu-open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      backdrop.setAttribute('aria-hidden', 'false');
+      toggleButtons.forEach(function (button) {
+        button.setAttribute('aria-expanded', 'true');
+      });
+      return;
+    }
+
+    header.classList.remove('fh-header--menu-open');
+    document.body.classList.remove('fh-header-mobile-menu-open');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    backdrop.setAttribute('aria-hidden', 'true');
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function openMenu() {
+    if (isOpen || desktopQuery.matches) {
+      return;
+    }
+
+    lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    isOpen = true;
+    applyState();
+    mobileMenu.focus();
+    document.addEventListener('keydown', handleKeydown);
+  }
+
+  function closeMenu() {
+    if (!isOpen && !desktopQuery.matches) {
+      applyState();
+      return;
+    }
+
+    isOpen = false;
+    applyState();
+    document.removeEventListener('keydown', handleKeydown);
+
+    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      lastFocusedElement.focus();
+    }
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+    }
+  }
+
+  toggleButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      if (desktopQuery.matches) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+  });
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  });
+
+  backdrop.addEventListener('click', function (event) {
+    event.preventDefault();
+    closeMenu();
+  });
+
+  mobileMenu.addEventListener('click', function (event) {
+    if (desktopQuery.matches) {
+      return;
+    }
+
+    var link = event.target.closest('a');
+
+    if (link) {
+      closeMenu();
+    }
+  });
+
+  desktopQuery.addEventListener('change', function () {
+    if (desktopQuery.matches) {
+      isOpen = false;
+      document.removeEventListener('keydown', handleKeydown);
+    }
+
+    applyState();
+  });
+
+  applyState();
+});
+// End Section: FH mobile navigation toggle
 // End Section: Bestell-Versand Countdown Code
 
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
