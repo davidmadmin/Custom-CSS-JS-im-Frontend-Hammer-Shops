@@ -1,5 +1,234 @@
 // Section: Global scripts for all pages
 
+// Section: FH mobile navigation behaviour
+document.addEventListener('DOMContentLoaded', function () {
+  var header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) {
+    return;
+  }
+
+  var nav = header.querySelector('[data-fh-mobile-menu]');
+
+  if (!nav) {
+    return;
+  }
+
+  var toggleButtons = header.querySelectorAll('[data-fh-mobile-menu-toggle]');
+  var closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
+  var backdrop = header.querySelector('[data-fh-mobile-menu-backdrop]');
+  var submenuToggles = nav.querySelectorAll('[data-fh-mobile-submenu-toggle]');
+  var body = document.body;
+  var focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  var mediaQuery = window.matchMedia('(min-width: 992px)');
+  var restoreFocus = null;
+  var isOpen = false;
+
+  function isDesktop() {
+    return mediaQuery.matches;
+  }
+
+  function setToggleState(expanded) {
+    var value = expanded ? 'true' : 'false';
+
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', value);
+    });
+  }
+
+  function syncAriaHidden() {
+    if (isDesktop()) {
+      nav.setAttribute('aria-hidden', 'false');
+    } else {
+      nav.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    }
+  }
+
+  function getFocusableElements() {
+    return Array.from(nav.querySelectorAll(focusableSelector)).filter(function (element) {
+      if (element.hasAttribute('tabindex') && element.getAttribute('tabindex') === '-1') {
+        return false;
+      }
+
+      return element.getClientRects().length > 0;
+    });
+  }
+
+  function handleKeydown(event) {
+    if (!isOpen) {
+      return;
+    }
+
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    var focusable = getFocusableElements();
+
+    if (focusable.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    var firstElement = focusable[0];
+    var lastElement = focusable[focusable.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement || !nav.contains(document.activeElement)) {
+        event.preventDefault();
+        lastElement.focus();
+      }
+    } else if (document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+
+  function openMenu(trigger) {
+    if (isOpen || isDesktop()) {
+      return;
+    }
+
+    isOpen = true;
+    restoreFocus = trigger instanceof HTMLElement ? trigger : document.activeElement;
+    header.classList.add('fh-header--mobile-menu-open');
+    nav.classList.add('fh-header__nav--open');
+    body.classList.add('fh-page-no-scroll');
+    setToggleState(true);
+    syncAriaHidden();
+
+    var focusable = getFocusableElements();
+
+    if (focusable.length > 0) {
+      focusable[0].focus();
+    }
+
+    document.addEventListener('keydown', handleKeydown);
+  }
+
+  function closeMenu(options) {
+    var settings = options || {};
+
+    if (!isOpen && !settings.force) {
+      syncAriaHidden();
+      return;
+    }
+
+    isOpen = false;
+    header.classList.remove('fh-header--mobile-menu-open');
+    nav.classList.remove('fh-header__nav--open');
+    body.classList.remove('fh-page-no-scroll');
+    setToggleState(false);
+    nav.querySelectorAll('.fh-header__nav-item.is-open').forEach(function (item) {
+      item.classList.remove('is-open');
+    });
+    submenuToggles.forEach(function (toggle) {
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+    document.removeEventListener('keydown', handleKeydown);
+    syncAriaHidden();
+
+    if (!settings.skipFocus && restoreFocus && typeof restoreFocus.focus === 'function') {
+      restoreFocus.focus();
+    }
+
+    restoreFocus = null;
+  }
+
+  function handleMediaChange(event) {
+    if (event.matches) {
+      closeMenu({ skipFocus: true, force: true });
+      nav.querySelectorAll('.fh-header__nav-item.is-open').forEach(function (item) {
+        item.classList.remove('is-open');
+      });
+      submenuToggles.forEach(function (toggle) {
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    syncAriaHidden();
+  }
+
+  toggleButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (isDesktop()) {
+        return;
+      }
+
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu(button);
+      }
+    });
+  });
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu({ skipFocus: true });
+    });
+  }
+
+  submenuToggles.forEach(function (toggle) {
+    var navItem = toggle.closest('.fh-header__nav-item');
+
+    if (!navItem) {
+      return;
+    }
+
+    toggle.addEventListener('click', function (event) {
+      if (isDesktop()) {
+        return;
+      }
+
+      event.preventDefault();
+      var isExpanded = navItem.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    });
+  });
+
+  nav.addEventListener('click', function (event) {
+    if (isDesktop()) {
+      return;
+    }
+
+    var target = event.target.closest('.fh-header__nav-link');
+
+    if (!target) {
+      return;
+    }
+
+    if (target.getAttribute('href') && target.getAttribute('href').trim() !== '#') {
+      closeMenu({ skipFocus: true });
+    }
+  });
+
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', handleMediaChange);
+  } else if (typeof mediaQuery.addListener === 'function') {
+    mediaQuery.addListener(handleMediaChange);
+  }
+
+  syncAriaHidden();
+});
+// End Section: FH mobile navigation behaviour
+
 // Section: FH account menu toggle behaviour
 document.addEventListener('DOMContentLoaded', function () {
   function resolveGreeting(defaultGreeting) {
