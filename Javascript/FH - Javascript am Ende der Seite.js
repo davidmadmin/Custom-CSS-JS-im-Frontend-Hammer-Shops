@@ -1,7 +1,20 @@
 // Section: Global scripts for all pages
 
+function fhOnReady(callback) {
+  if (typeof callback !== 'function') {
+    return;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', callback);
+    return;
+  }
+
+  callback();
+}
+
 // Section: FH account menu toggle behaviour
-document.addEventListener('DOMContentLoaded', function () {
+fhOnReady(function () {
   function resolveGreeting(defaultGreeting) {
     const hour = new Date().getHours();
 
@@ -132,8 +145,194 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH mobile navigation toggle
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) {
+    return;
+  }
+
+  const menu = header.querySelector('[data-fh-mobile-menu]');
+  const toggleButtons = header.querySelectorAll('[data-fh-mobile-menu-toggle]');
+
+  if (!menu || toggleButtons.length === 0) {
+    return;
+  }
+
+  const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
+  const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  let isOpen = false;
+  let previouslyFocusedElement = null;
+
+  function setExpandedState(value) {
+    const expandedValue = value ? 'true' : 'false';
+
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', expandedValue);
+    });
+  }
+
+  function focusInitialElement() {
+    const closeButton = menu.querySelector('[data-fh-mobile-menu-close]');
+
+    if (closeButton instanceof HTMLElement) {
+      closeButton.focus();
+      return;
+    }
+
+    const firstLink = menu.querySelector('.fh-header__nav-link');
+
+    if (firstLink instanceof HTMLElement) {
+      firstLink.focus();
+    }
+  }
+
+  function handleDocumentKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+    }
+  }
+
+  function handleTrapFocus(event) {
+    if (!isOpen || event.key !== 'Tab') {
+      return;
+    }
+
+    const focusableElements = Array.prototype.slice
+      .call(menu.querySelectorAll(focusableSelectors))
+      .filter(function (element) {
+        return (
+          element instanceof HTMLElement &&
+          element.offsetParent !== null &&
+          !element.hasAttribute('disabled') &&
+          element.getAttribute('aria-hidden') !== 'true'
+        );
+      });
+
+    if (focusableElements.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      }
+
+      return;
+    }
+
+    if (document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+
+  function openMenu() {
+    if (isOpen) {
+      return;
+    }
+
+    previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    menu.classList.add('fh-header__nav--open');
+    menu.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('fh-mobile-menu-open');
+    setExpandedState(true);
+    document.addEventListener('keydown', handleDocumentKeydown);
+    document.addEventListener('keydown', handleTrapFocus);
+    focusInitialElement();
+    isOpen = true;
+  }
+
+  function closeMenu(options) {
+    const skipFocus = !!(options && options.skipFocus === true);
+
+    menu.classList.remove('fh-header__nav--open');
+    menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
+    document.body.classList.remove('fh-mobile-menu-open');
+    setExpandedState(false);
+
+    if (!isOpen) {
+      return;
+    }
+
+    document.removeEventListener('keydown', handleDocumentKeydown);
+    document.removeEventListener('keydown', handleTrapFocus);
+    isOpen = false;
+
+    if (skipFocus) {
+      previouslyFocusedElement = null;
+      return;
+    }
+
+    const target = previouslyFocusedElement || toggleButtons[0];
+
+    if (target instanceof HTMLElement) {
+      target.focus();
+    }
+
+    previouslyFocusedElement = null;
+  }
+
+  toggleButtons.forEach(function (button) {
+    button.setAttribute('aria-expanded', 'false');
+
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (isOpen) {
+        closeMenu();
+        return;
+      }
+
+      openMenu();
+    });
+  });
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  });
+
+  menu.addEventListener('click', function (event) {
+    if (event.target && event.target.closest('[data-fh-mobile-menu-close]')) {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    const navLink = event.target && event.target.closest('.fh-header__nav-link');
+
+    if (navLink && !navLink.closest('.dropdown-menu')) {
+      closeMenu();
+    }
+  });
+
+  function handleBreakpointChange() {
+    closeMenu({ skipFocus: true });
+  }
+
+  if (typeof desktopMedia.addEventListener === 'function') {
+    desktopMedia.addEventListener('change', handleBreakpointChange);
+  } else if (typeof desktopMedia.addListener === 'function') {
+    desktopMedia.addListener(handleBreakpointChange);
+  }
+
+  closeMenu({ skipFocus: true });
+});
+// End Section: FH mobile navigation toggle
+
 // Section: FH Merkliste button enhancements
-document.addEventListener('DOMContentLoaded', function () {
+fhOnReady(function () {
   const iconMarkup =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
 
@@ -266,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: FH Merkliste button enhancements
 
 // Section: FH wish list flyout preview
-document.addEventListener('DOMContentLoaded', function () {
+fhOnReady(function () {
   const container = document.querySelector('[data-fh-wishlist-menu-container]');
 
   if (!container) {
@@ -1366,7 +1565,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: FH wish list flyout preview
 
 // Section: Basket preview attribute cleanup
-document.addEventListener('DOMContentLoaded', function () {
+fhOnReady(function () {
   const attributeKeywords = ['inhalt', 'abmess', 'länge', 'laenge', 'breite', 'höhe', 'hoehe'];
   const previewSelectors = ['.basket-preview', '.basket-preview-list', '.basket-preview-items'];
   const labelSelectors = [
@@ -1568,7 +1767,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: Basket preview attribute cleanup
 
 // Section: Ensure auth modals load their Vue components before opening
-document.addEventListener('DOMContentLoaded', function () {
+fhOnReady(function () {
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) {
       return window.vueApp.$store;
@@ -1716,7 +1915,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: Bestell-Versand Countdown Code
 
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
-document.addEventListener('DOMContentLoaded', function () {
+fhOnReady(function () {
   const shippingIcons = {
     'ShippingProfileID1531': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
     'ShippingProfileID1545': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
@@ -1745,7 +1944,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: Versand Icons ändern & einfügen
 
 // Section: Gratisversand Fortschritt Balken
-document.addEventListener('DOMContentLoaded', function () {
+fhOnReady(function () {
   const THRESHOLD = 150;
 
   const COUNTRY_SELECT_ID_FRAGMENTS = [
@@ -1887,7 +2086,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
 // Section: Animierte Suchplatzhalter Vorschläge
 
-document.addEventListener("DOMContentLoaded", function () {
+fhOnReady(function () {
   const searchInput = document.querySelector('input.search-input');
   if (!searchInput) return;
 
@@ -2110,7 +2309,7 @@ var observer = new MutationObserver(function(mutationsList, observer) {
   patchBasketButton();
 });
 
-document.addEventListener("DOMContentLoaded", function() {
+fhOnReady(function () {
   observer.observe(document.body, { childList: true, subtree: true });
   patchBasketButton();
 });
