@@ -132,6 +132,249 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH mobile menu interactions
+document.addEventListener('DOMContentLoaded', function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) {
+    return;
+  }
+
+  const openButton = header.querySelector('[data-fh-mobile-menu-toggle]');
+  const menu = header.querySelector('[data-fh-mobile-menu]');
+  const overlay = header.querySelector('[data-fh-mobile-menu-overlay]');
+  const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
+  const dropdownItems = Array.from(header.querySelectorAll('.fh-header__nav-item.dropdown'));
+  const focusableSelector =
+    'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])';
+  const mobileMediaQuery = window.matchMedia('(max-width: 991.98px)');
+
+  if (!openButton || !menu) {
+    return;
+  }
+
+  let isOpen = false;
+  let lastFocusedElement = null;
+
+  function isMobile() {
+    return mobileMediaQuery.matches;
+  }
+
+  function syncAriaHidden() {
+    if (!menu) {
+      return;
+    }
+
+    if (isMobile()) {
+      menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    } else {
+      menu.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function closeAllDropdowns() {
+    dropdownItems.forEach(function (item) {
+      item.classList.remove('is-open');
+    });
+  }
+
+  function getFocusableElements() {
+    return Array.from(menu.querySelectorAll(focusableSelector)).filter(function (element) {
+      if (!element || typeof element.focus !== 'function') {
+        return false;
+      }
+
+      if (element.hasAttribute('disabled') || element.getAttribute('aria-hidden') === 'true') {
+        return false;
+      }
+
+      const rects = element.getClientRects();
+
+      return rects.length > 0 && rects[0].width > 0 && rects[0].height > 0;
+    });
+  }
+
+  function handleKeydown(event) {
+    if (!isOpen) {
+      return;
+    }
+
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const focusable = getFocusableElements();
+
+    if (!focusable.length) {
+      return;
+    }
+
+    const firstElement = focusable[0];
+    const lastElement = focusable[focusable.length - 1];
+    const activeElement = document.activeElement;
+
+    if (event.shiftKey) {
+      if (activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus({ preventScroll: true });
+      }
+
+      return;
+    }
+
+    if (activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus({ preventScroll: true });
+    }
+  }
+
+  function openMenu() {
+    if (isOpen || !isMobile()) {
+      return;
+    }
+
+    lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+      window.fhAccountMenu.close();
+    }
+
+    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+      window.fhWishlistMenu.close();
+    }
+
+    header.classList.add('fh-header--mobile-menu-open');
+    document.body.classList.add('fh-mobile-menu-open');
+    openButton.setAttribute('aria-expanded', 'true');
+    isOpen = true;
+    syncAriaHidden();
+    document.addEventListener('keydown', handleKeydown, true);
+
+    window.requestAnimationFrame(function () {
+      const focusTarget = header.querySelector('[data-fh-mobile-menu-close]') || menu;
+
+      if (focusTarget && typeof focusTarget.focus === 'function') {
+        focusTarget.focus({ preventScroll: true });
+      }
+    });
+  }
+
+  function closeMenu(options) {
+    const opts = options || {};
+
+    if (!isOpen && !opts.force) {
+      syncAriaHidden();
+      return;
+    }
+
+    header.classList.remove('fh-header--mobile-menu-open');
+    document.body.classList.remove('fh-mobile-menu-open');
+    openButton.setAttribute('aria-expanded', 'false');
+    isOpen = false;
+    closeAllDropdowns();
+    document.removeEventListener('keydown', handleKeydown, true);
+    syncAriaHidden();
+
+    if (!opts.skipFocus) {
+      const focusTarget = lastFocusedElement && typeof lastFocusedElement.focus === 'function' ? lastFocusedElement : openButton;
+
+      if (focusTarget && typeof focusTarget.focus === 'function') {
+        focusTarget.focus({ preventScroll: true });
+      }
+    }
+
+    lastFocusedElement = null;
+  }
+
+  openButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  });
+
+  if (overlay) {
+    overlay.addEventListener('click', function () {
+      closeMenu();
+    });
+  }
+
+  dropdownItems.forEach(function (item) {
+    const trigger = item.querySelector('.fh-header__nav-link');
+
+    if (!trigger) {
+      return;
+    }
+
+    trigger.addEventListener('click', function (event) {
+      if (!isMobile()) {
+        return;
+      }
+
+      event.preventDefault();
+      const shouldOpen = !item.classList.contains('is-open');
+
+      closeAllDropdowns();
+
+      if (shouldOpen) {
+        item.classList.add('is-open');
+      }
+    });
+  });
+
+  menu.addEventListener('click', function (event) {
+    const link = event.target.closest('a');
+
+    if (!link || !isMobile()) {
+      return;
+    }
+
+    if (link.classList.contains('fh-header__nav-link')) {
+      const parentItem = link.parentElement;
+
+      if (parentItem && parentItem.classList.contains('dropdown')) {
+        return;
+      }
+    }
+
+    closeMenu({ skipFocus: true });
+  });
+
+  mobileMediaQuery.addEventListener('change', function (event) {
+    if (!event.matches) {
+      closeMenu({ skipFocus: true, force: true });
+    }
+
+    syncAriaHidden();
+  });
+
+  syncAriaHidden();
+
+  window.fhMobileMenu = window.fhMobileMenu || {};
+  window.fhMobileMenu.open = openMenu;
+  window.fhMobileMenu.close = closeMenu;
+  window.fhMobileMenu.isOpen = function () {
+    return isOpen;
+  };
+});
+// End Section: FH mobile menu interactions
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
