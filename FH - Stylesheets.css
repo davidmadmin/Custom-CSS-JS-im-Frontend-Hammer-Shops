@@ -234,6 +234,68 @@
   gap: 6px;
 }
 
+.fh-header__account-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 13px 22px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background: linear-gradient(120deg, #1f2937, #0f172a);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+  transition: all 0.2s ease;
+}
+
+.fh-header__account-login:hover,
+.fh-header__account-login:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(120deg, #25334a, #111c33);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
+  transform: translateY(-1px);
+}
+
+.fh-header__account-login:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 165, 240, 0.35), 0 12px 24px rgba(15, 23, 42, 0.16);
+}
+
+.fh-header__account-register {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(49, 165, 240, 0.4);
+  background-color: rgba(248, 250, 252, 0.9);
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.fh-header__account-register:hover,
+.fh-header__account-register:focus {
+  text-decoration: none;
+  color: #0f172a;
+  background-color: rgba(226, 232, 240, 0.9);
+  border-color: rgba(49, 165, 240, 0.6);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
+}
+
+.fh-header__account-register:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 165, 240, 0.25), 0 8px 16px rgba(15, 23, 42, 0.12);
+}
+
 .fh-header__panel-divider {
   width: 100%;
   height: 1px;
