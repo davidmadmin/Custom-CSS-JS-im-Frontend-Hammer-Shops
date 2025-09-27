@@ -205,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function setMenuState(isOpen) {
     headerRoot.classList.toggle('fh-header--mobile-menu-open', isOpen);
     mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+    mobileMenu.toggleAttribute('inert', !isOpen);
     menuToggle.setAttribute('aria-expanded', String(isOpen));
     document.documentElement.classList.toggle('fh-mobile-menu-open', isOpen);
     document.body.classList.toggle('fh-mobile-menu-open', isOpen);

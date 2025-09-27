@@ -779,6 +779,8 @@
   inset: 0;
   display: flex;
   pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear 0.3s;
   z-index: 5000;
 }
 
@@ -1006,6 +1008,8 @@
 
 .fh-header--mobile-menu-open .fh-mobile-menu {
   pointer-events: auto;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 .fh-header--mobile-menu-open .fh-mobile-menu__backdrop {
