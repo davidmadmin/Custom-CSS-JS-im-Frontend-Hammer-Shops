@@ -26,8 +26,8 @@
   margin: 0 auto;
   color: #1a1a1a;
   font-family: "Open Sans", Arial, sans-serif;
-  width: 1600px; /* Do not change this */
-  max-width: 1600px;
+  width: 1600px; /* Do not change this for Desktop viewport*/
+  max-width: 1600px; /* Do not change this for Desktop viewport*/
 }
 
 .fh-header__top-bar {
