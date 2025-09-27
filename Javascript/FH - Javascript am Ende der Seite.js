@@ -1751,6 +1751,56 @@ fhOnDocumentReady(function () {
   var desktopQuery = window.matchMedia('(min-width: 1200px)');
   var isOpen = false;
   var lastFocusedElement = null;
+  var focusableSelector = [
+    'a[href]',
+    'area[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    'iframe',
+    'object',
+    'embed',
+    '[contenteditable]',
+    '[tabindex]'
+  ].join(',');
+
+  function setMenuFocusability(disabled) {
+    if (disabled) {
+      mobileMenu.setAttribute('inert', '');
+    } else {
+      mobileMenu.removeAttribute('inert');
+    }
+
+    var focusableElements = mobileMenu.querySelectorAll(focusableSelector);
+
+    focusableElements.forEach(function (element) {
+      var storedTabIndex = element.getAttribute('data-fh-menu-original-tabindex');
+
+      if (disabled) {
+        if (storedTabIndex === null) {
+          var currentTabIndex = element.getAttribute('tabindex');
+          element.setAttribute('data-fh-menu-original-tabindex', currentTabIndex === null ? '' : currentTabIndex);
+        }
+
+        element.setAttribute('tabindex', '-1');
+        return;
+      }
+
+      if (storedTabIndex === null) {
+        element.removeAttribute('tabindex');
+        return;
+      }
+
+      element.removeAttribute('data-fh-menu-original-tabindex');
+
+      if (storedTabIndex === '') {
+        element.removeAttribute('tabindex');
+      } else {
+        element.setAttribute('tabindex', storedTabIndex);
+      }
+    });
+  }
 
   function applyState() {
     if (desktopQuery.matches) {
@@ -1761,6 +1811,7 @@ fhOnDocumentReady(function () {
       toggleButtons.forEach(function (button) {
         button.setAttribute('aria-expanded', 'false');
       });
+      setMenuFocusability(false);
       return;
     }
 
@@ -1772,6 +1823,7 @@ fhOnDocumentReady(function () {
       toggleButtons.forEach(function (button) {
         button.setAttribute('aria-expanded', 'true');
       });
+      setMenuFocusability(false);
       return;
     }
 
@@ -1782,6 +1834,7 @@ fhOnDocumentReady(function () {
     toggleButtons.forEach(function (button) {
       button.setAttribute('aria-expanded', 'false');
     });
+    setMenuFocusability(true);
   }
 
   function openMenu() {
