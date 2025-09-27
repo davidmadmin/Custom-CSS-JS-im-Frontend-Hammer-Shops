@@ -2055,39 +2055,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // End Section: Animierte Suchplatzhalter Vorschläge
 
-// --- Anfang Custom Header Menü Icons ---
-
-$(document).ready(function () {
-  const customIcons = {
-    428: 'tuerdruecker-icon.svg'
-  };
-
-  const iconBaseUrl = 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/img/Icons/';
-
-  Object.entries(customIcons).forEach(([catId, iconFile]) => {
-    if (!iconFile) {
-      console.warn(`Kein Icon für Kategorie ${catId}`);
-      return;
-    }
-
-    const $link = $(`.kjv-cat-id-${catId} > a`);
-    if ($link.length === 0) {
-      console.warn(`Link nicht gefunden für Kategorie ${catId}`);
-      return;
-    }
-
-    // Vorheriges Icon entfernen
-    $link.find('i.fa').remove();
-
-    // Icon nur einfügen, wenn noch keins vorhanden ist
-    if ($link.find('img.custom-menu-icon').length === 0) {
-      const imgTag = `<img src="${iconBaseUrl}${iconFile}" alt="" class="custom-menu-icon" width="25" height="15">`;
-      $link.prepend(imgTag);
-    }
-  });
-});
-
-// --- Ende Custom Header Menü Icons ---
 
 
 // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
