@@ -56,7 +56,17 @@ function fhInitElements(selector, initializer, options) {
     });
   }
 
+  function queueScan() {
+    if (typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(scan);
+      return;
+    }
+
+    window.setTimeout(scan, 0);
+  }
+
   scan();
+  queueScan();
 
   const observerTarget = document.body || document.documentElement;
 
@@ -70,6 +80,53 @@ function fhInitElements(selector, initializer, options) {
 
   observer.observe(observerTarget, { childList: true, subtree: true });
 }
+
+const fhHeaderDebugSelectors = {
+  accountMenu: {
+    container: '.fh-account-menu-container[data-fh-account-menu-container]',
+    toggle: '.fh-account-menu-container [data-fh-account-menu-toggle]',
+    panel: '.fh-header__panel.fh-header__panel--account[data-fh-account-menu]'
+  },
+  wishListMenu: {
+    container: '.fh-wishlist-menu-container[data-fh-wishlist-menu-container]',
+    toggle: '.fh-wishlist-menu-container [data-fh-wishlist-menu-toggle]',
+    panel: '.fh-header__panel[data-fh-wishlist-menu]'
+  },
+  mobileNavigation: {
+    root: '.fh-header[data-fh-header-root]',
+    toggle: '.fh-header [data-fh-mobile-menu-toggle]',
+    menu: 'nav.fh-header__nav[data-fh-mobile-menu]'
+  }
+};
+
+window.fhHeaderDebug = Object.assign({}, window.fhHeaderDebug, {
+  selectors: fhHeaderDebugSelectors,
+  logMenuStatus: function () {
+    const sections = fhHeaderDebugSelectors;
+
+    Object.keys(sections).forEach(function (key) {
+      const definition = sections[key];
+      const entries = Object.keys(definition)
+        .map(function (innerKey) {
+          const selector = definition[innerKey];
+          const nodes = Array.prototype.slice.call(document.querySelectorAll(selector));
+          return {
+            name: innerKey,
+            selector: selector,
+            count: nodes.length
+          };
+        });
+
+      console.info('[FH Header]', key, entries);
+    });
+  }
+});
+
+fhOnDocumentReady(function () {
+  if (window.fhHeaderDebug && typeof window.fhHeaderDebug.logMenuStatus === 'function') {
+    window.fhHeaderDebug.logMenuStatus();
+  }
+});
 
 // Section: FH account menu toggle behaviour
 fhOnDocumentReady(function () {
