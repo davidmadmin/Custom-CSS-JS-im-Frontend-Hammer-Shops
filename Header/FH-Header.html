@@ -21,95 +21,108 @@
     <a href="/" class="fh-header__logo">
       <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER">
     </a>
-    <form action="#" method="get" class="fh-header__search-form">
-      <input type="search" name="q" class="search-input fh-header__search-input" placeholder="Suchbegriff eingeben" aria-label="Suche">
-      <button type="button" data-search-clear aria-label="Eingabe löschen" class="fh-header__search-clear">
-        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__search-clear-icon">
-          <line x1="5" y1="5" x2="15" y2="15"></line>
-          <line x1="15" y1="5" x2="5" y2="15"></line>
-        </svg>
+    <div class="fh-header__search-wrapper">
+      <button type="button" class="fh-header__menu-toggle" data-fh-menu-toggle aria-controls="fh-header-navigation" aria-expanded="false" aria-label="Menü öffnen">
+        <span class="fh-header__menu-toggle-bar"></span>
+        <span class="fh-header__menu-toggle-bar"></span>
+        <span class="fh-header__menu-toggle-bar"></span>
       </button>
-    </form>
-    <div class="fh-wishlist-menu-container position-relative" data-fh-wishlist-menu-container>
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle class="fh-header__icon-button">
-        <span class="fh-header__badge" v-cloak v-text="$store.getters.wishListCount || 0"></span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon fh-header__icon--wishlist">
-          <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
-        </svg>
-      </button>
-      <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" class="fh-header__panel">
-        <div class="fh-header__panel-arrow"></div>
-        <div class="fh-header__panel-header">
-          <div class="fh-header__panel-title">Merkliste</div>
-        </div>
-        <div data-fh-wishlist-menu-loading class="fh-header__panel-text py-3">Wird geladen …</div>
-        <div data-fh-wishlist-menu-error class="fh-header__panel-text text-danger py-3">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
-        <div data-fh-wishlist-menu-empty class="fh-header__panel-text py-3">Ihre Merkliste ist leer.</div>
-        <ul data-fh-wishlist-menu-list class="list-unstyled mb-0 fh-header__wishlist-list"></ul>
-      </div>
+      <form action="#" method="get" class="fh-header__search-form">
+        <input type="search" name="q" class="search-input fh-header__search-input" placeholder="Suchbegriff eingeben" aria-label="Suche">
+        <button type="button" data-search-clear aria-label="Eingabe löschen" class="fh-header__search-clear">
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__search-clear-icon">
+            <line x1="5" y1="5" x2="15" y2="15"></line>
+            <line x1="15" y1="5" x2="5" y2="15"></line>
+          </svg>
+        </button>
+      </form>
     </div>
-    <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
-          <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
-          <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
-        </svg>
-      </button>
-      <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
-        <div class="fh-header__panel-arrow"></div>
-        <div v-if="!$store.getters.isLoggedIn">
-          <div class="fh-header__panel-title mb-3">Ihr Konto</div>
-          <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
-          <div class="fh-header__panel-inline my-3 fh-header__panel-text">
-            <span>oder</span>
-            <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger class="fh-header__account-register">Registrieren</a>
+    <div class="fh-header__actions">
+      <div class="fh-wishlist-menu-container position-relative" data-fh-wishlist-menu-container>
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle class="fh-header__icon-button">
+          <span class="fh-header__badge" v-cloak v-text="$store.getters.wishListCount || 0"></span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon fh-header__icon--wishlist">
+            <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
+          </svg>
+        </button>
+        <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" class="fh-header__panel">
+          <div class="fh-header__panel-arrow"></div>
+          <div class="fh-header__panel-header">
+            <div class="fh-header__panel-title">Merkliste</div>
           </div>
-          <div class="fh-header__panel-divider my-3"></div>
-          <div class="fh-header__panel-stack mb-3 text-body">
-            <div class="fh-header__panel-subtitle">Vorteile:</div>
-            <ul class="fh-header__panel-list">
-              <li>Schneller kaufen</li>
-              <li>Hammer Punkte sammeln</li>
-              <li>Einfacherer Support</li>
-            </ul>
-          </div>
+          <div data-fh-wishlist-menu-loading class="fh-header__panel-text py-3">Wird geladen …</div>
+          <div data-fh-wishlist-menu-error class="fh-header__panel-text text-danger py-3">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
+          <div data-fh-wishlist-menu-empty class="fh-header__panel-text py-3">Ihre Merkliste ist leer.</div>
+          <ul data-fh-wishlist-menu-list class="list-unstyled mb-0 fh-header__wishlist-list"></ul>
         </div>
-        <div v-else>
-          <div class="fh-header__panel-stack mb-3 text-body">
-            <div class="fh-header__panel-title">
-              <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
-              <span v-else v-cloak>Hallo</span>
+      </div>
+      <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
+            <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
+            <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
+          </svg>
+        </button>
+        <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
+          <div class="fh-header__panel-arrow"></div>
+          <div v-if="!$store.getters.isLoggedIn">
+            <div class="fh-header__panel-title mb-3">Ihr Konto</div>
+            <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
+            <div class="fh-header__panel-inline my-3 fh-header__panel-text">
+              <span>oder</span>
+              <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger class="fh-header__account-register">Registrieren</a>
             </div>
-            <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+            <div class="fh-header__panel-divider my-3"></div>
+            <div class="fh-header__panel-stack mb-3 text-body">
+              <div class="fh-header__panel-subtitle">Vorteile:</div>
+              <ul class="fh-header__panel-list">
+                <li>Schneller kaufen</li>
+                <li>Hammer Punkte sammeln</li>
+                <li>Einfacherer Support</li>
+              </ul>
+            </div>
           </div>
-          <div class="fh-header__panel-divider mb-3"></div>
-          <nav class="fh-header__panel-links mb-4">
-            <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
-            <a href="/hammer-praemien" class="fh-header__panel-link">Hammer Prämien</a>
-            <a href="/my-account/addresses" class="fh-header__panel-link">Adressen</a>
-            <a href="/my-account/orders" class="fh-header__panel-link">Bestellungen</a>
-          </nav>
-          <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
+          <div v-else>
+            <div class="fh-header__panel-stack mb-3 text-body">
+              <div class="fh-header__panel-title">
+                <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
+                <span v-else v-cloak>Hallo</span>
+              </div>
+              <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+            </div>
+            <div class="fh-header__panel-divider mb-3"></div>
+            <nav class="fh-header__panel-links mb-4">
+              <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
+              <a href="/hammer-praemien" class="fh-header__panel-link">Hammer Prämien</a>
+              <a href="/my-account/addresses" class="fh-header__panel-link">Adressen</a>
+              <a href="/my-account/orders" class="fh-header__panel-link">Bestellungen</a>
+            </nav>
+            <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="fh-basket-preview fh-header__basket">
-      <a v-toggle-basket-preview href="#" class="toggle-basket-preview fh-header__basket-link" aria-label="Warenkorb">
-        <span class="fh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="fh-header__basket-icon">
-          <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
-          <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
-          <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
-        </svg>
-        <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-        <span class="fh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-        <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-        <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-      </a>
-      <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
+      <div class="fh-basket-preview fh-header__basket">
+        <a v-toggle-basket-preview href="#" class="toggle-basket-preview fh-header__basket-link" aria-label="Warenkorb">
+          <span class="fh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="fh-header__basket-icon">
+            <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
+            <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
+            <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
+          </svg>
+          <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+          <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+        </a>
+        <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
+      </div>
     </div>
   </div>
-  <nav class="fh-header__nav">
+  <nav id="fh-header-navigation" class="fh-header__nav" data-fh-mobile-menu aria-hidden="false" tabindex="-1">
+    <div class="fh-header__mobile-nav-header">
+      <span class="fh-header__mobile-nav-title">Menü</span>
+      <button type="button" class="fh-header__mobile-nav-close" data-fh-menu-close aria-label="Menü schließen"></button>
+    </div>
     <div class="fh-header__nav-inner">
       <ul class="nav fh-header__nav-list">
       <li class="nav-item dropdown fh-header__nav-item">
@@ -388,4 +401,5 @@
       </ul>
     </div>
   </nav>
+  <div class="fh-header__mobile-backdrop" data-fh-mobile-backdrop aria-hidden="true"></div>
 </div>
