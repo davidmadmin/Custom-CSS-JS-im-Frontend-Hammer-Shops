@@ -59,10 +59,10 @@
         <div class="fh-header__panel-arrow"></div>
         <div v-if="!$store.getters.isLoggedIn">
           <div class="fh-header__panel-title mb-3">Ihr Konto</div>
-          <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="btn btn-dark w-100 fw-semibold rounded-3 py-3">Anmelden</a>
+          <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
           <div class="fh-header__panel-inline my-3 fh-header__panel-text">
             <span>oder</span>
-            <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger class="badge rounded-pill bg-light text-body fw-semibold px-3 py-2 text-decoration-none">registrieren</a>
+            <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger class="fh-header__account-register">Registrieren</a>
           </div>
           <div class="fh-header__panel-divider my-3"></div>
           <div class="fh-header__panel-stack mb-3 text-body">
