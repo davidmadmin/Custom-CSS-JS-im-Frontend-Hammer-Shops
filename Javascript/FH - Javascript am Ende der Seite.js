@@ -1,7 +1,21 @@
 // Section: Global scripts for all pages
 
+// Utility: run callbacks once DOM is ready even if the event already fired
+function fhOnDocumentReady(callback) {
+  if (typeof callback !== 'function') {
+    return;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', callback);
+    return;
+  }
+
+  callback();
+}
+
 // Section: FH account menu toggle behaviour
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   function resolveGreeting(defaultGreeting) {
     const hour = new Date().getHours();
 
@@ -133,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: FH account menu toggle behaviour
 
 // Section: FH Merkliste button enhancements
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   const iconMarkup =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
 
@@ -266,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: FH Merkliste button enhancements
 
 // Section: FH wish list flyout preview
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   const container = document.querySelector('[data-fh-wishlist-menu-container]');
 
   if (!container) {
@@ -1366,7 +1380,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: FH wish list flyout preview
 
 // Section: Basket preview attribute cleanup
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   const attributeKeywords = ['inhalt', 'abmess', 'länge', 'laenge', 'breite', 'höhe', 'hoehe'];
   const previewSelectors = ['.basket-preview', '.basket-preview-list', '.basket-preview-items'];
   const labelSelectors = [
@@ -1568,7 +1582,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: Basket preview attribute cleanup
 
 // Section: Ensure auth modals load their Vue components before opening
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) {
       return window.vueApp.$store;
@@ -1715,7 +1729,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 
 // Section: FH mobile navigation toggle
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   var header = document.querySelector('[data-fh-header-root]');
 
   if (!header) {
@@ -1855,7 +1869,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: Bestell-Versand Countdown Code
 
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   const shippingIcons = {
     'ShippingProfileID1531': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
     'ShippingProfileID1545': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
@@ -1884,7 +1898,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // End Section: Versand Icons ändern & einfügen
 
 // Section: Gratisversand Fortschritt Balken
-document.addEventListener('DOMContentLoaded', function () {
+fhOnDocumentReady(function () {
   const THRESHOLD = 150;
 
   const COUNTRY_SELECT_ID_FRAGMENTS = [
@@ -2026,7 +2040,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
 // Section: Animierte Suchplatzhalter Vorschläge
 
-document.addEventListener("DOMContentLoaded", function () {
+fhOnDocumentReady(function () {
   const searchInput = document.querySelector('input.search-input');
   if (!searchInput) return;
 
@@ -2249,7 +2263,7 @@ var observer = new MutationObserver(function(mutationsList, observer) {
   patchBasketButton();
 });
 
-document.addEventListener("DOMContentLoaded", function() {
+fhOnDocumentReady(function () {
   observer.observe(document.body, { childList: true, subtree: true });
   patchBasketButton();
 });
