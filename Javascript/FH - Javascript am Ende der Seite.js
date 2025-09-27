@@ -132,6 +132,197 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH mobile menu interactions
+document.addEventListener('DOMContentLoaded', function () {
+  const headerRoot = document.querySelector('[data-fh-header-root]');
+
+  if (!headerRoot) {
+    return;
+  }
+
+  const mobileMenu = headerRoot.querySelector('[data-fh-mobile-menu]');
+  const menuToggle = headerRoot.querySelector('[data-fh-mobile-menu-toggle]');
+
+  if (!mobileMenu || !menuToggle) {
+    return;
+  }
+
+  const closeControls = mobileMenu.querySelectorAll('[data-fh-mobile-menu-close]');
+  const submenuToggles = mobileMenu.querySelectorAll('[data-fh-mobile-submenu-toggle]');
+  const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  let lastFocusedElement = null;
+
+  function getFocusableElements() {
+    return Array.from(mobileMenu.querySelectorAll(focusableSelectors)).filter(function (element) {
+      if (element.hasAttribute('disabled')) {
+        return false;
+      }
+
+      if (element.getAttribute('aria-hidden') === 'true') {
+        return false;
+      }
+
+      if (typeof element.offsetParent === 'undefined') {
+        return true;
+      }
+
+      return element.offsetParent !== null;
+    });
+  }
+
+  function handleFocusTrap(event) {
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const focusable = getFocusableElements();
+
+    if (focusable.length === 0) {
+      return;
+    }
+
+    const firstElement = focusable[0];
+    const lastElement = focusable[focusable.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement || !mobileMenu.contains(document.activeElement)) {
+        event.preventDefault();
+        lastElement.focus();
+      }
+    } else if (document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+
+  function handleEscape(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu(event);
+    }
+  }
+
+  function setMenuState(isOpen) {
+    headerRoot.classList.toggle('fh-header--mobile-menu-open', isOpen);
+    mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+    document.documentElement.classList.toggle('fh-mobile-menu-open', isOpen);
+    document.body.classList.toggle('fh-mobile-menu-open', isOpen);
+
+    if (isOpen) {
+      lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+      requestAnimationFrame(function () {
+        const firstFocusable = getFocusableElements()[0];
+
+        if (firstFocusable && typeof firstFocusable.focus === 'function') {
+          firstFocusable.focus();
+        }
+      });
+
+      document.addEventListener('keydown', handleFocusTrap);
+      document.addEventListener('keydown', handleEscape);
+    } else {
+      document.removeEventListener('keydown', handleFocusTrap);
+      document.removeEventListener('keydown', handleEscape);
+
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+        lastFocusedElement.focus();
+      } else {
+        menuToggle.focus();
+      }
+    }
+  }
+
+  function openMenu(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (headerRoot.classList.contains('fh-header--mobile-menu-open')) {
+      return;
+    }
+
+    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+      window.fhAccountMenu.close();
+    }
+
+    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+      window.fhWishlistMenu.close();
+    }
+
+    setMenuState(true);
+  }
+
+  function closeMenu(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (!headerRoot.classList.contains('fh-header--mobile-menu-open')) {
+      return;
+    }
+
+    setMenuState(false);
+  }
+
+  menuToggle.addEventListener('click', function (event) {
+    if (headerRoot.classList.contains('fh-header--mobile-menu-open')) {
+      closeMenu(event);
+    } else {
+      openMenu(event);
+    }
+  });
+
+  closeControls.forEach(function (element) {
+    element.addEventListener('click', closeMenu);
+  });
+
+  mobileMenu.addEventListener('click', function (event) {
+    const link = event.target.closest('a[href]');
+
+    if (link && mobileMenu.contains(link)) {
+      closeMenu();
+    }
+  });
+
+  submenuToggles.forEach(function (toggle) {
+    const item = toggle.closest('[data-fh-mobile-menu-item]');
+
+    if (!item) {
+      return;
+    }
+
+    const subList = item.querySelector(':scope > .fh-mobile-menu__sub-list');
+
+    if (subList) {
+      subList.setAttribute('aria-hidden', 'true');
+    }
+
+    toggle.setAttribute('aria-expanded', 'false');
+
+    toggle.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      const isOpen = item.classList.toggle('is-open');
+
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+      if (subList) {
+        subList.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      }
+    });
+  });
+
+  window.fhMobileMenu = window.fhMobileMenu || {};
+  window.fhMobileMenu.open = openMenu;
+  window.fhMobileMenu.close = closeMenu;
+  window.fhMobileMenu.isOpen = function () {
+    return headerRoot.classList.contains('fh-header--mobile-menu-open');
+  };
+});
+// End Section: FH mobile menu interactions
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =

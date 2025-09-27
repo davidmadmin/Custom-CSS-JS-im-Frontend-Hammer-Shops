@@ -18,10 +18,14 @@
     </span>
   </div>
   <div class="fh-header__main">
+    <button type="button" class="fh-header__burger" aria-label="Menü öffnen" aria-controls="fh-mobile-menu" aria-expanded="false" data-fh-mobile-menu-toggle>
+      <span class="fh-header__burger-bars" aria-hidden="true"></span>
+      <span class="fh-header__burger-label">Menü</span>
+    </button>
     <a href="/" class="fh-header__logo">
       <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER">
     </a>
-    <form action="#" method="get" class="fh-header__search-form">
+    <form action="#" method="get" class="fh-header__search-form" role="search">
       <input type="search" name="q" class="search-input fh-header__search-input" placeholder="Suchbegriff eingeben" aria-label="Suche">
       <button type="button" data-search-clear aria-label="Eingabe löschen" class="fh-header__search-clear">
         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__search-clear-icon">
@@ -30,83 +34,85 @@
         </svg>
       </button>
     </form>
-    <div class="fh-wishlist-menu-container position-relative" data-fh-wishlist-menu-container>
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle class="fh-header__icon-button">
-        <span class="fh-header__badge" v-cloak v-text="$store.getters.wishListCount || 0"></span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon fh-header__icon--wishlist">
-          <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
-        </svg>
-      </button>
-      <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" class="fh-header__panel">
-        <div class="fh-header__panel-arrow"></div>
-        <div class="fh-header__panel-header">
-          <div class="fh-header__panel-title">Merkliste</div>
+    <div class="fh-header__actions" data-fh-header-actions>
+      <div class="fh-wishlist-menu-container position-relative" data-fh-wishlist-menu-container>
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle class="fh-header__icon-button">
+          <span class="fh-header__badge" v-cloak v-text="$store.getters.wishListCount || 0"></span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon fh-header__icon--wishlist">
+            <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
+          </svg>
+        </button>
+        <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" class="fh-header__panel">
+          <div class="fh-header__panel-arrow"></div>
+          <div class="fh-header__panel-header">
+            <div class="fh-header__panel-title">Merkliste</div>
+          </div>
+          <div data-fh-wishlist-menu-loading class="fh-header__panel-text py-3">Wird geladen …</div>
+          <div data-fh-wishlist-menu-error class="fh-header__panel-text text-danger py-3">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
+          <div data-fh-wishlist-menu-empty class="fh-header__panel-text py-3">Ihre Merkliste ist leer.</div>
+          <ul data-fh-wishlist-menu-list class="list-unstyled mb-0 fh-header__wishlist-list"></ul>
         </div>
-        <div data-fh-wishlist-menu-loading class="fh-header__panel-text py-3">Wird geladen …</div>
-        <div data-fh-wishlist-menu-error class="fh-header__panel-text text-danger py-3">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
-        <div data-fh-wishlist-menu-empty class="fh-header__panel-text py-3">Ihre Merkliste ist leer.</div>
-        <ul data-fh-wishlist-menu-list class="list-unstyled mb-0 fh-header__wishlist-list"></ul>
       </div>
-    </div>
-    <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
-      <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
-          <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
-          <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
-        </svg>
-      </button>
-      <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
-        <div class="fh-header__panel-arrow"></div>
-        <div v-if="!$store.getters.isLoggedIn">
-          <div class="fh-header__panel-title mb-3">Ihr Konto</div>
-          <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
-          <div class="fh-header__panel-inline my-3 fh-header__panel-text">
-            <span>oder</span>
-            <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger class="fh-header__account-register">Registrieren</a>
-          </div>
-          <div class="fh-header__panel-divider my-3"></div>
-          <div class="fh-header__panel-stack mb-3 text-body">
-            <div class="fh-header__panel-subtitle">Vorteile:</div>
-            <ul class="fh-header__panel-list">
-              <li>Schneller kaufen</li>
-              <li>Hammer Punkte sammeln</li>
-              <li>Einfacherer Support</li>
-            </ul>
-          </div>
-        </div>
-        <div v-else>
-          <div class="fh-header__panel-stack mb-3 text-body">
-            <div class="fh-header__panel-title">
-              <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
-              <span v-else v-cloak>Hallo</span>
+      <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
+            <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
+            <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
+          </svg>
+        </button>
+        <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
+          <div class="fh-header__panel-arrow"></div>
+          <div v-if="!$store.getters.isLoggedIn">
+            <div class="fh-header__panel-title mb-3">Ihr Konto</div>
+            <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
+            <div class="fh-header__panel-inline my-3 fh-header__panel-text">
+              <span>oder</span>
+              <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger class="fh-header__account-register">Registrieren</a>
             </div>
-            <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+            <div class="fh-header__panel-divider my-3"></div>
+            <div class="fh-header__panel-stack mb-3 text-body">
+              <div class="fh-header__panel-subtitle">Vorteile:</div>
+              <ul class="fh-header__panel-list">
+                <li>Schneller kaufen</li>
+                <li>Hammer Punkte sammeln</li>
+                <li>Einfacherer Support</li>
+              </ul>
+            </div>
           </div>
-          <div class="fh-header__panel-divider mb-3"></div>
-          <nav class="fh-header__panel-links mb-4">
-            <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
-            <a href="/hammer-praemien" class="fh-header__panel-link">Hammer Prämien</a>
-            <a href="/my-account/addresses" class="fh-header__panel-link">Adressen</a>
-            <a href="/my-account/orders" class="fh-header__panel-link">Bestellungen</a>
-          </nav>
-          <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
+          <div v-else>
+            <div class="fh-header__panel-stack mb-3 text-body">
+              <div class="fh-header__panel-title">
+                <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
+                <span v-else v-cloak>Hallo</span>
+              </div>
+              <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+            </div>
+            <div class="fh-header__panel-divider mb-3"></div>
+            <nav class="fh-header__panel-links mb-4">
+              <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
+              <a href="/hammer-praemien" class="fh-header__panel-link">Hammer Prämien</a>
+              <a href="/my-account/addresses" class="fh-header__panel-link">Adressen</a>
+              <a href="/my-account/orders" class="fh-header__panel-link">Bestellungen</a>
+            </nav>
+            <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="fh-basket-preview fh-header__basket">
-      <a v-toggle-basket-preview href="#" class="toggle-basket-preview fh-header__basket-link" aria-label="Warenkorb">
-        <span class="fh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="fh-header__basket-icon">
-          <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
-          <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
-          <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
-        </svg>
-        <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-        <span class="fh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-        <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-        <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-      </a>
-      <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
+      <div class="fh-basket-preview fh-header__basket">
+        <a v-toggle-basket-preview href="#" class="toggle-basket-preview fh-header__basket-link" aria-label="Warenkorb">
+          <span class="fh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="fh-header__basket-icon">
+            <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
+            <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
+            <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
+          </svg>
+          <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+          <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+        </a>
+        <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
+      </div>
     </div>
   </div>
   <nav class="fh-header__nav">
@@ -388,4 +394,287 @@
       </ul>
     </div>
   </nav>
+  <div class="fh-mobile-menu" id="fh-mobile-menu" data-fh-mobile-menu aria-hidden="true">
+    <div class="fh-mobile-menu__backdrop" data-fh-mobile-menu-close></div>
+    <div class="fh-mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Hauptmenü">
+      <div class="fh-mobile-menu__header">
+        <span class="fh-mobile-menu__title">Menü</span>
+        <button type="button" class="fh-mobile-menu__close" aria-label="Menü schließen" data-fh-mobile-menu-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="#" method="get" class="fh-mobile-menu__search" role="search">
+        <label for="fh-mobile-menu-search" class="fh-mobile-menu__sr-only">Suche</label>
+        <input type="search" id="fh-mobile-menu-search" name="q" placeholder="Suchbegriff eingeben" class="fh-mobile-menu__search-input">
+      </form>
+      <nav class="fh-mobile-menu__nav" aria-label="Hauptnavigation mobil">
+        <ul class="fh-mobile-menu__list">
+          <li class="fh-mobile-menu__item fh-mobile-menu__item--level-1 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+            <div class="fh-mobile-menu__item-header">
+              <a href="/schloesser" class="fh-mobile-menu__link">Schlösser</a>
+              <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-schloesser" data-fh-mobile-submenu-toggle>
+                <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+              </button>
+            </div>
+            <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-schloesser">
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+                <div class="fh-mobile-menu__item-header">
+                  <span class="fh-mobile-menu__label">Einsteckschlösser &amp; Öffner</span>
+                  <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-schloesser-einsteck" data-fh-mobile-submenu-toggle>
+                    <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                    <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+                  </button>
+                </div>
+                <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-schloesser-einsteck">
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Einsteckschlösser für Metalltore</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Elektrische Türöffner</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">FH-Schlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Garagentorschlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Haustürschlösser</a></li>
+                </ul>
+              </li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+                <div class="fh-mobile-menu__item-header">
+                  <span class="fh-mobile-menu__label">Rahmen &amp; Sicherheit</span>
+                  <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-schloesser-rahmen" data-fh-mobile-submenu-toggle>
+                    <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                    <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+                  </button>
+                </div>
+                <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-schloesser-rahmen">
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Kastenschlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Korridortürschlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Rohrrahmenschlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Rosetten &amp; Schilder</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Schließbleche</a></li>
+                </ul>
+              </li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+                <div class="fh-mobile-menu__item-header">
+                  <span class="fh-mobile-menu__label">Innenraum &amp; Zubehör</span>
+                  <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-schloesser-innenraum" data-fh-mobile-submenu-toggle>
+                    <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                    <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+                  </button>
+                </div>
+                <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-schloesser-innenraum">
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">WC-Tür-Schlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Wohnungstürschlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3"><a href="#" class="fh-mobile-menu__link">Zimmertürschlösser</a></li>
+                  <li class="fh-mobile-menu__item fh-mobile-menu__item--level-3 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+                    <div class="fh-mobile-menu__item-header">
+                      <a href="#" class="fh-mobile-menu__link">Zubehör für Schloss und Tor</a>
+                      <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-schloesser-zubehoer" data-fh-mobile-submenu-toggle>
+                        <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                        <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+                      </button>
+                    </div>
+                    <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-schloesser-zubehoer">
+                      <li class="fh-mobile-menu__item fh-mobile-menu__item--level-4"><a href="#" class="fh-mobile-menu__link">Montagesets</a></li>
+                      <li class="fh-mobile-menu__item fh-mobile-menu__item--level-4"><a href="#" class="fh-mobile-menu__link">Pflegesets</a></li>
+                      <li class="fh-mobile-menu__item fh-mobile-menu__item--level-4"><a href="#" class="fh-mobile-menu__link">Sicherheitssets</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="/schloesser" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Alle SCHLÖSSER sehen</a></li>
+            </ul>
+          </li>
+          <li class="fh-mobile-menu__item fh-mobile-menu__item--level-1 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+            <div class="fh-mobile-menu__item-header">
+              <a href="#" class="fh-mobile-menu__link">Beschläge</a>
+              <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-beschlaege" data-fh-mobile-submenu-toggle>
+                <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+              </button>
+            </div>
+            <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-beschlaege">
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Platzhalter Menu 2</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 2</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 3</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 4</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 5</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Alle Beschläge sehen</a></li>
+            </ul>
+          </li>
+          <li class="fh-mobile-menu__item fh-mobile-menu__item--level-1 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+            <div class="fh-mobile-menu__item-header">
+              <a href="#" class="fh-mobile-menu__link">Sicherungen</a>
+              <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-sicherungen" data-fh-mobile-submenu-toggle>
+                <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+              </button>
+            </div>
+            <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-sicherungen">
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Platzhalter Menu 3</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 2</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 3</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 4</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 5</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Alle Sicherungen sehen</a></li>
+            </ul>
+          </li>
+          <li class="fh-mobile-menu__item fh-mobile-menu__item--level-1 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+            <div class="fh-mobile-menu__item-header">
+              <a href="#" class="fh-mobile-menu__link">Sichtschutz</a>
+              <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-sichtschutz" data-fh-mobile-submenu-toggle>
+                <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+              </button>
+            </div>
+            <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-sichtschutz">
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Platzhalter Menu 4</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 2</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 3</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 4</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 5</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Alle Sichtschutz sehen</a></li>
+            </ul>
+          </li>
+          <li class="fh-mobile-menu__item fh-mobile-menu__item--level-1 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+            <div class="fh-mobile-menu__item-header">
+              <a href="#" class="fh-mobile-menu__link">Fenstermontage</a>
+              <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-fenstermontage" data-fh-mobile-submenu-toggle>
+                <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+              </button>
+            </div>
+            <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-fenstermontage">
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Platzhalter Menu 5</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 2</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 3</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 4</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 5</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Alle Fenstermontage sehen</a></li>
+            </ul>
+          </li>
+          <li class="fh-mobile-menu__item fh-mobile-menu__item--level-1 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+            <div class="fh-mobile-menu__item-header">
+              <a href="#" class="fh-mobile-menu__link">Chemische Befestigung</a>
+              <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-chemische" data-fh-mobile-submenu-toggle>
+                <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+              </button>
+            </div>
+            <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-chemische">
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Platzhalter Menu 6</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 2</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 3</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 4</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 5</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Alle Chemische Befestigung sehen</a></li>
+            </ul>
+          </li>
+          <li class="fh-mobile-menu__item fh-mobile-menu__item--level-1 fh-mobile-menu__item--has-children" data-fh-mobile-menu-item>
+            <div class="fh-mobile-menu__item-header">
+              <a href="#" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Aktionen</a>
+              <button type="button" class="fh-mobile-menu__toggle" aria-expanded="false" aria-controls="fh-mobile-submenu-aktionen" data-fh-mobile-submenu-toggle>
+                <span class="fh-mobile-menu__toggle-icon" aria-hidden="true"></span>
+                <span class="fh-mobile-menu__sr-only">Unterkategorien anzeigen</span>
+              </button>
+            </div>
+            <ul class="fh-mobile-menu__sub-list" id="fh-mobile-submenu-aktionen">
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Platzhalter Menu 7</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 2</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 3</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 4</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2 fh-mobile-menu__label">Kategorie 5</li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link">[Platzhalter]</a></li>
+              <li class="fh-mobile-menu__item fh-mobile-menu__item--level-2"><a href="#" class="fh-mobile-menu__link fh-mobile-menu__link--highlight">Alle Aktionen sehen</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </div>
