@@ -265,6 +265,200 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH Merkliste button enhancements
 
+// Section: FH mobile menu behaviour
+document.addEventListener('DOMContentLoaded', function () {
+  const headerRoot = document.querySelector('[data-fh-header-root]');
+
+  if (!headerRoot) {
+    return;
+  }
+
+  const menu = headerRoot.querySelector('[data-fh-mobile-menu]');
+
+  if (!menu) {
+    return;
+  }
+
+  const openButtons = headerRoot.querySelectorAll('[data-fh-mobile-menu-toggle]');
+  const closeButtons = menu.querySelectorAll('[data-fh-mobile-menu-close]');
+  const backdrop = menu.querySelector('.fh-mobile-menu__backdrop');
+  const panel = menu.querySelector('.fh-mobile-menu__panel');
+  const submenuToggles = menu.querySelectorAll('[data-fh-mobile-submenu-toggle]');
+  const body = document.body;
+  const html = document.documentElement;
+  let isOpen = false;
+  let lastFocusedElement = null;
+
+  function setExpandedState(value) {
+    openButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', String(value));
+      button.setAttribute('aria-label', value ? 'Menü schließen' : 'Menü öffnen');
+    });
+  }
+
+  function trapFocus(event) {
+    if (!isOpen || !panel) {
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const focusable = panel.querySelectorAll(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (!focusable.length) {
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.target === last && !event.shiftKey) {
+      event.preventDefault();
+      first.focus();
+    } else if (event.target === first && event.shiftKey) {
+      event.preventDefault();
+      last.focus();
+    }
+  }
+
+  function closeAllSubmenus() {
+    submenuToggles.forEach(function (toggle) {
+      const listItem = toggle.closest('li');
+      const targetSubmenu = listItem ? listItem.querySelector('[data-fh-mobile-submenu]') : null;
+
+      if (targetSubmenu) {
+        targetSubmenu.classList.remove('is-open');
+      }
+
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function openMenu() {
+    if (isOpen) {
+      return;
+    }
+
+    lastFocusedElement = document.activeElement;
+    menu.classList.add('is-open');
+    menu.setAttribute('aria-hidden', 'false');
+    body.classList.add('fh-mobile-menu-open');
+    html.classList.add('fh-mobile-menu-open');
+    setExpandedState(true);
+    isOpen = true;
+
+    if (closeButtons.length > 0) {
+      closeButtons[0].focus({ preventScroll: true });
+    }
+
+    document.addEventListener('keydown', handleKeydown, true);
+    panel && panel.addEventListener('keydown', trapFocus, true);
+  }
+
+  function closeMenu() {
+    if (!isOpen) {
+      return;
+    }
+
+    menu.classList.remove('is-open');
+    menu.setAttribute('aria-hidden', 'true');
+    body.classList.remove('fh-mobile-menu-open');
+    html.classList.remove('fh-mobile-menu-open');
+    setExpandedState(false);
+    closeAllSubmenus();
+    isOpen = false;
+
+    document.removeEventListener('keydown', handleKeydown, true);
+    panel && panel.removeEventListener('keydown', trapFocus, true);
+
+    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      lastFocusedElement.focus({ preventScroll: true });
+    }
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape') {
+      closeMenu();
+    }
+  }
+
+  openButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+  });
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  }
+
+  submenuToggles.forEach(function (toggle) {
+    const listItem = toggle.closest('li');
+
+    if (!listItem) {
+      return;
+    }
+
+    const submenu = listItem.querySelector('[data-fh-mobile-submenu]');
+
+    if (!submenu) {
+      return;
+    }
+
+    toggle.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      const isCurrentlyOpen = submenu.classList.contains('is-open');
+      const siblings = listItem.parentElement ? Array.from(listItem.parentElement.children) : [];
+
+      siblings.forEach(function (sibling) {
+        if (sibling !== listItem) {
+          const siblingToggle = sibling.querySelector('[data-fh-mobile-submenu-toggle]');
+          const siblingSubmenu = sibling.querySelector('[data-fh-mobile-submenu]');
+
+          if (siblingSubmenu && siblingSubmenu.classList.contains('is-open')) {
+            siblingSubmenu.classList.remove('is-open');
+          }
+
+          if (siblingToggle) {
+            siblingToggle.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      submenu.classList.toggle('is-open', !isCurrentlyOpen);
+      toggle.setAttribute('aria-expanded', String(!isCurrentlyOpen));
+    });
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.matchMedia('(min-width: 992px)').matches) {
+      closeMenu();
+    }
+  });
+});
+// End Section: FH mobile menu behaviour
+
 // Section: FH wish list flyout preview
 document.addEventListener('DOMContentLoaded', function () {
   const container = document.querySelector('[data-fh-wishlist-menu-container]');
