@@ -30,6 +30,17 @@
   max-width: 1600px; /* Do not change this for Desktop viewport*/
 }
 
+@media (max-width: 1600px) {
+  .fh-header {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .fh-header__nav-inner {
+    max-width: 100%;
+  }
+}
+
 .fh-header__top-bar {
   display: flex;
   align-items: center;
@@ -63,9 +74,11 @@
   background-color: #38bdf8;
 }
 
+
 .fh-header__main {
   display: grid;
-  grid-template-columns: auto 1fr auto auto auto;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 'logo search actions';
   align-items: center;
   padding: 26px 32px 22px;
   border-bottom: 1px solid #e2e2e2;
@@ -74,6 +87,7 @@
 }
 
 .fh-header__logo {
+  grid-area: logo;
   display: flex;
   align-items: center;
 }
@@ -83,7 +97,40 @@
   height: 64px;
 }
 
+.fh-header__menu-toggle {
+  grid-area: toggle;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid #d9d9d9;
+  border-radius: 14px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fh-header__menu-toggle:focus,
+.fh-header__menu-toggle:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5f5;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.fh-header__menu-toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin: 3px 0;
+  border-radius: 999px;
+  background-color: #1a1a1a;
+  transition: background-color 0.2s ease;
+}
+
 .fh-header__search-form {
+  grid-area: search;
   position: relative;
   display: flex;
   align-items: center;
@@ -118,6 +165,14 @@
   color: #94a3b8;
   cursor: pointer;
   transition: color 0.2s ease;
+}
+
+.fh-header__actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
 }
 
 .fh-header__search-clear-icon {
@@ -445,6 +500,14 @@
   background-color: #ffffff;
 }
 
+.fh-header__mobile-controls {
+  display: none;
+}
+
+.fh-header__mobile-overlay {
+  display: none;
+}
+
 .fh-header__nav-inner {
   position: relative;
   max-width: 1600px;
@@ -573,6 +636,235 @@
   visibility: visible;
   pointer-events: auto;
   transform: translateY(0);
+}
+
+html.fh-header--menu-open,
+body.fh-header--menu-open {
+  overflow: hidden;
+}
+
+@media (max-width: 1199.98px) {
+  .fh-header__main {
+    padding: 22px 24px 18px;
+  }
+
+  .fh-header__actions {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .fh-header__top-bar {
+    display: none;
+  }
+
+  .fh-header__main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'logo actions'
+      'toggle search';
+    padding: 18px 16px 16px;
+    row-gap: 16px;
+    column-gap: 16px;
+  }
+
+  .fh-header__logo img {
+    height: 56px;
+  }
+
+  .fh-header__actions {
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .fh-header__menu-toggle {
+    display: flex;
+    align-self: start;
+  }
+
+  .fh-header__search-input {
+    padding: 14px 48px 14px 16px;
+    border-radius: 14px;
+  }
+
+  .fh-header__search-clear {
+    right: 16px;
+  }
+
+  .fh-header__icon-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .fh-header__basket-total {
+    display: none;
+  }
+
+  .fh-header__nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+    box-shadow: 0 28px 60px rgba(15, 23, 42, 0.32);
+    padding: 0;
+    border: none;
+    z-index: 5000;
+  }
+
+  .fh-header__nav--open {
+    transform: translateX(0);
+  }
+
+  .fh-header__mobile-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #ffffff;
+  }
+
+  .fh-header__mobile-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #0f172a;
+  }
+
+  .fh-header__mobile-close {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #d9d9d9;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .fh-header__mobile-close:focus,
+  .fh-header__mobile-close:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5f5;
+  }
+
+  .fh-header__mobile-close-bar {
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background-color: #1a1a1a;
+  }
+
+  .fh-header__mobile-close-bar:first-child {
+    transform: rotate(45deg);
+  }
+
+  .fh-header__mobile-close-bar:last-child {
+    transform: rotate(-45deg);
+  }
+
+  .fh-header__nav-inner {
+    height: calc(100% - 72px);
+    overflow-y: auto;
+    padding: 24px 24px 40px;
+    width: min(420px, 100%);
+    margin: 0 auto;
+  }
+
+  .fh-header__nav-list {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  .fh-header__nav-item {
+    flex: none;
+    text-align: left;
+  }
+
+  .fh-header__nav-link {
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .fh-header__nav-item:last-child .fh-header__nav-link {
+    border-bottom: none;
+  }
+
+  .fh-header__dropdown {
+    position: static;
+    width: 100%;
+    margin: 0;
+    padding: 12px 0 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    display: none;
+  }
+
+  .fh-header__nav-item.show > .fh-header__dropdown {
+    display: block;
+  }
+
+  .fh-header__dropdown-grid {
+    gap: 18px;
+  }
+
+  .fh-header__dropdown-grid--four,
+  .fh-header__dropdown-grid--five {
+    grid-template-columns: 1fr;
+  }
+
+  .fh-header__dropdown-footer {
+    margin-top: 16px;
+  }
+
+  .fh-header__mobile-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease;
+    z-index: 4000;
+  }
+
+  .fh-header__mobile-overlay.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .fh-header__nav {
+    position: static;
+    transform: none !important;
+    box-shadow: none;
+    height: auto;
+  }
+
+  .fh-header__nav-inner {
+    height: auto;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .fh-header__mobile-overlay {
+    display: none !important;
+  }
 }
 /* End Section: FH Header Base Layout */
 

@@ -1,5 +1,189 @@
 // Section: Global scripts for all pages
 
+// Section: FH mobile navigation toggle
+document.addEventListener('DOMContentLoaded', function () {
+  const headerRoot = document.querySelector('[data-fh-header-root]');
+
+  if (!headerRoot) {
+    return;
+  }
+
+  const menu = headerRoot.querySelector('[data-fh-mobile-menu]');
+  const overlay = headerRoot.querySelector('[data-fh-mobile-menu-overlay]');
+  const toggleButtons = headerRoot.querySelectorAll('[data-fh-mobile-menu-toggle]');
+  const closeButtons = headerRoot.querySelectorAll('[data-fh-mobile-menu-close]');
+  const htmlElement = document.documentElement;
+  const bodyElement = document.body;
+  const mediaQuery = window.matchMedia('(min-width: 1024px)');
+
+  if (!menu || toggleButtons.length === 0) {
+    return;
+  }
+
+  let isOpen = false;
+
+  function updateAriaHidden() {
+    if (mediaQuery.matches) {
+      menu.setAttribute('aria-hidden', 'false');
+      return;
+    }
+
+    menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+  }
+
+  function showOverlay() {
+    if (!overlay) {
+      return;
+    }
+
+    overlay.removeAttribute('hidden');
+
+    requestAnimationFrame(function () {
+      overlay.classList.add('is-visible');
+    });
+  }
+
+  function hideOverlay() {
+    if (!overlay) {
+      return;
+    }
+
+    overlay.classList.remove('is-visible');
+
+    const handleTransitionEnd = function () {
+      overlay.setAttribute('hidden', '');
+    };
+
+    overlay.addEventListener('transitionend', handleTransitionEnd, { once: true });
+
+    window.setTimeout(function () {
+      if (!overlay.classList.contains('is-visible')) {
+        overlay.setAttribute('hidden', '');
+      }
+    }, 400);
+  }
+
+  function lockScroll() {
+    htmlElement.classList.add('fh-header--menu-open');
+    bodyElement.classList.add('fh-header--menu-open');
+  }
+
+  function releaseScroll() {
+    htmlElement.classList.remove('fh-header--menu-open');
+    bodyElement.classList.remove('fh-header--menu-open');
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu(true);
+    }
+  }
+
+  function openMenu() {
+    if (isOpen || mediaQuery.matches) {
+      return;
+    }
+
+    menu.classList.add('fh-header__nav--open');
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', 'true');
+    });
+    showOverlay();
+    lockScroll();
+    isOpen = true;
+    updateAriaHidden();
+    document.addEventListener('keydown', handleKeydown);
+  }
+
+  function closeMenu(shouldFocusToggle) {
+    menu.classList.remove('fh-header__nav--open');
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', 'false');
+    });
+
+    if (!isOpen) {
+      updateAriaHidden();
+
+      if (shouldFocusToggle && toggleButtons[0]) {
+        toggleButtons[0].focus();
+      }
+
+      return;
+    }
+
+    hideOverlay();
+    releaseScroll();
+    isOpen = false;
+    updateAriaHidden();
+    document.removeEventListener('keydown', handleKeydown);
+
+    if (shouldFocusToggle && toggleButtons[0]) {
+      toggleButtons[0].focus();
+    }
+  }
+
+  toggleButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (isOpen) {
+        closeMenu(false);
+      } else {
+        openMenu();
+      }
+    });
+  });
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu(true);
+    });
+  });
+
+  if (overlay) {
+    overlay.addEventListener('click', function () {
+      closeMenu(false);
+    });
+  }
+
+  menu.addEventListener('click', function (event) {
+    const trigger = event.target.closest('[data-fh-mobile-menu-close]');
+
+    if (trigger) {
+      event.preventDefault();
+      closeMenu(true);
+    }
+  });
+
+  function handleViewportChange(event) {
+    if (event.matches) {
+      closeMenu(false);
+      releaseScroll();
+
+      if (overlay) {
+        overlay.classList.remove('is-visible');
+        overlay.setAttribute('hidden', '');
+      }
+    }
+
+    updateAriaHidden();
+  }
+
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', handleViewportChange);
+  } else if (typeof mediaQuery.addListener === 'function') {
+    mediaQuery.addListener(handleViewportChange);
+  }
+
+  updateAriaHidden();
+
+  if (!mediaQuery.matches) {
+    closeMenu(false);
+  }
+});
+// End Section: FH mobile navigation toggle
+
 // Section: FH account menu toggle behaviour
 document.addEventListener('DOMContentLoaded', function () {
   function resolveGreeting(defaultGreeting) {
