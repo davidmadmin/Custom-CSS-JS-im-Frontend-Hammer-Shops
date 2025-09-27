@@ -132,6 +132,192 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH mobile navigation toggle
+document.addEventListener('DOMContentLoaded', function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) {
+    return;
+  }
+
+  const menu = header.querySelector('[data-fh-mobile-menu]');
+  const toggleButtons = header.querySelectorAll('[data-fh-mobile-menu-toggle]');
+
+  if (!menu || toggleButtons.length === 0) {
+    return;
+  }
+
+  const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
+  const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  let isOpen = false;
+  let previouslyFocusedElement = null;
+
+  function setExpandedState(value) {
+    const expandedValue = value ? 'true' : 'false';
+
+    toggleButtons.forEach(function (button) {
+      button.setAttribute('aria-expanded', expandedValue);
+    });
+  }
+
+  function focusInitialElement() {
+    const closeButton = menu.querySelector('[data-fh-mobile-menu-close]');
+
+    if (closeButton instanceof HTMLElement) {
+      closeButton.focus();
+      return;
+    }
+
+    const firstLink = menu.querySelector('.fh-header__nav-link');
+
+    if (firstLink instanceof HTMLElement) {
+      firstLink.focus();
+    }
+  }
+
+  function handleDocumentKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+    }
+  }
+
+  function handleTrapFocus(event) {
+    if (!isOpen || event.key !== 'Tab') {
+      return;
+    }
+
+    const focusableElements = Array.prototype.slice
+      .call(menu.querySelectorAll(focusableSelectors))
+      .filter(function (element) {
+        return (
+          element instanceof HTMLElement &&
+          element.offsetParent !== null &&
+          !element.hasAttribute('disabled') &&
+          element.getAttribute('aria-hidden') !== 'true'
+        );
+      });
+
+    if (focusableElements.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      }
+
+      return;
+    }
+
+    if (document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+
+  function openMenu() {
+    if (isOpen) {
+      return;
+    }
+
+    previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    menu.classList.add('fh-header__nav--open');
+    menu.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('fh-mobile-menu-open');
+    setExpandedState(true);
+    document.addEventListener('keydown', handleDocumentKeydown);
+    document.addEventListener('keydown', handleTrapFocus);
+    focusInitialElement();
+    isOpen = true;
+  }
+
+  function closeMenu(options) {
+    const skipFocus = !!(options && options.skipFocus === true);
+
+    menu.classList.remove('fh-header__nav--open');
+    menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
+    document.body.classList.remove('fh-mobile-menu-open');
+    setExpandedState(false);
+
+    if (!isOpen) {
+      return;
+    }
+
+    document.removeEventListener('keydown', handleDocumentKeydown);
+    document.removeEventListener('keydown', handleTrapFocus);
+    isOpen = false;
+
+    if (skipFocus) {
+      previouslyFocusedElement = null;
+      return;
+    }
+
+    const target = previouslyFocusedElement || toggleButtons[0];
+
+    if (target instanceof HTMLElement) {
+      target.focus();
+    }
+
+    previouslyFocusedElement = null;
+  }
+
+  toggleButtons.forEach(function (button) {
+    button.setAttribute('aria-expanded', 'false');
+
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (isOpen) {
+        closeMenu();
+        return;
+      }
+
+      openMenu();
+    });
+  });
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeMenu();
+    });
+  });
+
+  menu.addEventListener('click', function (event) {
+    if (event.target && event.target.closest('[data-fh-mobile-menu-close]')) {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    const navLink = event.target && event.target.closest('.fh-header__nav-link');
+
+    if (navLink && !navLink.closest('.dropdown-menu')) {
+      closeMenu();
+    }
+  });
+
+  function handleBreakpointChange() {
+    closeMenu({ skipFocus: true });
+  }
+
+  if (typeof desktopMedia.addEventListener === 'function') {
+    desktopMedia.addEventListener('change', handleBreakpointChange);
+  } else if (typeof desktopMedia.addListener === 'function') {
+    desktopMedia.addListener(handleBreakpointChange);
+  }
+
+  closeMenu({ skipFocus: true });
+});
+// End Section: FH mobile navigation toggle
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
