@@ -99,28 +99,37 @@ const fhHeaderDebugSelectors = {
   }
 };
 
-window.fhHeaderDebug = Object.assign({}, window.fhHeaderDebug, {
-  selectors: fhHeaderDebugSelectors,
-  logMenuStatus: function () {
-    const sections = fhHeaderDebugSelectors;
+var fhExistingHeaderDebug = window.fhHeaderDebug;
+var fhMergedHeaderDebug = {};
 
-    Object.keys(sections).forEach(function (key) {
-      const definition = sections[key];
-      const entries = Object.keys(definition)
-        .map(function (innerKey) {
-          const selector = definition[innerKey];
-          const nodes = Array.prototype.slice.call(document.querySelectorAll(selector));
-          return {
-            name: innerKey,
-            selector: selector,
-            count: nodes.length
-          };
-        });
+if (fhExistingHeaderDebug && typeof fhExistingHeaderDebug === 'object') {
+  Object.keys(fhExistingHeaderDebug).forEach(function (key) {
+    fhMergedHeaderDebug[key] = fhExistingHeaderDebug[key];
+  });
+}
 
-      console.info('[FH Header]', key, entries);
-    });
-  }
-});
+fhMergedHeaderDebug.selectors = fhHeaderDebugSelectors;
+fhMergedHeaderDebug.logMenuStatus = function () {
+  const sections = fhHeaderDebugSelectors;
+
+  Object.keys(sections).forEach(function (key) {
+    const definition = sections[key];
+    const entries = Object.keys(definition)
+      .map(function (innerKey) {
+        const selector = definition[innerKey];
+        const nodes = Array.prototype.slice.call(document.querySelectorAll(selector));
+        return {
+          name: innerKey,
+          selector: selector,
+          count: nodes.length
+        };
+      });
+
+    console.info('[FH Header]', key, entries);
+  });
+};
+
+window.fhHeaderDebug = fhMergedHeaderDebug;
 
 fhOnDocumentReady(function () {
   if (window.fhHeaderDebug && typeof window.fhHeaderDebug.logMenuStatus === 'function') {
