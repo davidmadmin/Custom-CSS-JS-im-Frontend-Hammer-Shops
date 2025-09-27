@@ -132,6 +132,235 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH mobile menu behaviour
+document.addEventListener('DOMContentLoaded', function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) {
+    return;
+  }
+
+  const mobileMenu = header.querySelector('[data-fh-mobile-menu]');
+
+  if (!mobileMenu) {
+    return;
+  }
+
+  const openTriggers = header.querySelectorAll('[data-fh-mobile-menu-toggle]');
+  const closeTriggers = mobileMenu.querySelectorAll('[data-fh-mobile-menu-close]');
+  const submenuToggles = mobileMenu.querySelectorAll('[data-fh-mobile-submenu-toggle]');
+  const body = document.body;
+
+  let isMenuOpen = false;
+  let lastFocusedElement = null;
+
+  function findDirectSubmenu(item) {
+    if (!item) {
+      return null;
+    }
+
+    const children = Array.from(item.children || []);
+
+    for (let i = 0; i < children.length; i += 1) {
+      const child = children[i];
+
+      if (child && child.hasAttribute && child.hasAttribute('data-fh-mobile-submenu')) {
+        return child;
+      }
+    }
+
+    return null;
+  }
+
+  function setSubmenuState(item, expanded) {
+    const submenu = findDirectSubmenu(item);
+
+    if (!submenu) {
+      return;
+    }
+
+    submenu.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+  }
+
+  function resetSubmenus() {
+    const submenus = mobileMenu.querySelectorAll('[data-fh-mobile-submenu]');
+
+    submenus.forEach(function (submenu) {
+      submenu.setAttribute('aria-hidden', 'true');
+    });
+
+    submenuToggles.forEach(function (toggle) {
+      const parentItem = toggle.closest('[data-fh-mobile-menu-item]');
+
+      toggle.setAttribute('aria-expanded', 'false');
+
+      if (parentItem) {
+        parentItem.classList.remove('is-open');
+        setSubmenuState(parentItem, false);
+      }
+    });
+  }
+
+  function initialiseSubmenus() {
+    resetSubmenus();
+
+    submenuToggles.forEach(function (toggle) {
+      toggle.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const item = toggle.closest('[data-fh-mobile-menu-item]');
+
+        if (!item) {
+          return;
+        }
+
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        const nextExpanded = !expanded;
+
+        toggle.setAttribute('aria-expanded', nextExpanded ? 'true' : 'false');
+        item.classList.toggle('is-open', nextExpanded);
+        setSubmenuState(item, nextExpanded);
+      });
+    });
+  }
+
+  function getFocusableElements() {
+    const focusableSelectors = ['a[href]', 'button:not([disabled])', 'input:not([disabled])', 'textarea:not([disabled])', 'select:not([disabled])', '[tabindex]:not([tabindex="-1"])'];
+    const nodes = Array.from(mobileMenu.querySelectorAll(focusableSelectors.join(',')));
+
+    return nodes.filter(function (node) {
+      if (!(node instanceof HTMLElement)) {
+        return false;
+      }
+
+      return node.getClientRects().length > 0;
+    });
+  }
+
+  function trapFocus(event) {
+    if (!isMenuOpen || event.key !== 'Tab') {
+      return;
+    }
+
+    const focusable = getFocusableElements();
+
+    if (focusable.length === 0) {
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+      return;
+    }
+
+    if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function closeMenu(options) {
+    if (!isMenuOpen) {
+      return;
+    }
+
+    mobileMenu.classList.remove('is-open');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    body.classList.remove('fh-mobile-menu-open');
+    document.removeEventListener('keydown', handleKeydown, true);
+
+    isMenuOpen = false;
+
+    resetSubmenus();
+
+    if (options && options.restoreFocus && lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      lastFocusedElement.focus();
+    }
+  }
+
+  function openMenu(trigger) {
+    if (isMenuOpen) {
+      return;
+    }
+
+    lastFocusedElement = trigger || document.activeElement;
+    mobileMenu.classList.add('is-open');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    body.classList.add('fh-mobile-menu-open');
+    document.addEventListener('keydown', handleKeydown, true);
+
+    isMenuOpen = true;
+
+    const focusable = getFocusableElements();
+
+    if (focusable.length > 0) {
+      requestAnimationFrame(function () {
+        focusable[0].focus();
+      });
+    }
+  }
+
+  function handleKeydown(event) {
+    if (!isMenuOpen) {
+      return;
+    }
+
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
+      closeMenu({ restoreFocus: true });
+      return;
+    }
+
+    trapFocus(event);
+  }
+
+  function handleOpenTrigger(event) {
+    event.preventDefault();
+    openMenu(event.currentTarget || event.target);
+  }
+
+  function handleCloseTrigger(event) {
+    event.preventDefault();
+    closeMenu({ restoreFocus: true });
+  }
+
+  function handleLinkClick(event) {
+    const link = event.target.closest('a[href]');
+
+    if (!link) {
+      return;
+    }
+
+    closeMenu({ restoreFocus: false });
+  }
+
+  function handleResize() {
+    if (window.innerWidth >= 992) {
+      closeMenu({ restoreFocus: false });
+    }
+  }
+
+  initialiseSubmenus();
+
+  mobileMenu.setAttribute('aria-hidden', 'true');
+
+  openTriggers.forEach(function (trigger) {
+    trigger.addEventListener('click', handleOpenTrigger);
+  });
+
+  closeTriggers.forEach(function (trigger) {
+    trigger.addEventListener('click', handleCloseTrigger);
+  });
+
+  mobileMenu.addEventListener('click', handleLinkClick);
+  window.addEventListener('resize', handleResize);
+});
+// End Section: FH mobile menu behaviour
+
 // Section: FH Merkliste button enhancements
 document.addEventListener('DOMContentLoaded', function () {
   const iconMarkup =
