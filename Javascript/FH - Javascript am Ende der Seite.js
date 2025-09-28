@@ -133,8 +133,11 @@ fhOnReady(function () {
   const stage = menu.querySelector('[data-fh-mobile-stage]');
   const submenuContainer = stage || menu.querySelector('[data-fh-mobile-submenu-container]');
   const submenuTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
-  const rootPanel = menu.querySelector('[data-fh-mobile-stage-panel="root"]');
   const stagePanels = stage ? Array.prototype.slice.call(stage.querySelectorAll('[data-fh-mobile-stage-panel]')) : [];
+  const rootPanel = stage
+    ? stage.querySelector('[data-fh-mobile-stage-panel="root"]')
+    : menu.querySelector('[data-fh-mobile-stage-panel="root"]');
+  const defaultPanel = rootPanel || stagePanels[0] || null;
   const panelMap = {};
 
   stagePanels.forEach(function (panel) {
@@ -146,7 +149,7 @@ fhOnReady(function () {
   let isOpen = false;
   let previouslyFocusedElement = null;
   let isTransitioning = false;
-  let panelStack = rootPanel ? [rootPanel] : [];
+  let panelStack = defaultPanel ? [defaultPanel] : [];
   let triggerStack = [null];
 
   function setPanelState(panel, isActive) {
@@ -175,10 +178,10 @@ fhOnReady(function () {
 
   if (stage) {
     stagePanels.forEach(function (panel) {
-      setPanelState(panel, panel === rootPanel);
+      setPanelState(panel, panel === defaultPanel);
     });
-
-    if (!rootPanel && stagePanels.length > 0) panelStack = [stagePanels[0]];
+  } else if (defaultPanel) {
+    setPanelState(defaultPanel, true);
   }
 
   function getCurrentPanel() {
@@ -302,7 +305,7 @@ fhOnReady(function () {
         return;
       }
 
-      if (previousPanel && previousPanel !== rootPanel) {
+      if (previousPanel && defaultPanel && previousPanel !== defaultPanel) {
         const backButton = previousPanel.querySelector('[data-fh-mobile-submenu-back]');
 
         if (backButton instanceof HTMLElement) backButton.focus();
@@ -314,6 +317,7 @@ fhOnReady(function () {
     const immediate = !!(options && options.immediate === true);
     const skipFocus = !!(options && options.skipFocus === true);
     const currentPanel = getCurrentPanel();
+    const targetPanel = defaultPanel;
 
     triggerStack.forEach(function (trigger) {
       if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'false');
@@ -321,14 +325,14 @@ fhOnReady(function () {
 
     triggerStack = [null];
 
-    if (!rootPanel) {
+    if (!targetPanel) {
       panelStack = [];
       return;
     }
 
-    if (currentPanel && currentPanel !== rootPanel) {
+    if (currentPanel && currentPanel !== targetPanel) {
       if (!immediate && stage && !isTransitioning) {
-        animatePanels(currentPanel, rootPanel, 'backward', function () {
+        animatePanels(currentPanel, targetPanel, 'backward', function () {
           if (!skipFocus) {
             const rootLink = menu.querySelector('.fh-header__nav-link');
 
@@ -337,23 +341,23 @@ fhOnReady(function () {
         });
       } else {
         setPanelState(currentPanel, false);
-        setPanelState(rootPanel, true);
+        setPanelState(targetPanel, true);
 
         if (stage) {
-          if (immediate) stage.style.height = rootPanel.scrollHeight + 'px';
-          else updateStageHeight(rootPanel);
+          if (immediate) stage.style.height = targetPanel.scrollHeight + 'px';
+          else updateStageHeight(targetPanel);
         }
       }
     } else {
-      setPanelState(rootPanel, true);
+      setPanelState(targetPanel, true);
 
       if (stage) {
-        if (immediate) stage.style.height = rootPanel.scrollHeight + 'px';
-        else updateStageHeight(rootPanel);
+        if (immediate) stage.style.height = targetPanel.scrollHeight + 'px';
+        else updateStageHeight(targetPanel);
       }
     }
 
-    panelStack = [rootPanel];
+    panelStack = [targetPanel];
   }
 
   function setExpandedState(value) {
@@ -384,12 +388,18 @@ fhOnReady(function () {
     const focusableElements = Array.prototype.slice
       .call(menu.querySelectorAll(focusableSelectors))
       .filter(function (element) {
-        return (
-          element instanceof HTMLElement &&
-          element.offsetParent !== null &&
-          !element.hasAttribute('disabled') &&
-          element.getAttribute('aria-hidden') !== 'true'
-        );
+        if (!(element instanceof HTMLElement)) return false;
+        if (element.hasAttribute('disabled')) return false;
+        if (element.getAttribute('aria-hidden') === 'true') return false;
+        if (element.closest('[aria-hidden="true"]')) return false;
+        if (element.closest('[hidden]')) return false;
+
+        const style = window.getComputedStyle(element);
+
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        if (style.position === 'fixed') return true;
+
+        return element.offsetParent !== null;
       });
 
     if (focusableElements.length === 0) { event.preventDefault(); return; }
@@ -426,7 +436,7 @@ fhOnReady(function () {
     document.addEventListener('keydown', handleDocumentKeydown);
     document.addEventListener('keydown', handleTrapFocus);
 
-    if (stage && rootPanel) updateStageHeight(rootPanel);
+    if (stage && defaultPanel) updateStageHeight(defaultPanel);
 
     focusInitialElement();
     isOpen = true;

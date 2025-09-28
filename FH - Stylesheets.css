@@ -213,6 +213,7 @@
   width: 420px;
   max-width: calc(100vw - 32px);
   padding: 20px;
+  box-sizing: border-box;
   background-color: #ffffff;
   border: 1px solid #e2e2e2;
   border-radius: 16px;
