@@ -130,8 +130,12 @@ fhOnReady(function () {
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const submenuContainer = menu.querySelector('[data-fh-mobile-submenu-container]');
+  const submenuTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
   let isOpen = false;
   let previouslyFocusedElement = null;
+  let activeSubmenu = null;
+  let lastSubmenuTrigger = null;
 
   function setExpandedState(value) {
     const expandedValue = value ? 'true' : 'false';
@@ -189,10 +193,64 @@ fhOnReady(function () {
     }
   }
 
+  function closeSubmenu(options) {
+    if (!submenuContainer) return;
+
+    const skipFocus = !!(options && options.skipFocus === true);
+
+    if (lastSubmenuTrigger instanceof HTMLElement) lastSubmenuTrigger.setAttribute('aria-expanded', 'false');
+
+    if (activeSubmenu) {
+      activeSubmenu.classList.remove('is-active');
+      activeSubmenu.setAttribute('aria-hidden', 'true');
+    }
+
+    menu.classList.remove('fh-header__nav--submenu-open');
+
+    if (!skipFocus && lastSubmenuTrigger instanceof HTMLElement) lastSubmenuTrigger.focus();
+
+    activeSubmenu = null;
+    lastSubmenuTrigger = null;
+  }
+
+  function openSubmenu(target, trigger) {
+    if (!submenuContainer || !target || desktopMedia.matches) return;
+
+    const nextPanel = submenuContainer.querySelector('[data-fh-mobile-submenu-panel="' + target + '"]');
+
+    if (!nextPanel) return;
+
+    if (activeSubmenu && activeSubmenu !== nextPanel) {
+      activeSubmenu.classList.remove('is-active');
+      activeSubmenu.setAttribute('aria-hidden', 'true');
+    }
+
+    if (lastSubmenuTrigger instanceof HTMLElement && lastSubmenuTrigger !== trigger) lastSubmenuTrigger.setAttribute('aria-expanded', 'false');
+
+    menu.classList.add('fh-header__nav--submenu-open');
+    nextPanel.classList.add('is-active');
+    nextPanel.setAttribute('aria-hidden', 'false');
+
+    if (trigger instanceof HTMLElement) {
+      trigger.setAttribute('aria-expanded', 'true');
+      lastSubmenuTrigger = trigger;
+    } else {
+      lastSubmenuTrigger = null;
+    }
+
+    activeSubmenu = nextPanel;
+
+    const backButton = nextPanel.querySelector('[data-fh-mobile-submenu-back]');
+
+    if (backButton instanceof HTMLElement) backButton.focus();
+  }
+
   function openMenu() {
     if (isOpen) return;
 
     previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    closeSubmenu({ skipFocus: true });
 
     menu.classList.add('fh-header__nav--open');
     menu.setAttribute('aria-hidden', 'false');
@@ -211,6 +269,7 @@ fhOnReady(function () {
     menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
     document.body.classList.remove('fh-mobile-menu-open');
     setExpandedState(false);
+    closeSubmenu({ skipFocus: true });
 
     if (!isOpen) return;
 
@@ -255,8 +314,43 @@ fhOnReady(function () {
 
     const navLink = event.target && event.target.closest('.fh-header__nav-link');
 
-    if (navLink && !navLink.closest('.dropdown-menu')) closeMenu();
+    if (navLink && !navLink.closest('.dropdown-menu')) {
+      if (!desktopMedia.matches && navLink.hasAttribute('data-fh-mobile-submenu-target')) return;
+
+      closeMenu();
+    }
   });
+
+  if (submenuContainer) {
+    submenuTriggers.forEach(function (trigger) {
+      trigger.setAttribute('aria-expanded', trigger.getAttribute('aria-expanded') || 'false');
+
+      trigger.addEventListener('click', function (event) {
+        if (desktopMedia.matches) return;
+
+        const target = trigger.getAttribute('data-fh-mobile-submenu-target');
+
+        if (!target) return;
+
+        event.preventDefault();
+        openSubmenu(target, trigger);
+      });
+    });
+
+    submenuContainer.addEventListener('click', function (event) {
+      const backButton = event.target && event.target.closest('[data-fh-mobile-submenu-back]');
+
+      if (backButton) {
+        event.preventDefault();
+        closeSubmenu();
+        return;
+      }
+
+      const submenuLink = event.target && event.target.closest('.fh-header__mobile-submenu-link');
+
+      if (submenuLink) closeMenu();
+    });
+  }
 
   function handleBreakpointChange() {
     closeMenu({ skipFocus: true });

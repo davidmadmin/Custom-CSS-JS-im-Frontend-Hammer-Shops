@@ -631,6 +631,89 @@
   transform: translateY(0);
 }
 
+.fh-header__mobile-submenu {
+  display: none;
+}
+
+.fh-header__mobile-submenu-panel {
+  display: none;
+}
+
+.fh-header__mobile-submenu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.fh-header__mobile-submenu-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.fh-header__mobile-submenu-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.fh-header__mobile-submenu-back:hover,
+.fh-header__mobile-submenu-back:focus {
+  color: #0f172a;
+  background-color: rgba(15, 23, 42, 0.06);
+  text-decoration: none;
+}
+
+.fh-header__mobile-submenu-back:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(49, 165, 240, 0.35);
+}
+
+.fh-header__mobile-submenu-back-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.fh-header__mobile-submenu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fh-header__mobile-submenu-link {
+  display: block;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1a1a1a;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.fh-header__mobile-submenu-link:hover,
+.fh-header__mobile-submenu-link:focus {
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.fh-header__mobile-submenu-link--all {
+  font-weight: 700;
+}
+
+.fh-header__mobile-submenu-list li:last-child .fh-header__mobile-submenu-link {
+  border-bottom: none;
+}
+
 @media (max-width: 1199.98px) {
   .fh-header {
     width: 100%;
@@ -750,6 +833,26 @@
     padding: 0;
   }
 
+  .fh-header__nav--submenu-open .fh-header__nav-list {
+    display: none;
+  }
+
+  .fh-header__mobile-submenu {
+    display: none;
+  }
+
+  .fh-header__nav--submenu-open .fh-header__mobile-submenu {
+    display: block;
+  }
+
+  .fh-header__mobile-submenu-panel {
+    display: none;
+  }
+
+  .fh-header__mobile-submenu-panel.is-active {
+    display: block;
+  }
+
   .fh-header__nav-item {
     flex: none;
     text-align: left;
@@ -772,6 +875,27 @@
 
 body.fh-mobile-menu-open {
   overflow: hidden;
+}
+
+@media (max-width: 767.98px) {
+  .fh-header__panel {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: calc(100vw - 32px);
+    max-width: 360px;
+  }
+
+  .fh-header__panel--account {
+    width: calc(100vw - 32px);
+    max-width: 260px;
+  }
+
+  .fh-header__panel-arrow {
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
 }
 /* End Section: FH Header Base Layout */
 
@@ -824,6 +948,15 @@ body.fh-mobile-menu-open {
   #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active div[id^="trustbadge-container-"],
   #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #web-chat-loader-root {
     display: none !important;
+}
+
+body.fh-mobile-menu-open .widget_container_overlay,
+body.fh-mobile-menu-open #trustami-mobile-view,
+body.fh-mobile-menu-open .back-to-top,
+body.fh-mobile-menu-open .widget-cookie-bar,
+body.fh-mobile-menu-open div[id^="trustbadge-container-"],
+body.fh-mobile-menu-open #web-chat-loader-root {
+  display: none !important;
 }
 /* End Section: Trustbadge ausblenden */
 
