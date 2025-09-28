@@ -130,12 +130,231 @@ fhOnReady(function () {
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   const desktopMedia = window.matchMedia('(min-width: 992px)');
-  const submenuContainer = menu.querySelector('[data-fh-mobile-submenu-container]');
+  const stage = menu.querySelector('[data-fh-mobile-stage]');
+  const submenuContainer = stage || menu.querySelector('[data-fh-mobile-submenu-container]');
   const submenuTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
+  const rootPanel = menu.querySelector('[data-fh-mobile-stage-panel="root"]');
+  const stagePanels = stage ? Array.prototype.slice.call(stage.querySelectorAll('[data-fh-mobile-stage-panel]')) : [];
+  const panelMap = {};
+
+  stagePanels.forEach(function (panel) {
+    const key = panel.getAttribute('data-fh-mobile-stage-panel');
+
+    if (key) panelMap[key] = panel;
+  });
+
   let isOpen = false;
   let previouslyFocusedElement = null;
-  let activeSubmenu = null;
-  let lastSubmenuTrigger = null;
+  let isTransitioning = false;
+  let panelStack = rootPanel ? [rootPanel] : [];
+  let triggerStack = [null];
+
+  function setPanelState(panel, isActive) {
+    if (!panel) return;
+
+    if (isActive) {
+      panel.classList.add('is-active');
+      panel.setAttribute('aria-hidden', 'false');
+
+      if (stage) {
+        panel.style.opacity = '1';
+        panel.style.transform = 'translateX(0)';
+      }
+
+      return;
+    }
+
+    panel.classList.remove('is-active');
+    panel.setAttribute('aria-hidden', 'true');
+
+    if (stage) {
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateX(100%)';
+    }
+  }
+
+  if (stage) {
+    stagePanels.forEach(function (panel) {
+      setPanelState(panel, panel === rootPanel);
+    });
+
+    if (!rootPanel && stagePanels.length > 0) panelStack = [stagePanels[0]];
+  }
+
+  function getCurrentPanel() {
+    return panelStack[panelStack.length - 1] || null;
+  }
+
+  function updateStageHeight(panel) {
+    if (!stage) return;
+
+    const target = panel || getCurrentPanel();
+
+    if (!target) return;
+
+    stage.style.height = target.scrollHeight + 'px';
+  }
+
+  function resetStageHeight() {
+    if (!stage) return;
+
+    stage.style.height = '';
+  }
+
+  function animatePanels(fromPanel, toPanel, direction, callback) {
+    if (!fromPanel || !toPanel || fromPanel === toPanel) {
+      if (fromPanel && fromPanel !== toPanel) setPanelState(fromPanel, false);
+      if (toPanel) {
+        setPanelState(toPanel, true);
+        updateStageHeight(toPanel);
+      }
+
+      if (typeof callback === 'function') callback();
+
+      return;
+    }
+
+    if (!stage) {
+      setPanelState(fromPanel, false);
+      setPanelState(toPanel, true);
+
+      if (typeof callback === 'function') callback();
+
+      return;
+    }
+
+    isTransitioning = true;
+    stage.classList.add('is-transitioning');
+
+    const toStart = direction === 'backward' ? '-100%' : '100%';
+    const fromTarget = direction === 'backward' ? '100%' : '-100%';
+
+    toPanel.classList.add('is-active');
+    toPanel.setAttribute('aria-hidden', 'false');
+    toPanel.style.opacity = '1';
+    toPanel.style.transform = 'translateX(' + toStart + ')';
+
+    stage.style.height = fromPanel.scrollHeight + 'px';
+
+    const startAnimation = window.requestAnimationFrame || function (fn) {
+      return window.setTimeout(fn, 16);
+    };
+
+    startAnimation(function () {
+      updateStageHeight(toPanel);
+
+      fromPanel.style.transform = 'translateX(' + fromTarget + ')';
+      fromPanel.style.opacity = '0';
+      toPanel.style.transform = 'translateX(0)';
+
+      window.setTimeout(function () {
+        setPanelState(fromPanel, false);
+        setPanelState(toPanel, true);
+        isTransitioning = false;
+        stage.classList.remove('is-transitioning');
+
+        if (typeof callback === 'function') callback();
+      }, 260);
+    });
+  }
+
+  function goForward(panel, trigger) {
+    if (!panel || desktopMedia.matches || isTransitioning) return;
+
+    const currentPanel = getCurrentPanel();
+
+    if (!currentPanel || panel === currentPanel) return;
+
+    const requiredParent = panel.getAttribute('data-fh-mobile-submenu-parent');
+
+    if (requiredParent) {
+      const currentKey = currentPanel.getAttribute('data-fh-mobile-stage-panel');
+
+      if (currentKey !== requiredParent) return;
+    }
+
+    panelStack.push(panel);
+    triggerStack.push(trigger instanceof HTMLElement ? trigger : null);
+
+    if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'true');
+
+    animatePanels(currentPanel, panel, 'forward', function () {
+      const backButton = panel.querySelector('[data-fh-mobile-submenu-back]');
+
+      if (backButton instanceof HTMLElement) backButton.focus();
+    });
+  }
+
+  function goBackward() {
+    if (panelStack.length <= 1 || isTransitioning) return;
+
+    const currentPanel = panelStack.pop();
+    const previousPanel = getCurrentPanel();
+    const closingTrigger = triggerStack.pop();
+
+    if (closingTrigger instanceof HTMLElement) closingTrigger.setAttribute('aria-expanded', 'false');
+
+    animatePanels(currentPanel, previousPanel, 'backward', function () {
+      const previousTrigger = triggerStack[triggerStack.length - 1];
+
+      if (previousTrigger instanceof HTMLElement) {
+        previousTrigger.focus();
+        return;
+      }
+
+      if (previousPanel && previousPanel !== rootPanel) {
+        const backButton = previousPanel.querySelector('[data-fh-mobile-submenu-back]');
+
+        if (backButton instanceof HTMLElement) backButton.focus();
+      }
+    });
+  }
+
+  function resetToRoot(options) {
+    const immediate = !!(options && options.immediate === true);
+    const skipFocus = !!(options && options.skipFocus === true);
+    const currentPanel = getCurrentPanel();
+
+    triggerStack.forEach(function (trigger) {
+      if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'false');
+    });
+
+    triggerStack = [null];
+
+    if (!rootPanel) {
+      panelStack = [];
+      return;
+    }
+
+    if (currentPanel && currentPanel !== rootPanel) {
+      if (!immediate && stage && !isTransitioning) {
+        animatePanels(currentPanel, rootPanel, 'backward', function () {
+          if (!skipFocus) {
+            const rootLink = menu.querySelector('.fh-header__nav-link');
+
+            if (rootLink instanceof HTMLElement) rootLink.focus();
+          }
+        });
+      } else {
+        setPanelState(currentPanel, false);
+        setPanelState(rootPanel, true);
+
+        if (stage) {
+          if (immediate) stage.style.height = rootPanel.scrollHeight + 'px';
+          else updateStageHeight(rootPanel);
+        }
+      }
+    } else {
+      setPanelState(rootPanel, true);
+
+      if (stage) {
+        if (immediate) stage.style.height = rootPanel.scrollHeight + 'px';
+        else updateStageHeight(rootPanel);
+      }
+    }
+
+    panelStack = [rootPanel];
+  }
 
   function setExpandedState(value) {
     const expandedValue = value ? 'true' : 'false';
@@ -193,64 +412,12 @@ fhOnReady(function () {
     }
   }
 
-  function closeSubmenu(options) {
-    if (!submenuContainer) return;
-
-    const skipFocus = !!(options && options.skipFocus === true);
-
-    if (lastSubmenuTrigger instanceof HTMLElement) lastSubmenuTrigger.setAttribute('aria-expanded', 'false');
-
-    if (activeSubmenu) {
-      activeSubmenu.classList.remove('is-active');
-      activeSubmenu.setAttribute('aria-hidden', 'true');
-    }
-
-    menu.classList.remove('fh-header__nav--submenu-open');
-
-    if (!skipFocus && lastSubmenuTrigger instanceof HTMLElement) lastSubmenuTrigger.focus();
-
-    activeSubmenu = null;
-    lastSubmenuTrigger = null;
-  }
-
-  function openSubmenu(target, trigger) {
-    if (!submenuContainer || !target || desktopMedia.matches) return;
-
-    const nextPanel = submenuContainer.querySelector('[data-fh-mobile-submenu-panel="' + target + '"]');
-
-    if (!nextPanel) return;
-
-    if (activeSubmenu && activeSubmenu !== nextPanel) {
-      activeSubmenu.classList.remove('is-active');
-      activeSubmenu.setAttribute('aria-hidden', 'true');
-    }
-
-    if (lastSubmenuTrigger instanceof HTMLElement && lastSubmenuTrigger !== trigger) lastSubmenuTrigger.setAttribute('aria-expanded', 'false');
-
-    menu.classList.add('fh-header__nav--submenu-open');
-    nextPanel.classList.add('is-active');
-    nextPanel.setAttribute('aria-hidden', 'false');
-
-    if (trigger instanceof HTMLElement) {
-      trigger.setAttribute('aria-expanded', 'true');
-      lastSubmenuTrigger = trigger;
-    } else {
-      lastSubmenuTrigger = null;
-    }
-
-    activeSubmenu = nextPanel;
-
-    const backButton = nextPanel.querySelector('[data-fh-mobile-submenu-back]');
-
-    if (backButton instanceof HTMLElement) backButton.focus();
-  }
-
   function openMenu() {
     if (isOpen) return;
 
     previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
-    closeSubmenu({ skipFocus: true });
+    resetToRoot({ immediate: true, skipFocus: true });
 
     menu.classList.add('fh-header__nav--open');
     menu.setAttribute('aria-hidden', 'false');
@@ -258,6 +425,9 @@ fhOnReady(function () {
     setExpandedState(true);
     document.addEventListener('keydown', handleDocumentKeydown);
     document.addEventListener('keydown', handleTrapFocus);
+
+    if (stage && rootPanel) updateStageHeight(rootPanel);
+
     focusInitialElement();
     isOpen = true;
   }
@@ -269,7 +439,8 @@ fhOnReady(function () {
     menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
     document.body.classList.remove('fh-mobile-menu-open');
     setExpandedState(false);
-    closeSubmenu({ skipFocus: true });
+    resetToRoot({ immediate: true, skipFocus: true });
+    resetStageHeight();
 
     if (!isOpen) return;
 
@@ -328,12 +499,16 @@ fhOnReady(function () {
       trigger.addEventListener('click', function (event) {
         if (desktopMedia.matches) return;
 
-        const target = trigger.getAttribute('data-fh-mobile-submenu-target');
+        const targetKey = trigger.getAttribute('data-fh-mobile-submenu-target');
 
-        if (!target) return;
+        if (!targetKey) return;
+
+        const nextPanel = panelMap[targetKey];
+
+        if (!nextPanel) return;
 
         event.preventDefault();
-        openSubmenu(target, trigger);
+        goForward(nextPanel, trigger);
       });
     });
 
@@ -342,13 +517,13 @@ fhOnReady(function () {
 
       if (backButton) {
         event.preventDefault();
-        closeSubmenu();
+        goBackward();
         return;
       }
 
       const submenuLink = event.target && event.target.closest('.fh-header__mobile-submenu-link');
 
-      if (submenuLink) closeMenu();
+      if (submenuLink && !submenuLink.hasAttribute('data-fh-mobile-submenu-target')) closeMenu();
     });
   }
 
@@ -358,6 +533,12 @@ fhOnReady(function () {
 
   if (typeof desktopMedia.addEventListener === 'function') desktopMedia.addEventListener('change', handleBreakpointChange); else if (typeof desktopMedia.addListener === 'function') {
     desktopMedia.addListener(handleBreakpointChange);
+  }
+
+  if (stage) {
+    window.addEventListener('resize', function () {
+      if (isOpen) updateStageHeight();
+    });
   }
 
   closeMenu({ skipFocus: true });
