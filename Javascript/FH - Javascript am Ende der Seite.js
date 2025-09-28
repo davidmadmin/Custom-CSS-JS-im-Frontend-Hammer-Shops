@@ -1,14 +1,9 @@
 // Section: Global scripts for all pages
 
 function fhOnReady(callback) {
-  if (typeof callback !== 'function') {
-    return;
-  }
+  if (typeof callback !== 'function') return;
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', callback);
-    return;
-  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', callback); return; }
 
   callback();
 }
@@ -18,17 +13,11 @@ fhOnReady(function () {
   function resolveGreeting(defaultGreeting) {
     const hour = new Date().getHours();
 
-    if (hour >= 0 && hour < 10) {
-      return 'Guten Morgen,';
-    }
+    if (hour >= 0 && hour < 10) return 'Guten Morgen,';
 
-    if (hour < 16) {
-      return 'Guten Tag,';
-    }
+    if (hour < 16) return 'Guten Tag,';
 
-    if (hour < 24) {
-      return 'Guten Abend,';
-    }
+    if (hour < 24) return 'Guten Abend,';
 
     return defaultGreeting;
   }
@@ -40,9 +29,7 @@ fhOnReady(function () {
       const defaultGreeting = element.getAttribute('data-default-greeting') || element.textContent || '';
       const nextGreeting = resolveGreeting(defaultGreeting);
 
-      if (element.textContent !== nextGreeting) {
-        element.textContent = nextGreeting;
-      }
+      if (element.textContent !== nextGreeting) element.textContent = nextGreeting;
     });
   }
 
@@ -62,27 +49,19 @@ fhOnReady(function () {
     });
   }
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
   const toggleButton = container.querySelector('[data-fh-account-menu-toggle]');
   const menu = container.querySelector('[data-fh-account-menu]');
 
-  if (!toggleButton || !menu) {
-    return;
-  }
+  if (!toggleButton || !menu) return;
 
   let isOpen = false;
 
   function openMenu() {
-    if (isOpen) {
-      return;
-    }
+    if (isOpen) return;
 
-    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
-      window.fhWishlistMenu.close();
-    }
+    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') window.fhWishlistMenu.close();
 
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
@@ -93,9 +72,7 @@ fhOnReady(function () {
   }
 
   function closeMenu() {
-    if (!isOpen) {
-      return;
-    }
+    if (!isOpen) return;
 
     menu.style.display = 'none';
     menu.setAttribute('aria-hidden', 'true');
@@ -106,9 +83,7 @@ fhOnReady(function () {
   }
 
   function handleDocumentClick(event) {
-    if (!container.contains(event.target)) {
-      closeMenu();
-    }
+    if (!container.contains(event.target)) closeMenu();
   }
 
   function handleKeydown(event) {
@@ -122,9 +97,7 @@ fhOnReady(function () {
     event.preventDefault();
     event.stopPropagation();
 
-    if (isOpen) {
-      closeMenu();
-    } else {
+    if (isOpen) closeMenu(); else {
       openMenu();
     }
   });
@@ -132,9 +105,7 @@ fhOnReady(function () {
   menu.addEventListener('click', function (event) {
     const trigger = event.target.closest('[data-fh-login-trigger], [data-fh-registration-trigger], [data-fh-account-close]');
 
-    if (trigger) {
-      closeMenu();
-    }
+    if (trigger) closeMenu();
   });
 
   window.fhAccountMenu = window.fhAccountMenu || {};
@@ -149,16 +120,12 @@ fhOnReady(function () {
 fhOnReady(function () {
   const header = document.querySelector('[data-fh-header-root]');
 
-  if (!header) {
-    return;
-  }
+  if (!header) return;
 
   const menu = header.querySelector('[data-fh-mobile-menu]');
   const toggleButtons = header.querySelectorAll('[data-fh-mobile-menu-toggle]');
 
-  if (!menu || toggleButtons.length === 0) {
-    return;
-  }
+  if (!menu || toggleButtons.length === 0) return;
 
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -177,28 +144,19 @@ fhOnReady(function () {
   function focusInitialElement() {
     const closeButton = menu.querySelector('[data-fh-mobile-menu-close]');
 
-    if (closeButton instanceof HTMLElement) {
-      closeButton.focus();
-      return;
-    }
+    if (closeButton instanceof HTMLElement) { closeButton.focus(); return; }
 
     const firstLink = menu.querySelector('.fh-header__nav-link');
 
-    if (firstLink instanceof HTMLElement) {
-      firstLink.focus();
-    }
+    if (firstLink instanceof HTMLElement) firstLink.focus();
   }
 
   function handleDocumentKeydown(event) {
-    if (event.key === 'Escape' || event.key === 'Esc') {
-      closeMenu();
-    }
+    if (event.key === 'Escape' || event.key === 'Esc') closeMenu();
   }
 
   function handleTrapFocus(event) {
-    if (!isOpen || event.key !== 'Tab') {
-      return;
-    }
+    if (!isOpen || event.key !== 'Tab') return;
 
     const focusableElements = Array.prototype.slice
       .call(menu.querySelectorAll(focusableSelectors))
@@ -211,10 +169,7 @@ fhOnReady(function () {
         );
       });
 
-    if (focusableElements.length === 0) {
-      event.preventDefault();
-      return;
-    }
+    if (focusableElements.length === 0) { event.preventDefault(); return; }
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
@@ -235,9 +190,7 @@ fhOnReady(function () {
   }
 
   function openMenu() {
-    if (isOpen) {
-      return;
-    }
+    if (isOpen) return;
 
     previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
@@ -259,24 +212,17 @@ fhOnReady(function () {
     document.body.classList.remove('fh-mobile-menu-open');
     setExpandedState(false);
 
-    if (!isOpen) {
-      return;
-    }
+    if (!isOpen) return;
 
     document.removeEventListener('keydown', handleDocumentKeydown);
     document.removeEventListener('keydown', handleTrapFocus);
     isOpen = false;
 
-    if (skipFocus) {
-      previouslyFocusedElement = null;
-      return;
-    }
+    if (skipFocus) { previouslyFocusedElement = null; return; }
 
     const target = previouslyFocusedElement || toggleButtons[0];
 
-    if (target instanceof HTMLElement) {
-      target.focus();
-    }
+    if (target instanceof HTMLElement) target.focus();
 
     previouslyFocusedElement = null;
   }
@@ -287,10 +233,7 @@ fhOnReady(function () {
     button.addEventListener('click', function (event) {
       event.preventDefault();
 
-      if (isOpen) {
-        closeMenu();
-        return;
-      }
+      if (isOpen) { closeMenu(); return; }
 
       openMenu();
     });
@@ -312,18 +255,14 @@ fhOnReady(function () {
 
     const navLink = event.target && event.target.closest('.fh-header__nav-link');
 
-    if (navLink && !navLink.closest('.dropdown-menu')) {
-      closeMenu();
-    }
+    if (navLink && !navLink.closest('.dropdown-menu')) closeMenu();
   });
 
   function handleBreakpointChange() {
     closeMenu({ skipFocus: true });
   }
 
-  if (typeof desktopMedia.addEventListener === 'function') {
-    desktopMedia.addEventListener('change', handleBreakpointChange);
-  } else if (typeof desktopMedia.addListener === 'function') {
+  if (typeof desktopMedia.addEventListener === 'function') desktopMedia.addEventListener('change', handleBreakpointChange); else if (typeof desktopMedia.addListener === 'function') {
     desktopMedia.addListener(handleBreakpointChange);
   }
 
@@ -337,37 +276,26 @@ fhOnReady(function () {
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
 
   function replaceWishlistWord(value) {
-    if (typeof value !== 'string' || value.length === 0) {
-      return value;
-    }
+    if (typeof value !== 'string' || value.length === 0) return value;
 
     return value.replace(/Wunschliste|Merkzettel/gi, 'Merkliste');
   }
 
   function updateAttribute(target, attribute) {
-    if (!target || !attribute) {
-      return;
-    }
+    if (!target || !attribute) return;
 
     if (target.hasAttribute(attribute)) {
       const currentValue = target.getAttribute(attribute);
       const nextValue = replaceWishlistWord(currentValue);
 
-      if (typeof nextValue === 'string' && nextValue.length > 0) {
-        target.setAttribute(attribute, nextValue);
-        return;
-      }
+      if (typeof nextValue === 'string' && nextValue.length > 0) { target.setAttribute(attribute, nextValue); return; }
     }
 
-    if (attribute === 'aria-label' || attribute === 'title') {
-      target.setAttribute(attribute, 'Merkliste');
-    }
+    if (attribute === 'aria-label' || attribute === 'title') target.setAttribute(attribute, 'Merkliste');
   }
 
   function enhanceButton(button) {
-    if (!button || !(button instanceof HTMLElement)) {
-      return;
-    }
+    if (!button || !(button instanceof HTMLElement)) return;
 
     button.classList.add('fh-wishlist-button');
 
@@ -382,9 +310,7 @@ fhOnReady(function () {
     });
 
     Array.from(button.childNodes).forEach(function (node) {
-      if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim().length > 0) {
-        node.parentNode.removeChild(node);
-      }
+      if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim().length > 0) node.parentNode.removeChild(node);
     });
 
     const iconWrapper = document.createElement('span');
@@ -408,17 +334,11 @@ fhOnReady(function () {
     updateAttribute(button, 'title');
 
     if (button.dataset) {
-      if (button.dataset.originalTitle) {
-        button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
-      }
+      if (button.dataset.originalTitle) button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
 
-      if (button.dataset.titleAdd) {
-        button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
-      }
+      if (button.dataset.titleAdd) button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
 
-      if (button.dataset.titleRemove) {
-        button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
-      }
+      if (button.dataset.titleRemove) button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
     }
 
     const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
@@ -428,13 +348,9 @@ fhOnReady(function () {
   }
 
   function enhanceWishlistButtons(root) {
-    if (!root) {
-      return;
-    }
+    if (!root) return;
 
-    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) {
-      enhanceButton(root);
-    }
+    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) enhanceButton(root);
 
     if (root.querySelectorAll) {
       const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
@@ -450,9 +366,7 @@ fhOnReady(function () {
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (node) {
-          if (node.nodeType !== 1) {
-            return;
-          }
+          if (node.nodeType !== 1) return;
 
           enhanceWishlistButtons(node);
         });
@@ -468,9 +382,7 @@ fhOnReady(function () {
 fhOnReady(function () {
   const container = document.querySelector('[data-fh-wishlist-menu-container]');
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
   const toggleButton = container.querySelector('[data-fh-wishlist-menu-toggle]');
   const menu = container.querySelector('[data-fh-wishlist-menu]');
@@ -479,9 +391,7 @@ fhOnReady(function () {
   const emptyState = container.querySelector('[data-fh-wishlist-menu-empty]');
   const errorState = container.querySelector('[data-fh-wishlist-menu-error]');
 
-  if (!toggleButton || !menu || !list) {
-    return;
-  }
+  if (!toggleButton || !menu || !list) return;
 
   let isOpen = false;
   let hasLoadedOnce = false;
@@ -490,26 +400,18 @@ fhOnReady(function () {
   const pendingWishListUpdateWaiters = [];
 
   function getVueStore() {
-    if (window.vueApp && window.vueApp.$store) {
-      return window.vueApp.$store;
-    }
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
 
-    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') {
-      return window.ceresStore;
-    }
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
 
     return null;
   }
 
   function getLocale() {
     if (window.App) {
-      if (App.locale) {
-        return App.locale.replace('_', '-');
-      }
+      if (App.locale) return App.locale.replace('_', '-');
 
-      if (App.defaultLanguage) {
-        return App.defaultLanguage.replace('_', '-');
-      }
+      if (App.defaultLanguage) return App.defaultLanguage.replace('_', '-');
     }
 
     return 'de-DE';
@@ -536,41 +438,19 @@ fhOnReady(function () {
 
       const amount = typeof value === 'number' ? value : parseFloat(value);
 
-      if (!isFinite(amount)) {
-        return formatter.format(0);
-      }
+      if (!isFinite(amount)) return formatter.format(0);
 
       return formatter.format(amount);
     };
   })();
 
-  function getWishListActionName(store) {
-    if (!store || !store._actions) {
-      return null;
-    }
+  function resolveStoreAction(store, actionNames) {
+    if (!store || !store._actions) return null;
 
-    if (store._actions['wishList/initWishListItems']) {
-      return 'wishList/initWishListItems';
-    }
+    for (let index = 0; index < actionNames.length; index += 1) {
+      const name = actionNames[index];
 
-    if (store._actions.initWishListItems) {
-      return 'initWishListItems';
-    }
-
-    return null;
-  }
-
-  function getBasketActionName(store) {
-    if (!store || !store._actions) {
-      return null;
-    }
-
-    if (store._actions['basket/addBasketItem']) {
-      return 'basket/addBasketItem';
-    }
-
-    if (store._actions.addBasketItem) {
-      return 'addBasketItem';
+      if (store._actions[name]) return name;
     }
 
     return null;
@@ -582,32 +462,20 @@ fhOnReady(function () {
     wishListUpdateVersion += 1;
     updateList(normalizedItems);
 
-    if (!pendingWishListUpdateWaiters.length) {
-      return;
-    }
+    if (!pendingWishListUpdateWaiters.length) return;
 
     const currentVersion = wishListUpdateVersion;
+    const waiters = pendingWishListUpdateWaiters.splice(0);
 
-    for (let index = pendingWishListUpdateWaiters.length - 1; index >= 0; index--) {
-      const waiter = pendingWishListUpdateWaiters[index];
+    waiters.forEach(function (waiter) {
+      if (waiter.timeoutId) window.clearTimeout(waiter.timeoutId);
 
-      if (currentVersion > waiter.version) {
-        pendingWishListUpdateWaiters.splice(index, 1);
-
-        if (waiter.timeoutId) {
-          window.clearTimeout(waiter.timeoutId);
-        }
-
-        try {
-          waiter.resolve({
-            items: normalizedItems,
-            version: currentVersion
-          });
-        } catch (error) {
-          // Ignore errors thrown inside resolver handlers
-        }
+      try {
+        waiter.resolve({ items: normalizedItems, version: currentVersion });
+      } catch (error) {
+        // Ignore errors thrown inside resolver handlers
       }
-    }
+    });
   }
 
   function waitForNextWishListUpdate(timeoutMs) {
@@ -622,7 +490,6 @@ fhOnReady(function () {
       }
 
       const waiter = {
-        version: versionAtRegistration,
         resolve: resolve,
         reject: reject,
         timeoutId: null
@@ -632,9 +499,7 @@ fhOnReady(function () {
         waiter.timeoutId = window.setTimeout(function () {
           const index = pendingWishListUpdateWaiters.indexOf(waiter);
 
-          if (index !== -1) {
-            pendingWishListUpdateWaiters.splice(index, 1);
-          }
+          if (index !== -1) pendingWishListUpdateWaiters.splice(index, 1);
 
           reject(new Error('timeout'));
         }, timeoutMs);
@@ -645,21 +510,15 @@ fhOnReady(function () {
   }
 
   function showLoading(isLoading) {
-    if (loadingIndicator) {
-      loadingIndicator.style.display = isLoading ? 'block' : 'none';
-    }
+    if (loadingIndicator) loadingIndicator.style.display = isLoading ? 'block' : 'none';
   }
 
   function showEmptyState(isEmpty) {
-    if (emptyState) {
-      emptyState.style.display = isEmpty ? 'block' : 'none';
-    }
+    if (emptyState) emptyState.style.display = isEmpty ? 'block' : 'none';
   }
 
   function showError(message) {
-    if (!errorState) {
-      return;
-    }
+    if (!errorState) return;
 
     if (message) {
       errorState.textContent = message;
@@ -670,9 +529,7 @@ fhOnReady(function () {
   }
 
   function getItemUrl(item) {
-    if (!item || !item.texts) {
-      return '#';
-    }
+    if (!item || !item.texts) return '#';
 
     const enableOldUrlPattern = window.App && App.config && App.config.global && App.config.global.enableOldUrlPattern;
     const trailingSlash = window.App && App.urlTrailingSlash;
@@ -682,37 +539,25 @@ fhOnReady(function () {
     const urlPath = item.texts.urlPath || '';
     const includeLanguage = item.texts.lang && defaultLanguage && item.texts.lang !== defaultLanguage;
 
-    if (!urlPath || urlPath.charAt(0) !== '/') {
-      link = '/';
-    }
+    if (!urlPath || urlPath.charAt(0) !== '/') link = '/';
 
-    if (includeLanguage) {
-      link += item.texts.lang + '/';
-    }
+    if (includeLanguage) link += item.texts.lang + '/';
 
-    if (urlPath) {
-      link += urlPath;
-    }
+    if (urlPath) link += urlPath;
 
     let suffix = '';
 
-    if (enableOldUrlPattern) {
-      suffix = '/a-' + (item.item && item.item.id ? item.item.id : '');
-    } else if (item.item && item.variation && item.item.id && item.variation.id) {
+    if (enableOldUrlPattern) suffix = '/a-' + (item.item && item.item.id ? item.item.id : ''); else if (item.item && item.variation && item.item.id && item.variation.id) {
       suffix = '_' + item.item.id + '_' + item.variation.id;
     } else if (item.item && item.item.id) {
       suffix = '_' + item.item.id;
     }
 
     if (trailingSlash) {
-      if (link.length > 1 && link.charAt(link.length - 1) === '/') {
-        link = link.substring(0, link.length - 1);
-      }
+      if (link.length > 1 && link.charAt(link.length - 1) === '/') link = link.substring(0, link.length - 1);
     }
 
-    if (link.endsWith(suffix)) {
-      return trailingSlash ? link + '/' : link;
-    }
+    if (link.endsWith(suffix)) return trailingSlash ? link + '/' : link;
 
     return link + suffix + (trailingSlash ? '/' : '');
   }
@@ -720,17 +565,13 @@ fhOnReady(function () {
   function getPrimaryImage(item) {
     const images = item && item.images ? item.images : null;
 
-    if (!images) {
-      return null;
-    }
+    if (!images) return null;
 
     const collection = Array.isArray(images.variation) && images.variation.length
       ? images.variation
       : (Array.isArray(images.all) ? images.all : []);
 
-    if (!collection.length) {
-      return null;
-    }
+    if (!collection.length) return null;
 
     const sorted = collection.slice().sort(function (a, b) {
       const posA = typeof a.position === 'number' ? a.position : 0;
@@ -740,9 +581,7 @@ fhOnReady(function () {
 
     const candidate = sorted[0] || collection[0];
 
-    if (!candidate) {
-      return null;
-    }
+    if (!candidate) return null;
 
     const url = candidate.urlPreview || candidate.urlMiddle || candidate.urlSecondPreview || candidate.url;
     const alt = (candidate.names && (candidate.names.alternate || candidate.names.name)) || '';
@@ -754,9 +593,7 @@ fhOnReady(function () {
   }
 
   function getBasePrice(item) {
-    if (!item || !item.prices) {
-      return '';
-    }
+    if (!item || !item.prices) return '';
 
     if (item.prices.specialOffer && item.prices.specialOffer.basePrice) {
       const basePrice = item.prices.specialOffer.basePrice;
@@ -764,9 +601,7 @@ fhOnReady(function () {
       if (typeof basePrice === 'string') {
         const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
 
-        if (normalized === 'n/a') {
-          return '';
-        }
+        if (normalized === 'n/a') return '';
       }
 
       return basePrice;
@@ -778,9 +613,7 @@ fhOnReady(function () {
       if (typeof basePrice === 'string') {
         const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
 
-        if (normalized === 'n/a') {
-          return '';
-        }
+        if (normalized === 'n/a') return '';
       }
 
       return basePrice;
@@ -790,33 +623,15 @@ fhOnReady(function () {
   }
 
   function getRemoveWishListActionName(store) {
-    if (!store || !store._actions) {
-      return null;
-    }
-
-    if (store._actions['wishList/removeWishListItem']) {
-      return 'wishList/removeWishListItem';
-    }
-
-    if (store._actions.removeWishListItem) {
-      return 'removeWishListItem';
-    }
-
-    return null;
+    return resolveStoreAction(store, ['wishList/removeWishListItem', 'removeWishListItem']);
   }
 
   function getUnitPrice(item) {
-    if (!item || !item.prices) {
-      return 0;
-    }
+    if (!item || !item.prices) return 0;
 
-    if (item.prices.specialOffer && item.prices.specialOffer.unitPrice && typeof item.prices.specialOffer.unitPrice.value !== 'undefined') {
-      return item.prices.specialOffer.unitPrice.value;
-    }
+    if (item.prices.specialOffer && item.prices.specialOffer.unitPrice && typeof item.prices.specialOffer.unitPrice.value !== 'undefined') return item.prices.specialOffer.unitPrice.value;
 
-    if (item.prices.default && item.prices.default.unitPrice && typeof item.prices.default.unitPrice.value !== 'undefined') {
-      return item.prices.default.unitPrice.value;
-    }
+    if (item.prices.default && item.prices.default.unitPrice && typeof item.prices.default.unitPrice.value !== 'undefined') return item.prices.default.unitPrice.value;
 
     return 0;
   }
@@ -840,13 +655,9 @@ fhOnReady(function () {
   }
 
   function isSaleable(item) {
-    if (!item || !item.filter) {
-      return true;
-    }
+    if (!item || !item.filter) return true;
 
-    if (Object.prototype.hasOwnProperty.call(item.filter, 'isSalable')) {
-      return !!item.filter.isSalable;
-    }
+    if (Object.prototype.hasOwnProperty.call(item.filter, 'isSalable')) return !!item.filter.isSalable;
 
     return true;
   }
@@ -862,19 +673,14 @@ fhOnReady(function () {
 
     const items = Array.isArray(documents) ? documents : [];
 
-    if (!items.length) {
-      showEmptyState(true);
-      return;
-    }
+    if (!items.length) { showEmptyState(true); return; }
 
     showEmptyState(false);
 
     items.forEach(function (documentItem) {
       const item = documentItem && documentItem.data ? documentItem.data : null;
 
-      if (!item) {
-        return;
-      }
+      if (!item) return;
 
       const url = getItemUrl(item);
       const image = getPrimaryImage(item);
@@ -1023,15 +829,11 @@ fhOnReady(function () {
       const maxQuantity = quantityDefaults.max && quantityDefaults.max > 0 ? quantityDefaults.max : null;
 
       function getDecimalPlaces(value) {
-        if (typeof value !== 'number' || !isFinite(value)) {
-          return 0;
-        }
+        if (typeof value !== 'number' || !isFinite(value)) return 0;
 
         const parts = value.toString().split('.');
 
-        if (parts.length < 2) {
-          return 0;
-        }
+        if (parts.length < 2) return 0;
 
         return parts[1].length;
       }
@@ -1103,9 +905,7 @@ fhOnReady(function () {
       decreaseButton.appendChild(decreaseIcon);
 
       function formatQuantityDisplay(value) {
-        if (Number.isInteger(value)) {
-          return String(value);
-        }
+        if (Number.isInteger(value)) return String(value);
 
         if (quantityPrecision > 0) {
           const fixed = value.toFixed(quantityPrecision);
@@ -1121,17 +921,11 @@ fhOnReady(function () {
           ? value
           : parseFloat(String(value).replace(',', '.'));
 
-        if (!isFinite(numeric) || numeric <= 0) {
-          numeric = minQuantity;
-        }
+        if (!isFinite(numeric) || numeric <= 0) numeric = minQuantity;
 
-        if (numeric < minQuantity) {
-          numeric = minQuantity;
-        }
+        if (numeric < minQuantity) numeric = minQuantity;
 
-        if (maxQuantity && numeric > maxQuantity) {
-          numeric = maxQuantity;
-        }
+        if (maxQuantity && numeric > maxQuantity) numeric = maxQuantity;
 
         const steps = Math.ceil((numeric - minQuantity) / intervalQuantity);
         const adjusted = minQuantity + Math.max(0, steps) * intervalQuantity;
@@ -1148,9 +942,7 @@ fhOnReady(function () {
       function setButtonState(button, isDisabled) {
         button.disabled = isDisabled;
 
-        if (isDisabled) {
-          button.classList.add('disabled');
-        } else {
+        if (isDisabled) button.classList.add('disabled'); else {
           button.classList.remove('disabled');
         }
       }
@@ -1169,15 +961,11 @@ fhOnReady(function () {
       increaseButton.addEventListener('click', function (event) {
         event.preventDefault();
 
-        if (!isSaleable(item)) {
-          return;
-        }
+        if (!isSaleable(item)) return;
 
         let candidate = currentQuantity + intervalQuantity;
 
-        if (maxQuantity && candidate > maxQuantity) {
-          candidate = maxQuantity;
-        }
+        if (maxQuantity && candidate > maxQuantity) candidate = maxQuantity;
 
         updateQuantity(normalizeQuantity(candidate));
       });
@@ -1185,15 +973,11 @@ fhOnReady(function () {
       decreaseButton.addEventListener('click', function (event) {
         event.preventDefault();
 
-        if (!isSaleable(item)) {
-          return;
-        }
+        if (!isSaleable(item)) return;
 
         let candidate = currentQuantity - intervalQuantity;
 
-        if (candidate < minQuantity) {
-          candidate = minQuantity;
-        }
+        if (candidate < minQuantity) candidate = minQuantity;
 
         updateQuantity(normalizeQuantity(candidate));
       });
@@ -1221,24 +1005,16 @@ fhOnReady(function () {
         event.preventDefault();
         event.stopPropagation();
 
-        if (addToCartButton.disabled) {
-          return;
-        }
+        if (addToCartButton.disabled) return;
 
         const store = getVueStore();
-        const actionName = getBasketActionName(store);
+        const actionName = resolveStoreAction(store, ['basket/addBasketItem', 'addBasketItem']);
 
-        if (!store || !actionName) {
-          window.location.href = url;
-          return;
-        }
+        if (!store || !actionName) { window.location.href = url; return; }
 
         const variationId = item.variation && item.variation.id ? item.variation.id : null;
 
-        if (!variationId) {
-          window.location.href = url;
-          return;
-        }
+        if (!variationId) { window.location.href = url; return; }
 
         const originalText = addToCartButton.textContent;
         addToCartButton.disabled = true;
@@ -1284,15 +1060,11 @@ fhOnReady(function () {
         const store = getVueStore();
         const actionName = getRemoveWishListActionName(store);
 
-        if (!store || !actionName) {
-          return;
-        }
+        if (!store || !actionName) return;
 
         const variationId = item && item.variation && item.variation.id ? item.variation.id : null;
 
-        if (!variationId) {
-          return;
-        }
+        if (!variationId) return;
 
         const stateItems = store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)
           ? store.state.wishList.wishListItems
@@ -1335,20 +1107,14 @@ fhOnReady(function () {
       list.appendChild(li);
     });
 
-    if (list.lastElementChild) {
-      list.lastElementChild.style.borderBottom = 'none';
-    }
+    if (list.lastElementChild) list.lastElementChild.style.borderBottom = 'none';
   }
 
   function subscribeToWishList(store) {
-    if (!store || typeof store.subscribe !== 'function' || hasSubscribedToStore) {
-      return;
-    }
+    if (!store || typeof store.subscribe !== 'function' || hasSubscribedToStore) return;
 
     store.subscribe(function (mutation, state) {
-      if (!mutation || !mutation.type) {
-        return;
-      }
+      if (!mutation || !mutation.type) return;
 
       const relevantMutations = [
         'setWishListItems',
@@ -1357,9 +1123,7 @@ fhOnReady(function () {
         'setWishListIds'
       ];
 
-      if (relevantMutations.indexOf(mutation.type) === -1) {
-        return;
-      }
+      if (relevantMutations.indexOf(mutation.type) === -1) return;
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
       notifyWishListUpdated(items);
@@ -1379,7 +1143,7 @@ fhOnReady(function () {
         return;
       }
 
-      const actionName = getWishListActionName(store);
+      const actionName = resolveStoreAction(store, ['wishList/initWishListItems', 'initWishListItems']);
 
       subscribeToWishList(store);
 
@@ -1400,9 +1164,7 @@ fhOnReady(function () {
         .then(function (result) {
           let documents = [];
 
-          if (Array.isArray(result)) {
-            documents = result;
-          } else if (result && Array.isArray(result.documents)) {
+          if (Array.isArray(result)) documents = result; else if (result && Array.isArray(result.documents)) {
             documents = result.documents;
           } else if (store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
             documents = store.state.wishList.wishListItems;
@@ -1421,9 +1183,7 @@ fhOnReady(function () {
   }
 
   function handleDocumentClick(event) {
-    if (!container.contains(event.target)) {
-      closeMenu();
-    }
+    if (!container.contains(event.target)) closeMenu();
   }
 
   function handleKeydown(event) {
@@ -1434,13 +1194,9 @@ fhOnReady(function () {
   }
 
   function openMenu() {
-    if (isOpen) {
-      return;
-    }
+    if (isOpen) return;
 
-    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
-      window.fhAccountMenu.close();
-    }
+    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') window.fhAccountMenu.close();
 
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
@@ -1457,9 +1213,7 @@ fhOnReady(function () {
     const focusToggle = config.focusToggle === true;
 
     function finalizeOpen() {
-      if (!isOpen) {
-        openMenu();
-      } else if (focusToggle) {
+      if (!isOpen) openMenu(); else if (focusToggle) {
         toggleButton.focus();
       }
     }
@@ -1491,9 +1245,7 @@ fhOnReady(function () {
   }
 
   function closeMenu() {
-    if (!isOpen) {
-      return;
-    }
+    if (!isOpen) return;
 
     menu.style.display = 'none';
     menu.setAttribute('aria-hidden', 'true');
@@ -1507,9 +1259,7 @@ fhOnReady(function () {
     event.preventDefault();
     event.stopPropagation();
 
-    if (isOpen) {
-      closeMenu();
-    } else {
+    if (isOpen) closeMenu(); else {
       openMenuWithOptions();
     }
   });
@@ -1521,15 +1271,11 @@ fhOnReady(function () {
   document.addEventListener('click', function (event) {
     const wishlistButton = event.target.closest('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
 
-    if (!wishlistButton) {
-      return;
-    }
+    if (!wishlistButton) return;
 
     const store = getVueStore();
 
-    if (store) {
-      subscribeToWishList(store);
-    }
+    if (store) subscribeToWishList(store);
 
     const waitPromise = store
       ? waitForNextWishListUpdate(4000)
@@ -1585,15 +1331,11 @@ fhOnReady(function () {
   }
 
   function shouldHideLabel(text) {
-    if (!text) {
-      return false;
-    }
+    if (!text) return false;
 
     const normalized = normalizeLabel(text);
 
-    if (!normalized) {
-      return false;
-    }
+    if (!normalized) return false;
 
     return attributeKeywords.some(function (keyword) {
       return normalized.startsWith(keyword) || normalized.includes(' ' + keyword);
@@ -1601,145 +1343,98 @@ fhOnReady(function () {
   }
 
   function hideAttributeNode(node) {
-    if (!node || node.nodeType !== 1) {
-      return;
-    }
+    if (!node || node.nodeType !== 1) return;
 
-    if (node.dataset && node.dataset.fhAttributeHidden === 'true') {
-      return;
-    }
+    if (node.dataset && node.dataset.fhAttributeHidden === 'true') return;
 
     node.style.display = 'none';
 
-    if (node.dataset) {
-      node.dataset.fhAttributeHidden = 'true';
-    }
+    if (node.dataset) node.dataset.fhAttributeHidden = 'true';
 
     const tagName = node.tagName ? node.tagName.toLowerCase() : '';
 
     if (tagName === 'dt') {
       const dd = node.nextElementSibling;
 
-      if (dd && dd.tagName && dd.tagName.toLowerCase() === 'dd') {
-        hideAttributeNode(dd);
-      }
+      if (dd && dd.tagName && dd.tagName.toLowerCase() === 'dd') hideAttributeNode(dd);
     } else if (tagName === 'dd') {
       const prev = node.previousElementSibling;
 
-      if (prev && prev.tagName && prev.tagName.toLowerCase() === 'dt') {
-        hideAttributeNode(prev);
-      }
+      if (prev && prev.tagName && prev.tagName.toLowerCase() === 'dt') hideAttributeNode(prev);
     }
   }
 
   function suppressAttributeContainer(node) {
-    if (!node) {
-      return;
-    }
+    if (!node) return;
 
     const container = node.closest('li, tr, div, dd, dt') || node;
     hideAttributeNode(container);
   }
 
   function pruneAttributePairs(item) {
-    if (!item || item.nodeType !== 1) {
-      return;
-    }
+    if (!item || item.nodeType !== 1) return;
 
     const dtNodes = item.querySelectorAll('dt');
 
     dtNodes.forEach(function (dt) {
-      if (shouldHideLabel(dt.textContent || '')) {
-        hideAttributeNode(dt);
-      }
+      if (shouldHideLabel(dt.textContent || '')) hideAttributeNode(dt);
     });
 
     const explicitLabelNodes = item.querySelectorAll(labelSelectors.join(', '));
 
     explicitLabelNodes.forEach(function (labelNode) {
-      if (shouldHideLabel(labelNode.textContent || '')) {
-        suppressAttributeContainer(labelNode);
-      }
+      if (shouldHideLabel(labelNode.textContent || '')) suppressAttributeContainer(labelNode);
     });
 
     const fallbackNodes = item.querySelectorAll('li, div, span, dd');
 
     fallbackNodes.forEach(function (node) {
-      if (!node || (node.dataset && node.dataset.fhAttributeChecked === 'true')) {
-        return;
-      }
+      if (!node || (node.dataset && node.dataset.fhAttributeChecked === 'true')) return;
 
-      if (!node.closest('.basket-preview-item, [data-basket-item]')) {
-        return;
-      }
+      if (!node.closest('.basket-preview-item, [data-basket-item]')) return;
 
-      if (node.dataset) {
-        node.dataset.fhAttributeChecked = 'true';
-      }
+      if (node.dataset) node.dataset.fhAttributeChecked = 'true';
 
-      if (node.children && node.children.length > 1 && !node.matches('dd')) {
-        return;
-      }
+      if (node.children && node.children.length > 1 && !node.matches('dd')) return;
 
       const text = node.textContent || '';
       const separatorIndex = text.indexOf(':');
 
-      if (separatorIndex === -1) {
-        return;
-      }
+      if (separatorIndex === -1) return;
 
       const label = text.slice(0, separatorIndex);
 
-      if (shouldHideLabel(label)) {
-        suppressAttributeContainer(node);
-      }
+      if (shouldHideLabel(label)) suppressAttributeContainer(node);
     });
   }
 
   function prunePreview(previewRoot) {
-    if (!previewRoot || previewRoot.nodeType !== 1) {
-      return;
-    }
+    if (!previewRoot || previewRoot.nodeType !== 1) return;
 
     const items = previewRoot.querySelectorAll('.basket-preview-item, [data-basket-item]');
 
-    if (items.length) {
-      items.forEach(pruneAttributePairs);
-    } else if (previewRoot.matches('.basket-preview-item, [data-basket-item]')) {
+    if (items.length) items.forEach(pruneAttributePairs); else if (previewRoot.matches('.basket-preview-item, [data-basket-item]')) {
       pruneAttributePairs(previewRoot);
     }
   }
 
   function bindPreview(previewRoot) {
-    if (!previewRoot || previewRoot.nodeType !== 1) {
-      return;
-    }
+    if (!previewRoot || previewRoot.nodeType !== 1) return;
 
-    if (previewRoot.dataset && previewRoot.dataset.fhAttributeObserver === 'true') {
-      prunePreview(previewRoot);
-      return;
-    }
+    if (previewRoot.dataset && previewRoot.dataset.fhAttributeObserver === 'true') { prunePreview(previewRoot); return; }
 
-    if (previewRoot.dataset) {
-      previewRoot.dataset.fhAttributeObserver = 'true';
-    }
+    if (previewRoot.dataset) previewRoot.dataset.fhAttributeObserver = 'true';
 
     prunePreview(previewRoot);
 
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
-        if (!mutation) {
-          return;
-        }
+        if (!mutation) return;
 
         mutation.addedNodes.forEach(function (node) {
-          if (!(node instanceof HTMLElement)) {
-            return;
-          }
+          if (!(node instanceof HTMLElement)) return;
 
-          if (node.matches('.basket-preview-item, [data-basket-item]')) {
-            pruneAttributePairs(node);
-          } else {
+          if (node.matches('.basket-preview-item, [data-basket-item]')) pruneAttributePairs(node); else {
             prunePreview(node);
           }
         });
@@ -1769,13 +1464,9 @@ fhOnReady(function () {
 // Section: Ensure auth modals load their Vue components before opening
 fhOnReady(function () {
   function getVueStore() {
-    if (window.vueApp && window.vueApp.$store) {
-      return window.vueApp.$store;
-    }
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
 
-    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') {
-      return window.ceresStore;
-    }
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
 
     return null;
   }
@@ -1783,9 +1474,7 @@ fhOnReady(function () {
   function loadLazyComponent(componentName) {
     const store = getVueStore();
 
-    if (!store || typeof store.dispatch !== 'function') {
-      return;
-    }
+    if (!store || typeof store.dispatch !== 'function') return;
 
     store.dispatch('loadComponent', componentName);
   }
@@ -1888,9 +1577,7 @@ fhOnReady(function () {
       var dayNum = pad2(nextWorkday.getDate());
       var monthNum = pad2(nextWorkday.getMonth()+1);
       var datum = dayNum + '.' + monthNum;
-      if (day === 5 && hour >= 13) {
-        dateLabel = "nächsten Montag, den " + datum;
-      } else if (day === 6) {
+      if (day === 5 && hour >= 13) dateLabel = "nächsten Montag, den " + datum; else if (day === 6) {
         dateLabel = "nächsten Montag, den " + datum;
       } else if (day === 0) {
         dateLabel = "Morgen, Montag den " + datum;
@@ -2024,9 +1711,7 @@ fhOnReady(function () {
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const ratio = Math.min(total / THRESHOLD, 1);
     bar.style.width = (ratio * 100) + '%';
-    if (total < THRESHOLD) {
-      text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`;
-    } else {
+    if (total < THRESHOLD) text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`; else {
       text.textContent = 'Gratisversand erreicht!';
     }
   }
@@ -2078,9 +1763,7 @@ fhOnReady(function () {
 (function() {
   var path = window.location.pathname;
   // Bei folgenden Pfaden abbrechen:
-  if (path.includes("/checkout") || path.includes("/kaufabwicklung") || path.includes("/kasse")) {
-    return;
-  }
+  if (path.includes("/checkout") || path.includes("/kaufabwicklung") || path.includes("/kasse")) return;
 
   // -- Anfang des restlichen Codes --
   
@@ -2211,9 +1894,7 @@ fhOnReady(function () {
   function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-      if (!inputFocused) {
-        startTyping();
-      }
+      if (!inputFocused) startTyping();
     }, 10000);
   }
 
@@ -2221,17 +1902,13 @@ fhOnReady(function () {
   searchInput.addEventListener("focus", function () {
     inputFocused = true;
     stopTyping();
-    if (!searchInput.value) {
-      searchInput.placeholder = "Wonach suchst du?";
-    }
+    if (!searchInput.value) searchInput.placeholder = "Wonach suchst du?";
     // Keine Animation starten während Fokus!
   });
 
   searchInput.addEventListener("input", function () {
     stopTyping();
-    if (!searchInput.value) {
-      searchInput.placeholder = "Wonach suchst du?";
-    }
+    if (!searchInput.value) searchInput.placeholder = "Wonach suchst du?";
     // Keine Animation starten während Fokus!
   });
 
@@ -2241,9 +1918,7 @@ fhOnReady(function () {
   });
 
   window.addEventListener("scroll", function () {
-    if (!isInViewport(searchInput)) {
-      stopTyping();
-    } else if (!animationActive && !inputFocused) {
+    if (!isInViewport(searchInput)) stopTyping(); else if (!animationActive && !inputFocused) {
       startTyping();
     }
   });
@@ -2273,9 +1948,7 @@ function patchBasketButton() {
     });
 
     // Button-Text und Custom-Icon setzen, falls Icon fehlt (ohne Spinner!)
-    if (!weiterEinkaufenBtn.querySelector('i.fa-arrow-left')) {
-      weiterEinkaufenBtn.innerHTML = '<i class="fa fa-arrow-left" aria-hidden="true" style="margin-right:8px"></i>Weiter einkaufen';
-    }
+    if (!weiterEinkaufenBtn.querySelector('i.fa-arrow-left')) weiterEinkaufenBtn.innerHTML = '<i class="fa fa-arrow-left" aria-hidden="true" style="margin-right:8px"></i>Weiter einkaufen';
 
     if (!weiterEinkaufenBtn.classList.contains('weiter-einkaufen-patched')) {
       weiterEinkaufenBtn.addEventListener('click', function(e) {
