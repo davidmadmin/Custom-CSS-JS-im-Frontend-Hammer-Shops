@@ -132,7 +132,9 @@
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <ul class="nav fh-header__nav-list">
+      <div class="fh-header__mobile-views" data-fh-mobile-views>
+        <div class="fh-header__mobile-view fh-header__mobile-view--root is-active" data-fh-mobile-panel="root" aria-hidden="false">
+          <ul class="nav fh-header__nav-list">
       <li class="nav-item dropdown fh-header__nav-item">
         <a class="nav-link fh-header__nav-link" href="/schloesser" data-fh-mobile-submenu-target="schloesser" aria-controls="fh-mobile-submenu-schloesser" aria-expanded="false">SCHLÖSSER</a>
         <div class="dropdown-menu fh-header__dropdown">
@@ -141,7 +143,15 @@
               <a href="#" class="fh-header__dropdown-link">Einsteckschlösser für Metalltore</a>
               <a href="#" class="fh-header__dropdown-link">elektrische Türöffner</a>
               <a href="#" class="fh-header__dropdown-link">FH-Schlösser</a>
-              <a href="#" class="fh-header__dropdown-link">Garagentorschlösser</a>
+              <div class="fh-header__dropdown-group">
+                <a href="/garagentorschloesser" class="fh-header__dropdown-link fh-header__dropdown-link--parent">Garagentorschlösser</a>
+                <div class="fh-header__dropdown-sublist">
+                  <a href="/schloesser/garagentorschloesser/garagentorschloesser-unten-schliessend" class="fh-header__dropdown-sublink">Garagentorschlösser unten schließend</a>
+                  <a href="/schloesser/garagentorschloesser/garagentorschloesser-seitlich-schliessend" class="fh-header__dropdown-sublink">Garagentorschlösser seitlich schließend</a>
+                  <a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-schliessend" class="fh-header__dropdown-sublink">Garagentorschlösser oben schließend</a>
+                  <a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-und-unten-schliessend" class="fh-header__dropdown-sublink">Garagentorschlösser oben und unten schließend</a>
+                </div>
+              </div>
               <a href="#" class="fh-header__dropdown-link">Haustürschlösser</a>
             </div>
             <div>
@@ -406,9 +416,9 @@
           </div>
         </div>
       </li>
-      </ul>
-      <div class="fh-header__mobile-submenu" data-fh-mobile-submenu-container>
-        <div class="fh-header__mobile-submenu-panel" id="fh-mobile-submenu-schloesser" data-fh-mobile-submenu-panel="schloesser" aria-hidden="true">
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-schloesser" data-fh-mobile-panel="schloesser" aria-hidden="true">
           <div class="fh-header__mobile-submenu-header">
             <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
@@ -423,7 +433,7 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">Einsteckschlösser für Metalltore</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">elektrische Türöffner</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">FH-Schlösser</a></li>
-            <li><a href="#" class="fh-header__mobile-submenu-link">Garagentorschlösser</a></li>
+            <li><button type="button" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--has-children" data-fh-mobile-submenu-target="garagentorschloesser" aria-controls="fh-mobile-submenu-garagentorschloesser" aria-expanded="false">Garagentorschlösser</button></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">Haustürschlösser</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">Kastenschlösser</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">Korridortürschlösser</a></li>
@@ -436,7 +446,7 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">Zubehör für Schloss und Tor</a></li>
           </ul>
         </div>
-        <div class="fh-header__mobile-submenu-panel" id="fh-mobile-submenu-beschlaege" data-fh-mobile-submenu-panel="beschlaege" aria-hidden="true">
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-beschlaege" data-fh-mobile-panel="beschlaege" aria-hidden="true">
           <div class="fh-header__mobile-submenu-header">
             <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
@@ -455,7 +465,7 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
           </ul>
         </div>
-        <div class="fh-header__mobile-submenu-panel" id="fh-mobile-submenu-sicherungen" data-fh-mobile-submenu-panel="sicherungen" aria-hidden="true">
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-sicherungen" data-fh-mobile-panel="sicherungen" aria-hidden="true">
           <div class="fh-header__mobile-submenu-header">
             <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
@@ -474,7 +484,7 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
           </ul>
         </div>
-        <div class="fh-header__mobile-submenu-panel" id="fh-mobile-submenu-sichtschutz" data-fh-mobile-submenu-panel="sichtschutz" aria-hidden="true">
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-sichtschutz" data-fh-mobile-panel="sichtschutz" aria-hidden="true">
           <div class="fh-header__mobile-submenu-header">
             <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
@@ -493,7 +503,7 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
           </ul>
         </div>
-        <div class="fh-header__mobile-submenu-panel" id="fh-mobile-submenu-fenstermontage" data-fh-mobile-submenu-panel="fenstermontage" aria-hidden="true">
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-fenstermontage" data-fh-mobile-panel="fenstermontage" aria-hidden="true">
           <div class="fh-header__mobile-submenu-header">
             <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
@@ -512,7 +522,7 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
           </ul>
         </div>
-        <div class="fh-header__mobile-submenu-panel" id="fh-mobile-submenu-chemische-befestigung" data-fh-mobile-submenu-panel="chemische-befestigung" aria-hidden="true">
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-chemische-befestigung" data-fh-mobile-panel="chemische-befestigung" aria-hidden="true">
           <div class="fh-header__mobile-submenu-header">
             <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
@@ -531,7 +541,7 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
           </ul>
         </div>
-        <div class="fh-header__mobile-submenu-panel" id="fh-mobile-submenu-aktionen" data-fh-mobile-submenu-panel="aktionen" aria-hidden="true">
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-aktionen" data-fh-mobile-panel="aktionen" aria-hidden="true">
           <div class="fh-header__mobile-submenu-header">
             <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
@@ -548,6 +558,24 @@
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-garagentorschloesser" data-fh-mobile-panel="garagentorschloesser" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zur Kategorie Garagentorschlösser">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <span>Zurück</span>
+            </button>
+            <div class="fh-header__mobile-submenu-title">Garagentorschlösser</div>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/garagentorschloesser" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Garagentorschlösser</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-unten-schliessend" class="fh-header__mobile-submenu-link">Garagentorschlösser unten schließend</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-seitlich-schliessend" class="fh-header__mobile-submenu-link">Garagentorschlösser seitlich schließend</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-schliessend" class="fh-header__mobile-submenu-link">Garagentorschlösser oben schließend</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-und-unten-schliessend" class="fh-header__mobile-submenu-link">Garagentorschlösser oben und unten schließend</a></li>
           </ul>
         </div>
       </div>
