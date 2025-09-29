@@ -515,6 +515,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // End Section: Animierte Suchplatzhalter Vorschläge
 
+  // Section: Trusted Shops Badge toggle during search overlay
+  (function () {
+    var BODY_CLASS = 'sh-search-overlay-open';
+    var OVERLAY_SELECTORS = ['[data-dfd-screen="mobile-initial"]', '[data-dfd-screen="embedded"]'];
+
+    function isElementVisible(element) {
+      if (!(element instanceof HTMLElement)) return false;
+
+      var style = window.getComputedStyle(element);
+
+      if (!style) return false;
+
+      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+
+      return true;
+    }
+
+    function updateOverlayState() {
+      var overlayIsActive = OVERLAY_SELECTORS.some(function (selector) {
+        var element = document.querySelector(selector);
+
+        if (!element) return false;
+
+        return isElementVisible(element);
+      });
+
+      if (!document.body) return;
+
+      document.body.classList.toggle(BODY_CLASS, overlayIsActive);
+    }
+
+    function setupObserver() {
+      var observerTarget = document.body || document.documentElement;
+
+      if (!observerTarget) return;
+
+      var observer = new MutationObserver(function () {
+        updateOverlayState();
+      });
+
+      observer.observe(observerTarget, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class', 'data-dfd-screen'],
+      });
+
+      updateOverlayState();
+
+      window.addEventListener('beforeunload', function () {
+        observer.disconnect();
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupObserver);
+    } else {
+      setupObserver();
+    }
+  })();
+  // End Section: Trusted Shops Badge toggle during search overlay
+
   // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
   function patchBasketButton() {
