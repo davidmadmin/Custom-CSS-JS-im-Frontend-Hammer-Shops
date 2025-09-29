@@ -541,6 +541,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return isElementVisible(element);
       });
 
+      if (!overlayIsActive) {
+        overlayIsActive = Boolean(document.querySelector('.dfd-results-grid'));
+      }
+
       if (!document.body) return;
 
       document.body.classList.toggle(BODY_CLASS, overlayIsActive);
