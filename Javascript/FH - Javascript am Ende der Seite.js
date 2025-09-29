@@ -2253,6 +2253,10 @@ fhOnReady(function () {
       return isElementVisible(element);
     });
 
+    if (!overlayIsActive) {
+      overlayIsActive = Boolean(document.querySelector('.dfd-results-grid'));
+    }
+
     document.body.classList.toggle(BODY_CLASS, overlayIsActive);
   }
 
