@@ -469,6 +469,104 @@ fhOnReady(function () {
 });
 // End Section: FH mobile navigation toggle
 
+// Section: FH mobile search row scroll hide/show
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) return;
+
+  if (!header.querySelector('.fh-header__search-area')) return;
+
+  const mobileMedia = window.matchMedia('(max-width: 991.98px)');
+  const SCROLL_THRESHOLD = 40;
+  const raf =
+    typeof window.requestAnimationFrame === 'function'
+      ? window.requestAnimationFrame.bind(window)
+      : function (callback) { return window.setTimeout(callback, 16); };
+  let lastScrollY = window.pageYOffset || 0;
+  let downDistance = 0;
+  let upDistance = 0;
+  let isHidden = false;
+  let ticking = false;
+
+  function showRow() {
+    if (!isHidden) return;
+
+    header.classList.remove('fh-header--search-hidden');
+    isHidden = false;
+  }
+
+  function hideRow() {
+    if (isHidden) return;
+
+    header.classList.add('fh-header--search-hidden');
+    isHidden = true;
+  }
+
+  function resetTracking(scrollPosition) {
+    downDistance = 0;
+    upDistance = 0;
+    lastScrollY = typeof scrollPosition === 'number' ? scrollPosition : window.pageYOffset || 0;
+  }
+
+  function handleScrollFrame() {
+    ticking = false;
+
+    if (!mobileMedia.matches) {
+      showRow();
+      resetTracking(window.pageYOffset || 0);
+      return;
+    }
+
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+    const delta = currentScroll - lastScrollY;
+
+    if (currentScroll <= 0) {
+      showRow();
+      resetTracking(0);
+      return;
+    }
+
+    if (delta > 0) {
+      downDistance += delta;
+      upDistance = 0;
+
+      if (!isHidden && downDistance >= SCROLL_THRESHOLD) hideRow();
+    } else if (delta < 0) {
+      upDistance += Math.abs(delta);
+      downDistance = 0;
+
+      if (isHidden && upDistance >= SCROLL_THRESHOLD) showRow();
+    }
+
+    lastScrollY = currentScroll;
+  }
+
+  function handleScroll() {
+    if (ticking) return;
+
+    ticking = true;
+    raf(handleScrollFrame);
+  }
+
+  function handleMediaChange(event) {
+    if (event && event.matches === false) {
+      showRow();
+    }
+
+    resetTracking(window.pageYOffset || 0);
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  if (typeof mobileMedia.addEventListener === 'function') mobileMedia.addEventListener('change', handleMediaChange); else if (typeof mobileMedia.addListener === 'function') {
+    mobileMedia.addListener(handleMediaChange);
+  }
+
+  handleMediaChange(mobileMedia);
+});
+// End Section: FH mobile search row scroll hide/show
+
 // Section: FH Merkliste button enhancements
 fhOnReady(function () {
   const iconMarkup =

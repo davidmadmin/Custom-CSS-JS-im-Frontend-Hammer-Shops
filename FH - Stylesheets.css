@@ -809,6 +809,8 @@
       "search search";
     row-gap: 16px;
     padding: 18px 16px 20px;
+    transition: row-gap 0.25s ease, padding-bottom 0.25s ease;
+    overflow: visible;
   }
 
   .fh-header__logo {
@@ -821,6 +823,23 @@
     grid-template-columns: auto 1fr;
     column-gap: 12px;
     width: 100%;
+    overflow: visible;
+    max-height: 400px;
+    transition: max-height 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .fh-header--search-hidden .fh-header__main {
+    row-gap: 0;
+    padding-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .fh-header--search-hidden .fh-header__search-area {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+    overflow: hidden;
   }
 
   .fh-header__actions {
