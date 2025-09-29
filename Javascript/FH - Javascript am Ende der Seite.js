@@ -216,6 +216,8 @@ fhOnReady(function () {
     const depth = Math.max(panelStack.length - 1, 0);
     const currentEntry = panelStack[depth] || panelStack[0];
     const currentPanel = getPanelById(currentEntry ? currentEntry.id : ROOT_PANEL_ID);
+    const activeIndex = currentPanel ? panelElements.indexOf(currentPanel) : 0;
+    const normalizedIndex = activeIndex > -1 ? activeIndex : 0;
 
     panelElements.forEach(function (panel) {
       const isActive = panel === currentPanel;
@@ -224,7 +226,7 @@ fhOnReady(function () {
       panel.setAttribute('aria-hidden', isActive ? 'false' : 'true');
     });
 
-    panelContainer.style.transform = 'translateX(-' + depth * 100 + '%)';
+    panelContainer.style.transform = 'translate3d(-' + normalizedIndex * 100 + '%, 0, 0)';
     menu.classList.toggle('fh-header__nav--submenu-open', depth > 0);
 
     if (skipFocus) return;
