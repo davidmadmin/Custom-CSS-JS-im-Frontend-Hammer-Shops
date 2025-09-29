@@ -1937,11 +1937,24 @@ fhOnReady(function () {
     'country-id-select'
   ];
 
+  function findCountrySelects(fragment, root = document) {
+    return Array.from(root.querySelectorAll(`select[id*="${fragment}"]`));
+  }
+
   function isGermanySelected() {
-    return COUNTRY_SELECT_ID_FRAGMENTS.some((fragment) => {
-      const select = document.querySelector(`select[id*="${fragment}"]`);
-      return select && select.value === '1';
-    });
+    return COUNTRY_SELECT_ID_FRAGMENTS.some((fragment) =>
+      findCountrySelects(fragment).some((select) => select.value === '1')
+    );
+  }
+
+  function isGermanySelectedInCartPreview() {
+    const bar = document.getElementById('free-shipping-bar');
+    if (!bar) return true;
+    const previewRoot = bar.closest('.basket-preview');
+    if (!previewRoot) return true;
+    const selects = findCountrySelects('shipping-country-select', previewRoot);
+    if (!selects.length) return true;
+    return selects.some((select) => select.value === '1');
   }
 
   function isCheckoutPage() {
@@ -2019,9 +2032,11 @@ fhOnReady(function () {
     if (!bar) return;
     const path = window.location.pathname;
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
+    const inCartPreview = Boolean(bar.closest('.basket-preview'));
     const hide =
       (pickup && pickup.checked) ||
       (isCheckoutPage() && !isGermanySelected()) ||
+      (inCartPreview && !isGermanySelectedInCartPreview()) ||
       (path.includes('/bestellbestaetigung') && total < THRESHOLD);
     bar.style.display = hide ? 'none' : '';
   }
