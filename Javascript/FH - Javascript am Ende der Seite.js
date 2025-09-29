@@ -130,12 +130,15 @@ fhOnReady(function () {
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   const desktopMedia = window.matchMedia('(min-width: 992px)');
-  const submenuContainer = menu.querySelector('[data-fh-mobile-submenu-container]');
-  const submenuTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
+  const panelContainer = menu.querySelector('[data-fh-mobile-views]');
+  const panelElements = panelContainer
+    ? Array.prototype.slice.call(panelContainer.querySelectorAll('[data-fh-mobile-panel]'))
+    : [];
+  const panelTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
+  const ROOT_PANEL_ID = 'root';
   let isOpen = false;
   let previouslyFocusedElement = null;
-  let activeSubmenu = null;
-  let lastSubmenuTrigger = null;
+  let panelStack = [{ id: ROOT_PANEL_ID, trigger: null }];
 
   function setExpandedState(value) {
     const expandedValue = value ? 'true' : 'false';
@@ -193,56 +196,146 @@ fhOnReady(function () {
     }
   }
 
-  function closeSubmenu(options) {
-    if (!submenuContainer) return;
+  function getPanelById(id) {
+    if (!panelContainer || !id) return null;
+
+    for (let index = 0; index < panelElements.length; index += 1) {
+      const panel = panelElements[index];
+
+      if (panel && panel.getAttribute('data-fh-mobile-panel') === id) return panel;
+    }
+
+    return null;
+  }
+
+  function updatePanelState(options) {
+    if (!panelContainer || panelElements.length === 0) return;
+
+    const skipFocus = !!(options && options.skipFocus === true);
+    const preventRootFocus = !!(options && options.preventRootFocus === true);
+    const depth = Math.max(panelStack.length - 1, 0);
+    const currentEntry = panelStack[depth] || panelStack[0];
+    const currentPanel = getPanelById(currentEntry ? currentEntry.id : ROOT_PANEL_ID);
+
+    panelElements.forEach(function (panel) {
+      const isActive = panel === currentPanel;
+
+      panel.classList.toggle('is-active', isActive);
+      panel.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+    });
+
+    panelContainer.style.transform = 'translateX(-' + depth * 100 + '%)';
+    menu.classList.toggle('fh-header__nav--submenu-open', depth > 0);
+
+    if (skipFocus) return;
+
+    if (depth === 0) {
+      if (preventRootFocus) return;
+
+      const firstLink = menu.querySelector('.fh-header__nav-link');
+
+      if (firstLink instanceof HTMLElement) firstLink.focus();
+      return;
+    }
+
+    if (currentPanel) {
+      const backButton = currentPanel.querySelector('[data-fh-mobile-submenu-back]');
+
+      if (backButton instanceof HTMLElement) {
+        backButton.focus();
+        return;
+      }
+    }
+
+    if (currentEntry && currentEntry.trigger instanceof HTMLElement) currentEntry.trigger.focus();
+  }
+
+  function resetPanels(options) {
+    if (!panelContainer || panelElements.length === 0) return;
 
     const skipFocus = !!(options && options.skipFocus === true);
 
-    if (lastSubmenuTrigger instanceof HTMLElement) lastSubmenuTrigger.setAttribute('aria-expanded', 'false');
+    panelStack
+      .slice(1)
+      .forEach(function (entry) {
+        if (entry && entry.trigger instanceof HTMLElement) entry.trigger.setAttribute('aria-expanded', 'false');
+      });
 
-    if (activeSubmenu) {
-      activeSubmenu.classList.remove('is-active');
-      activeSubmenu.setAttribute('aria-hidden', 'true');
-    }
+    panelStack = [{ id: ROOT_PANEL_ID, trigger: null }];
 
-    menu.classList.remove('fh-header__nav--submenu-open');
-
-    if (!skipFocus && lastSubmenuTrigger instanceof HTMLElement) lastSubmenuTrigger.focus();
-
-    activeSubmenu = null;
-    lastSubmenuTrigger = null;
+    updatePanelState({ skipFocus: skipFocus, preventRootFocus: true });
   }
 
-  function openSubmenu(target, trigger) {
-    if (!submenuContainer || !target || desktopMedia.matches) return;
+  function openPanel(panelId, trigger) {
+    if (!panelContainer || panelElements.length === 0 || !panelId || desktopMedia.matches) return;
 
-    const nextPanel = submenuContainer.querySelector('[data-fh-mobile-submenu-panel="' + target + '"]');
+    const nextPanel = getPanelById(panelId);
 
     if (!nextPanel) return;
 
-    if (activeSubmenu && activeSubmenu !== nextPanel) {
-      activeSubmenu.classList.remove('is-active');
-      activeSubmenu.setAttribute('aria-hidden', 'true');
-    }
+    const normalizedTrigger = trigger instanceof HTMLElement ? trigger : null;
+    const existingIndex = panelStack.findIndex(function (entry) {
+      return entry && entry.id === panelId;
+    });
 
-    if (lastSubmenuTrigger instanceof HTMLElement && lastSubmenuTrigger !== trigger) lastSubmenuTrigger.setAttribute('aria-expanded', 'false');
+    if (existingIndex > -1) {
+      panelStack
+        .slice(existingIndex + 1)
+        .forEach(function (entry) {
+          if (entry && entry.trigger instanceof HTMLElement) entry.trigger.setAttribute('aria-expanded', 'false');
+        });
 
-    menu.classList.add('fh-header__nav--submenu-open');
-    nextPanel.classList.add('is-active');
-    nextPanel.setAttribute('aria-hidden', 'false');
-
-    if (trigger instanceof HTMLElement) {
-      trigger.setAttribute('aria-expanded', 'true');
-      lastSubmenuTrigger = trigger;
+      panelStack = panelStack.slice(0, existingIndex + 1);
     } else {
-      lastSubmenuTrigger = null;
+      panelStack.push({ id: panelId, trigger: normalizedTrigger });
     }
 
-    activeSubmenu = nextPanel;
+    if (normalizedTrigger) normalizedTrigger.setAttribute('aria-expanded', 'true');
 
-    const backButton = nextPanel.querySelector('[data-fh-mobile-submenu-back]');
+    updatePanelState();
+  }
 
-    if (backButton instanceof HTMLElement) backButton.focus();
+  function stepBack(options) {
+    if (!panelContainer || panelElements.length === 0 || panelStack.length <= 1) return;
+
+    const removedEntry = panelStack.pop();
+
+    if (removedEntry && removedEntry.trigger instanceof HTMLElement) removedEntry.trigger.setAttribute('aria-expanded', 'false');
+
+    updatePanelState({ skipFocus: true });
+
+    if (options && options.skipFocus === true) return;
+
+    if (removedEntry && removedEntry.trigger instanceof HTMLElement) {
+      removedEntry.trigger.focus();
+      return;
+    }
+
+    const parentEntry = panelStack[panelStack.length - 1];
+
+    if (parentEntry) {
+      if (parentEntry.trigger instanceof HTMLElement) {
+        parentEntry.trigger.focus();
+        return;
+      }
+
+      if (parentEntry.id !== ROOT_PANEL_ID) {
+        const parentPanel = getPanelById(parentEntry.id);
+
+        if (parentPanel) {
+          const backButton = parentPanel.querySelector('[data-fh-mobile-submenu-back]');
+
+          if (backButton instanceof HTMLElement) {
+            backButton.focus();
+            return;
+          }
+        }
+      }
+    }
+
+    const firstLink = menu.querySelector('.fh-header__nav-link');
+
+    if (firstLink instanceof HTMLElement) firstLink.focus();
   }
 
   function openMenu() {
@@ -250,7 +343,7 @@ fhOnReady(function () {
 
     previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
-    closeSubmenu({ skipFocus: true });
+    resetPanels({ skipFocus: true });
 
     menu.classList.add('fh-header__nav--open');
     menu.setAttribute('aria-hidden', 'false');
@@ -269,7 +362,7 @@ fhOnReady(function () {
     menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
     document.body.classList.remove('fh-mobile-menu-open');
     setExpandedState(false);
-    closeSubmenu({ skipFocus: true });
+    resetPanels({ skipFocus: true });
 
     if (!isOpen) return;
 
@@ -321,8 +414,8 @@ fhOnReady(function () {
     }
   });
 
-  if (submenuContainer) {
-    submenuTriggers.forEach(function (trigger) {
+  if (panelContainer && panelElements.length > 0) {
+    panelTriggers.forEach(function (trigger) {
       trigger.setAttribute('aria-expanded', trigger.getAttribute('aria-expanded') || 'false');
 
       trigger.addEventListener('click', function (event) {
@@ -333,23 +426,26 @@ fhOnReady(function () {
         if (!target) return;
 
         event.preventDefault();
-        openSubmenu(target, trigger);
+        event.stopPropagation();
+        openPanel(target, trigger);
       });
     });
 
-    submenuContainer.addEventListener('click', function (event) {
+    panelContainer.addEventListener('click', function (event) {
       const backButton = event.target && event.target.closest('[data-fh-mobile-submenu-back]');
 
       if (backButton) {
         event.preventDefault();
-        closeSubmenu();
+        stepBack();
         return;
       }
 
       const submenuLink = event.target && event.target.closest('.fh-header__mobile-submenu-link');
 
-      if (submenuLink) closeMenu();
+      if (submenuLink && !submenuLink.hasAttribute('data-fh-mobile-submenu-target')) closeMenu();
     });
+
+    updatePanelState({ skipFocus: true, preventRootFocus: true });
   }
 
   function handleBreakpointChange() {
