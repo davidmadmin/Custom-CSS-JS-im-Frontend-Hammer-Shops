@@ -548,6 +548,77 @@
   color: #1f7fc9;
 }
 
+/* Section: FH header navigation icons */
+:root {
+  --fh-icon-schloesser: url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%3E%3Ccircle%20cx%3D%278%27%20cy%3D%2712%27%20r%3D%274%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2711%27%20y%3D%2710.5%27%20width%3D%2711%27%20height%3D%273%27%20rx%3D%271.5%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2717%27%20y%3D%2710.5%27%20width%3D%273%27%20height%3D%275.5%27%20rx%3D%271.2%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2714%27%20y%3D%2710.5%27%20width%3D%272.5%27%20height%3D%274%27%20rx%3D%271%27%20fill%3D%27black%27%2F%3E%3C%2Fsvg%3E');
+  --fh-icon-beschlaege: url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%3E%3Crect%20x%3D%274%27%20y%3D%275%27%20width%3D%276%27%20height%3D%2714%27%20rx%3D%271.5%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2714%27%20y%3D%275%27%20width%3D%276%27%20height%3D%2714%27%20rx%3D%271.5%27%20fill%3D%27black%27%2F%3E%3Ccircle%20cx%3D%277%27%20cy%3D%278%27%20r%3D%271.2%27%20fill%3D%27white%27%2F%3E%3Ccircle%20cx%3D%277%27%20cy%3D%2712%27%20r%3D%271.2%27%20fill%3D%27white%27%2F%3E%3Ccircle%20cx%3D%277%27%20cy%3D%2716%27%20r%3D%271.2%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E');
+  --fh-icon-sicherungen: url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M12%203L4%206v5c0%205.2%203.5%209.7%208%2010.8%204.5-1.1%208-5.6%208-10.8V6l-8-3z%27%20fill%3D%27black%27%2F%3E%3Cpath%20d%3D%27M12%209.5a3.5%203.5%200%200%200-3.5%203.5c0%202.2%202%204.5%203.5%205%201.5-.5%203.5-2.8%203.5-5A3.5%203.5%200%200%200%2012%209.5z%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E');
+  --fh-icon-sichtschutz: url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%3E%3Crect%20x%3D%274%27%20y%3D%276%27%20width%3D%273%27%20height%3D%2712%27%20rx%3D%271.2%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%279%27%20y%3D%274%27%20width%3D%273%27%20height%3D%2716%27%20rx%3D%271.2%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2714%27%20y%3D%276%27%20width%3D%273%27%20height%3D%2712%27%20rx%3D%271.2%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2719%27%20y%3D%278%27%20width%3D%273%27%20height%3D%2710%27%20rx%3D%271.2%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%276%27%20y%3D%2710%27%20width%3D%2714%27%20height%3D%272%27%20rx%3D%271%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E');
+  --fh-icon-fenstermontage: url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%3E%3Crect%20x%3D%273%27%20y%3D%273%27%20width%3D%2718%27%20height%3D%2718%27%20rx%3D%272%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2711%27%20y%3D%273%27%20width%3D%272%27%20height%3D%2718%27%20fill%3D%27white%27%2F%3E%3Crect%20x%3D%273%27%20y%3D%2711%27%20width%3D%2718%27%20height%3D%272%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E');
+  --fh-icon-chemische-befestigung: url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%3E%3Crect%20x%3D%2710%27%20y%3D%273%27%20width%3D%274%27%20height%3D%272.5%27%20rx%3D%271.2%27%20fill%3D%27black%27%2F%3E%3Cpath%20d%3D%27M10%205.5v4.6l-4.1%206.8c-1%201.7.2%203.9%202.2%203.9h7.8c2%200%203.2-2.2%202.2-3.9L14%2010.1V5.5h-4z%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2715%27%20width%3D%278%27%20height%3D%272%27%20rx%3D%271%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E');
+  --fh-icon-aktionen: url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M3%204v7l10%2010%207-7-10-10H3z%27%20fill%3D%27black%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%278%27%20r%3D%271.8%27%20fill%3D%27white%27%2F%3E%3Crect%20x%3D%2712%27%20y%3D%2712%27%20width%3D%276%27%20height%3D%272%27%20rx%3D%271%27%20transform%3D%27rotate%2845%2012%2012%29%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E');
+}
+
+[data-fh-category-icon] {
+  --fh-category-icon: none;
+  align-items: center;
+  gap: 10px;
+}
+
+a[data-fh-category-icon] {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.fh-header__nav-link[data-fh-category-icon] {
+  justify-content: center;
+}
+
+.fh-header__mobile-submenu-title[data-fh-category-icon] {
+  display: inline-flex;
+}
+
+[data-fh-category-icon]::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask: var(--fh-category-icon) center/contain no-repeat;
+  mask: var(--fh-category-icon) center/contain no-repeat;
+}
+
+[data-fh-category-icon='schloesser'] {
+  --fh-category-icon: var(--fh-icon-schloesser);
+}
+
+[data-fh-category-icon='beschlaege'] {
+  --fh-category-icon: var(--fh-icon-beschlaege);
+}
+
+[data-fh-category-icon='sicherungen'] {
+  --fh-category-icon: var(--fh-icon-sicherungen);
+}
+
+[data-fh-category-icon='sichtschutz'] {
+  --fh-category-icon: var(--fh-icon-sichtschutz);
+}
+
+[data-fh-category-icon='fenstermontage'] {
+  --fh-category-icon: var(--fh-icon-fenstermontage);
+}
+
+[data-fh-category-icon='chemische-befestigung'] {
+  --fh-category-icon: var(--fh-icon-chemische-befestigung);
+}
+
+[data-fh-category-icon='aktionen'] {
+  --fh-category-icon: var(--fh-icon-aktionen);
+}
+/* End Section: FH header navigation icons */
+
 .fh-header__dropdown {
   position: absolute;
   top: 100%;
@@ -915,7 +986,12 @@
 
   .fh-header__mobile-close {
     display: inline-flex;
+    position: sticky;
+    top: 0;
+    z-index: 5;
     margin-bottom: 24px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
   }
 
   .fh-header__mobile-close-icon {
@@ -969,6 +1045,26 @@
   .fh-header__mobile-submenu-panel.is-active,
   .fh-header__mobile-submenu-panel[aria-hidden="false"] {
     display: flex;
+  }
+
+  .fh-header__mobile-submenu-header {
+    top: 0;
+    z-index: 4;
+    padding-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+  }
+
+  .fh-header__mobile-submenu-list {
+    padding-top: 4px;
+  }
+
+  .fh-header__mobile-submenu-link--all {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background-color: #ffffff;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
   }
 
   .fh-header__nav-item {
