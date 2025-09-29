@@ -226,6 +226,16 @@ fhOnReady(function () {
     panelContainer.style.transform = '';
     menu.classList.toggle('fh-header__nav--submenu-open', depth > 0);
 
+    if (menu instanceof HTMLElement) menu.scrollTop = 0;
+
+    if (currentPanel instanceof HTMLElement) {
+      currentPanel.scrollTop = 0;
+
+      const scrollableList = currentPanel.querySelector('.fh-header__mobile-submenu-list');
+
+      if (scrollableList instanceof HTMLElement) scrollableList.scrollTop = 0;
+    }
+
     if (skipFocus) return;
 
     if (depth === 0) {

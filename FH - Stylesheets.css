@@ -674,13 +674,19 @@
 
 .fh-header__mobile-submenu-panel {
   display: none;
+  flex-direction: column;
 }
 
 .fh-header__mobile-submenu-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
+  padding: 0 0 24px;
+  background-color: #ffffff;
 }
 
 .fh-header__mobile-submenu-title {
@@ -695,14 +701,16 @@
   align-items: center;
   gap: 8px;
   padding: 6px 12px 6px 8px;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: none;
+  background-color: transparent;
   color: #1a1a1a;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .fh-header__mobile-submenu-back:hover,
@@ -710,6 +718,7 @@
   color: #0f172a;
   background-color: rgba(15, 23, 42, 0.06);
   text-decoration: none;
+  border-color: transparent;
 }
 
 .fh-header__mobile-submenu-back:focus {
@@ -723,9 +732,12 @@
 }
 
 .fh-header__mobile-submenu-list {
+  flex: 1 1 auto;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .fh-header__mobile-submenu-link {
@@ -931,7 +943,13 @@
   }
 
   .fh-header__mobile-submenu-panel {
-    display: block;
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .fh-header__mobile-submenu-panel.is-active,
+  .fh-header__mobile-submenu-panel[aria-hidden="false"] {
+    display: flex;
   }
 
   .fh-header__nav-item {
