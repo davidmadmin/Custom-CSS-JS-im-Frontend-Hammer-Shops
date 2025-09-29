@@ -309,25 +309,15 @@ fhOnReady(function () {
 
     const removedEntry = panelStack.pop();
 
+    const parentEntry = panelStack[panelStack.length - 1];
+
     if (removedEntry && removedEntry.trigger instanceof HTMLElement) removedEntry.trigger.setAttribute('aria-expanded', 'false');
 
     updatePanelState({ skipFocus: true });
 
     if (options && options.skipFocus === true) return;
 
-    if (removedEntry && removedEntry.trigger instanceof HTMLElement) {
-      removedEntry.trigger.focus();
-      return;
-    }
-
-    const parentEntry = panelStack[panelStack.length - 1];
-
     if (parentEntry) {
-      if (parentEntry.trigger instanceof HTMLElement) {
-        parentEntry.trigger.focus();
-        return;
-      }
-
       if (parentEntry.id !== ROOT_PANEL_ID) {
         const parentPanel = getPanelById(parentEntry.id);
 
@@ -339,6 +329,16 @@ fhOnReady(function () {
             return;
           }
         }
+      }
+
+      if (removedEntry && removedEntry.trigger instanceof HTMLElement) {
+        removedEntry.trigger.focus();
+        return;
+      }
+
+      if (parentEntry.trigger instanceof HTMLElement) {
+        parentEntry.trigger.focus();
+        return;
       }
     }
 
