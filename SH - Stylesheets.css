@@ -37,6 +37,10 @@
   #web-chat-loader-root {
   display: none !important;
 }
+
+body.sh-search-overlay-open div[id^="trustbadge-container-"] {
+  display: none !important;
+}
 /* End Section: Trustbadge ausblenden */
 
 /* Section: Allgemeines Button-Styling für .btn-primary */
