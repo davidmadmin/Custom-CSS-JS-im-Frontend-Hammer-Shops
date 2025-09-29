@@ -695,7 +695,7 @@
   align-items: center;
   gap: 8px;
   padding: 6px 12px 6px 8px;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 999px;
   background: none;
   color: #1a1a1a;
@@ -703,6 +703,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .fh-header__mobile-submenu-back:hover,
@@ -932,6 +934,24 @@
 
   .fh-header__mobile-submenu-panel {
     display: block;
+    min-height: 100%;
+  }
+
+  .fh-header__mobile-submenu-panel.is-active,
+  .fh-header__mobile-submenu-panel[aria-hidden="false"] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fh-header__mobile-submenu-header {
+    flex: 0 0 auto;
+  }
+
+  .fh-header__mobile-submenu-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .fh-header__nav-item {
