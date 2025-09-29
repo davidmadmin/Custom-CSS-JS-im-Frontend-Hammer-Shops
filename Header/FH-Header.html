@@ -1,4 +1,44 @@
 <div class="fh-header" data-fh-header-root>
+  <svg xmlns="http://www.w3.org/2000/svg" class="fh-header__icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="fh-icon-lock" viewBox="0 0 24 24">
+      <rect x="5" y="11" width="14" height="10" rx="2" ry="2"></rect>
+      <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+      <path d="M12 15v3"></path>
+      <circle cx="12" cy="15" r="1"></circle>
+    </symbol>
+    <symbol id="fh-icon-hardware" viewBox="0 0 24 24">
+      <rect x="6" y="3" width="12" height="18" rx="2"></rect>
+      <path d="M9 11h6"></path>
+      <path d="M9 7.5h2.5"></path>
+      <path d="M9 15h6"></path>
+    </symbol>
+    <symbol id="fh-icon-shield" viewBox="0 0 24 24">
+      <path d="M12 21c5-2.5 8-6 8-11V6l-8-3-8 3v4c0 5 3 8.5 8 11z"></path>
+    </symbol>
+    <symbol id="fh-icon-fence" viewBox="0 0 24 24">
+      <path d="M4 5v14"></path>
+      <path d="M9 5v14"></path>
+      <path d="M15 5v14"></path>
+      <path d="M20 5v14"></path>
+      <path d="M3 9h18"></path>
+      <path d="M3 15h18"></path>
+    </symbol>
+    <symbol id="fh-icon-window" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+      <path d="M12 4v16"></path>
+      <path d="M4 12h16"></path>
+      <path d="M16 16l2.5 2.5"></path>
+    </symbol>
+    <symbol id="fh-icon-lab" viewBox="0 0 24 24">
+      <path d="M9 3h6"></path>
+      <path d="M10 3v11a4 4 0 1 0 4 0V3"></path>
+      <path d="M10 9h4"></path>
+    </symbol>
+    <symbol id="fh-icon-tag" viewBox="0 0 24 24">
+      <path d="M20 12l-8 8-8-8V4h8l8 8z"></path>
+      <circle cx="12" cy="8" r="1.5"></circle>
+    </symbol>
+  </svg>
   <div class="fh-header__top-bar text-uppercase">
     <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" class="fh-header__top-link">
       <span class="fh-header__bullet"></span>
@@ -136,7 +176,12 @@
         <div class="fh-header__mobile-view fh-header__mobile-view--root is-active" data-fh-mobile-panel="root" aria-hidden="false">
           <ul class="nav fh-header__nav-list">
       <li class="nav-item dropdown fh-header__nav-item">
-        <a class="nav-link fh-header__nav-link" href="/schloesser" data-fh-mobile-submenu-target="schloesser" aria-controls="fh-mobile-submenu-schloesser" aria-expanded="false">SCHLÖSSER</a>
+        <a class="nav-link fh-header__nav-link" href="/schloesser" data-fh-mobile-submenu-target="schloesser" aria-controls="fh-mobile-submenu-schloesser" aria-expanded="false">
+          <svg aria-hidden="true" class="fh-header__category-icon" focusable="false">
+            <use href="#fh-icon-lock"></use>
+          </svg>
+          <span class="fh-header__nav-text">Schlösser</span>
+        </a>
         <div class="dropdown-menu fh-header__dropdown">
           <div class="fh-header__dropdown-grid fh-header__dropdown-grid--four">
             <div>
@@ -177,7 +222,12 @@
         </div>
       </li>
       <li class="nav-item dropdown fh-header__nav-item">
-        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="beschlaege" aria-controls="fh-mobile-submenu-beschlaege" aria-expanded="false">Beschläge</a>
+        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="beschlaege" aria-controls="fh-mobile-submenu-beschlaege" aria-expanded="false">
+          <svg aria-hidden="true" class="fh-header__category-icon" focusable="false">
+            <use href="#fh-icon-hardware"></use>
+          </svg>
+          <span class="fh-header__nav-text">Beschläge</span>
+        </a>
         <div class="dropdown-menu fh-header__dropdown">
           <div class="fh-header__dropdown-grid fh-header__dropdown-grid--five">
             <div>
@@ -217,7 +267,12 @@
         </div>
       </li>
       <li class="nav-item dropdown fh-header__nav-item">
-        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="sicherungen" aria-controls="fh-mobile-submenu-sicherungen" aria-expanded="false">Sicherungen</a>
+        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="sicherungen" aria-controls="fh-mobile-submenu-sicherungen" aria-expanded="false">
+          <svg aria-hidden="true" class="fh-header__category-icon" focusable="false">
+            <use href="#fh-icon-shield"></use>
+          </svg>
+          <span class="fh-header__nav-text">Sicherungen</span>
+        </a>
         <div class="dropdown-menu fh-header__dropdown">
           <div class="fh-header__dropdown-grid fh-header__dropdown-grid--five">
             <div>
@@ -257,7 +312,12 @@
         </div>
       </li>
       <li class="nav-item dropdown fh-header__nav-item">
-        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="sichtschutz" aria-controls="fh-mobile-submenu-sichtschutz" aria-expanded="false">Sichtschutz</a>
+        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="sichtschutz" aria-controls="fh-mobile-submenu-sichtschutz" aria-expanded="false">
+          <svg aria-hidden="true" class="fh-header__category-icon" focusable="false">
+            <use href="#fh-icon-fence"></use>
+          </svg>
+          <span class="fh-header__nav-text">Sichtschutz</span>
+        </a>
         <div class="dropdown-menu fh-header__dropdown">
           <div class="fh-header__dropdown-grid fh-header__dropdown-grid--five">
             <div>
@@ -297,7 +357,12 @@
         </div>
       </li>
       <li class="nav-item dropdown fh-header__nav-item">
-        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="fenstermontage" aria-controls="fh-mobile-submenu-fenstermontage" aria-expanded="false">Fenstermontage</a>
+        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="fenstermontage" aria-controls="fh-mobile-submenu-fenstermontage" aria-expanded="false">
+          <svg aria-hidden="true" class="fh-header__category-icon" focusable="false">
+            <use href="#fh-icon-window"></use>
+          </svg>
+          <span class="fh-header__nav-text">Fenstermontage</span>
+        </a>
         <div class="dropdown-menu fh-header__dropdown">
           <div class="fh-header__dropdown-grid fh-header__dropdown-grid--five">
             <div>
@@ -337,7 +402,12 @@
         </div>
       </li>
       <li class="nav-item dropdown fh-header__nav-item">
-        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="chemische-befestigung" aria-controls="fh-mobile-submenu-chemische-befestigung" aria-expanded="false">Chemische Befestigung</a>
+        <a class="nav-link fh-header__nav-link" href="#" data-fh-mobile-submenu-target="chemische-befestigung" aria-controls="fh-mobile-submenu-chemische-befestigung" aria-expanded="false">
+          <svg aria-hidden="true" class="fh-header__category-icon" focusable="false">
+            <use href="#fh-icon-lab"></use>
+          </svg>
+          <span class="fh-header__nav-text">Chemische Befestigung</span>
+        </a>
         <div class="dropdown-menu fh-header__dropdown">
           <div class="fh-header__dropdown-grid fh-header__dropdown-grid--five">
             <div>
@@ -377,7 +447,12 @@
         </div>
       </li>
       <li class="nav-item dropdown fh-header__nav-item">
-        <a class="nav-link fh-header__nav-link fh-header__nav-link--highlight" href="#" data-fh-mobile-submenu-target="aktionen" aria-controls="fh-mobile-submenu-aktionen" aria-expanded="false">Aktionen</a>
+        <a class="nav-link fh-header__nav-link fh-header__nav-link--highlight" href="#" data-fh-mobile-submenu-target="aktionen" aria-controls="fh-mobile-submenu-aktionen" aria-expanded="false">
+          <svg aria-hidden="true" class="fh-header__category-icon" focusable="false">
+            <use href="#fh-icon-tag"></use>
+          </svg>
+          <span class="fh-header__nav-text">Aktionen</span>
+        </a>
         <div class="dropdown-menu fh-header__dropdown">
           <div class="fh-header__dropdown-grid fh-header__dropdown-grid--five">
             <div>
@@ -426,10 +501,15 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Schlösser</div>
+            <div class="fh-header__mobile-submenu-title">
+              <svg aria-hidden="true" class="fh-header__category-icon fh-header__category-icon--mobile" focusable="false">
+                <use href="#fh-icon-lock"></use>
+              </svg>
+              <span>Schlösser</span>
+            </div>
+            <a href="/schloesser" class="fh-header__mobile-submenu-all">Alle Schlösser</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="/schloesser" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Schlösser</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">Einsteckschlösser für Metalltore</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">elektrische Türöffner</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">FH-Schlösser</a></li>
@@ -454,10 +534,15 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Beschläge</div>
+            <div class="fh-header__mobile-submenu-title">
+              <svg aria-hidden="true" class="fh-header__category-icon fh-header__category-icon--mobile" focusable="false">
+                <use href="#fh-icon-hardware"></use>
+              </svg>
+              <span>Beschläge</span>
+            </div>
+            <a href="#" class="fh-header__mobile-submenu-all">Alle Beschläge</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="#" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Beschläge</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
@@ -473,10 +558,15 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Sicherungen</div>
+            <div class="fh-header__mobile-submenu-title">
+              <svg aria-hidden="true" class="fh-header__category-icon fh-header__category-icon--mobile" focusable="false">
+                <use href="#fh-icon-shield"></use>
+              </svg>
+              <span>Sicherungen</span>
+            </div>
+            <a href="#" class="fh-header__mobile-submenu-all">Alle Sicherungen</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="#" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Sicherungen</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
@@ -492,10 +582,15 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Sichtschutz</div>
+            <div class="fh-header__mobile-submenu-title">
+              <svg aria-hidden="true" class="fh-header__category-icon fh-header__category-icon--mobile" focusable="false">
+                <use href="#fh-icon-fence"></use>
+              </svg>
+              <span>Sichtschutz</span>
+            </div>
+            <a href="#" class="fh-header__mobile-submenu-all">Alle Sichtschutz-Artikel</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="#" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Sichtschutz-Artikel</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
@@ -511,10 +606,15 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Fenstermontage</div>
+            <div class="fh-header__mobile-submenu-title">
+              <svg aria-hidden="true" class="fh-header__category-icon fh-header__category-icon--mobile" focusable="false">
+                <use href="#fh-icon-window"></use>
+              </svg>
+              <span>Fenstermontage</span>
+            </div>
+            <a href="#" class="fh-header__mobile-submenu-all">Alle Fenstermontage-Artikel</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="#" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Fenstermontage-Artikel</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
@@ -530,10 +630,15 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Chemische Befestigung</div>
+            <div class="fh-header__mobile-submenu-title">
+              <svg aria-hidden="true" class="fh-header__category-icon fh-header__category-icon--mobile" focusable="false">
+                <use href="#fh-icon-lab"></use>
+              </svg>
+              <span>Chemische Befestigung</span>
+            </div>
+            <a href="#" class="fh-header__mobile-submenu-all">Alle Chemische Befestigung</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="#" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Chemische Befestigung</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
@@ -549,10 +654,15 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Aktionen</div>
+            <div class="fh-header__mobile-submenu-title">
+              <svg aria-hidden="true" class="fh-header__category-icon fh-header__category-icon--mobile" focusable="false">
+                <use href="#fh-icon-tag"></use>
+              </svg>
+              <span>Aktionen</span>
+            </div>
+            <a href="#" class="fh-header__mobile-submenu-all">Alle Aktionen</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="#" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Aktionen</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
             <li><a href="#" class="fh-header__mobile-submenu-link">[Platzhalter]</a></li>
@@ -568,10 +678,10 @@
               </svg>
               <span>Zurück</span>
             </button>
-            <div class="fh-header__mobile-submenu-title">Garagentorschlösser</div>
+            <div class="fh-header__mobile-submenu-title"><span>Garagentorschlösser</span></div>
+            <a href="/garagentorschloesser" class="fh-header__mobile-submenu-all">Alle Garagentorschlösser</a>
           </div>
           <ul class="fh-header__mobile-submenu-list">
-            <li><a href="/garagentorschloesser" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Garagentorschlösser</a></li>
             <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-unten-schliessend" class="fh-header__mobile-submenu-link">Garagentorschlösser unten schließend</a></li>
             <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-seitlich-schliessend" class="fh-header__mobile-submenu-link">Garagentorschlösser seitlich schließend</a></li>
             <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-schliessend" class="fh-header__mobile-submenu-link">Garagentorschlösser oben schließend</a></li>
