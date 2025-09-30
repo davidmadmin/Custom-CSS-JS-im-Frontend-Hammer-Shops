@@ -509,8 +509,8 @@
 
 .fh-header__nav-list {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 0;
   list-style: none;
   margin: 0;
   padding: 0 32px;
@@ -531,6 +531,7 @@
   padding: 18px 12px;
   color: #1a1a1a;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .fh-header__nav-link--highlight {
@@ -980,6 +981,7 @@
     padding: 18px 0;
     font-size: 18px;
     border-bottom: 1px solid #e5e7eb;
+    white-space: normal;
   }
 
   .fh-header__nav-item:last-child .fh-header__nav-link {
