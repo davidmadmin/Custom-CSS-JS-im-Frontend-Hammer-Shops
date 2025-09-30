@@ -1038,6 +1038,7 @@ body.fh-mobile-menu-open {
     transform: translateX(-50%);
     width: calc(100vw - 32px);
     max-width: 360px;
+    box-sizing: border-box;
   }
 
   .fh-header__panel--account {
@@ -1048,7 +1049,7 @@ body.fh-mobile-menu-open {
   .fh-header__panel-arrow {
     left: 50%;
     right: auto;
-    transform: translate(-50%, -50%) rotate(45deg);
+    transform: translateX(-50%) rotate(45deg);
   }
 }
 /* End Section: FH Header Base Layout */
