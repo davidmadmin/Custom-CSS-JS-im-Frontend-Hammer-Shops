@@ -1036,13 +1036,13 @@ body.fh-mobile-menu-open {
     left: 50%;
     right: auto;
     transform: translateX(-50%);
-    width: calc(100vw - 32px);
+    width: calc(100vw - 48px);
     max-width: 360px;
     box-sizing: border-box;
   }
 
   .fh-header__panel--account {
-    width: calc(100vw - 32px);
+    width: calc(100vw - 48px);
     max-width: 260px;
   }
 
