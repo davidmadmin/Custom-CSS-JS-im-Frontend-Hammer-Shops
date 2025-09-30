@@ -1035,20 +1035,21 @@ body.fh-mobile-menu-open {
   .fh-header__panel {
     left: 50%;
     right: auto;
-    transform: translateX(-50%);
-    width: calc(100vw - 32px);
-    max-width: 360px;
+    transform: translateX(calc(-50% - 12px));
+    width: min(calc(100% - 32px), 360px);
+    max-width: min(360px, calc(100vw - 48px));
+    box-sizing: border-box;
   }
 
   .fh-header__panel--account {
-    width: calc(100vw - 32px);
-    max-width: 260px;
+    width: min(calc(100% - 32px), 260px);
+    max-width: min(260px, calc(100vw - 48px));
   }
 
   .fh-header__panel-arrow {
     left: 50%;
     right: auto;
-    transform: translate(-50%, -50%) rotate(45deg);
+    transform: translateX(calc(-50% + 12px)) rotate(45deg);
   }
 }
 /* End Section: FH Header Base Layout */
