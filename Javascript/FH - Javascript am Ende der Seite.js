@@ -135,10 +135,82 @@ fhOnReady(function () {
     ? Array.prototype.slice.call(panelContainer.querySelectorAll('[data-fh-mobile-panel]'))
     : [];
   const panelTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
+  const PANEL_STORAGE_KEY = 'fh-mobile-menu-panels';
+  const PANEL_STORAGE_VERSION = '1';
   const ROOT_PANEL_ID = 'root';
   let isOpen = false;
   let previouslyFocusedElement = null;
   let panelStack = [{ id: ROOT_PANEL_ID, trigger: null }];
+
+  function getPanelStorage() {
+    try {
+      return window.localStorage;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function persistPanelPath() {
+    const storage = getPanelStorage();
+
+    if (!storage) return;
+
+    const path = panelStack
+      .slice(1)
+      .map(function (entry) {
+        return entry && typeof entry.id === 'string' ? entry.id : null;
+      })
+      .filter(function (id) {
+        return typeof id === 'string' && id.length > 0;
+      });
+
+    try {
+      if (path.length === 0) {
+        storage.removeItem(PANEL_STORAGE_KEY);
+        return;
+      }
+
+      const payload = JSON.stringify({ v: PANEL_STORAGE_VERSION, panels: path });
+
+      storage.setItem(PANEL_STORAGE_KEY, payload);
+    } catch (error) {
+      /* no-op */
+    }
+  }
+
+  function readStoredPanelPath() {
+    const storage = getPanelStorage();
+
+    if (!storage) return null;
+
+    try {
+      const raw = storage.getItem(PANEL_STORAGE_KEY);
+
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw);
+
+      if (!parsed || parsed.v !== PANEL_STORAGE_VERSION || !Array.isArray(parsed.panels)) return null;
+
+      return parsed.panels
+        .map(function (value) {
+          return typeof value === 'string' ? value : '';
+        })
+        .filter(function (value) {
+          return value.length > 0 && value !== ROOT_PANEL_ID;
+        });
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getPanelTriggerById(panelId) {
+    if (!panelId) return null;
+
+    const safeId = panelId.replace(/"/g, '\\"');
+
+    return menu.querySelector('[data-fh-mobile-submenu-target="' + safeId + '"]');
+  }
 
   function setExpandedState(value) {
     const expandedValue = value ? 'true' : 'false';
@@ -208,6 +280,46 @@ fhOnReady(function () {
     return null;
   }
 
+  function restorePanelPath() {
+    const panelIds = readStoredPanelPath();
+
+    if (!panelIds || panelIds.length === 0) return false;
+
+    resetPanels({ skipFocus: true });
+
+    for (let index = 0; index < panelIds.length; index += 1) {
+      const panelId = panelIds[index];
+
+      if (!panelId) {
+        resetPanels({ skipFocus: true });
+        persistPanelPath();
+        return false;
+      }
+
+      const targetPanel = getPanelById(panelId);
+
+      if (!targetPanel) {
+        resetPanels({ skipFocus: true });
+        persistPanelPath();
+        return false;
+      }
+
+      const trigger = getPanelTriggerById(panelId);
+
+      openPanel(panelId, trigger, { skipFocus: true });
+
+      const currentEntry = panelStack[panelStack.length - 1];
+
+      if (!currentEntry || currentEntry.id !== panelId) {
+        resetPanels({ skipFocus: true });
+        persistPanelPath();
+        return false;
+      }
+    }
+
+    return panelStack.length > 1;
+  }
+
   function updatePanelState(options) {
     if (!panelContainer || panelElements.length === 0) return;
 
@@ -263,6 +375,7 @@ fhOnReady(function () {
     if (!panelContainer || panelElements.length === 0) return;
 
     const skipFocus = !!(options && options.skipFocus === true);
+    const skipPersist = !!(options && options.skipPersist === true);
 
     panelStack
       .slice(1)
@@ -273,9 +386,11 @@ fhOnReady(function () {
     panelStack = [{ id: ROOT_PANEL_ID, trigger: null }];
 
     updatePanelState({ skipFocus: skipFocus, preventRootFocus: true });
+
+    if (!skipPersist) persistPanelPath();
   }
 
-  function openPanel(panelId, trigger) {
+  function openPanel(panelId, trigger, options) {
     if (!panelContainer || panelElements.length === 0 || !panelId || desktopMedia.matches) return;
 
     const nextPanel = getPanelById(panelId);
@@ -301,7 +416,9 @@ fhOnReady(function () {
 
     if (normalizedTrigger) normalizedTrigger.setAttribute('aria-expanded', 'true');
 
-    updatePanelState();
+    updatePanelState({ skipFocus: !!(options && options.skipFocus === true) });
+
+    persistPanelPath();
   }
 
   function stepBack(options) {
@@ -314,6 +431,8 @@ fhOnReady(function () {
     if (removedEntry && removedEntry.trigger instanceof HTMLElement) removedEntry.trigger.setAttribute('aria-expanded', 'false');
 
     updatePanelState({ skipFocus: true });
+
+    persistPanelPath();
 
     if (options && options.skipFocus === true) return;
 
@@ -352,7 +471,9 @@ fhOnReady(function () {
 
     previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
-    resetPanels({ skipFocus: true });
+    const restored = restorePanelPath();
+
+    if (!restored) resetPanels({ skipFocus: true });
 
     menu.classList.add('fh-header__nav--open');
     menu.setAttribute('aria-hidden', 'false');
@@ -360,7 +481,7 @@ fhOnReady(function () {
     setExpandedState(true);
     document.addEventListener('keydown', handleDocumentKeydown);
     document.addEventListener('keydown', handleTrapFocus);
-    focusInitialElement();
+    if (restored) { updatePanelState(); } else focusInitialElement();
     isOpen = true;
   }
 
@@ -371,7 +492,8 @@ fhOnReady(function () {
     menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
     document.body.classList.remove('fh-mobile-menu-open');
     setExpandedState(false);
-    resetPanels({ skipFocus: true });
+    persistPanelPath();
+    resetPanels({ skipFocus: true, skipPersist: true });
 
     if (!isOpen) return;
 
