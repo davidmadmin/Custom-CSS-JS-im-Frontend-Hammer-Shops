@@ -1033,11 +1033,13 @@ body.fh-mobile-menu-open {
 
 @media (max-width: 767.98px) {
   .fh-header__panel {
+    --fh-header-mobile-panel-shift: 8px;
     left: 50%;
     right: auto;
-    transform: translateX(-50%);
+    transform: translateX(calc(-50% + var(--fh-header-mobile-panel-shift, 0px)));
     width: calc(100vw - 32px);
     max-width: 360px;
+    box-sizing: border-box;
   }
 
   .fh-header__panel--account {
@@ -1048,7 +1050,7 @@ body.fh-mobile-menu-open {
   .fh-header__panel-arrow {
     left: 50%;
     right: auto;
-    transform: translate(-50%, -50%) rotate(45deg);
+    transform: translateX(calc(-50% + var(--fh-header-mobile-panel-shift, 0px))) rotate(45deg);
   }
 }
 /* End Section: FH Header Base Layout */
