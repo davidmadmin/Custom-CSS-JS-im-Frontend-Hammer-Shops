@@ -135,6 +135,9 @@ fhOnReady(function () {
     ? Array.prototype.slice.call(panelContainer.querySelectorAll('[data-fh-mobile-panel]'))
     : [];
   const panelTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
+  const rootLabel = menu.getAttribute('data-fh-mobile-root-label') || 'Start';
+  const panelTitleMap = new Map();
+  const breadcrumbTargets = new Map();
   const ROOT_PANEL_ID = 'root';
   let isOpen = false;
   let previouslyFocusedElement = null;
@@ -142,6 +145,26 @@ fhOnReady(function () {
   const PANEL_STORAGE_KEY = 'fh-mobile-menu-panel-path';
   const PANEL_STORAGE_VERSION = '1';
   let suppressPersistence = false;
+
+  if (panelElements.length > 0) {
+    panelElements.forEach(function (panel) {
+      if (!panel) return;
+
+      const panelId = panel.getAttribute('data-fh-mobile-panel');
+
+      if (!panelId) return;
+
+      const titleElement = panel.querySelector('.fh-header__mobile-submenu-title');
+
+      if (titleElement && typeof titleElement.textContent === 'string') {
+        panelTitleMap.set(panelId, titleElement.textContent.trim());
+      }
+
+      const breadcrumbElement = panel.querySelector('[data-fh-mobile-breadcrumb]');
+
+      if (breadcrumbElement) breadcrumbTargets.set(panelId, breadcrumbElement);
+    });
+  }
 
   function readStoredPanelPath() {
     try {
@@ -321,6 +344,97 @@ fhOnReady(function () {
     return null;
   }
 
+  function getPanelLabel(panelId) {
+    if (panelId === ROOT_PANEL_ID) return rootLabel;
+
+    if (panelTitleMap.has(panelId)) return panelTitleMap.get(panelId);
+
+    const panel = getPanelById(panelId);
+
+    if (!panel) return '';
+
+    const titleElement = panel.querySelector('.fh-header__mobile-submenu-title');
+    const label = titleElement && typeof titleElement.textContent === 'string' ? titleElement.textContent.trim() : '';
+
+    if (panelId && label) panelTitleMap.set(panelId, label);
+
+    return label;
+  }
+
+  function renderBreadcrumb(currentPanel, depth) {
+    if (!panelContainer || panelElements.length === 0) return;
+
+    breadcrumbTargets.forEach(function (container) {
+      if (container) container.innerHTML = '';
+    });
+
+    if (!currentPanel) return;
+
+    const currentEntry = panelStack[Math.max(depth, 0)];
+    const currentId = currentEntry ? currentEntry.id : ROOT_PANEL_ID;
+    const container = breadcrumbTargets.get(currentId);
+
+    if (!container) return;
+
+    const path = panelStack.slice(0, Math.max(depth, 0) + 1);
+    const fragment = document.createDocumentFragment();
+
+    path.forEach(function (entry, index) {
+      const label = getPanelLabel(entry ? entry.id : null);
+
+      if (!label) return;
+
+      const isLast = index === path.length - 1;
+
+      if (!isLast) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'fh-header__mobile-breadcrumb-link';
+        button.setAttribute('data-fh-mobile-breadcrumb-depth', String(index));
+        button.setAttribute('aria-label', 'Zu ' + label);
+        button.textContent = label;
+        fragment.appendChild(button);
+      } else {
+        const current = document.createElement('span');
+        current.className = 'fh-header__mobile-breadcrumb-current';
+        current.setAttribute('aria-current', 'page');
+        current.textContent = label;
+        fragment.appendChild(current);
+      }
+
+      if (index < path.length - 1) {
+        const separator = document.createElement('span');
+        separator.className = 'fh-header__mobile-breadcrumb-separator';
+        separator.setAttribute('aria-hidden', 'true');
+        separator.textContent = '›';
+        fragment.appendChild(separator);
+      }
+    });
+
+    container.appendChild(fragment);
+  }
+
+  function navigateToDepth(targetDepth) {
+    if (!panelContainer || panelElements.length === 0) return;
+
+    const normalizedDepth = Number(targetDepth);
+
+    if (!Number.isInteger(normalizedDepth)) return;
+
+    if (normalizedDepth < 0 || normalizedDepth >= panelStack.length) return;
+
+    if (normalizedDepth === panelStack.length - 1) return;
+
+    const removedEntries = panelStack.splice(normalizedDepth + 1);
+
+    removedEntries.forEach(function (entry) {
+      if (entry && entry.trigger instanceof HTMLElement) entry.trigger.setAttribute('aria-expanded', 'false');
+    });
+
+    updatePanelState();
+    persistPanelStack();
+  }
+
   function updatePanelState(options) {
     if (!panelContainer || panelElements.length === 0) return;
 
@@ -329,6 +443,9 @@ fhOnReady(function () {
     const depth = Math.max(panelStack.length - 1, 0);
     const currentEntry = panelStack[depth] || panelStack[0];
     const currentPanel = getPanelById(currentEntry ? currentEntry.id : ROOT_PANEL_ID);
+
+    renderBreadcrumb(currentPanel, depth);
+
     panelElements.forEach(function (panel) {
       const isActive = panel === currentPanel;
 
@@ -569,6 +686,17 @@ fhOnReady(function () {
     });
 
     panelContainer.addEventListener('click', function (event) {
+      const breadcrumbButton = event.target && event.target.closest('[data-fh-mobile-breadcrumb-depth]');
+
+      if (breadcrumbButton) {
+        event.preventDefault();
+        const depth = parseInt(breadcrumbButton.getAttribute('data-fh-mobile-breadcrumb-depth'), 10);
+
+        if (!Number.isNaN(depth)) navigateToDepth(depth);
+
+        return;
+      }
+
       const backButton = event.target && event.target.closest('[data-fh-mobile-submenu-back]');
 
       if (backButton) {
