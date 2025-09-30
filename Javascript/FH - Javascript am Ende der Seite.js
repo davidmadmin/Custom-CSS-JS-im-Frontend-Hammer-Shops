@@ -136,9 +136,10 @@ fhOnReady(function () {
     : [];
   const panelTriggers = menu.querySelectorAll('[data-fh-mobile-submenu-target]');
   const ROOT_PANEL_ID = 'root';
+  const ROOT_BREADCRUMB_LABEL = menu.getAttribute('data-fh-mobile-root-label') || 'Start';
   let isOpen = false;
   let previouslyFocusedElement = null;
-  let panelStack = [{ id: ROOT_PANEL_ID, trigger: null }];
+  let panelStack = [{ id: ROOT_PANEL_ID, trigger: null, label: ROOT_BREADCRUMB_LABEL }];
   const PANEL_STORAGE_KEY = 'fh-mobile-menu-panel-path';
   const PANEL_STORAGE_VERSION = '1';
   let suppressPersistence = false;
@@ -321,6 +322,30 @@ fhOnReady(function () {
     return null;
   }
 
+  function resolvePanelLabel(panelId) {
+    if (!panelId) return '';
+
+    if (panelId === ROOT_PANEL_ID) return ROOT_BREADCRUMB_LABEL;
+
+    const panel = getPanelById(panelId);
+
+    if (!panel) return '';
+
+    const dataLabel = panel.getAttribute('data-fh-mobile-breadcrumb-label');
+
+    if (typeof dataLabel === 'string' && dataLabel.trim().length > 0) return dataLabel.trim();
+
+    const title = panel.querySelector('.fh-header__mobile-submenu-title');
+
+    if (title && typeof title.textContent === 'string') {
+      const titleText = title.textContent.replace(/\s+/g, ' ').trim();
+
+      if (titleText.length > 0) return titleText;
+    }
+
+    return panelId;
+  }
+
   function updatePanelState(options) {
     if (!panelContainer || panelElements.length === 0) return;
 
@@ -349,6 +374,8 @@ fhOnReady(function () {
       if (scrollableList instanceof HTMLElement) scrollableList.scrollTop = 0;
     }
 
+    renderBreadcrumb(currentPanel);
+
     if (skipFocus) return;
 
     if (depth === 0) {
@@ -372,6 +399,62 @@ fhOnReady(function () {
     if (currentEntry && currentEntry.trigger instanceof HTMLElement) currentEntry.trigger.focus();
   }
 
+  function renderBreadcrumb(panel) {
+    if (!panel) return;
+
+    const list = panel.querySelector('[data-fh-mobile-breadcrumb]');
+
+    if (!list) return;
+
+    while (list.firstChild) list.removeChild(list.firstChild);
+
+    const breadcrumbContainer = list.closest('.fh-header__mobile-breadcrumb');
+    const entries = panelStack
+      .map(function (entry, index) {
+        if (!entry) return null;
+
+        const label = (entry.label || resolvePanelLabel(entry.id) || '').trim();
+
+        if (label.length === 0) return null;
+
+        return {
+          id: entry.id,
+          label: label,
+          isCurrent: index === panelStack.length - 1,
+        };
+      })
+      .filter(Boolean);
+
+    if (!entries || entries.length <= 1) {
+      if (breadcrumbContainer) breadcrumbContainer.classList.remove('is-active');
+      return;
+    }
+
+    entries.forEach(function (entry) {
+      const item = document.createElement('li');
+      item.className = 'fh-header__mobile-breadcrumb-item' + (entry.isCurrent ? ' is-current' : '');
+
+      if (entry.isCurrent) {
+        const current = document.createElement('span');
+        current.className = 'fh-header__mobile-breadcrumb-current';
+        current.setAttribute('aria-current', 'page');
+        current.textContent = entry.label;
+        item.appendChild(current);
+      } else {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'fh-header__mobile-breadcrumb-link';
+        button.setAttribute('data-fh-mobile-breadcrumb-target', entry.id);
+        button.textContent = entry.label;
+        item.appendChild(button);
+      }
+
+      list.appendChild(item);
+    });
+
+    if (breadcrumbContainer) breadcrumbContainer.classList.add('is-active');
+  }
+
   function resetPanels(options) {
     if (!panelContainer || panelElements.length === 0) return;
 
@@ -383,7 +466,7 @@ fhOnReady(function () {
         if (entry && entry.trigger instanceof HTMLElement) entry.trigger.setAttribute('aria-expanded', 'false');
       });
 
-    panelStack = [{ id: ROOT_PANEL_ID, trigger: null }];
+    panelStack = [{ id: ROOT_PANEL_ID, trigger: null, label: ROOT_BREADCRUMB_LABEL }];
 
     updatePanelState({ skipFocus: skipFocus, preventRootFocus: true });
 
@@ -399,6 +482,7 @@ fhOnReady(function () {
 
     const normalizedTrigger = trigger instanceof HTMLElement ? trigger : null;
     const skipFocus = !!(options && options.skipFocus === true);
+    const resolvedLabel = resolvePanelLabel(panelId);
     const existingIndex = panelStack.findIndex(function (entry) {
       return entry && entry.id === panelId;
     });
@@ -411,8 +495,14 @@ fhOnReady(function () {
         });
 
       panelStack = panelStack.slice(0, existingIndex + 1);
+      const currentEntry = panelStack[existingIndex];
+
+      if (currentEntry) {
+        currentEntry.label = resolvedLabel;
+        if (normalizedTrigger) currentEntry.trigger = normalizedTrigger;
+      }
     } else {
-      panelStack.push({ id: panelId, trigger: normalizedTrigger });
+      panelStack.push({ id: panelId, trigger: normalizedTrigger, label: resolvedLabel });
     }
 
     if (normalizedTrigger) normalizedTrigger.setAttribute('aria-expanded', 'true');
@@ -465,6 +555,28 @@ fhOnReady(function () {
     const firstLink = menu.querySelector('.fh-header__nav-link');
 
     if (firstLink instanceof HTMLElement) firstLink.focus();
+  }
+
+  function jumpToPanel(panelId) {
+    if (!panelContainer || panelElements.length === 0 || !panelId) return;
+
+    const targetIndex = panelStack.findIndex(function (entry) {
+      return entry && entry.id === panelId;
+    });
+
+    if (targetIndex === -1 || targetIndex === panelStack.length - 1) return;
+
+    panelStack
+      .slice(targetIndex + 1)
+      .forEach(function (entry) {
+        if (entry && entry.trigger instanceof HTMLElement) entry.trigger.setAttribute('aria-expanded', 'false');
+      });
+
+    panelStack = panelStack.slice(0, targetIndex + 1);
+
+    updatePanelState();
+
+    persistPanelStack();
   }
 
   function openMenu() {
@@ -574,6 +686,17 @@ fhOnReady(function () {
       if (backButton) {
         event.preventDefault();
         stepBack();
+        return;
+      }
+
+      const breadcrumbButton = event.target && event.target.closest('[data-fh-mobile-breadcrumb-target]');
+
+      if (breadcrumbButton) {
+        event.preventDefault();
+        const targetPanelId = breadcrumbButton.getAttribute('data-fh-mobile-breadcrumb-target');
+
+        if (targetPanelId) jumpToPanel(targetPanelId);
+
         return;
       }
 
