@@ -703,20 +703,36 @@
 .fh-header__mobile-submenu-header {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 0;
+  padding: 16px 0;
+  background: linear-gradient(180deg, #ffffff 85%, rgba(255, 255, 255, 0.92));
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.fh-header__mobile-submenu-bar {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 0;
-  padding: 0 0 24px;
-  background-color: #ffffff;
 }
 
 .fh-header__mobile-submenu-title {
+  flex: 1 1 auto;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.4px;
   text-transform: uppercase;
+}
+
+.fh-header__mobile-submenu-description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4b5563;
 }
 
 .fh-header__mobile-submenu-back {
@@ -917,7 +933,9 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     background-color: #ffffff;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -933,7 +951,11 @@
     max-width: none;
     margin: 0;
     padding: 0 24px 48px;
-    overflow: hidden;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: visible;
   }
 
   .fh-header__mobile-close {
@@ -959,12 +981,16 @@
   .fh-header__mobile-views {
     position: relative;
     width: 100%;
-    min-height: calc(100vh - 120px);
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   .fh-header__mobile-view {
     display: none;
     width: 100%;
+    height: 100%;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -974,6 +1000,7 @@
 
   .fh-header__mobile-view.is-active {
     display: block;
+    height: 100%;
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -982,16 +1009,22 @@
 
   .fh-header__mobile-view[aria-hidden="false"] {
     display: block;
+    height: 100%;
   }
 
   .fh-header__mobile-submenu-panel {
-    min-height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     height: 100%;
   }
 
   .fh-header__mobile-submenu-panel.is-active,
   .fh-header__mobile-submenu-panel[aria-hidden="false"] {
     display: flex;
+  }
+
+  .fh-header__mobile-view--root {
+    overflow-y: auto;
   }
 
   .fh-header__nav-item {
