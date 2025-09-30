@@ -116,6 +116,48 @@ fhOnReady(function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH desktop header scroll behaviour
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) return;
+
+  const desktopMediaQuery = window.matchMedia('(min-width: 992px)');
+  const scrolledClassName = 'fh-header--scrolled';
+
+  function updateHeaderState() {
+    if (!desktopMediaQuery.matches) {
+      header.classList.remove(scrolledClassName);
+      return;
+    }
+
+    if (window.scrollY > 0) {
+      header.classList.add(scrolledClassName);
+    } else {
+      header.classList.remove(scrolledClassName);
+    }
+  }
+
+  function handleScroll() {
+    updateHeaderState();
+  }
+
+  function handleMediaChange() {
+    updateHeaderState();
+  }
+
+  if (typeof desktopMediaQuery.addEventListener === 'function') {
+    desktopMediaQuery.addEventListener('change', handleMediaChange);
+  } else if (typeof desktopMediaQuery.addListener === 'function') {
+    desktopMediaQuery.addListener(handleMediaChange);
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  updateHeaderState();
+});
+// End Section: FH desktop header scroll behaviour
+
 // Section: FH mobile navigation toggle
 fhOnReady(function () {
   const header = document.querySelector('[data-fh-header-root]');

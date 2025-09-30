@@ -31,6 +31,7 @@
 }
 
 .fh-header__top-bar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,6 +42,7 @@
   font-size: 13px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
+  z-index: 1;
 }
 
 .fh-header__top-item,
@@ -61,6 +63,24 @@
   height: 6px;
   border-radius: 50%;
   background-color: #38bdf8;
+}
+
+@media (min-width: 992px) {
+  .fh-header__top-bar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    height: 100%;
+    transform: translateX(-50%);
+    background: inherit;
+    z-index: -1;
+  }
+
+  .fh-header--scrolled .fh-header__top-bar {
+    display: none;
+  }
 }
 
 .fh-header__main {
