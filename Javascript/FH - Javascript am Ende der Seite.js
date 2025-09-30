@@ -488,12 +488,15 @@ fhOnReady(function () {
   let upDistance = 0;
   let isHidden = false;
   let ticking = false;
+  let lastToggleAt = Date.now();
+  const TOGGLE_DEBOUNCE_MS = 180;
 
   function showRow() {
     if (!isHidden) return;
 
     header.classList.remove('fh-header--search-hidden');
     isHidden = false;
+    lastToggleAt = Date.now();
   }
 
   function hideRow() {
@@ -501,6 +504,7 @@ fhOnReady(function () {
 
     header.classList.add('fh-header--search-hidden');
     isHidden = true;
+    lastToggleAt = Date.now();
   }
 
   function resetTracking(scrollPosition) {
@@ -524,6 +528,13 @@ fhOnReady(function () {
     if (currentScroll <= 0) {
       showRow();
       resetTracking(0);
+      return;
+    }
+
+    const timeSinceLastToggle = Date.now() - lastToggleAt;
+
+    if (timeSinceLastToggle < TOGGLE_DEBOUNCE_MS) {
+      lastScrollY = currentScroll;
       return;
     }
 
