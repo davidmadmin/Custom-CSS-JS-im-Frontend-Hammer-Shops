@@ -527,11 +527,33 @@
 }
 
 .fh-header__nav-link {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
   padding: 18px 12px;
   color: #1a1a1a;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.fh-header__nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.fh-header__nav-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.fh-header__nav-text {
+  display: inline-block;
 }
 
 .fh-header__nav-link--highlight {
@@ -982,6 +1004,18 @@
     font-size: 18px;
     border-bottom: 1px solid #e5e7eb;
     white-space: normal;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .fh-header__nav-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .fh-header__nav-icon svg {
+    width: 22px;
+    height: 22px;
   }
 
   .fh-header__nav-item:last-child .fh-header__nav-link {
