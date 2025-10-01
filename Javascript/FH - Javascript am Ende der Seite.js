@@ -725,6 +725,55 @@ fhOnReady(function () {
 });
 // End Section: FH mobile navigation toggle
 
+// Section: FH desktop top bar scroll visibility
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) return;
+
+  const topBar = header.querySelector('.fh-header__top-bar');
+
+  if (!topBar) return;
+
+  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const hiddenClassName = 'fh-header--top-hidden';
+  let lastAppliedState = null;
+
+  function shouldHideTopBar() {
+    if (!desktopMedia.matches) return false;
+
+    return (window.pageYOffset || document.documentElement.scrollTop || 0) > 0;
+  }
+
+  function applyState(forceUpdate) {
+    const shouldHide = shouldHideTopBar();
+
+    if (!forceUpdate && shouldHide === lastAppliedState) return;
+
+    header.classList.toggle(hiddenClassName, shouldHide);
+    lastAppliedState = shouldHide;
+  }
+
+  function handleScroll() {
+    applyState(false);
+  }
+
+  function handleMediaChange() {
+    applyState(true);
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  if (typeof desktopMedia.addEventListener === 'function') {
+    desktopMedia.addEventListener('change', handleMediaChange);
+  } else if (typeof desktopMedia.addListener === 'function') {
+    desktopMedia.addListener(handleMediaChange);
+  }
+
+  applyState(true);
+});
+// End Section: FH desktop top bar scroll visibility
+
 // Section: FH mobile search row scroll hide/show
 fhOnReady(function () {
   const header = document.querySelector('[data-fh-header-root]');

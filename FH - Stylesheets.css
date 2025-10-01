@@ -31,16 +31,29 @@
 }
 
 .fh-header__top-bar {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 48px;
   padding: 10px 32px;
-  background: linear-gradient(90deg, #1f2937, #0f172a);
   color: #ffffff;
   font-size: 13px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
+}
+
+.fh-header__top-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100%;
+  background: linear-gradient(90deg, #1f2937, #0f172a);
+  z-index: -1;
 }
 
 .fh-header__top-item,
@@ -61,6 +74,12 @@
   height: 6px;
   border-radius: 50%;
   background-color: #38bdf8;
+}
+
+@media (min-width: 992px) {
+  .fh-header--top-hidden .fh-header__top-bar {
+    display: none;
+  }
 }
 
 .fh-header__main {
