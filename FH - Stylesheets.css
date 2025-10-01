@@ -1154,6 +1154,10 @@ body.fh-mobile-menu-open {
 /* End Section: FH Header Base Layout */
 
 /* Section: Page Header Background */
+#page-header-parent {
+  padding: 0;
+}
+
 #page-header {
   background-color: #ffffff !important;
 }
