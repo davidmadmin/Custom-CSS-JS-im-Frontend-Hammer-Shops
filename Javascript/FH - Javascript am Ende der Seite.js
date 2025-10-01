@@ -124,27 +124,84 @@ fhOnReady(function () {
 
   const desktopMediaQuery = window.matchMedia('(min-width: 992px)');
   const scrolledClassName = 'fh-header--scrolled';
+  const hiddenClassName = 'fh-header--topbar-hidden';
+  const topBar = header.querySelector('.fh-header__top-bar');
+  const SCROLL_DELTA_THRESHOLD = 8;
+  let topBarHeight = topBar ? topBar.scrollHeight : 0;
+  let lastKnownScrollY = window.scrollY;
+  let lastAppliedScrollY = window.scrollY;
+  let isTicking = false;
 
-  function updateHeaderState() {
-    if (!desktopMediaQuery.matches) {
+  function measureTopBar() {
+    if (!topBar) return;
+
+    topBarHeight = topBar.scrollHeight || 0;
+    header.style.setProperty('--fh-top-bar-max-height', topBarHeight + 'px');
+  }
+
+  function applyScrollState() {
+    isTicking = false;
+
+    const currentY = lastKnownScrollY;
+    const isDesktop = desktopMediaQuery.matches;
+
+    if (!isDesktop) {
       header.classList.remove(scrolledClassName);
+      header.classList.remove(hiddenClassName);
+      lastAppliedScrollY = currentY;
       return;
     }
 
-    if (window.scrollY > 0) {
-      header.classList.add(scrolledClassName);
-    } else {
+    if (currentY <= 0) {
+      header.classList.remove(hiddenClassName);
       header.classList.remove(scrolledClassName);
+      lastAppliedScrollY = currentY;
+      return;
+    }
+
+    header.classList.add(scrolledClassName);
+
+    if (!topBar) {
+      lastAppliedScrollY = currentY;
+      return;
+    }
+
+    const delta = currentY - lastAppliedScrollY;
+    const absoluteDelta = Math.abs(delta);
+    const collapseBoundary = Math.max(topBarHeight, 40);
+
+    if (currentY <= collapseBoundary) {
+      header.classList.remove(hiddenClassName);
+    } else if (delta > 0 && absoluteDelta > SCROLL_DELTA_THRESHOLD) {
+      header.classList.add(hiddenClassName);
+    } else if (delta < 0 && absoluteDelta > SCROLL_DELTA_THRESHOLD) {
+      header.classList.remove(hiddenClassName);
+    }
+
+    lastAppliedScrollY = currentY;
+  }
+
+  function requestScrollUpdate() {
+    lastKnownScrollY = window.scrollY;
+
+    if (!isTicking) {
+      window.requestAnimationFrame(applyScrollState);
+      isTicking = true;
     }
   }
 
-  function handleScroll() {
-    updateHeaderState();
+  function updateImmediately() {
+    lastKnownScrollY = window.scrollY;
+    applyScrollState();
   }
 
   function handleMediaChange() {
-    updateHeaderState();
+    measureTopBar();
+    lastAppliedScrollY = window.scrollY;
+    updateImmediately();
   }
+
+  measureTopBar();
 
   if (typeof desktopMediaQuery.addEventListener === 'function') {
     desktopMediaQuery.addEventListener('change', handleMediaChange);
@@ -152,9 +209,14 @@ fhOnReady(function () {
     desktopMediaQuery.addListener(handleMediaChange);
   }
 
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('resize', function () {
+    measureTopBar();
+    updateImmediately();
+  });
 
-  updateHeaderState();
+  window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+
+  updateImmediately();
 });
 // End Section: FH desktop header scroll behaviour
 
