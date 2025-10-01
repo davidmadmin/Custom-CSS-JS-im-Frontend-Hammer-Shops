@@ -30,6 +30,22 @@
   max-width: 1600px; /* Do not change this for Desktop viewport*/
   --fh-top-bar-max-height: 0px;
   --fh-top-bar-padding-y: 10px;
+  --fh-top-bar-background-height: var(--fh-top-bar-max-height, 56px);
+}
+
+.fh-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: var(--fh-top-bar-background-height, 56px);
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #1f2937, #0f172a);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 0.35s ease;
 }
 
 .fh-header__top-bar {
@@ -99,6 +115,10 @@
   pointer-events: none;
   visibility: hidden;
   transition-delay: 0s, 0s, 0s, 0.35s;
+}
+
+.fh-header--topbar-hidden::before {
+  opacity: 0;
 }
 
 .fh-header__main {
@@ -197,6 +217,23 @@
   column-gap: 20px;
   justify-self: end;
 }
+
+/* Section: FH Footer Base Layout */
+
+.fh-footer {
+  width: 100%;
+  border-top: 8px solid #000000;
+  background: linear-gradient(to bottom, #ffffff, #f1f1f1);
+}
+
+.fh-footer__inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-size: 0.9rem;
+}
+
+/* End Section: FH Footer Base Layout */
 
 .fh-header__icon-button {
   position: relative;
