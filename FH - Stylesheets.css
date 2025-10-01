@@ -46,6 +46,9 @@
 @media (min-width: 992px) {
   .fh-header__top-bar {
     position: relative;
+    overflow: hidden;
+    max-height: 200px;
+    transition: max-height 0.35s ease, padding-top 0.35s ease, padding-bottom 0.35s ease, opacity 0.3s ease;
   }
 
   .fh-header__top-bar::before {
@@ -58,10 +61,19 @@
     width: 100vw;
     height: 100%;
     background: linear-gradient(90deg, #1f2937, #0f172a);
+    transition: opacity 0.3s ease;
   }
 
   .fh-header--top-bar-hidden .fh-header__top-bar {
-    display: none;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .fh-header--top-bar-hidden .fh-header__top-bar::before {
+    opacity: 0;
   }
 }
 

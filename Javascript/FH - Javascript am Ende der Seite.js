@@ -845,6 +845,7 @@ fhOnReady(function () {
   if (!topBar) return;
 
   const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const HIDE_SCROLL_THRESHOLD = 24;
   const raf =
     typeof window.requestAnimationFrame === 'function'
       ? window.requestAnimationFrame.bind(window)
@@ -862,7 +863,7 @@ fhOnReady(function () {
     }
 
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || 0;
-    const shouldHide = scrollPosition > 0;
+    const shouldHide = scrollPosition > HIDE_SCROLL_THRESHOLD;
 
     header.classList.toggle('fh-header--top-bar-hidden', shouldHide);
   }
