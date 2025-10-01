@@ -300,6 +300,26 @@ button[data-testing="quantity-btn-decrease"],
 }
 /* End Section: Input Unit Border Radius */
 
+/* Section: Form Control Border Radius */
+.custom-select {
+  border-radius: 6px;
+}
+
+.form-control {
+  border-radius: 6px;
+}
+
+.page-item:first-child .page-link {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.page-item:last-child .page-link {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+/* End Section: Form Control Border Radius */
+
 /* Section: Method list item label padding */
 .cmp-method-list .method-list-item label {
   padding-right: 0px;
