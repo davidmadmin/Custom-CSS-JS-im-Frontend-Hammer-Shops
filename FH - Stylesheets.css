@@ -28,8 +28,8 @@
   font-family: "Open Sans", Arial, sans-serif;
   width: 1600px; /* Do not change this for Desktop viewport*/
   max-width: 1600px; /* Do not change this for Desktop viewport*/
-  --fh-top-bar-max-height: 0px;
-  --fh-top-bar-padding-y: 10px;
+  --fh-top-bar-max-height: 72px;
+  --fh-top-bar-padding-y: 14px;
 }
 
 .fh-header__top-bar {
@@ -38,8 +38,8 @@
   align-items: center;
   justify-content: center;
   gap: 48px;
-  padding: var(--fh-top-bar-padding-y, 10px) 32px;
-  background: linear-gradient(90deg, #1f2937, #0f172a);
+  padding: var(--fh-top-bar-padding-y, 14px) 32px;
+  background: transparent;
   color: #ffffff;
   font-size: 13px;
   letter-spacing: 0.3px;
@@ -49,7 +49,7 @@
   isolation: isolate;
   visibility: visible;
   box-sizing: border-box;
-  max-height: var(--fh-top-bar-max-height, 56px);
+  max-height: var(--fh-top-bar-max-height, 72px);
   transition: max-height 0.35s ease, padding 0.35s ease, opacity 0.2s ease,
     visibility 0s linear 0s;
   transition-delay: 0s, 0s, 0s, 0s;
@@ -64,7 +64,7 @@
   width: 100vw;
   height: 100%;
   transform: translateX(-50%);
-  background: inherit;
+  background: linear-gradient(90deg, #1f2937, #0f172a);
   z-index: -1;
   pointer-events: none;
   transition: opacity 0.35s ease;
