@@ -124,26 +124,51 @@ fhOnReady(function () {
 
   const desktopMediaQuery = window.matchMedia('(min-width: 992px)');
   const scrolledClassName = 'fh-header--scrolled';
+  const hiddenClassName = 'fh-header--top-hidden';
+  const SCROLL_DELTA_THRESHOLD = 6;
+  const RESET_THRESHOLD = 24;
+  let lastScrollY = window.scrollY;
+  let rafId = null;
 
-  function updateHeaderState() {
+  function applyHeaderState() {
+    rafId = null;
+
     if (!desktopMediaQuery.matches) {
-      header.classList.remove(scrolledClassName);
+      header.classList.remove(scrolledClassName, hiddenClassName);
+      lastScrollY = window.scrollY;
       return;
     }
 
-    if (window.scrollY > 0) {
+    const currentY = window.scrollY;
+    const delta = currentY - lastScrollY;
+
+    if (currentY > 0) {
       header.classList.add(scrolledClassName);
     } else {
       header.classList.remove(scrolledClassName);
     }
+
+    if (currentY <= RESET_THRESHOLD) {
+      header.classList.remove(hiddenClassName);
+    } else if (delta > SCROLL_DELTA_THRESHOLD) {
+      header.classList.add(hiddenClassName);
+    } else if (delta < -SCROLL_DELTA_THRESHOLD) {
+      header.classList.remove(hiddenClassName);
+    }
+
+    lastScrollY = currentY;
   }
 
-  function handleScroll() {
-    updateHeaderState();
+  function requestStateUpdate() {
+    if (rafId !== null) return;
+
+    rafId = window.requestAnimationFrame(applyHeaderState);
   }
 
   function handleMediaChange() {
-    updateHeaderState();
+    header.classList.remove(scrolledClassName, hiddenClassName);
+    lastScrollY = window.scrollY;
+    requestStateUpdate();
   }
 
   if (typeof desktopMediaQuery.addEventListener === 'function') {
@@ -152,9 +177,9 @@ fhOnReady(function () {
     desktopMediaQuery.addListener(handleMediaChange);
   }
 
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('scroll', requestStateUpdate, { passive: true });
 
-  updateHeaderState();
+  applyHeaderState();
 });
 // End Section: FH desktop header scroll behaviour
 

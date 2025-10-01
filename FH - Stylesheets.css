@@ -66,6 +66,14 @@
 }
 
 @media (min-width: 992px) {
+  .fh-header__top-bar {
+    position: relative;
+    overflow: hidden;
+    max-height: 120px;
+    transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease;
+    will-change: max-height, opacity;
+  }
+
   .fh-header__top-bar::before {
     content: "";
     position: absolute;
@@ -78,8 +86,16 @@
     z-index: -1;
   }
 
-  .fh-header--scrolled .fh-header__top-bar {
-    display: none;
+  .fh-header--top-hidden .fh-header__top-bar {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+  }
+
+  .fh-header--scrolled .fh-header__main {
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
   }
 }
 
