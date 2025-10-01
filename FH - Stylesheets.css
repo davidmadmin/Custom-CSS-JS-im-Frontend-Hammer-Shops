@@ -30,6 +30,7 @@
   max-width: 1600px; /* Do not change this for Desktop viewport*/
   --fh-top-bar-max-height: 72px;
   --fh-top-bar-padding-y: 14px;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
 }
 
 .fh-header__top-bar {
