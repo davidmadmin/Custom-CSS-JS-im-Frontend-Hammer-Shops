@@ -43,6 +43,28 @@
   text-transform: uppercase;
 }
 
+@media (min-width: 992px) {
+  .fh-header__top-bar {
+    position: relative;
+  }
+
+  .fh-header__top-bar::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 100%;
+    background: linear-gradient(90deg, #1f2937, #0f172a);
+  }
+
+  .fh-header--top-bar-hidden .fh-header__top-bar {
+    display: none;
+  }
+}
+
 .fh-header__top-item,
 .fh-header__top-link {
   display: inline-flex;

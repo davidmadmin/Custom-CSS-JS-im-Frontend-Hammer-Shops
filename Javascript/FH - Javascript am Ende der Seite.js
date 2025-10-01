@@ -834,6 +834,58 @@ fhOnReady(function () {
 });
 // End Section: FH mobile search row scroll hide/show
 
+// Section: FH desktop top bar visibility on scroll
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) return;
+
+  const topBar = header.querySelector('.fh-header__top-bar');
+
+  if (!topBar) return;
+
+  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const raf =
+    typeof window.requestAnimationFrame === 'function'
+      ? window.requestAnimationFrame.bind(window)
+      : function (callback) {
+          return window.setTimeout(callback, 16);
+        };
+  let ticking = false;
+
+  function applyTopBarState() {
+    ticking = false;
+
+    if (!desktopMedia.matches) {
+      header.classList.remove('fh-header--top-bar-hidden');
+      return;
+    }
+
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || 0;
+    const shouldHide = scrollPosition > 0;
+
+    header.classList.toggle('fh-header--top-bar-hidden', shouldHide);
+  }
+
+  function requestTopBarUpdate() {
+    if (ticking) return;
+
+    ticking = true;
+    raf(applyTopBarState);
+  }
+
+  window.addEventListener('scroll', requestTopBarUpdate, { passive: true });
+
+  if (typeof desktopMedia.addEventListener === 'function') {
+    desktopMedia.addEventListener('change', requestTopBarUpdate);
+  } else if (typeof desktopMedia.addListener === 'function') {
+    desktopMedia.addListener(requestTopBarUpdate);
+  }
+
+  requestTopBarUpdate();
+});
+// End Section: FH desktop top bar visibility on scroll
+
 // Section: FH Merkliste button enhancements
 fhOnReady(function () {
   const iconMarkup =
