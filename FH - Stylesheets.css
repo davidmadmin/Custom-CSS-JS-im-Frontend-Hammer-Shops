@@ -46,9 +46,12 @@
   text-transform: uppercase;
   z-index: 1;
   overflow: hidden;
+  visibility: visible;
   box-sizing: border-box;
   max-height: var(--fh-top-bar-max-height, 56px);
-  transition: max-height 0.35s ease, padding 0.35s ease, opacity 0.2s ease;
+  transition: max-height 0.35s ease, padding 0.35s ease, opacity 0.2s ease,
+    visibility 0s linear 0s;
+  transition-delay: 0s, 0s, 0s, 0s;
   will-change: max-height, padding, opacity;
 }
 
@@ -94,6 +97,8 @@
   max-height: 0;
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
+  transition-delay: 0s, 0s, 0s, 0.35s;
 }
 
 .fh-header__main {
