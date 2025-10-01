@@ -28,6 +28,8 @@
   font-family: "Open Sans", Arial, sans-serif;
   width: 1600px; /* Do not change this for Desktop viewport*/
   max-width: 1600px; /* Do not change this for Desktop viewport*/
+  --fh-top-bar-max-height: 0px;
+  --fh-top-bar-padding-y: 10px;
 }
 
 .fh-header__top-bar {
@@ -36,13 +38,18 @@
   align-items: center;
   justify-content: center;
   gap: 48px;
-  padding: 10px 32px;
+  padding: var(--fh-top-bar-padding-y, 10px) 32px;
   background: linear-gradient(90deg, #1f2937, #0f172a);
   color: #ffffff;
   font-size: 13px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
   z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+  max-height: var(--fh-top-bar-max-height, 56px);
+  transition: max-height 0.35s ease, padding 0.35s ease, opacity 0.2s ease;
+  will-change: max-height, padding, opacity;
 }
 
 .fh-header__top-item,
@@ -77,10 +84,16 @@
     background: inherit;
     z-index: -1;
   }
+}
 
-  .fh-header--scrolled .fh-header__top-bar {
-    display: none;
-  }
+.fh-header--topbar-hidden {
+  --fh-top-bar-padding-y: 0px;
+}
+
+.fh-header--topbar-hidden .fh-header__top-bar {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .fh-header__main {
