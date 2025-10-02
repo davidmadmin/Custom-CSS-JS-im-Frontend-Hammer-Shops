@@ -68,6 +68,25 @@
         </button>
         <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
           <div class="fh-header__panel-arrow"></div>
+          <div
+            class="fh-header__price-toggle"
+            v-if="$store && $store.state && $store.state.basket"
+            v-cloak
+          >
+            <div class="fh-header__price-toggle-label">Preise anzeigen</div>
+            <button
+              type="button"
+              class="fh-price-toggle"
+              :class="{ 'fh-price-toggle--net': $store.state.basket.showNetPrices }"
+              :aria-pressed="$store.state.basket.showNetPrices ? 'true' : 'false'"
+              :disabled="$store.state.basket.isBasketLoading"
+              @click.prevent.stop="$store.commit('setShowNetPrices', !$store.state.basket.showNetPrices); $store.dispatch('refreshBasket')"
+            >
+              <span class="fh-price-toggle__text" v-text="$store.state.basket.showNetPrices ? 'exkl. MwSt.' : 'inkl. MwSt.'"></span>
+              <span class="fh-price-toggle__thumb" aria-hidden="true"></span>
+              <span class="fh-header__sr-only" v-text="$store.state.basket.showNetPrices ? 'Nettopreise werden angezeigt' : 'Bruttopreise werden angezeigt'"></span>
+            </button>
+          </div>
           <div v-if="!$store.getters.isLoggedIn">
             <div class="fh-header__panel-title mb-3">Ihr Konto</div>
             <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
