@@ -691,7 +691,7 @@
 }
 
 .fh-header__panel-contact-label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: #1f2937;
 }
@@ -699,18 +699,20 @@
 .fh-header__panel-contact-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .fh-header__panel-contact-chip {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: 6px;
+  padding: 4px 10px;
   border-radius: 999px;
   background: rgba(59, 130, 246, 0.15);
   color: #0f172a;
   font-weight: 600;
+  font-size: 12px;
+  line-height: 1.25;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -726,8 +728,8 @@
 
 .fh-header__panel-contact-icon {
   display: inline-flex;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 .fh-header__panel-contact-icon svg {
