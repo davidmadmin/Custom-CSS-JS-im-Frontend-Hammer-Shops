@@ -682,6 +682,63 @@
   color: #6b7280;
 }
 
+.fh-header__panel-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+.fh-header__panel-contact-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.fh-header__panel-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fh-header__panel-contact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.15);
+  color: #0f172a;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fh-header__panel-contact-chip:hover,
+.fh-header__panel-contact-chip:focus {
+  background: rgba(59, 130, 246, 0.25);
+  color: #0f172a;
+  text-decoration: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+.fh-header__panel-contact-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+}
+
+.fh-header__panel-contact-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.fh-header__panel-contact-text {
+  white-space: nowrap;
+}
+
 .fh-header__panel-inline {
   display: flex;
   align-items: center;
