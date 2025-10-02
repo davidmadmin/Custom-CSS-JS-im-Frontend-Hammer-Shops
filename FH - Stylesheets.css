@@ -491,6 +491,16 @@
   .fh-footer__badge-grid img {
     max-height: 40px;
   }
+
+  .fh-footer__badge-grid--payments {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 12px;
+    row-gap: 14px;
+    justify-items: center;
+    overflow: visible;
+    padding-bottom: 0;
+  }
 }
 
 @media (max-width: 420px) {
