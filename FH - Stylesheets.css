@@ -682,6 +682,75 @@
   color: #6b7280;
 }
 
+.fh-header__customer-segment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+.fh-header__customer-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.15);
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.fh-header__customer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.fh-header__customer-contact--personal {
+  gap: 6px;
+}
+
+.fh-header__customer-contact-label,
+.fh-header__customer-contact-heading {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.fh-header__customer-contact-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fh-header__contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.fh-header__contact-button:hover,
+.fh-header__contact-button:focus {
+  background: #1f2937;
+  color: #ffffff;
+  text-decoration: none;
+  outline: none;
+}
+
 .fh-header__panel-contact {
   display: flex;
   flex-direction: column;
