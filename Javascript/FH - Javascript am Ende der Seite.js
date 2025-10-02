@@ -199,26 +199,61 @@ fhOnReady(function () {
 
     if (!mutationApplied) return false;
 
-    const actionName = fhResolveStoreAction(store, [
-      'basket/updateBasket',
-      'basket/fetchBasket',
-      'basket/refreshBasket',
-      'basket/loadBasket'
-    ]);
+    function scheduleBasketRefresh() {
+      const refreshActionName = fhResolveStoreAction(store, [
+        'basket/updateBasket',
+        'basket/fetchBasket',
+        'basket/refreshBasket',
+        'basket/loadBasket'
+      ]);
 
-    if (actionName) {
-      try {
-        const dispatchResult = store.dispatch(actionName);
+      if (refreshActionName) {
+        try {
+          const refreshResult = store.dispatch(refreshActionName);
 
-        if (dispatchResult && typeof dispatchResult.catch === 'function') {
-          dispatchResult.catch(function () {
-            // Ignore dispatch rejections
-          });
+          if (refreshResult && typeof refreshResult.catch === 'function') {
+            refreshResult.catch(function () {
+              // Ignore dispatch rejections
+            });
+          }
+        } catch (error) {
+          // Ignore dispatch errors
         }
-      } catch (error) {
-        // Ignore dispatch errors
       }
     }
+
+    const persistActionName = fhResolveStoreAction(store, [
+      'basket/setShowNetPrices',
+      'basket/saveShowNetPrices',
+      'basket/updateShowNetPrices',
+      'basket/setBasketSettings',
+      'basket/saveBasketSettings'
+    ]);
+
+    if (persistActionName) {
+      try {
+        const payload = /setBasketSettings$|saveBasketSettings$/.test(persistActionName)
+          ? { showNetPrices: nextValue }
+          : nextValue;
+        const persistResult = store.dispatch(persistActionName, payload);
+
+        if (persistResult && typeof persistResult.then === 'function') {
+          persistResult.then(
+            function () {
+              scheduleBasketRefresh();
+            },
+            function () {
+              scheduleBasketRefresh();
+            }
+          );
+          return true;
+        }
+      } catch (error) {
+        // Ignore dispatch errors and fall back to immediate refresh
+      }
+    }
+
+    scheduleBasketRefresh();
 
     return true;
   }
