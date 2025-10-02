@@ -685,7 +685,7 @@
 .fh-header__panel-contact {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 16px;
   color: #0f172a;
 }
@@ -696,10 +696,15 @@
   color: #1f2937;
 }
 
-.fh-header__panel-contact-row {
+.fh-header__panel-contact-line {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+}
+
+.fh-header__panel-contact-line,
+.fh-header__panel-contact-chip {
+  align-self: flex-start;
 }
 
 .fh-header__panel-contact-chip {
@@ -739,6 +744,12 @@
 
 .fh-header__panel-contact-text {
   white-space: nowrap;
+}
+
+.fh-header__panel-contact-or {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .fh-header__panel-inline {
