@@ -95,8 +95,56 @@
               </div>
               <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
             </div>
+            <div
+              class="fh-header__customer-segment"
+              v-if="$store.state.user && $store.state.user.userData && [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
+            >
+              <span
+                class="fh-header__customer-badge"
+                v-text="({ 1: 'Standardkonto', 12: 'Firmenkunde', 16: 'Firmenkunde', 21: 'Firmenkunde' })[Number($store.state.user.userData.classId)]"
+                v-cloak
+              ></span>
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--standard"
+                v-if="Number($store.state.user.userData.classId) === 1"
+                v-cloak
+              >
+                <span class="fh-header__customer-contact-label">Ansprechpartner:</span>
+                <span class="fh-header__customer-contact-name">Standard</span>
+              </div>
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--personal"
+                v-else-if="Number($store.state.user.userData.classId) === 12"
+                v-cloak
+              >
+                <div class="fh-header__customer-contact-heading">Ihr persönlicher Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-name">Ulrich Vorländer</div>
+                <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+              </div>
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--personal"
+                v-else-if="Number($store.state.user.userData.classId) === 16"
+                v-cloak
+              >
+                <div class="fh-header__customer-contact-heading">Ihr persönlicher Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-name">Andreas Fischermann</div>
+                <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+              </div>
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--personal"
+                v-else-if="Number($store.state.user.userData.classId) === 21"
+                v-cloak
+              >
+                <div class="fh-header__customer-contact-heading">Ihr persönlicher Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-name">Gabriele Sprenger</div>
+                <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+              </div>
+            </div>
             <div class="fh-header__panel-divider mb-3"></div>
-            <div class="fh-header__panel-contact">
+            <div
+              class="fh-header__panel-contact"
+              v-if="!($store.state.user && $store.state.user.userData && [12, 16, 21].includes(Number($store.state.user.userData.classId)))"
+            >
               <div class="fh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
               <div class="fh-header__panel-contact-line">
                 <a href="tel:02204910980" class="fh-header__panel-contact-chip">
