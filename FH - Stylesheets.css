@@ -107,6 +107,15 @@
 }
 
 /* Section: FH Footer Base Layout */
+
+/* Override the plentyShop container restriction so the footer can span the full viewport width. */
+#vue-app > div.footer.container-max.d-print-none {
+  max-width: 100%;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .fh-footer {
   position: relative;
   isolation: isolate;
@@ -130,7 +139,8 @@
 }
 
 .fh-footer__inner {
-  max-width: 1600px;
+  max-width: 1400px;
+  width: min(1400px, 100%);
   margin: 0 auto;
   padding: 56px 24px 36px;
   font-size: 0.95rem;
