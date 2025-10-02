@@ -310,39 +310,30 @@
 .fh-footer__badge-grid {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 6px;
-  scrollbar-width: thin;
-}
-
-.fh-footer__badge-grid::-webkit-scrollbar {
-  height: 6px;
-}
-
-.fh-footer__badge-grid::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
-  border-radius: 4px;
+  justify-content: flex-start;
+  gap: 18px;
+  flex-wrap: wrap;
+  overflow: visible;
+  padding-bottom: 0;
 }
 
 .fh-footer__badge-grid--payments {
-  gap: 18px;
+  gap: 20px;
 }
 
 .fh-footer__badge-grid img {
   flex: 0 0 auto;
   width: auto;
-  max-height: 44px;
+  max-height: 48px;
   border-radius: 12px;
   background: #ffffff;
-  padding: 6px 10px;
+  padding: 8px 14px;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .fh-footer__badge-grid--payments img {
-  max-height: 52px;
-  padding: 8px 16px;
+  max-height: 60px;
+  padding: 10px 18px;
 }
 
 .fh-footer__bottom {
@@ -416,15 +407,15 @@
 }
 
 .fh-footer__legal .fh-footer__social-link {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  margin-left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  margin-left: 8px;
 }
 
 .fh-footer__legal .fh-footer__social-link img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 @media (max-width: 1199.98px) {
@@ -502,16 +493,16 @@
 
   .fh-footer__badge-grid {
     justify-content: flex-start;
-    gap: 14px;
+    gap: 16px;
   }
 
   .fh-footer__badge-grid img {
-    max-height: 40px;
+    max-height: 42px;
   }
 
   .fh-footer__badge-grid--payments img {
-    max-height: 48px;
-    padding: 8px 14px;
+    max-height: 52px;
+    padding: 8px 16px;
   }
 
   .fh-footer__badge-grid--payments {
