@@ -132,7 +132,7 @@
   height: 100%;
   transform: translateX(-50%);
   background: linear-gradient(180deg, #ffffff 0%, #f6f7fb 40%, #eef2ff 100%);
-  border-top: 6px solid #2563eb;
+  border-top: 6px solid #0f172a;
   box-sizing: border-box;
   z-index: -1;
   pointer-events: none;
@@ -237,6 +237,31 @@
   transform: scale(1);
 }
 
+.fh-footer__benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+  color: #1e293b;
+}
+
+.fh-footer__benefits li {
+  position: relative;
+  padding-left: 28px;
+  line-height: 1.55;
+}
+
+.fh-footer__benefits li::before {
+  content: "\2713";
+  position: absolute;
+  top: 2px;
+  left: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
 .fh-footer__community {
   display: flex;
   flex-direction: column;
@@ -304,12 +329,13 @@
 
 .fh-footer__bottom {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) minmax(0, 1fr);
   gap: 32px;
   margin-top: 48px;
   padding-top: 36px;
   border-top: 1px solid rgba(148, 163, 184, 0.4);
   color: #475569;
+  align-items: start;
 }
 
 .fh-footer__brands {
@@ -317,6 +343,17 @@
   align-items: center;
   gap: 28px;
   flex-wrap: wrap;
+}
+
+.fh-footer__logistics {
+  display: grid;
+  gap: 24px;
+  align-content: start;
+}
+
+.fh-footer__logistics-section {
+  display: grid;
+  gap: 16px;
 }
 
 .fh-footer__brand-logo {
@@ -378,6 +415,14 @@
 
   .fh-footer__brands {
     justify-content: center;
+  }
+
+  .fh-footer__logistics {
+    justify-items: center;
+  }
+
+  .fh-footer__logistics-section {
+    width: min(100%, 420px);
   }
 
   .fh-footer__legal {
