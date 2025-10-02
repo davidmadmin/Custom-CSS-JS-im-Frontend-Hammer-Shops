@@ -308,34 +308,53 @@
 }
 
 .fh-footer__badge-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-  gap: 12px;
+  display: flex;
   align-items: center;
+  gap: 16px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.fh-footer__badge-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.fh-footer__badge-grid::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 4px;
 }
 
 .fh-footer__badge-grid--payments {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .fh-footer__badge-grid img {
-  width: 100%;
-  max-width: 110px;
-  height: auto;
+  flex: 0 0 auto;
+  width: auto;
+  max-height: 44px;
   border-radius: 12px;
   background: #ffffff;
   padding: 6px 10px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .fh-footer__bottom {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: 32px;
   margin-top: 48px;
   padding-top: 36px;
   border-top: 1px solid rgba(148, 163, 184, 0.4);
   color: #475569;
   align-items: start;
+}
+
+.fh-footer__brand-section {
+  display: grid;
+  gap: 24px;
+  align-content: start;
 }
 
 .fh-footer__brands {
@@ -413,6 +432,10 @@
     text-align: center;
   }
 
+  .fh-footer__brand-section {
+    justify-items: center;
+  }
+
   .fh-footer__brands {
     justify-content: center;
   }
@@ -440,6 +463,14 @@
     gap: 20px;
   }
 
+  .fh-footer__column--benefits {
+    order: 3;
+  }
+
+  .fh-footer__column--legal {
+    order: 4;
+  }
+
   .fh-footer__heading {
     font-size: 1rem;
   }
@@ -448,20 +479,17 @@
     display: none;
   }
 
-  .fh-footer__badge-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .fh-footer__badge-grid--payments {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .fh-footer__social {
     flex-wrap: nowrap;
   }
 
+  .fh-footer__badge-grid {
+    justify-content: flex-start;
+    gap: 14px;
+  }
+
   .fh-footer__badge-grid img {
-    max-width: none;
+    max-height: 40px;
   }
 }
 
