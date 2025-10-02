@@ -8,6 +8,38 @@ function fhOnReady(callback) {
   callback();
 }
 
+function fhGetVueStore() {
+  if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+  if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+  return null;
+}
+
+function fhResolveStoreMutation(store, names) {
+  if (!store || !store._mutations) return null;
+
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+
+    if (Array.isArray(store._mutations[name]) && store._mutations[name].length > 0) return name;
+  }
+
+  return null;
+}
+
+function fhResolveStoreAction(store, names) {
+  if (!store || !store._actions) return null;
+
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
+
+    if (Array.isArray(store._actions[name]) && store._actions[name].length > 0) return name;
+  }
+
+  return null;
+}
+
 // Section: FH account menu toggle behaviour
 fhOnReady(function () {
   function resolveGreeting(defaultGreeting) {
@@ -115,6 +147,147 @@ fhOnReady(function () {
   };
 });
 // End Section: FH account menu toggle behaviour
+
+// Section: FH account menu price toggle
+fhOnReady(function () {
+  const menu = document.querySelector('[data-fh-account-menu]');
+  const toggleButton = menu ? menu.querySelector('[data-fh-tax-toggle-button]') : null;
+
+  if (!toggleButton) return;
+
+  function readShowNetPrices() {
+    const store = fhGetVueStore();
+
+    if (store && store.state && store.state.basket) return Boolean(store.state.basket.showNetPrices);
+
+    return false;
+  }
+
+  function applyButtonState() {
+    const showNet = readShowNetPrices();
+
+    toggleButton.classList.toggle('is-net', showNet);
+    toggleButton.setAttribute('aria-pressed', showNet ? 'true' : 'false');
+    toggleButton.setAttribute('data-fh-tax-toggle-state', showNet ? 'net' : 'gross');
+  }
+
+  function setShowNetPrices(nextValue) {
+    const store = fhGetVueStore();
+
+    if (!store) return false;
+
+    let mutationApplied = false;
+    const mutationName = fhResolveStoreMutation(store, [
+      'basket/setShowNetPrices',
+      'basket/setShowNetPrice',
+      'basket/SET_SHOW_NET_PRICES'
+    ]);
+
+    if (mutationName) {
+      try {
+        store.commit(mutationName, nextValue);
+        mutationApplied = true;
+      } catch (error) {
+        // Ignore commit errors; fall back to direct state mutation
+      }
+    }
+
+    if (!mutationApplied && store.state && store.state.basket) {
+      store.state.basket.showNetPrices = nextValue;
+      mutationApplied = true;
+    }
+
+    if (!mutationApplied) return false;
+
+    const actionName = fhResolveStoreAction(store, [
+      'basket/updateBasket',
+      'basket/fetchBasket',
+      'basket/refreshBasket',
+      'basket/loadBasket'
+    ]);
+
+    if (actionName) {
+      try {
+        const dispatchResult = store.dispatch(actionName);
+
+        if (dispatchResult && typeof dispatchResult.catch === 'function') {
+          dispatchResult.catch(function () {
+            // Ignore dispatch rejections
+          });
+        }
+      } catch (error) {
+        // Ignore dispatch errors
+      }
+    }
+
+    return true;
+  }
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const currentState = readShowNetPrices();
+    const nextState = !currentState;
+
+    if (setShowNetPrices(nextState)) applyButtonState();
+  });
+
+  let unwatch = null;
+  let lastStore = null;
+  const WATCH_INTERVAL_MS = 1500;
+
+  function ensureStoreWatcher() {
+    const store = fhGetVueStore();
+
+    if (store === lastStore) return;
+
+    if (typeof unwatch === 'function') {
+      try {
+        unwatch();
+      } catch (error) {
+        // Ignore watcher teardown errors
+      }
+
+      unwatch = null;
+    }
+
+    if (store && typeof store.watch === 'function') {
+      unwatch = store.watch(
+        function (state) {
+          return state && state.basket ? state.basket.showNetPrices : null;
+        },
+        function () {
+          applyButtonState();
+        },
+        { immediate: true }
+      );
+    } else {
+      applyButtonState();
+    }
+
+    lastStore = store;
+  }
+
+  ensureStoreWatcher();
+
+  const intervalId = window.setInterval(ensureStoreWatcher, WATCH_INTERVAL_MS);
+
+  window.addEventListener('beforeunload', function () {
+    if (intervalId) window.clearInterval(intervalId);
+
+    if (typeof unwatch === 'function') {
+      try {
+        unwatch();
+      } catch (error) {
+        // Ignore watcher teardown errors
+      }
+    }
+  });
+
+  applyButtonState();
+});
+// End Section: FH account menu price toggle
 
 // Section: FH desktop header scroll behaviour
 fhOnReady(function () {

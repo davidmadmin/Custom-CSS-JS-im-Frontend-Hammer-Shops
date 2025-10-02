@@ -68,6 +68,27 @@
         </button>
         <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
           <div class="fh-header__panel-arrow"></div>
+          <div class="fh-header__tax-toggle" data-fh-tax-toggle>
+            <div class="fh-header__tax-toggle-header">
+              <span class="fh-header__tax-toggle-title">Preise anzeigen:</span>
+              <button
+                type="button"
+                class="fh-header__tax-toggle-button"
+                data-fh-tax-toggle-button
+                :class="{ 'is-net': $store.state.basket && $store.state.basket.showNetPrices }"
+                :aria-pressed="$store.state.basket && $store.state.basket.showNetPrices ? 'true' : 'false'"
+              >
+                <span class="fh-header__tax-toggle-label" v-if="!($store.state.basket && $store.state.basket.showNetPrices)" v-cloak>
+                  inkl. MwSt.
+                </span>
+                <span class="fh-header__tax-toggle-label" v-else v-cloak>
+                  exkl. MwSt.
+                </span>
+                <span class="fh-header__tax-toggle-handle" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="fh-header__tax-toggle-caption">Zwischen Brutto- und Nettopreisen wechseln.</div>
+          </div>
           <div v-if="!$store.getters.isLoggedIn">
             <div class="fh-header__panel-title mb-3">Ihr Konto</div>
             <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
