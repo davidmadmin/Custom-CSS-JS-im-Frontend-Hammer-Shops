@@ -171,6 +171,20 @@ fhOnReady(function () {
     toggleButton.setAttribute('data-fh-tax-toggle-state', showNet ? 'net' : 'gross');
   }
 
+  let reloadTimeoutId = null;
+
+  function scheduleFullPageReload() {
+    if (reloadTimeoutId) return;
+
+    reloadTimeoutId = window.setTimeout(function () {
+      try {
+        window.location.reload();
+      } catch (error) {
+        // Ignore reload errors (e.g. blocked by the browser)
+      }
+    }, 300);
+  }
+
   function setShowNetPrices(nextValue) {
     const store = fhGetVueStore();
 
@@ -241,9 +255,11 @@ fhOnReady(function () {
           persistResult.then(
             function () {
               scheduleBasketRefresh();
+              scheduleFullPageReload();
             },
             function () {
               scheduleBasketRefresh();
+              scheduleFullPageReload();
             }
           );
           return true;
@@ -254,6 +270,7 @@ fhOnReady(function () {
     }
 
     scheduleBasketRefresh();
+    scheduleFullPageReload();
 
     return true;
   }
