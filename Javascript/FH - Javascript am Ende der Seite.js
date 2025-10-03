@@ -2358,7 +2358,52 @@ fhOnReady(function () {
     return val.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0€';
   }
 
+  function ensureFreeShippingBarStyles() {
+    if (document.getElementById('free-shipping-style')) {
+      return;
+    }
+    const style = document.createElement('style');
+    style.id = 'free-shipping-style';
+    style.textContent = `
+#free-shipping-bar .free-shipping-progress {
+  position: relative;
+  overflow: visible;
+}
+
+#free-shipping-bar .free-shipping-shine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -6px;
+  width: 22px;
+  pointer-events: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(0, 123, 255, 0) 0%, rgba(0, 123, 255, 0.55) 35%, rgba(255, 255, 255, 0.95) 65%, rgba(0, 123, 255, 0) 100%);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  box-shadow: 0 0 12px rgba(0, 140, 255, 0.45);
+  animation: freeShippingShine 1.6s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+@keyframes freeShippingShine {
+  0%,
+  100% {
+    transform: scaleX(0.85);
+    background-position: 0% 50%;
+  }
+  50% {
+    transform: scaleX(1.05);
+    background-position: 100% 50%;
+  }
+}
+`;
+    document.head.appendChild(style);
+  }
+
   function createBar(id) {
+    ensureFreeShippingBarStyles();
     const wrapper = document.createElement('div');
     wrapper.id = id;
     wrapper.style.marginTop = '0px';
@@ -2383,15 +2428,28 @@ fhOnReady(function () {
     bar.style.width = '0%';
     bar.style.background = primaryColor;
     bar.style.transition = 'width 0.3s ease';
+    bar.style.position = 'relative';
+    bar.style.borderRadius = '4px';
+    bar.style.overflow = 'visible';
+    bar.className = 'free-shipping-progress';
+
+    const shine = document.createElement('div');
+    shine.className = 'free-shipping-shine';
+    bar.appendChild(shine);
+
     bg.appendChild(bar);
 
-    return { wrapper, bar, text };
+    return { wrapper, bar, text, shine };
   }
 
-  function update(bar, text) {
+  function update(bar, text, shine) {
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const ratio = Math.min(total / THRESHOLD, 1);
-    bar.style.width = (ratio * 100) + '%';
+    const progressWidth = ratio >= 1 ? 100 : Math.max(ratio * 100, 1);
+    bar.style.width = progressWidth + '%';
+    if (shine) {
+      shine.style.opacity = ratio >= 1 ? '0' : '1';
+    }
     if (total < THRESHOLD) text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`; else {
       text.textContent = 'Gratisversand erreicht!';
     }
@@ -2415,10 +2473,10 @@ fhOnReady(function () {
   const observer = new MutationObserver(() => {
     const totals = document.querySelector('.cmp-totals');
     if (totals && !document.getElementById('free-shipping-bar')) {
-      const { wrapper, bar, text } = createBar('free-shipping-bar');
+      const { wrapper, bar, text, shine } = createBar('free-shipping-bar');
       totals.parentNode.insertBefore(wrapper, totals);
-      update(bar, text);
-      setInterval(() => update(bar, text), 1000);
+      update(bar, text, shine);
+      setInterval(() => update(bar, text, shine), 1000);
     }
     toggleFreeShippingBar();
   });
