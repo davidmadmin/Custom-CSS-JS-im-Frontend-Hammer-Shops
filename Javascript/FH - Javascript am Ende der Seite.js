@@ -171,10 +171,56 @@ fhOnReady(function () {
     toggleButton.setAttribute('data-fh-tax-toggle-state', showNet ? 'net' : 'gross');
   }
 
+  function applyGlobalShowNetPreference(nextValue) {
+    if (!window.App) return;
+
+    try {
+      if (App.basket && typeof App.basket === 'object') App.basket.showNetPrices = nextValue;
+    } catch (error) {
+      // Ignore attempts to update legacy basket references
+    }
+
+    if (!App.config || typeof App.config !== 'object') return;
+
+    try {
+      if (App.config.global && typeof App.config.global === 'object') {
+        if ('showNetPrices' in App.config.global) App.config.global.showNetPrices = nextValue;
+      }
+
+      if (App.config.basket && typeof App.config.basket === 'object') {
+        if ('showNetPrices' in App.config.basket) App.config.basket.showNetPrices = nextValue;
+      }
+
+      if (App.config.item && typeof App.config.item === 'object') {
+        if ('showNetPrices' in App.config.item) App.config.item.showNetPrices = nextValue;
+      }
+    } catch (error) {
+      // Ignore attempts to update config snapshots
+    }
+  }
+
+  function scheduleFullPageReload() {
+    if (window.fhPendingTaxToggleReload === true) return;
+
+    window.fhPendingTaxToggleReload = true;
+
+    window.setTimeout(function () {
+      try {
+        window.location.reload();
+      } catch (error) {
+        // Ignore reload errors
+      }
+    }, 250);
+  }
+
   function setShowNetPrices(nextValue) {
     const store = fhGetVueStore();
 
-    if (!store) return false;
+    if (!store) {
+      applyGlobalShowNetPreference(nextValue);
+      scheduleFullPageReload();
+      return false;
+    }
 
     let mutationApplied = false;
     const mutationName = fhResolveStoreMutation(store, [
@@ -197,28 +243,73 @@ fhOnReady(function () {
       mutationApplied = true;
     }
 
-    if (!mutationApplied) return false;
+    if (!mutationApplied) {
+      applyGlobalShowNetPreference(nextValue);
+      scheduleFullPageReload();
+      return false;
+    }
 
-    const actionName = fhResolveStoreAction(store, [
-      'basket/updateBasket',
-      'basket/fetchBasket',
-      'basket/refreshBasket',
-      'basket/loadBasket'
-    ]);
+    function scheduleBasketRefresh() {
+      const refreshActionName = fhResolveStoreAction(store, [
+        'basket/updateBasket',
+        'basket/fetchBasket',
+        'basket/refreshBasket',
+        'basket/loadBasket'
+      ]);
 
-    if (actionName) {
-      try {
-        const dispatchResult = store.dispatch(actionName);
+      if (refreshActionName) {
+        try {
+          const refreshResult = store.dispatch(refreshActionName);
 
-        if (dispatchResult && typeof dispatchResult.catch === 'function') {
-          dispatchResult.catch(function () {
-            // Ignore dispatch rejections
-          });
+          if (refreshResult && typeof refreshResult.catch === 'function') {
+            refreshResult.catch(function () {
+              // Ignore dispatch rejections
+            });
+          }
+        } catch (error) {
+          // Ignore dispatch errors
         }
-      } catch (error) {
-        // Ignore dispatch errors
       }
     }
+
+    function finalizeUiRefresh() {
+      applyGlobalShowNetPreference(nextValue);
+      scheduleBasketRefresh();
+      scheduleFullPageReload();
+    }
+
+    const persistActionName = fhResolveStoreAction(store, [
+      'basket/setShowNetPrices',
+      'basket/saveShowNetPrices',
+      'basket/updateShowNetPrices',
+      'basket/setBasketSettings',
+      'basket/saveBasketSettings'
+    ]);
+
+    if (persistActionName) {
+      try {
+        const payload = /setBasketSettings$|saveBasketSettings$/.test(persistActionName)
+          ? { showNetPrices: nextValue }
+          : nextValue;
+        const persistResult = store.dispatch(persistActionName, payload);
+
+        if (persistResult && typeof persistResult.then === 'function') {
+          persistResult.then(
+            function () {
+              finalizeUiRefresh();
+            },
+            function () {
+              finalizeUiRefresh();
+            }
+          );
+          return true;
+        }
+      } catch (error) {
+        // Ignore dispatch errors and fall back to immediate refresh
+      }
+    }
+
+    finalizeUiRefresh();
 
     return true;
   }
