@@ -327,13 +327,13 @@
   max-height: 48px;
   border-radius: 12px;
   background: #ffffff;
-  padding: 5px;
+  padding: 8px;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .fh-footer__badge-grid--payments img {
   max-height: 48px;
-  padding: 5px;
+  padding: 8px;
 }
 
 .fh-footer__badge-grid--shipping {
@@ -344,8 +344,8 @@
 .fh-footer__shipping-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-end;
+  text-align: right;
   gap: 8px;
 }
 
@@ -389,6 +389,8 @@
 .fh-footer__logistics-section {
   display: grid;
   gap: 16px;
+  justify-items: end;
+  text-align: right;
 }
 
 .fh-footer__brand-logo {
@@ -474,6 +476,13 @@
 
   .fh-footer__logistics-section {
     width: min(100%, 420px);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .fh-footer__shipping-item {
+    align-items: center;
+    text-align: center;
   }
 
   .fh-footer__legal {
@@ -522,7 +531,7 @@
 
   .fh-footer__badge-grid--payments img {
     max-height: 40px;
-    padding: 5px;
+    padding: 8px;
   }
 
   .fh-footer__badge-grid--payments {
