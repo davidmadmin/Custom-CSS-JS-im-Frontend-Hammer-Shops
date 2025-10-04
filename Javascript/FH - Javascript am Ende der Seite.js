@@ -2358,42 +2358,162 @@ fhOnReady(function () {
     return val.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0€';
   }
 
+  let hasInjectedFreeShippingStyles = false;
+
+  function ensureFreeShippingStyles() {
+    if (hasInjectedFreeShippingStyles) return;
+
+    const style = document.createElement('style');
+    style.id = 'fh-free-shipping-styles';
+    style.textContent = `
+      #free-shipping-bar {
+        --fh-free-shipping-primary: ${primaryColor};
+      }
+
+      #free-shipping-bar .fh-free-shipping__text {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+      }
+
+      #free-shipping-bar .fh-free-shipping__check {
+        color: #22c55e;
+        font-size: 1.1em;
+        line-height: 1;
+      }
+
+      #free-shipping-bar .fh-free-shipping__track {
+        width: 100%;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #free-shipping-bar .fh-free-shipping__progress {
+        height: 100%;
+        width: 0;
+        min-width: 2%;
+        border-radius: inherit;
+        background: linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 68%, transparent) 0%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 78%, transparent) 30%,
+          rgba(255, 255, 255, 0.26) 50%,
+          rgba(255, 255, 255, 0.26) 68%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 84%, transparent) 86%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 70%, transparent) 100%
+        );
+        background-size: 520% 100%;
+        animation: fh-free-shipping-progress-shine 24s ease-in-out infinite;
+        transition: width 0.35s ease;
+      }
+
+      #free-shipping-bar .fh-free-shipping__progress--complete {
+        animation: none;
+        background: linear-gradient(90deg, rgba(49, 165, 240, 0.95) 0%, rgba(49, 165, 240, 1) 100%);
+        background: linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 90%, white 10%) 0%,
+          var(--fh-free-shipping-primary) 100%
+        );
+      }
+
+      @keyframes fh-free-shipping-progress-shine {
+        0% {
+          background-position: -220% 50%;
+        }
+
+        100% {
+          background-position: 220% 50%;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+    hasInjectedFreeShippingStyles = true;
+  }
+
   function createBar(id) {
+    ensureFreeShippingStyles();
     const wrapper = document.createElement('div');
     wrapper.id = id;
     wrapper.style.marginTop = '0px';
     wrapper.style.marginBottom = '30px';
 
     const text = document.createElement('div');
+    text.className = 'fh-free-shipping__text';
     text.style.fontSize = '0.9rem';
     text.style.fontWeight = '600';
     text.style.marginBottom = '0.5rem';
+    text.dataset.hasReached = 'false';
     wrapper.appendChild(text);
 
     const bg = document.createElement('div');
-    bg.style.width = '100%';
-    bg.style.height = '8px';
-    bg.style.background = '#e0e0e0';
-    bg.style.borderRadius = '4px';
-    bg.style.overflow = 'hidden';
+    bg.className = 'fh-free-shipping__track';
     wrapper.appendChild(bg);
 
     const bar = document.createElement('div');
-    bar.style.height = '100%';
-    bar.style.width = '0%';
-    bar.style.background = primaryColor;
-    bar.style.transition = 'width 0.3s ease';
+    bar.className = 'fh-free-shipping__progress';
     bg.appendChild(bar);
 
     return { wrapper, bar, text };
   }
 
+  function animateSuccessMessage(element, html) {
+    if (!element || typeof element.animate !== 'function') {
+      element.innerHTML = html;
+      return;
+    }
+
+    const hide = element.animate([
+      { opacity: 1, transform: 'translateY(0)' },
+      { opacity: 0, transform: 'translateY(-6px)' },
+    ], {
+      duration: 220,
+      easing: 'ease',
+      fill: 'forwards',
+    });
+
+    hide.addEventListener('finish', function handleHideFinish() {
+      hide.removeEventListener('finish', handleHideFinish);
+      element.innerHTML = html;
+      element.animate([
+        { opacity: 0, transform: 'translateY(6px)' },
+        { opacity: 1, transform: 'translateY(0)' },
+      ], {
+        duration: 260,
+        easing: 'ease-out',
+        fill: 'forwards',
+      });
+    });
+  }
+
   function update(bar, text) {
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const ratio = Math.min(total / THRESHOLD, 1);
-    bar.style.width = (ratio * 100) + '%';
-    if (total < THRESHOLD) text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`; else {
-      text.textContent = 'Gratisversand erreicht!';
+    const widthPercent = Math.max(ratio * 100, 1);
+    bar.style.width = Math.min(widthPercent, 100) + '%';
+
+    const message = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`;
+    const hasReachedBefore = text.dataset.hasReached === 'true';
+
+    if (total < THRESHOLD) {
+      if (hasReachedBefore) text.dataset.hasReached = 'false';
+      if (text.textContent !== message) text.textContent = message;
+      bar.classList.remove('fh-free-shipping__progress--complete');
+    } else {
+      bar.style.width = '100%';
+      bar.classList.add('fh-free-shipping__progress--complete');
+      const successHtml = '<span class="fh-free-shipping__check" aria-hidden="true">✓</span><span>Gratisversand erreicht!</span>';
+
+      if (!hasReachedBefore) {
+        text.dataset.hasReached = 'true';
+        animateSuccessMessage(text, successHtml);
+      } else if (text.innerHTML !== successHtml) {
+        text.innerHTML = successHtml;
+      }
     }
   }
 
