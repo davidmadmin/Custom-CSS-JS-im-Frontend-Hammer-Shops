@@ -232,6 +232,132 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const primaryColor = getPrimaryColor();
 
+  const FREE_SHIPPING_STATE_KEY = '__hammerFreeShippingState';
+
+  function injectFreeShippingStyles() {
+    if (document.getElementById('free-shipping-bar-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'free-shipping-bar-styles';
+    style.textContent = `
+#free-shipping-bar .fsb-track {
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+#free-shipping-bar .fsb-progress {
+  position: relative;
+  height: 100%;
+  border-radius: 999px;
+  overflow: hidden;
+  transition: width 0.4s ease;
+}
+
+#free-shipping-bar .fsb-progress::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(120deg, rgba(255, 255, 255, 0) 0%, rgba(96, 175, 255, 0.35) 35%, rgba(255, 255, 255, 0.9) 50%, rgba(96, 175, 255, 0.35) 65%, rgba(255, 255, 255, 0) 80%);
+  background-size: 240% 100%;
+  animation: freeShippingBarShine 3.2s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes freeShippingBarShine {
+  0% {
+    background-position: -80% 0;
+  }
+
+  100% {
+    background-position: 120% 0;
+  }
+}
+
+#free-shipping-bar .fsb-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+#free-shipping-bar .fsb-message-success {
+  color: #155724;
+}
+
+#free-shipping-bar .fsb-checkmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: rgba(33, 150, 83, 0.12);
+  color: #1f7a2e;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+#free-shipping-bar .fsb-message-enter {
+  animation: fsbMessageEnter 0.5s ease forwards;
+}
+
+#free-shipping-bar .fsb-message-exit {
+  animation: fsbMessageExit 0.2s ease forwards;
+}
+
+@keyframes fsbMessageEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fsbMessageExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+`;
+    document.head.appendChild(style);
+  }
+
+  function applySuccessMessage(text) {
+    text.innerHTML =
+      '<span class="fsb-checkmark" aria-hidden="true">✔</span><span>Gratisversand erreicht!</span>';
+    text.classList.add('fsb-message-success');
+  }
+
+  function applyPendingMessage(text, total) {
+    text.classList.remove('fsb-message-success', 'fsb-message-enter', 'fsb-message-exit');
+    text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`;
+  }
+
+  function playSuccessMessage(wrapper, text) {
+    text.classList.remove('fsb-message-enter');
+    text.classList.add('fsb-message-exit');
+    setTimeout(() => {
+      if (wrapper.dataset.fsbState !== 'success') {
+        text.classList.remove('fsb-message-exit');
+        return;
+      }
+      applySuccessMessage(text);
+      text.classList.remove('fsb-message-exit');
+      text.classList.add('fsb-message-enter');
+      setTimeout(() => {
+        text.classList.remove('fsb-message-enter');
+      }, 500);
+    }, 180);
+  }
+
   function parseEuro(el) {
     if (!el) return 0;
     return (
@@ -251,43 +377,66 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function createBar(id) {
+    injectFreeShippingStyles();
     const wrapper = document.createElement('div');
     wrapper.id = id;
     wrapper.style.marginTop = '0px';
     wrapper.style.marginBottom = '30px';
 
     const text = document.createElement('div');
+    text.classList.add('fsb-message');
     text.style.fontSize = '0.9rem';
     text.style.fontWeight = '600';
     text.style.marginBottom = '0.5rem';
     wrapper.appendChild(text);
 
     const bg = document.createElement('div');
+    bg.classList.add('fsb-track');
     bg.style.width = '100%';
     bg.style.height = '8px';
     bg.style.background = '#e0e0e0';
-    bg.style.borderRadius = '4px';
+    bg.style.borderRadius = '999px';
     bg.style.overflow = 'hidden';
     wrapper.appendChild(bg);
 
     const bar = document.createElement('div');
+    bar.classList.add('fsb-progress');
     bar.style.height = '100%';
-    bar.style.width = '0%';
+    bar.style.width = '1%';
     bar.style.background = primaryColor;
-    bar.style.transition = 'width 0.3s ease';
+    bar.style.borderRadius = '999px';
+    bar.style.transition = 'width 0.4s ease';
     bg.appendChild(bar);
 
     return { wrapper, bar, text };
   }
 
-  function update(bar, text) {
+  function update(wrapper, bar, text) {
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const ratio = Math.min(total / THRESHOLD, 1);
-    bar.style.width = ratio * 100 + '%';
-    if (total < THRESHOLD) {
-      text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`;
+    const widthPercent = Math.min(Math.max(ratio * 100, 1), 100);
+    bar.style.width = widthPercent + '%';
+
+    const nextState = total >= THRESHOLD ? 'success' : 'pending';
+    const prevState =
+      wrapper.dataset.fsbState || window[FREE_SHIPPING_STATE_KEY] || 'pending';
+
+    if (nextState === 'success') {
+      wrapper.dataset.fsbState = 'success';
+      window[FREE_SHIPPING_STATE_KEY] = 'success';
+      if (prevState !== 'success') {
+        playSuccessMessage(wrapper, text);
+      } else if (!text.classList.contains('fsb-message-success')) {
+        applySuccessMessage(text);
+      }
     } else {
-      text.textContent = 'Gratisversand erreicht!';
+      wrapper.dataset.fsbState = 'pending';
+      window[FREE_SHIPPING_STATE_KEY] = 'pending';
+      applyPendingMessage(text, total);
+    }
+
+    if (nextState === 'success' && prevState === 'success') {
+      bar.style.width = '100%';
     }
   }
     function toggleFreeShippingBar() {
@@ -310,8 +459,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (totals && !document.getElementById('free-shipping-bar')) {
       const { wrapper, bar, text } = createBar('free-shipping-bar');
       totals.parentNode.insertBefore(wrapper, totals);
-      update(bar, text);
-      setInterval(() => update(bar, text), 1000);
+      update(wrapper, bar, text);
+      setInterval(() => update(wrapper, bar, text), 1000);
     }
     toggleFreeShippingBar();
   });
