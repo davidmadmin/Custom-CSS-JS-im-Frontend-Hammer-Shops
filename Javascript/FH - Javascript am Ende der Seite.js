@@ -2270,11 +2270,22 @@ fhOnReady(function () {
   }
   function formatTime(h, m, s, showSeconds, color) {
     let t = '<span style="font-weight:bold;color:' + color + ';">';
-    if(h > 0) {
-      t += h + ' ' + pluralize(h, 'Stunde', 'Stunden') + ' ';
+    if (h >= 24) {
+      const days = Math.floor(h / 24);
+      const remainingHours = h % 24;
+      t += days + ' ' + pluralize(days, 'Tag', 'Tage');
+      if (remainingHours > 0) {
+        t += ' ' + remainingHours + ' ' + pluralize(remainingHours, 'Stunde', 'Stunden');
+      } else if (m > 0) {
+        t += ' ' + m + ' ' + pluralize(m, 'Minute', 'Minuten');
+      }
+    } else {
+      if(h > 0) {
+        t += h + ' ' + pluralize(h, 'Stunde', 'Stunden') + ' ';
+      }
+      t += m + ' ' + pluralize(m, 'Minute', 'Minuten');
+      if(showSeconds) t += ' ' + s + ' ' + pluralize(s, 'Sekunde', 'Sekunden');
     }
-    t += m + ' ' + pluralize(m, 'Minute', 'Minuten');
-    if(showSeconds) t += ' ' + s + ' ' + pluralize(s, 'Sekunde', 'Sekunden');
     return t + '</span>';
   }
   var iconUrl = "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/shipping_9288277.svg";
