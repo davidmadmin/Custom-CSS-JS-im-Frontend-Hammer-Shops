@@ -108,6 +108,228 @@ fhOnReady(function () {
     if (trigger) closeMenu();
   });
 
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function resolveStoreAction(store, actionNames) {
+    if (!store || !store._actions) return null;
+
+    for (let index = 0; index < actionNames.length; index += 1) {
+      const name = actionNames[index];
+
+      if (store._actions[name]) return name;
+    }
+
+    return null;
+  }
+
+  function resolveStoreMutation(store, mutationNames) {
+    if (!store || !store._mutations) return null;
+
+    for (let index = 0; index < mutationNames.length; index += 1) {
+      const name = mutationNames[index];
+
+      if (store._mutations[name]) return name;
+    }
+
+    return null;
+  }
+
+  function getStoreShowNetPrices(store) {
+    if (!store || !store.state || !store.state.basket || typeof store.state.basket.showNetPrices === 'undefined') return null;
+
+    return !!store.state.basket.showNetPrices;
+  }
+
+  function setStoreShowNetPrices(store, showNet) {
+    if (!store) return false;
+
+    const target = !!showNet;
+    const current = getStoreShowNetPrices(store);
+
+    if (current === target) return false;
+
+    let applied = false;
+    const mutationName = resolveStoreMutation(store, ['basket/setShowNetPrices', 'basket/setBasketShowNetPrices', 'setShowNetPrices']);
+
+    if (mutationName) {
+      try {
+        store.commit(mutationName, target);
+        applied = true;
+      } catch (error) {
+        applied = false;
+      }
+    }
+
+    if (!applied && store.state && store.state.basket) {
+      store.state.basket.showNetPrices = target;
+      applied = true;
+    }
+
+    return applied;
+  }
+
+  function refreshBasketTotals(store) {
+    const actionName = resolveStoreAction(store, [
+      'basket/updateBasket',
+      'updateBasket',
+      'basket/loadBasket',
+      'loadBasket',
+      'basket/getBasket',
+      'getBasket'
+    ]);
+
+    if (!actionName) return;
+
+    try {
+      const result = store.dispatch(actionName);
+
+      if (result && typeof result.catch === 'function') result.catch(function () {});
+    } catch (error) {
+      /* Ignore dispatch errors in the custom integration to avoid breaking the UI. */
+    }
+  }
+
+  const priceToggleRoot = menu.querySelector('[data-fh-price-toggle-root]');
+  const priceToggleButton = priceToggleRoot ? priceToggleRoot.querySelector('[data-fh-price-toggle]') : null;
+
+  if (priceToggleRoot && priceToggleButton) {
+    const grossOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='gross']");
+    const netOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='net']");
+    const noteElement = priceToggleRoot.querySelector('[data-fh-price-toggle-note]');
+    const STORAGE_KEY = 'fh:price-display:show-net-prices';
+    let currentShowNet = false;
+    let hasIntegratedStore = false;
+    let storeWatcherCleanup = null;
+    let storeSyncTimeoutId = null;
+
+    function readStoredPreference() {
+      try {
+        const raw = window.sessionStorage.getItem(STORAGE_KEY);
+
+        if (raw === '1') return true;
+
+        if (raw === '0') return false;
+      } catch (error) {
+        /* Ignore storage access issues (e.g. Safari private mode). */
+      }
+
+      return null;
+    }
+
+    function persistPreference(value) {
+      try {
+        window.sessionStorage.setItem(STORAGE_KEY, value ? '1' : '0');
+      } catch (error) {
+        /* Ignore storage access issues (e.g. Safari private mode). */
+      }
+    }
+
+    function updateToggleUi(showNet) {
+      const isNet = !!showNet;
+
+      priceToggleButton.setAttribute('aria-checked', isNet ? 'true' : 'false');
+
+      if (isNet) priceToggleButton.classList.add('is-active'); else {
+        priceToggleButton.classList.remove('is-active');
+      }
+
+      if (grossOption) grossOption.setAttribute('aria-hidden', isNet ? 'true' : 'false');
+
+      if (netOption) netOption.setAttribute('aria-hidden', isNet ? 'false' : 'true');
+
+      if (noteElement) {
+        noteElement.textContent = isNet
+          ? 'Aktuell werden Nettopreise angezeigt.'
+          : 'Aktuell werden Bruttopreise angezeigt.';
+      }
+    }
+
+    function applyStateToStore(store, desiredState) {
+      const changed = setStoreShowNetPrices(store, desiredState);
+
+      if (changed) refreshBasketTotals(store);
+    }
+
+    function ensureStoreWatcher(store) {
+      if (!store || typeof store.watch !== 'function' || storeWatcherCleanup) return;
+
+      storeWatcherCleanup = store.watch(
+        function (state) {
+          return state && state.basket ? !!state.basket.showNetPrices : false;
+        },
+        function (value) {
+          const normalized = !!value;
+
+          currentShowNet = normalized;
+          updateToggleUi(normalized);
+          persistPreference(normalized);
+        }
+      );
+    }
+
+    function integrateWithStore(store) {
+      if (!store) return;
+
+      const storedPreference = readStoredPreference();
+      const storeValue = getStoreShowNetPrices(store);
+
+      if (!hasIntegratedStore) {
+        if (storedPreference === true || storedPreference === false) {
+          currentShowNet = storedPreference;
+        } else if (typeof storeValue === 'boolean') {
+          currentShowNet = storeValue;
+          persistPreference(storeValue);
+        }
+
+        hasIntegratedStore = true;
+      }
+
+      updateToggleUi(currentShowNet);
+      applyStateToStore(store, currentShowNet);
+      ensureStoreWatcher(store);
+    }
+
+    function scheduleStoreIntegration(delay) {
+      if (storeSyncTimeoutId) window.clearTimeout(storeSyncTimeoutId);
+
+      storeSyncTimeoutId = window.setTimeout(function () {
+        storeSyncTimeoutId = null;
+
+        const store = getVueStore();
+
+        if (!store) {
+          scheduleStoreIntegration(250);
+          return;
+        }
+
+        integrateWithStore(store);
+      }, typeof delay === 'number' ? delay : 0);
+    }
+
+    const initialPreference = readStoredPreference();
+
+    if (initialPreference === true || initialPreference === false) currentShowNet = initialPreference;
+
+    updateToggleUi(currentShowNet);
+
+    priceToggleButton.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      currentShowNet = !currentShowNet;
+      updateToggleUi(currentShowNet);
+      persistPreference(currentShowNet);
+      scheduleStoreIntegration(0);
+    });
+
+    scheduleStoreIntegration(0);
+  }
+
   window.fhAccountMenu = window.fhAccountMenu || {};
   window.fhAccountMenu.close = closeMenu;
   window.fhAccountMenu.isOpen = function () {
