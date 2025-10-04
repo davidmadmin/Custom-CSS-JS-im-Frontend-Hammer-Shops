@@ -319,7 +319,6 @@
 
 .fh-footer__badge-grid--payments {
   gap: 16px;
-  flex-wrap: nowrap;
 }
 
 .fh-footer__badge-grid img {
@@ -333,8 +332,8 @@
 }
 
 .fh-footer__badge-grid--payments img {
-  max-height: 60px;
-  padding: 5px;
+  max-height: 44px;
+  padding: 4px;
 }
 
 .fh-footer__badge-grid--shipping {
@@ -521,8 +520,8 @@
   }
 
   .fh-footer__badge-grid--payments img {
-    max-height: 52px;
-    padding: 5px;
+    max-height: 40px;
+    padding: 4px;
   }
 
   .fh-footer__badge-grid--payments {
