@@ -201,7 +201,7 @@ fhOnReady(function () {
   if (priceToggleRoot && priceToggleButton) {
     const grossOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='gross']");
     const netOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='net']");
-    const noteElement = priceToggleRoot.querySelector('[data-fh-price-toggle-note]');
+    const labelElement = priceToggleRoot.querySelector('[data-fh-price-toggle-label]');
     const STORAGE_KEY = 'fh:price-display:show-net-prices';
     let currentShowNet = false;
     let hasIntegratedStore = false;
@@ -468,21 +468,16 @@ fhOnReady(function () {
 
     function updateToggleUi(showNet) {
       const isNet = !!showNet;
+      const isGross = !isNet;
 
-      priceToggleButton.setAttribute('aria-checked', isNet ? 'true' : 'false');
-
-      if (isNet) priceToggleButton.classList.add('is-active'); else {
-        priceToggleButton.classList.remove('is-active');
-      }
+      priceToggleButton.setAttribute('aria-checked', isGross ? 'true' : 'false');
 
       if (grossOption) grossOption.setAttribute('aria-hidden', isNet ? 'true' : 'false');
 
       if (netOption) netOption.setAttribute('aria-hidden', isNet ? 'false' : 'true');
 
-      if (noteElement) {
-        noteElement.textContent = isNet
-          ? 'Aktuell werden Nettopreise angezeigt.'
-          : 'Aktuell werden Bruttopreise angezeigt.';
+      if (labelElement) {
+        labelElement.textContent = isNet ? 'Preise ohne MwSt' : 'Preise mit MwSt';
       }
     }
 

@@ -68,23 +68,6 @@
         </button>
         <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
           <div class="fh-header__panel-arrow"></div>
-          <div class="fh-header__panel-stack fh-header__price-toggle" data-fh-price-toggle-root>
-            <div class="fh-header__panel-subtitle">Preisanzeige</div>
-            <button
-              type="button"
-              class="fh-header__price-toggle-button"
-              data-fh-price-toggle
-              role="switch"
-              aria-checked="false"
-            >
-              <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="gross">inkl. MwSt.</span>
-              <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="net">exkl. MwSt.</span>
-              <span class="fh-header__price-toggle-handle" aria-hidden="true"></span>
-            </button>
-            <div class="fh-header__panel-text fh-header__price-toggle-note" data-fh-price-toggle-note>
-              Aktuell werden Bruttopreise angezeigt.
-            </div>
-          </div>
           <div v-if="!$store.getters.isLoggedIn">
             <div class="fh-header__panel-title mb-3">Ihr Konto</div>
             <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
@@ -112,6 +95,20 @@
                 <span v-else v-cloak>Hallo</span>
               </div>
               <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+            </div>
+            <div class="fh-header__price-toggle" data-fh-price-toggle-root>
+              <button
+                type="button"
+                class="fh-header__price-toggle-button"
+                data-fh-price-toggle
+                role="switch"
+                aria-checked="true"
+              >
+                <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="gross">inkl. MwSt.</span>
+                <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="net">exkl. MwSt.</span>
+                <span class="fh-header__price-toggle-handle" aria-hidden="true"></span>
+              </button>
+              <span class="fh-header__price-toggle-label" data-fh-price-toggle-label>Preise mit MwSt</span>
             </div>
             <div
               class="fh-header__customer-segment"
