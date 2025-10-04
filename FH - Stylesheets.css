@@ -770,6 +770,54 @@
   color: #6b7280;
 }
 
+.fh-header__vat-toggle {
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(219, 234, 254, 0.35) 0%, rgba(191, 219, 254, 0.2) 100%);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.fh-header__vat-toggle-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background-color: #ffffff;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fh-header__vat-toggle-button:hover,
+.fh-header__vat-toggle-button:focus {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
+  text-decoration: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  outline: none;
+}
+
+.fh-header__vat-toggle-button.is-active {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.fh-header__vat-toggle-button.is-processing,
+.fh-header__vat-toggle-button[disabled] {
+  cursor: progress;
+  opacity: 0.75;
+}
+
 .fh-header__customer-segment {
   display: flex;
   flex-direction: column;
