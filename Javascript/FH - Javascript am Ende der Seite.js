@@ -181,7 +181,9 @@ fhOnReady(function () {
       'basket/loadBasket',
       'loadBasket',
       'basket/getBasket',
-      'getBasket'
+      'getBasket',
+      'basket/refreshBasket',
+      'refreshBasket'
     ]);
 
     if (!actionName) return;
@@ -230,6 +232,12 @@ fhOnReady(function () {
       }
     }
 
+    function syncInitialData(value) {
+      if (window.App && window.App.initialData) {
+        window.App.initialData.showNetPrices = !!value;
+      }
+    }
+
     function updateToggleUi(showNet) {
       const isNet = !!showNet;
 
@@ -269,6 +277,7 @@ fhOnReady(function () {
           currentShowNet = normalized;
           updateToggleUi(normalized);
           persistPreference(normalized);
+          syncInitialData(normalized);
         }
       );
     }
@@ -293,6 +302,7 @@ fhOnReady(function () {
       updateToggleUi(currentShowNet);
       applyStateToStore(store, currentShowNet);
       ensureStoreWatcher(store);
+      syncInitialData(currentShowNet);
     }
 
     function scheduleStoreIntegration(delay) {
@@ -317,6 +327,7 @@ fhOnReady(function () {
     if (initialPreference === true || initialPreference === false) currentShowNet = initialPreference;
 
     updateToggleUi(currentShowNet);
+    syncInitialData(currentShowNet);
 
     priceToggleButton.addEventListener('click', function (event) {
       event.preventDefault();
@@ -324,6 +335,7 @@ fhOnReady(function () {
       currentShowNet = !currentShowNet;
       updateToggleUi(currentShowNet);
       persistPreference(currentShowNet);
+      syncInitialData(currentShowNet);
       scheduleStoreIntegration(0);
     });
 
