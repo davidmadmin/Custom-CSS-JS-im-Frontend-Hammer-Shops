@@ -2399,12 +2399,15 @@ fhOnReady(function () {
         background: linear-gradient(90deg, rgba(49, 165, 240, 0.75) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(49, 165, 240, 0.85) 100%);
         background: linear-gradient(
           90deg,
-          color-mix(in srgb, var(--fh-free-shipping-primary) 80%, transparent) 0%,
-          rgba(255, 255, 255, 0.55) 50%,
-          color-mix(in srgb, var(--fh-free-shipping-primary) 92%, transparent) 100%
+          color-mix(in srgb, var(--fh-free-shipping-primary) 78%, transparent) 0%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 88%, transparent) 32%,
+          rgba(255, 255, 255, 0.42) 50%,
+          rgba(255, 255, 255, 0.42) 66%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 90%, transparent) 82%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 82%, transparent) 100%
         );
-        background-size: 240% 100%;
-        animation: fh-free-shipping-progress-shine 5.2s ease-in-out infinite;
+        background-size: 360% 100%;
+        animation: fh-free-shipping-progress-shine 12.5s ease-in-out infinite;
         transition: width 0.3s ease;
       }
 
@@ -2420,11 +2423,11 @@ fhOnReady(function () {
 
       @keyframes fh-free-shipping-progress-shine {
         0% {
-          background-position: 160% 50%;
+          background-position: -220% 50%;
         }
 
         100% {
-          background-position: -160% 50%;
+          background-position: 220% 50%;
         }
       }
     `;
