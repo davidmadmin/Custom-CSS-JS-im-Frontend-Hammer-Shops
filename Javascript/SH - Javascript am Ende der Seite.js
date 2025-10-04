@@ -184,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Section: Gratisversand Fortschritt Balken
   document.addEventListener('DOMContentLoaded', function () {
     const THRESHOLD = 150;
+    const SHINE_WIDTH_PERCENT = 1.5;
 
     const COUNTRY_SELECT_ID_FRAGMENTS = [
       'shipping-country-select',
@@ -250,7 +251,22 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
+  function injectShineStyles() {
+    if (document.getElementById('free-shipping-shine-style')) return;
+
+    const style = document.createElement('style');
+    style.id = 'free-shipping-shine-style';
+    style.textContent = `@keyframes freeShippingBarShine {` +
+      `0% { background-position: 0% 50%; }` +
+      `100% { background-position: 200% 50%; }` +
+    `}`;
+
+    document.head.appendChild(style);
+  }
+
   function createBar(id) {
+    injectShineStyles();
+
     const wrapper = document.createElement('div');
     wrapper.id = id;
     wrapper.style.marginTop = '0px';
@@ -268,6 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
     bg.style.background = '#e0e0e0';
     bg.style.borderRadius = '4px';
     bg.style.overflow = 'hidden';
+    bg.style.position = 'relative';
     wrapper.appendChild(bg);
 
     const bar = document.createElement('div');
@@ -277,10 +294,43 @@ document.addEventListener("DOMContentLoaded", function () {
     bar.style.transition = 'width 0.3s ease';
     bg.appendChild(bar);
 
-    return { wrapper, bar, text };
+    const shine = document.createElement('div');
+    shine.dataset.freeShippingShine = 'true';
+    shine.style.position = 'absolute';
+    shine.style.top = '0';
+    shine.style.height = '100%';
+    shine.style.pointerEvents = 'none';
+    shine.style.borderRadius = 'inherit';
+    shine.style.background = `linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 45%, ${primaryColor} 100%)`;
+    shine.style.backgroundSize = '200% 100%';
+    shine.style.animation = 'freeShippingBarShine 1.8s linear infinite';
+    shine.style.opacity = '0';
+    shine.style.zIndex = '1';
+    shine.style.mixBlendMode = 'screen';
+    bg.appendChild(shine);
+
+    return { wrapper, bar, text, shine };
   }
 
-  function update(bar, text) {
+  function updateShine(shine, ratio) {
+    if (!shine) return;
+
+    if (ratio >= 1) {
+      shine.style.opacity = '0';
+      return;
+    }
+
+    const ratioPercent = Math.max(ratio * 100, 0);
+    const width = Math.min(SHINE_WIDTH_PERCENT, 100);
+    const maxLeft = 100 - width;
+    const left = Math.min(Math.max(ratioPercent - width, 0), maxLeft);
+
+    shine.style.width = width + '%';
+    shine.style.left = left + '%';
+    shine.style.opacity = '0.75';
+  }
+
+  function update(bar, text, shine) {
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const ratio = Math.min(total / THRESHOLD, 1);
     bar.style.width = ratio * 100 + '%';
@@ -289,6 +339,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       text.textContent = 'Gratisversand erreicht!';
     }
+    updateShine(shine, ratio);
   }
     function toggleFreeShippingBar() {
       const bar = document.getElementById('free-shipping-bar');
@@ -308,10 +359,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const observer = new MutationObserver(() => {
     const totals = document.querySelector('.cmp-totals');
     if (totals && !document.getElementById('free-shipping-bar')) {
-      const { wrapper, bar, text } = createBar('free-shipping-bar');
+      const { wrapper, bar, text, shine } = createBar('free-shipping-bar');
       totals.parentNode.insertBefore(wrapper, totals);
-      update(bar, text);
-      setInterval(() => update(bar, text), 1000);
+      update(bar, text, shine);
+      setInterval(() => update(bar, text, shine), 1000);
     }
     toggleFreeShippingBar();
   });
