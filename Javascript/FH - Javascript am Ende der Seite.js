@@ -2420,11 +2420,11 @@ fhOnReady(function () {
 
       @keyframes fh-free-shipping-progress-shine {
         0% {
-          background-position: -160% 50%;
+          background-position: 160% 50%;
         }
 
         100% {
-          background-position: 160% 50%;
+          background-position: -160% 50%;
         }
       }
     `;
