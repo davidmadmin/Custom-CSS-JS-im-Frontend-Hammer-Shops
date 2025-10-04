@@ -310,7 +310,7 @@
 .fh-footer__badge-grid {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 16px;
   flex-wrap: wrap;
   overflow: visible;
@@ -332,12 +332,13 @@
 }
 
 .fh-footer__badge-grid--payments img {
-  max-height: 44px;
-  padding: 4px;
+  max-height: 48px;
+  padding: 5px;
 }
 
 .fh-footer__badge-grid--shipping {
   gap: 24px;
+  justify-content: flex-end;
 }
 
 .fh-footer__shipping-item {
@@ -521,7 +522,7 @@
 
   .fh-footer__badge-grid--payments img {
     max-height: 40px;
-    padding: 4px;
+    padding: 5px;
   }
 
   .fh-footer__badge-grid--payments {
