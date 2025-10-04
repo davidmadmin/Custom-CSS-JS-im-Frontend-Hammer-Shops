@@ -22,19 +22,99 @@
       `${dateObj.year}-${dateObj.month}-${dateObj.day}T${dateObj.hour}:${dateObj.minute}:${dateObj.second}`,
     );
   }
+  function pad2(n) {
+    return n < 10 ? "0" + n : n;
+  }
+
+  var holidayCache = {};
+
+  function formatDateKey(date) {
+    return (
+      date.getFullYear() +
+      "-" +
+      pad2(date.getMonth() + 1) +
+      "-" +
+      pad2(date.getDate())
+    );
+  }
+
+  function calculateEasterSunday(year) {
+    var a = year % 19;
+    var b = Math.floor(year / 100);
+    var c = year % 100;
+    var d = Math.floor(b / 4);
+    var e = b % 4;
+    var f = Math.floor((b + 8) / 25);
+    var g = Math.floor((b - f + 1) / 3);
+    var h = (19 * a + b - d - g + 15) % 30;
+    var i = Math.floor(c / 4);
+    var k = c % 4;
+    var l = (32 + 2 * e + 2 * i - h - k) % 7;
+    var m = Math.floor((a + 11 * h + 22 * l) / 451);
+    var month = Math.floor((h + l - 7 * m + 114) / 31);
+    var day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+
+  function addDays(date, days) {
+    var copy = new Date(date);
+    copy.setDate(copy.getDate() + days);
+    return copy;
+  }
+
+  function getHolidaySet(year) {
+    if (holidayCache[year]) return holidayCache[year];
+
+    var holidays = new Set();
+    function add(date) {
+      holidays.add(formatDateKey(date));
+    }
+
+    [
+      [0, 1],   // Neujahr
+      [4, 1],   // Tag der Arbeit
+      [9, 3],   // Tag der Deutschen Einheit
+      [11, 25], // 1. Weihnachtsfeiertag
+      [11, 26], // 2. Weihnachtsfeiertag
+    ].forEach(function (parts) {
+      add(new Date(year, parts[0], parts[1]));
+    });
+
+    var easterSunday = calculateEasterSunday(year);
+    [
+      -2, // Karfreitag
+      1,  // Ostermontag
+      39, // Christi Himmelfahrt
+      50, // Pfingstmontag
+      60  // Fronleichnam (NRW)
+    ].forEach(function (offset) {
+      add(addDays(easterSunday, offset));
+    });
+
+    add(new Date(year, 10, 1)); // Allerheiligen (NRW)
+
+    holidayCache[year] = holidays;
+    return holidays;
+  }
+
+  function isHoliday(date) {
+    var set = getHolidaySet(date.getFullYear());
+    return set.has(formatDateKey(date));
+  }
+
   function isWorkday(date) {
     var day = date.getDay();
-    return day >= 1 && day <= 5;
+    if (day === 0 || day === 6) return false;
+    if (isHoliday(date)) return false;
+    return true;
   }
+
   function getNextWorkday(date) {
     var next = new Date(date);
     do {
       next.setDate(next.getDate() + 1);
     } while (!isWorkday(next));
     return next;
-  }
-  function pad2(n) {
-    return n < 10 ? "0" + n : n;
   }
   function pluralize(n, singular, plural) {
     return n === 1 ? singular : plural;
@@ -67,16 +147,7 @@
     var hour = now.getHours();
     var cutoff = new Date(now);
     cutoff.setHours(13, 0, 0, 0);
-    var ms,
-      h,
-      m,
-      s,
-      color,
-      targetDay,
-      isTomorrow,
-      dateLabel,
-      showSeconds,
-      zeitHtml;
+    var ms, h, m, s, color, dateLabel, showSeconds, zeitHtml;
     function getColor(hours) {
       if (hours < 1) return "#dc2626";
       if (hours < 3) return "#eab308";
@@ -111,21 +182,24 @@
       showSeconds = h === 0;
       color = getColor(h);
       zeitHtml = formatTime(h, m, s, showSeconds, color);
-      var tomorrow = new Date(now);
-      tomorrow.setDate(now.getDate() + 1);
-      var isTomorrow = tomorrow.toDateString() === nextWorkday.toDateString();
+      var startOfToday = new Date(now);
+      startOfToday.setHours(0, 0, 0, 0);
+      var startOfNext = new Date(nextWorkday);
+      startOfNext.setHours(0, 0, 0, 0);
+      var diffDays = Math.round((startOfNext - startOfToday) / (1000 * 60 * 60 * 24));
+      var tomorrow = new Date(startOfToday);
+      tomorrow.setDate(startOfToday.getDate() + 1);
+      var isTomorrow = startOfNext.getTime() === tomorrow.getTime();
       var dayName = weekdays[nextWorkday.getDay()];
       var dayNum = pad2(nextWorkday.getDate());
       var monthNum = pad2(nextWorkday.getMonth() + 1);
       var datum = dayNum + "." + monthNum;
-      if (day === 5 && hour >= 13) {
-        dateLabel = "nächsten Montag, den " + datum;
-      } else if (day === 6) {
-        dateLabel = "nächsten Montag, den " + datum;
-      } else if (day === 0) {
-        dateLabel = "Morgen, Montag den " + datum;
-      } else if (isTomorrow) {
+      if (isTomorrow) {
         dateLabel = "Morgen, " + dayName + " den " + datum;
+      } else if (diffDays === 2) {
+        dateLabel = "Übermorgen, " + dayName + " den " + datum;
+      } else if (diffDays > 2 && dayName === "Montag") {
+        dateLabel = "nächsten Montag, den " + datum;
       } else {
         dateLabel = dayName + " den " + datum;
       }
