@@ -2394,17 +2394,18 @@ fhOnReady(function () {
       #free-shipping-bar .fh-free-shipping__progress {
         height: 100%;
         width: 0;
-        min-width: 1%;
+        min-width: 2%;
         border-radius: inherit;
         background: linear-gradient(90deg, rgba(49, 165, 240, 0.75) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(49, 165, 240, 0.85) 100%);
         background: linear-gradient(
           90deg,
           color-mix(in srgb, var(--fh-free-shipping-primary) 82%, transparent) 0%,
-          rgba(255, 255, 255, 0.9) 50%,
+          rgba(255, 255, 255, 0.55) 50%,
           color-mix(in srgb, var(--fh-free-shipping-primary) 90%, transparent) 100%
         );
         background-size: 200% 100%;
-        animation: fh-free-shipping-progress-shine 2.8s ease-in-out infinite;
+        background-position: -120% 0;
+        animation: fh-free-shipping-progress-shine 5s ease-in-out infinite;
         transition: width 0.3s ease;
       }
 
@@ -2420,11 +2421,11 @@ fhOnReady(function () {
 
       @keyframes fh-free-shipping-progress-shine {
         0% {
-          background-position: 0% 50%;
+          background-position: -120% 0;
         }
 
         100% {
-          background-position: 100% 50%;
+          background-position: 100% 0;
         }
       }
     `;
