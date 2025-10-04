@@ -68,21 +68,27 @@
         </button>
         <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
           <div class="fh-header__panel-arrow"></div>
-          <div class="fh-header__panel-stack fh-header__price-toggle" data-fh-price-toggle-root>
-            <div class="fh-header__panel-subtitle">Preisanzeige</div>
-            <button
-              type="button"
-              class="fh-header__price-toggle-button"
-              data-fh-price-toggle
-              role="switch"
-              aria-checked="false"
-            >
-              <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="gross">inkl. MwSt.</span>
-              <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="net">exkl. MwSt.</span>
-              <span class="fh-header__price-toggle-handle" aria-hidden="true"></span>
-            </button>
-            <div class="fh-header__panel-text fh-header__price-toggle-note" data-fh-price-toggle-note>
-              Aktuell werden Bruttopreise angezeigt.
+          <div class="fh-header__price-toggle" data-fh-price-toggle-root>
+            <div class="fh-header__price-toggle-row">
+              <button
+                type="button"
+                class="fh-header__price-toggle-button"
+                data-fh-price-toggle
+                role="switch"
+                aria-checked="true"
+                aria-label="Preise mit Mehrwertsteuer anzeigen"
+              >
+                <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="gross">inkl. MwSt.</span>
+                <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="net">exkl. MwSt.</span>
+                <span class="fh-header__price-toggle-handle" aria-hidden="true"></span>
+              </button>
+              <span
+                class="fh-header__price-toggle-note fh-header__price-toggle-status"
+                data-fh-price-toggle-note
+                :class="{ 'fh-header__price-toggle-status--hidden': !$store.getters.isLoggedIn }"
+              >
+                Preise mit MwSt
+              </span>
             </div>
           </div>
           <div v-if="!$store.getters.isLoggedIn">

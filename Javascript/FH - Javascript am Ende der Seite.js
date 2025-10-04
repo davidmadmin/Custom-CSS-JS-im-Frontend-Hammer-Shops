@@ -468,22 +468,22 @@ fhOnReady(function () {
 
     function updateToggleUi(showNet) {
       const isNet = !!showNet;
+      const isGross = !isNet;
 
-      priceToggleButton.setAttribute('aria-checked', isNet ? 'true' : 'false');
+      priceToggleButton.setAttribute('aria-checked', isGross ? 'true' : 'false');
+      priceToggleButton.setAttribute(
+        'aria-label',
+        isNet ? 'Preise ohne Mehrwertsteuer anzeigen' : 'Preise mit Mehrwertsteuer anzeigen'
+      );
 
-      if (isNet) priceToggleButton.classList.add('is-active'); else {
-        priceToggleButton.classList.remove('is-active');
-      }
+      if (isGross) priceToggleButton.classList.add('is-active');
+      else priceToggleButton.classList.remove('is-active');
 
-      if (grossOption) grossOption.setAttribute('aria-hidden', isNet ? 'true' : 'false');
+      if (grossOption) grossOption.setAttribute('aria-hidden', isGross ? 'false' : 'true');
 
-      if (netOption) netOption.setAttribute('aria-hidden', isNet ? 'false' : 'true');
+      if (netOption) netOption.setAttribute('aria-hidden', isGross ? 'true' : 'false');
 
-      if (noteElement) {
-        noteElement.textContent = isNet
-          ? 'Aktuell werden Nettopreise angezeigt.'
-          : 'Aktuell werden Bruttopreise angezeigt.';
-      }
+      if (noteElement) noteElement.textContent = isNet ? 'Preise ohne MwSt' : 'Preise mit MwSt';
     }
 
     function applyStateToStore(store, desiredState) {
