@@ -2396,18 +2396,18 @@ fhOnReady(function () {
         width: 0;
         min-width: 2%;
         border-radius: inherit;
-        background: linear-gradient(90deg, rgba(49, 165, 240, 0.75) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(49, 165, 240, 0.85) 100%);
         background: linear-gradient(
           90deg,
-          color-mix(in srgb, var(--fh-free-shipping-primary) 78%, transparent) 0%,
-          color-mix(in srgb, var(--fh-free-shipping-primary) 88%, transparent) 32%,
-          rgba(255, 255, 255, 0.42) 50%,
-          rgba(255, 255, 255, 0.42) 66%,
-          color-mix(in srgb, var(--fh-free-shipping-primary) 90%, transparent) 82%,
-          color-mix(in srgb, var(--fh-free-shipping-primary) 82%, transparent) 100%
+          color-mix(in srgb, var(--fh-free-shipping-primary) 68%, transparent) 0%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 82%, transparent) 28%,
+          rgba(255, 255, 255, 0.16) 48%,
+          rgba(255, 255, 255, 0.22) 55%,
+          rgba(255, 255, 255, 0.16) 62%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 80%, transparent) 82%,
+          color-mix(in srgb, var(--fh-free-shipping-primary) 70%, transparent) 100%
         );
-        background-size: 360% 100%;
-        animation: fh-free-shipping-progress-shine 12.5s ease-in-out infinite;
+        background-size: 480% 100%;
+        animation: fh-free-shipping-progress-shine 24s linear infinite;
         transition: width 0.3s ease;
       }
 
@@ -2423,11 +2423,11 @@ fhOnReady(function () {
 
       @keyframes fh-free-shipping-progress-shine {
         0% {
-          background-position: -220% 50%;
+          background-position: -240% 50%;
         }
 
         100% {
-          background-position: 220% 50%;
+          background-position: 240% 50%;
         }
       }
     `;
