@@ -177,6 +177,19 @@
             </nav>
             <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
           </div>
+          <div class="fh-header__panel-divider my-3"></div>
+          <div class="fh-header__panel-stack fh-header__vat-toggle" data-fh-vat-toggle-container>
+            <div class="fh-header__panel-subtitle">Preisanzeige</div>
+            <div class="fh-header__panel-text">Steuern für die Preisansicht ein- oder ausblenden.</div>
+            <button type="button" class="fh-header__vat-toggle-button" data-fh-vat-toggle aria-pressed="false">
+              <span v-if="$store.state.basket && $store.state.basket.showNetPrices" v-cloak>Bruttopreise anzeigen</span>
+              <span v-else v-cloak>Nettopreise anzeigen</span>
+            </button>
+            <div class="fh-header__panel-text" data-fh-vat-status v-cloak>
+              <span v-if="$store.state.basket && $store.state.basket.showNetPrices">Aktuell werden Nettopreise angezeigt.</span>
+              <span v-else>Aktuell werden Bruttopreise angezeigt.</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="fh-basket-preview fh-header__basket">

@@ -116,6 +116,221 @@ fhOnReady(function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH VAT display toggle
+fhOnReady(function () {
+  const toggleButton = document.querySelector('[data-fh-vat-toggle]');
+
+  if (!toggleButton) return;
+
+  const toggleContainer = toggleButton.closest('[data-fh-vat-toggle-container]') || toggleButton.closest('[data-fh-account-menu]');
+  const STORAGE_KEY = 'fh:vat-display-preference';
+  const PROCESSING_CLASS = 'is-processing';
+  let isProcessing = false;
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresApp && window.ceresApp.$store) return window.ceresApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function readStoredPreference() {
+    try {
+      const value = window.sessionStorage.getItem(STORAGE_KEY);
+
+      if (value === 'net') return true;
+
+      if (value === 'gross') return false;
+    } catch (error) {
+      /* sessionStorage might be blocked */
+    }
+
+    return null;
+  }
+
+  function persistPreference(showNetPrices) {
+    try {
+      window.sessionStorage.setItem(STORAGE_KEY, showNetPrices ? 'net' : 'gross');
+    } catch (error) {
+      /* Ignore storage write errors */
+    }
+  }
+
+  function applyState(showNetPrices) {
+    const isNet = !!showNetPrices;
+    const mode = isNet ? 'net' : 'gross';
+
+    toggleButton.setAttribute('aria-pressed', isNet ? 'true' : 'false');
+    toggleButton.setAttribute('data-fh-vat-mode', mode);
+    toggleButton.classList.toggle('is-active', isNet);
+    toggleButton.setAttribute('aria-label', isNet ? 'Auf Bruttopreise umschalten' : 'Auf Nettopreise umschalten');
+
+    if (toggleContainer) toggleContainer.setAttribute('data-fh-vat-mode', mode);
+  }
+
+  function setProcessingState(nextState) {
+    isProcessing = !!nextState;
+    toggleButton.disabled = !!nextState;
+    toggleButton.classList.toggle(PROCESSING_CLASS, !!nextState);
+    toggleButton.setAttribute('aria-busy', nextState ? 'true' : 'false');
+  }
+
+  function refreshBasket(store) {
+    if (!store || typeof store.dispatch !== 'function') return null;
+
+    try {
+      const result = store.dispatch('refreshBasket');
+
+      if (result && typeof result.then === 'function') {
+        return result.catch(function () {
+          return null;
+        });
+      }
+    } catch (error) {
+      /* ignore refresh errors */
+    }
+
+    return null;
+  }
+
+  function updatePreference(showNetPrices, options) {
+    const store = getVueStore();
+    const settings = options || {};
+
+    if (!store) {
+      applyState(showNetPrices);
+      persistPreference(showNetPrices);
+      return null;
+    }
+
+    const currentStoreState = !!(store.state && store.state.basket && store.state.basket.showNetPrices);
+
+    if (!settings.force && currentStoreState === !!showNetPrices) {
+      applyState(showNetPrices);
+      persistPreference(showNetPrices);
+      return null;
+    }
+
+    if (typeof store.commit === 'function') {
+      try {
+        store.commit('setShowNetPrices', !!showNetPrices);
+      } catch (error) {
+        /* ignore commit errors */
+      }
+    }
+
+    applyState(showNetPrices);
+    persistPreference(showNetPrices);
+
+    if (settings.skipRefresh) return null;
+
+    return refreshBasket(store);
+  }
+
+  function subscribeToStore(store) {
+    if (!store || typeof store.subscribe !== 'function') return;
+
+    store.subscribe(function (mutation, state) {
+      if (!state || !state.basket) return;
+
+      if (mutation.type === 'setShowNetPrices' || mutation.type === 'setBasket') {
+        const showNetPrices = !!state.basket.showNetPrices;
+
+        applyState(showNetPrices);
+        persistPreference(showNetPrices);
+      }
+    });
+  }
+
+  function whenStoreReady(callback) {
+    const store = getVueStore();
+
+    if (store) {
+      callback(store);
+      return;
+    }
+
+    let attempts = 0;
+    const maxAttempts = 60;
+    const interval = window.setInterval(function () {
+      const candidate = getVueStore();
+
+      if (candidate) {
+        window.clearInterval(interval);
+        callback(candidate);
+      } else if (++attempts >= maxAttempts) {
+        window.clearInterval(interval);
+      }
+    }, 100);
+  }
+
+  toggleButton.disabled = true;
+  toggleButton.setAttribute('aria-pressed', 'false');
+  toggleButton.setAttribute('aria-label', 'Auf Nettopreise umschalten');
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    if (isProcessing) return;
+
+    const store = getVueStore();
+    const current = store && store.state && store.state.basket ? !!store.state.basket.showNetPrices : toggleButton.getAttribute('data-fh-vat-mode') === 'net';
+    const next = !current;
+
+    setProcessingState(true);
+
+    const result = updatePreference(next, { force: true });
+
+    if (result && typeof result.then === 'function') {
+      result.then(function () {
+        setProcessingState(false);
+      }, function () {
+        setProcessingState(false);
+      });
+    } else {
+      setProcessingState(false);
+    }
+  });
+
+  whenStoreReady(function (store) {
+    const storedPreference = readStoredPreference();
+    const initial = !!(store.state && store.state.basket && store.state.basket.showNetPrices);
+
+    subscribeToStore(store);
+    applyState(initial);
+
+    if (storedPreference === null) {
+      persistPreference(initial);
+      setProcessingState(false);
+      return;
+    }
+
+    if (storedPreference !== initial) {
+      setProcessingState(true);
+
+      const updateResult = updatePreference(storedPreference, { force: true });
+
+      if (updateResult && typeof updateResult.then === 'function') {
+        updateResult.then(function () {
+          setProcessingState(false);
+        }, function () {
+          setProcessingState(false);
+        });
+      } else {
+        setProcessingState(false);
+      }
+
+      return;
+    }
+
+    setProcessingState(false);
+  });
+});
+// End Section: FH VAT display toggle
+
 // Section: FH desktop header scroll behaviour
 fhOnReady(function () {
   const header = document.querySelector('[data-fh-header-root]');
