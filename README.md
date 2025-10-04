@@ -22,7 +22,7 @@ Dieses Repository sammelt alle CSS- und JavaScript-Anpassungen, mit denen wir di
 Neben Header und Footer stellen wir temporäre Funktions-Erweiterungen bereit. Diese sollen später in dedizierte Plugins überführt werden, dienen aber aktuell als Referenzimplementierung.
 
 ### Bestell-Versand Countdown
-Zeigt an, wie lange Bestellungen für den Versand am gleichen Tag aufgegeben werden können. Aktualisiert sich jede Sekunde und erscheint überall dort, wo ein Element mit der ID `cutoff-countdown` existiert.
+Zeigt an, wie lange Bestellungen für den Versand am gleichen Tag aufgegeben werden können. Aktualisiert sich jede Sekunde und erscheint überall dort, wo ein Element mit der ID `cutoff-countdown` existiert. Berücksichtigt bundeseinheitliche Feiertage sowie die landesweit arbeitsfreien Tage in Nordrhein-Westfalen bei der Berechnung des nächsten Versandtags.
 
 ### Versandarten-Icons
 Ersetzt die Standard-Icons der Versandprofile durch eigene Grafiken, sofern die entsprechenden Profile gerendert werden.
