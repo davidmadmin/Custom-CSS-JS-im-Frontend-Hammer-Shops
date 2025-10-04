@@ -108,6 +108,485 @@ fhOnReady(function () {
     if (trigger) closeMenu();
   });
 
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function resolveStoreAction(store, actionNames) {
+    if (!store || !store._actions) return null;
+
+    for (let index = 0; index < actionNames.length; index += 1) {
+      const name = actionNames[index];
+
+      if (store._actions[name]) return name;
+    }
+
+    return null;
+  }
+
+  function resolveStoreMutation(store, mutationNames) {
+    if (!store || !store._mutations) return null;
+
+    for (let index = 0; index < mutationNames.length; index += 1) {
+      const name = mutationNames[index];
+
+      if (store._mutations[name]) return name;
+    }
+
+    return null;
+  }
+
+  function getStoreShowNetPrices(store) {
+    if (!store || !store.state || !store.state.basket || typeof store.state.basket.showNetPrices === 'undefined') return null;
+
+    return !!store.state.basket.showNetPrices;
+  }
+
+  function setStoreShowNetPrices(store, showNet) {
+    if (!store) return false;
+
+    const target = !!showNet;
+    const current = getStoreShowNetPrices(store);
+
+    if (current === target) return false;
+
+    let applied = false;
+    const mutationName = resolveStoreMutation(store, ['basket/setShowNetPrices', 'basket/setBasketShowNetPrices', 'setShowNetPrices']);
+
+    if (mutationName) {
+      try {
+        store.commit(mutationName, target);
+        applied = true;
+      } catch (error) {
+        applied = false;
+      }
+    }
+
+    if (!applied && store.state && store.state.basket) {
+      store.state.basket.showNetPrices = target;
+      applied = true;
+    }
+
+    return applied;
+  }
+
+  function refreshBasketTotals(store) {
+    const actionName = resolveStoreAction(store, [
+      'basket/updateBasket',
+      'updateBasket',
+      'basket/loadBasket',
+      'loadBasket',
+      'basket/getBasket',
+      'getBasket'
+    ]);
+
+    if (!actionName) return;
+
+    try {
+      const result = store.dispatch(actionName);
+
+      if (result && typeof result.catch === 'function') result.catch(function () {});
+    } catch (error) {
+      /* Ignore dispatch errors in the custom integration to avoid breaking the UI. */
+    }
+  }
+
+  const priceToggleRoot = menu.querySelector('[data-fh-price-toggle-root]');
+  const priceToggleButton = priceToggleRoot ? priceToggleRoot.querySelector('[data-fh-price-toggle]') : null;
+
+  if (priceToggleRoot && priceToggleButton) {
+    const grossOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='gross']");
+    const netOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='net']");
+    const noteElement = priceToggleRoot.querySelector('[data-fh-price-toggle-note]');
+    const STORAGE_KEY = 'fh:price-display:show-net-prices';
+    let currentShowNet = false;
+    let hasIntegratedStore = false;
+    let storeWatcherCleanup = null;
+    let storeSyncTimeoutId = null;
+    let lastKnownStore = null;
+
+    const priceDisplayManager = (function () {
+      const managerState = {
+        rafId: null,
+        lastApplied: null,
+        observerInstalled: false,
+      };
+
+      function getCurrencyFormatter() {
+        let formatter = null;
+
+        return function format(value, currency, fallback) {
+          if (typeof value !== 'number' || !isFinite(value)) {
+            return typeof fallback === 'string' ? fallback : fallback == null ? null : fallback;
+          }
+
+          if (!formatter) {
+            if (typeof window !== 'undefined' && window.Vue && typeof window.Vue.filter === 'function') {
+              const currencyFilter = window.Vue.filter('currency');
+
+              if (typeof currencyFilter === 'function') {
+                formatter = function (amount, isoCode) {
+                  return currencyFilter(amount, isoCode);
+                };
+              }
+            }
+
+            if (!formatter) {
+              const locale =
+                (typeof window !== 'undefined' && window.App && (App.language || App.locale || App.defaultLocale)) ||
+                'de-DE';
+
+              formatter = function (amount, isoCode) {
+                const currencyCode = isoCode || (typeof window !== 'undefined' && window.App && App.activeCurrency) || 'EUR';
+
+                try {
+                  return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(amount);
+                } catch (error) {
+                  const formatted = amount.toFixed(2);
+
+                  return currencyCode ? formatted + ' ' + currencyCode : formatted;
+                }
+              };
+            }
+          }
+
+          try {
+            return formatter(value, currency);
+          } catch (error) {
+            return typeof fallback === 'string' ? fallback : fallback == null ? null : fallback;
+          }
+        };
+      }
+
+      const formatCurrency = getCurrencyFormatter();
+
+      function pickNumericValue(source, grossKey, netKey, showNet, fallback) {
+        if (!source || typeof source !== 'object') return typeof fallback === 'number' ? fallback : null;
+
+        const gross = source[grossKey];
+        const net = netKey ? source[netKey] : undefined;
+
+        if (showNet) {
+          if (typeof net === 'number' && isFinite(net)) return net;
+          if (typeof gross === 'number' && isFinite(gross)) return gross;
+        } else {
+          if (typeof gross === 'number' && isFinite(gross)) return gross;
+          if (typeof net === 'number' && isFinite(net)) return net;
+        }
+
+        return typeof fallback === 'number' && isFinite(fallback) ? fallback : null;
+      }
+
+      function assignFormatted(target, value, currency, fallback) {
+        if (!target || typeof target !== 'object') return;
+
+        if (Object.prototype.hasOwnProperty.call(target, 'value') && typeof value === 'number' && isFinite(value)) {
+          target.value = value;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(target, 'formatted')) {
+          const existing = target.formatted;
+          const fallbackValue = typeof existing === 'undefined' ? fallback : existing;
+
+          target.formatted = formatCurrency(value, currency, fallbackValue);
+        }
+      }
+
+      function updatePriceContainer(container, showNet) {
+        if (!container || typeof container !== 'object') return;
+
+        const raw = container.data;
+
+        if (!raw || typeof raw !== 'object') return;
+
+        const currency = raw.currency || (container.price && container.price.currency) || (window.App && App.activeCurrency) || 'EUR';
+
+        const priceValue = pickNumericValue(raw, 'price', 'priceNet', showNet, container.price && container.price.value);
+        assignFormatted(container.price, priceValue, currency, container.price && container.price.formatted);
+
+        const unitPriceValue = pickNumericValue(raw, 'unitPrice', 'unitPriceNet', showNet, container.unitPrice && container.unitPrice.value);
+        assignFormatted(container.unitPrice, unitPriceValue, currency, container.unitPrice && container.unitPrice.formatted);
+
+        if (Object.prototype.hasOwnProperty.call(container, 'totalPrice')) {
+          const totalValue = pickNumericValue(raw, 'totalPrice', 'totalPriceNet', showNet, container.totalPrice && container.totalPrice.value);
+          assignFormatted(container.totalPrice, totalValue, currency, container.totalPrice && container.totalPrice.formatted);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(container, 'lowestPrice')) {
+          const lowestValue = pickNumericValue(raw, 'lowestPrice', 'lowestPriceNet', showNet, container.lowestPrice && container.lowestPrice.value);
+          assignFormatted(container.lowestPrice, lowestValue, currency, container.lowestPrice && container.lowestPrice.formatted);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(container, 'basePrice')) {
+          const baseValue = pickNumericValue(raw, 'basePrice', 'basePriceNet', showNet, null);
+
+          if (typeof baseValue === 'number' && isFinite(baseValue)) {
+            container.basePrice = formatCurrency(baseValue, currency, container.basePrice);
+          }
+        }
+
+        if (container.contactClassDiscount && Object.prototype.hasOwnProperty.call(container.contactClassDiscount, 'amount')) {
+          const discountValue = pickNumericValue(raw, 'customerClassDiscount', 'customerClassDiscountNet', showNet, container.contactClassDiscount.amount);
+
+          if (typeof discountValue === 'number' && isFinite(discountValue)) container.contactClassDiscount.amount = discountValue;
+        }
+
+        if (container.categoryDiscount && Object.prototype.hasOwnProperty.call(container.categoryDiscount, 'amount')) {
+          const discountValue = pickNumericValue(raw, 'categoryDiscount', 'categoryDiscountNet', showNet, container.categoryDiscount.amount);
+
+          if (typeof discountValue === 'number' && isFinite(discountValue)) container.categoryDiscount.amount = discountValue;
+        }
+
+        container.isNet = !!showNet;
+      }
+
+      function updatePriceCollection(prices, showNet) {
+        if (!prices || typeof prices !== 'object') return;
+
+        updatePriceContainer(prices.default, showNet);
+        updatePriceContainer(prices.rrp, showNet);
+        updatePriceContainer(prices.specialOffer, showNet);
+
+        if (Array.isArray(prices.graduatedPrices)) {
+          prices.graduatedPrices.forEach(function (entry) {
+            updatePriceContainer(entry, showNet);
+          });
+        }
+      }
+
+      function isPriceCollection(candidate) {
+        return !!(candidate && typeof candidate === 'object' && candidate.default && typeof candidate.default === 'object' && candidate.default.data);
+      }
+
+      function traverseValue(value, showNet, seen) {
+        if (!value || typeof value !== 'object') return;
+
+        if (seen) {
+          if (seen.has(value)) return;
+          seen.add(value);
+        }
+
+        if (value.prices && isPriceCollection(value.prices)) updatePriceCollection(value.prices, showNet);
+
+        if (Array.isArray(value)) {
+          for (let index = 0; index < value.length; index += 1) traverseValue(value[index], showNet, seen);
+          return;
+        }
+
+        const keys = Object.keys(value);
+
+        for (let idx = 0; idx < keys.length; idx += 1) {
+          const child = value[keys[idx]];
+
+          if (child && typeof child === 'object') traverseValue(child, showNet, seen);
+        }
+      }
+
+      function applyNow(store, showNet) {
+        if (!store || !store.state) return;
+
+        const seen = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+        traverseValue(store.state, showNet, seen);
+
+        if (typeof document !== 'undefined' && document.documentElement) {
+          document.documentElement.setAttribute('data-fh-show-net-prices', showNet ? 'net' : 'gross');
+        }
+
+        if (typeof window !== 'undefined' && window.App && window.App.initialData) {
+          window.App.initialData.showNetPrices = !!showNet;
+        }
+
+        managerState.lastApplied = !!showNet;
+      }
+
+      function schedule(store, showNet) {
+        if (!store || !store.state) return;
+
+        const nextState = !!showNet;
+
+        if (managerState.rafId) {
+          if (typeof window.cancelAnimationFrame === 'function') {
+            window.cancelAnimationFrame(managerState.rafId);
+          }
+          if (typeof window.clearTimeout === 'function') window.clearTimeout(managerState.rafId);
+          managerState.rafId = null;
+        }
+
+        const scheduler = typeof window.requestAnimationFrame === 'function' ? window.requestAnimationFrame : window.setTimeout;
+
+        managerState.rafId = scheduler(function () {
+          managerState.rafId = null;
+          applyNow(store, nextState);
+        });
+      }
+
+      function ensureObserver(store, getState) {
+        if (!store || typeof store.subscribe !== 'function' || managerState.observerInstalled) return;
+
+        store.subscribe(function () {
+          const desired = typeof getState === 'function' ? getState() : managerState.lastApplied;
+
+          if (typeof desired === 'boolean') schedule(store, desired);
+        });
+
+        managerState.observerInstalled = true;
+      }
+
+      return {
+        scheduleUpdate: schedule,
+        ensureMutationObserver: ensureObserver,
+        applyImmediately: applyNow,
+      };
+    })();
+
+    function readStoredPreference() {
+      try {
+        const raw = window.sessionStorage.getItem(STORAGE_KEY);
+
+        if (raw === '1') return true;
+
+        if (raw === '0') return false;
+      } catch (error) {
+        /* Ignore storage access issues (e.g. Safari private mode). */
+      }
+
+      return null;
+    }
+
+    function persistPreference(value) {
+      try {
+        window.sessionStorage.setItem(STORAGE_KEY, value ? '1' : '0');
+      } catch (error) {
+        /* Ignore storage access issues (e.g. Safari private mode). */
+      }
+    }
+
+    function updateToggleUi(showNet) {
+      const isNet = !!showNet;
+
+      priceToggleButton.setAttribute('aria-checked', isNet ? 'true' : 'false');
+
+      if (isNet) priceToggleButton.classList.add('is-active'); else {
+        priceToggleButton.classList.remove('is-active');
+      }
+
+      if (grossOption) grossOption.setAttribute('aria-hidden', isNet ? 'true' : 'false');
+
+      if (netOption) netOption.setAttribute('aria-hidden', isNet ? 'false' : 'true');
+
+      if (noteElement) {
+        noteElement.textContent = isNet
+          ? 'Aktuell werden Nettopreise angezeigt.'
+          : 'Aktuell werden Bruttopreise angezeigt.';
+      }
+    }
+
+    function applyStateToStore(store, desiredState) {
+      const changed = setStoreShowNetPrices(store, desiredState);
+
+      if (store) priceDisplayManager.scheduleUpdate(store, desiredState);
+
+      if (changed) refreshBasketTotals(store);
+    }
+
+    function ensureStoreWatcher(store) {
+      if (!store || typeof store.watch !== 'function' || storeWatcherCleanup) return;
+
+      storeWatcherCleanup = store.watch(
+        function (state) {
+          return state && state.basket ? !!state.basket.showNetPrices : false;
+        },
+        function (value) {
+          const normalized = !!value;
+
+          currentShowNet = normalized;
+          updateToggleUi(normalized);
+          persistPreference(normalized);
+          if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, normalized);
+        }
+      );
+    }
+
+    function integrateWithStore(store) {
+      if (!store) return;
+
+      const storedPreference = readStoredPreference();
+      const storeValue = getStoreShowNetPrices(store);
+
+      if (!hasIntegratedStore) {
+        if (storedPreference === true || storedPreference === false) {
+          currentShowNet = storedPreference;
+        } else if (typeof storeValue === 'boolean') {
+          currentShowNet = storeValue;
+          persistPreference(storeValue);
+        }
+
+        hasIntegratedStore = true;
+      }
+
+      lastKnownStore = store;
+      updateToggleUi(currentShowNet);
+      applyStateToStore(store, currentShowNet);
+      ensureStoreWatcher(store);
+      priceDisplayManager.ensureMutationObserver(store, function () {
+        return currentShowNet;
+      });
+      priceDisplayManager.scheduleUpdate(store, currentShowNet);
+    }
+
+    function scheduleStoreIntegration(delay) {
+      if (storeSyncTimeoutId) window.clearTimeout(storeSyncTimeoutId);
+
+      storeSyncTimeoutId = window.setTimeout(function () {
+        storeSyncTimeoutId = null;
+
+        const store = getVueStore();
+
+        if (!store) {
+          scheduleStoreIntegration(250);
+          return;
+        }
+
+        integrateWithStore(store);
+      }, typeof delay === 'number' ? delay : 0);
+    }
+
+    const initialPreference = readStoredPreference();
+
+    if (initialPreference === true || initialPreference === false) currentShowNet = initialPreference;
+
+    updateToggleUi(currentShowNet);
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.documentElement.setAttribute('data-fh-show-net-prices', currentShowNet ? 'net' : 'gross');
+    }
+    if (typeof window !== 'undefined' && window.App && window.App.initialData) {
+      window.App.initialData.showNetPrices = !!currentShowNet;
+    }
+
+    priceToggleButton.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      currentShowNet = !currentShowNet;
+      updateToggleUi(currentShowNet);
+      persistPreference(currentShowNet);
+      if (typeof window !== 'undefined' && window.App && window.App.initialData) {
+        window.App.initialData.showNetPrices = !!currentShowNet;
+      }
+      if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, currentShowNet);
+      else if (typeof document !== 'undefined' && document.documentElement) {
+        document.documentElement.setAttribute('data-fh-show-net-prices', currentShowNet ? 'net' : 'gross');
+      }
+      scheduleStoreIntegration(0);
+    });
+
+    scheduleStoreIntegration(0);
+  }
+
   window.fhAccountMenu = window.fhAccountMenu || {};
   window.fhAccountMenu.close = closeMenu;
   window.fhAccountMenu.isOpen = function () {
