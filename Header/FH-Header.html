@@ -188,6 +188,18 @@
                 </a>
               </div>
             </div>
+            <div
+              class="fh-header__panel-account-type"
+              v-if="$store.state.user && $store.state.user.userData && Number($store.state.user.userData.classId) === 1"
+            >
+              Konto: Standardkonto
+            </div>
+            <div
+              class="fh-header__panel-account-type"
+              v-else-if="$store.state.user && $store.state.user.userData && [12, 16, 21].includes(Number($store.state.user.userData.classId))"
+            >
+              Konto: Firmenkunden
+            </div>
             <nav class="fh-header__panel-links mb-4">
               <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
               <a href="/my-account/settings" class="fh-header__panel-link">Kontoeinstellungen</a>
