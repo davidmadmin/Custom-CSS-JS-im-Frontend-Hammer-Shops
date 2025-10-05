@@ -1116,22 +1116,49 @@
 .fh-header__panel-links {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .fh-header__panel-link {
-  display: block;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 4px 0;
-  color: #1a1a1a;
+  color: inherit;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.fh-header__panel-link::before {
+  content: "";
+  display: inline-flex;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .fh-header__panel-link:hover,
 .fh-header__panel-link:focus {
-  color: #0f172a;
+  color: #2563eb;
   text-decoration: none;
+  transform: translateX(2px);
+}
+
+.fh-header__panel-link:hover::before,
+.fh-header__panel-link:focus::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fh-header__account-type {
+  margin-bottom: 16px;
 }
 
 .fh-header__logout {
