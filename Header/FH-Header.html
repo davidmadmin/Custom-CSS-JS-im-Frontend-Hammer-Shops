@@ -119,11 +119,13 @@
               class="fh-header__customer-segment"
               v-if="$store.state.user && $store.state.user.userData && [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
             >
-              <span
-                class="fh-header__customer-badge"
-                v-text="({ 1: 'Standardkonto', 12: 'Firmenkunde', 16: 'Firmenkunde', 21: 'Firmenkunde' })[Number($store.state.user.userData.classId)]"
-                v-cloak
-              ></span>
+              <span class="fh-header__customer-badge" v-cloak>
+                <span class="fh-header__customer-badge-label">Konto:</span>
+                <span
+                  class="fh-header__customer-badge-value"
+                  v-text="({ 1: 'Standardkonto', 12: 'Firmenkunden', 16: 'Firmenkunden', 21: 'Firmenkunden' })[Number($store.state.user.userData.classId)]"
+                ></span>
+              </span>
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--standard"
                 v-if="Number($store.state.user.userData.classId) === 1"

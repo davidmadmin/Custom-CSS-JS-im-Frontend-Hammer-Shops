@@ -882,14 +882,25 @@
   align-items: center;
   justify-content: center;
   align-self: flex-start;
+  gap: 4px;
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(59, 130, 246, 0.15);
   color: #0f172a;
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.fh-header__customer-badge-label {
+  font-weight: 600;
+  text-transform: none;
+}
+
+.fh-header__customer-badge-value {
   font-weight: 700;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .fh-header__customer-contact {
