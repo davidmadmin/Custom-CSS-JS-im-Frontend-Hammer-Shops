@@ -281,22 +281,37 @@ fhOnReady(function () {
       function assignFormatted(target, value, currency, fallback) {
         if (!target || typeof target !== 'object') return;
 
+        const hasVueSet =
+          typeof window !== 'undefined' && window.Vue && typeof window.Vue.set === 'function';
+
+        function setReactive(targetObject, key, nextValue) {
+          if (!targetObject || typeof targetObject !== 'object') return;
+
+          if (hasVueSet) {
+            window.Vue.set(targetObject, key, nextValue);
+          } else {
+            targetObject[key] = nextValue;
+          }
+        }
+
         if (Object.prototype.hasOwnProperty.call(target, 'value') && typeof value === 'number' && isFinite(value)) {
-          target.value = value;
+          setReactive(target, 'value', value);
         }
 
         if (Object.prototype.hasOwnProperty.call(target, 'formatted')) {
           const existing = target.formatted;
           const fallbackValue = typeof existing === 'undefined' ? fallback : existing;
+          const nextFormatted = formatCurrency(value, currency, fallbackValue);
 
-          target.formatted = formatCurrency(value, currency, fallbackValue);
+          setReactive(target, 'formatted', nextFormatted);
         }
       }
 
       function updatePriceContainer(container, showNet) {
         if (!container || typeof container !== 'object') return;
 
-        const raw = container.data;
+        const rawCandidate = container.data;
+        const raw = rawCandidate && typeof rawCandidate === 'object' ? rawCandidate : container;
 
         if (!raw || typeof raw !== 'object') return;
 
@@ -356,7 +371,20 @@ fhOnReady(function () {
       }
 
       function isPriceCollection(candidate) {
-        return !!(candidate && typeof candidate === 'object' && candidate.default && typeof candidate.default === 'object' && candidate.default.data);
+        if (!candidate || typeof candidate !== 'object') return false;
+
+        const defaultContainer = candidate.default;
+
+        if (!defaultContainer || typeof defaultContainer !== 'object') return false;
+
+        return !!(
+          defaultContainer.data ||
+          defaultContainer.price ||
+          defaultContainer.unitPrice ||
+          defaultContainer.totalPrice ||
+          defaultContainer.lowestPrice ||
+          defaultContainer.basePrice
+        );
       }
 
       function traverseValue(value, showNet, seen) {
@@ -463,6 +491,37 @@ fhOnReady(function () {
       }
     }
 
+    function updateVatNotes(showNet) {
+      const vatReplacement = showNet ? 'zzgl. ges. MwSt.' : 'inkl. ges. MwSt.';
+      const vatPattern = /(inkl\.|zzgl\.) ges\. MwSt\./i;
+
+      const categoryVatSpans = document.querySelectorAll('.vat.small.text-muted span');
+
+      categoryVatSpans.forEach(function (span) {
+        if (!span || typeof span.textContent !== 'string') return;
+
+        span.textContent = vatReplacement;
+      });
+
+      const productVatSpans = document.querySelectorAll('.widget.vat .widget-inner span');
+
+      productVatSpans.forEach(function (span) {
+        if (!span) return;
+
+        for (let idx = 0; idx < span.childNodes.length; idx += 1) {
+          const node = span.childNodes[idx];
+
+          if (!node || node.nodeType !== 3 || typeof node.textContent !== 'string') continue;
+
+          const nextContent = node.textContent.replace(vatPattern, vatReplacement);
+
+          if (nextContent !== node.textContent) node.textContent = nextContent;
+
+          break;
+        }
+      });
+    }
+
     function updateToggleUi(showNet) {
       const isNet = !!showNet;
       const isGross = !isNet;
@@ -481,6 +540,8 @@ fhOnReady(function () {
       if (netOption) netOption.setAttribute('aria-hidden', isGross ? 'true' : 'false');
 
       if (noteElement) noteElement.textContent = isNet ? 'Preise ohne MwSt' : 'Preise mit MwSt';
+
+      updateVatNotes(isNet);
     }
 
     function applyStateToStore(store, desiredState) {
