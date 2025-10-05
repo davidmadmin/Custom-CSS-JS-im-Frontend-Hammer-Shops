@@ -493,8 +493,307 @@ fhOnReady(function () {
 
       const seenObjects = typeof WeakSet === 'function' ? new WeakSet() : null;
 
-      function applyToTarget(target) {
+      function collectGraduatedPriceSets(sources) {
+        const collected = [];
+        const seen = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+        function markSeen(value) {
+          if (!seen) return false;
+
+          if (seen.has(value)) return true;
+
+          seen.add(value);
+
+          return false;
+        }
+
+        function addIfCandidate(candidate) {
+          if (!candidate || typeof candidate !== 'object') return;
+
+          const { prices, graduatedPrices } = candidate;
+
+          if (prices && Array.isArray(prices.graduatedPrices) && prices.graduatedPrices.length) {
+            collected.push(prices.graduatedPrices);
+          }
+
+          if (Array.isArray(graduatedPrices) && graduatedPrices.length) collected.push(graduatedPrices);
+        }
+
+        function traverse(value, depth) {
+          if (!value || typeof value !== 'object') return;
+
+          if (seen && markSeen(value)) return;
+
+          if (Array.isArray(value)) {
+            for (let idx = 0; idx < value.length; idx += 1) {
+              traverse(value[idx], depth + 1);
+            }
+
+            return;
+          }
+
+          addIfCandidate(value);
+
+          if (depth >= 3) return;
+
+          const keys = Object.keys(value);
+
+          for (let index = 0; index < keys.length; index += 1) {
+            const key = keys[index];
+
+            if (typeof key === 'string' && key.charAt(0) === '$') continue;
+
+            const next = value[key];
+
+            if (next && typeof next === 'object') traverse(next, depth + 1);
+          }
+        }
+
+        sources.forEach(function (source) {
+          if (!source || typeof source !== 'object') return;
+
+          traverse(source, 0);
+        });
+
+        return collected;
+      }
+
+      function updateGraduatedPriceCell(cell, formattedValue) {
+        if (!cell || typeof formattedValue !== 'string' || !formattedValue.trim()) return;
+
+        let textNode = null;
+
+        for (let idx = 0; idx < cell.childNodes.length; idx += 1) {
+          const node = cell.childNodes[idx];
+
+          if (node && node.nodeType === 3) {
+            textNode = node;
+            break;
+          }
+        }
+
+        if (!textNode) {
+          textNode = cell.insertBefore(document.createTextNode(''), cell.firstChild || null);
+        }
+
+        const trimmed = formattedValue.trim();
+        const needsTrailingSpace = textNode.nextSibling && textNode.nextSibling.nodeType === 1 && !/\s$/.test(trimmed);
+        textNode.textContent = needsTrailingSpace ? trimmed + ' ' : trimmed;
+      }
+
+      function updateGraduatedPriceTables(element, potentialSources) {
+        if (!element || !potentialSources || !potentialSources.length) return;
+
+        const tables = element.querySelectorAll('.graduated-prices-table');
+
+        if (!tables.length) return;
+
+        const priceSets = collectGraduatedPriceSets(potentialSources);
+
+        if (!priceSets.length) return;
+
+        const usedSets = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+        function normalizeQuantityValue(value) {
+          if (typeof value === 'number' && isFinite(value)) return value;
+
+          if (typeof value === 'string') {
+            const cleaned = value.replace(/[^0-9.,+-]/g, '');
+
+            if (!cleaned) return null;
+
+            const lastComma = cleaned.lastIndexOf(',');
+            const lastDot = cleaned.lastIndexOf('.');
+            let normalized = cleaned;
+
+            if (lastComma > lastDot) {
+              normalized = cleaned.replace(/\./g, '').replace(',', '.');
+            } else if (lastDot > lastComma) {
+              normalized = cleaned.replace(/,/g, '');
+            } else {
+              normalized = cleaned.replace(',', '.');
+            }
+
+            const parsed = parseFloat(normalized);
+
+            if (isFinite(parsed)) return parsed;
+          }
+
+          return null;
+        }
+
+        function extractEntryQuantity(entry) {
+          if (!entry || typeof entry !== 'object') return null;
+
+          const sources = [
+            entry.minimumOrderQuantity,
+            entry.minimumQuantity,
+            entry.fromQuantity,
+            entry.quantity,
+            entry.amount,
+          ];
+
+          const raw = entry.data;
+
+          if (raw && typeof raw === 'object') {
+            sources.push(
+              raw.minimumOrderQuantity,
+              raw.minimumQuantity,
+              raw.fromQuantity,
+              raw.quantity,
+              raw.amount,
+              raw.interval
+            );
+          }
+
+          for (let index = 0; index < sources.length; index += 1) {
+            const normalized = normalizeQuantityValue(sources[index]);
+
+            if (normalized != null) return normalized;
+          }
+
+          return null;
+        }
+
+        function readRowQuantities(rows) {
+          if (!rows || !rows.length) return null;
+
+          const result = [];
+
+          for (let index = 0; index < rows.length; index += 1) {
+            const row = rows[index];
+
+            if (!row) {
+              result.push(null);
+              continue;
+            }
+
+            const quantityCell = row.querySelector('td');
+            const quantityText = quantityCell ? quantityCell.textContent : '';
+
+            result.push(normalizeQuantityValue(quantityText));
+          }
+
+          return result;
+        }
+
+        function entryQuantitiesMatch(rowQuantities, entries) {
+          if (!rowQuantities || !rowQuantities.length) return false;
+          if (!entries || entries.length !== rowQuantities.length) return false;
+
+          let hasCompared = false;
+
+          for (let index = 0; index < rowQuantities.length; index += 1) {
+            const rowValue = rowQuantities[index];
+
+            if (rowValue == null) continue;
+
+            const entryValue = extractEntryQuantity(entries[index]);
+
+            if (entryValue == null) return false;
+
+            if (Math.abs(entryValue - rowValue) > 1e-6) return false;
+
+            hasCompared = true;
+          }
+
+          return hasCompared;
+        }
+
+        function pickPriceSet(rowCount, rowArray) {
+          const rowQuantities = Array.isArray(rowArray) ? readRowQuantities(rowArray) : null;
+          const hasRowQuantities = !!(rowQuantities && rowQuantities.some(function (value) {
+            return value != null;
+          }));
+
+          if (hasRowQuantities) {
+            for (let index = 0; index < priceSets.length; index += 1) {
+              const candidate = priceSets[index];
+
+              if (!candidate || !candidate.length) continue;
+
+              if (candidate.length !== rowCount) continue;
+
+              if (usedSets && usedSets.has(candidate)) continue;
+
+              if (!entryQuantitiesMatch(rowQuantities, candidate)) continue;
+
+              if (usedSets) usedSets.add(candidate);
+
+              return candidate;
+            }
+          }
+
+          for (let index = 0; index < priceSets.length; index += 1) {
+            const candidate = priceSets[index];
+
+            if (!candidate || !candidate.length) continue;
+
+            if (usedSets && usedSets.has(candidate)) continue;
+
+            if (typeof rowCount === 'number' && rowCount > 0 && candidate.length !== rowCount) {
+              continue;
+            }
+
+            if (usedSets) usedSets.add(candidate);
+
+            return candidate;
+          }
+
+          for (let index = 0; index < priceSets.length; index += 1) {
+            const candidate = priceSets[index];
+
+            if (!candidate || !candidate.length) continue;
+
+            if (usedSets && usedSets.has(candidate)) continue;
+
+            if (usedSets) usedSets.add(candidate);
+
+            return candidate;
+          }
+
+          return null;
+        }
+
+        tables.forEach(function (table) {
+          const rows = table.querySelectorAll('tbody > tr');
+
+          if (!rows.length) return;
+
+          const rowArray = Array.prototype.slice.call(rows);
+          const priceEntries = pickPriceSet(rowArray.length, rowArray);
+
+          if (!priceEntries) return;
+
+          rows.forEach(function (row, rowIndex) {
+            if (!row) return;
+
+            const cell = row.querySelector('.graduated-price');
+
+            if (!cell) return;
+
+            const entry = priceEntries[rowIndex];
+
+            if (!entry || typeof entry !== 'object') return;
+
+            const { price, unitPrice } = entry;
+
+            const formatted =
+              (price && typeof price.formatted === 'string' && price.formatted) ||
+              (unitPrice && typeof unitPrice.formatted === 'string' && unitPrice.formatted) ||
+              null;
+
+            if (!formatted) return;
+
+            updateGraduatedPriceCell(cell, formatted);
+          });
+        });
+      }
+
+      function applyToTarget(target, collector) {
         if (!target || typeof target !== 'object') return;
+
+        if (collector && typeof collector.push === 'function') collector.push(target);
 
         if (seenObjects) {
           if (seenObjects.has(target)) return;
@@ -518,10 +817,22 @@ fhOnReady(function () {
 
         if (!rootInstance || rootInstance.$el !== element) return;
 
-        applyToTarget(rootInstance.item);
-        applyToTarget(rootInstance.itemData);
-        applyToTarget(rootInstance.itemDataRef);
-        applyToTarget(rootInstance.itemSlotData);
+        const potentialSources = [];
+
+        applyToTarget(rootInstance.item, potentialSources);
+        applyToTarget(rootInstance.itemData, potentialSources);
+        applyToTarget(rootInstance.itemDataRef, potentialSources);
+        applyToTarget(rootInstance.itemSlotData, potentialSources);
+
+        if (rootInstance.$props && typeof rootInstance.$props === 'object') {
+          applyToTarget(rootInstance.$props.item, potentialSources);
+          applyToTarget(rootInstance.$props.itemData, potentialSources);
+        }
+
+        if (rootInstance && typeof rootInstance === 'object') potentialSources.push(rootInstance);
+        if (instance && typeof instance === 'object' && instance !== rootInstance) potentialSources.push(instance);
+
+        updateGraduatedPriceTables(element, potentialSources);
 
         if (typeof rootInstance.$forceUpdate === 'function') rootInstance.$forceUpdate();
       });
