@@ -195,10 +195,7 @@ fhOnReady(function () {
     }
   }
 
-  const priceToggleRoot = menu.querySelector('[data-fh-price-toggle-root]');
-  const priceToggleButton = priceToggleRoot ? priceToggleRoot.querySelector('[data-fh-price-toggle]') : null;
-
-  if (priceToggleRoot && priceToggleButton) {
+  function installPriceToggle(priceToggleRoot, priceToggleButton) {
     const grossOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='gross']");
     const netOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='net']");
     const noteElement = priceToggleRoot.querySelector('[data-fh-price-toggle-note]');
@@ -468,22 +465,22 @@ fhOnReady(function () {
 
     function updateToggleUi(showNet) {
       const isNet = !!showNet;
+      const isGross = !isNet;
 
-      priceToggleButton.setAttribute('aria-checked', isNet ? 'true' : 'false');
+      priceToggleButton.setAttribute('aria-checked', isGross ? 'true' : 'false');
+      priceToggleButton.setAttribute(
+        'aria-label',
+        isNet ? 'Preise ohne Mehrwertsteuer anzeigen' : 'Preise mit Mehrwertsteuer anzeigen'
+      );
 
-      if (isNet) priceToggleButton.classList.add('is-active'); else {
-        priceToggleButton.classList.remove('is-active');
-      }
+      if (isGross) priceToggleButton.classList.add('is-active');
+      else priceToggleButton.classList.remove('is-active');
 
-      if (grossOption) grossOption.setAttribute('aria-hidden', isNet ? 'true' : 'false');
+      if (grossOption) grossOption.setAttribute('aria-hidden', isGross ? 'false' : 'true');
 
-      if (netOption) netOption.setAttribute('aria-hidden', isNet ? 'false' : 'true');
+      if (netOption) netOption.setAttribute('aria-hidden', isGross ? 'true' : 'false');
 
-      if (noteElement) {
-        noteElement.textContent = isNet
-          ? 'Aktuell werden Nettopreise angezeigt.'
-          : 'Aktuell werden Bruttopreise angezeigt.';
-      }
+      if (noteElement) noteElement.textContent = isNet ? 'Preise ohne MwSt' : 'Preise mit MwSt';
     }
 
     function applyStateToStore(store, desiredState) {
@@ -586,6 +583,51 @@ fhOnReady(function () {
 
     scheduleStoreIntegration(0);
   }
+
+  function attemptInstallPriceToggle(root) {
+    const element = root || menu.querySelector('[data-fh-price-toggle-root]');
+
+    if (!element || element.__fhPriceToggleInitialized) return false;
+
+    const button = element.querySelector('[data-fh-price-toggle]');
+
+    if (!button) return false;
+
+    element.__fhPriceToggleInitialized = true;
+    installPriceToggle(element, button);
+
+    return true;
+  }
+
+  attemptInstallPriceToggle();
+
+  const priceToggleObserver = new MutationObserver(function (mutations) {
+    for (let index = 0; index < mutations.length; index += 1) {
+      const mutation = mutations[index];
+
+      if (mutation.type !== 'childList') continue;
+
+      if (attemptInstallPriceToggle()) return;
+
+      const addedNodes = mutation.addedNodes;
+
+      for (let nodeIndex = 0; nodeIndex < addedNodes.length; nodeIndex += 1) {
+        const node = addedNodes[nodeIndex];
+
+        if (node && node.nodeType === 1 && typeof node.querySelector === 'function') {
+          if (node.matches && node.matches('[data-fh-price-toggle-root]')) {
+            if (attemptInstallPriceToggle(node)) return;
+          }
+
+          const nestedRoot = node.querySelector('[data-fh-price-toggle-root]');
+
+          if (nestedRoot && attemptInstallPriceToggle(nestedRoot)) return;
+        }
+      }
+    }
+  });
+
+  priceToggleObserver.observe(menu, { childList: true, subtree: true });
 
   window.fhAccountMenu = window.fhAccountMenu || {};
   window.fhAccountMenu.close = closeMenu;
