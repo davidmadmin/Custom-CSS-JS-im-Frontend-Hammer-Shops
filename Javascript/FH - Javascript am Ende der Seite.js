@@ -206,6 +206,83 @@ fhOnReady(function () {
     let storeSyncTimeoutId = null;
     let lastKnownStore = null;
 
+    function updateVatReferenceNotes(showNet) {
+      if (typeof document === 'undefined') return;
+
+      const grossLabel = '* inkl. ges. MwSt.';
+      const netLabel = '* zzgl. ges. MwSt.';
+      const selectorList = ['.vat span'];
+      const sanitizeText = function (text) {
+        if (typeof text !== 'string') return '';
+
+        return text.replace(/\s+/g, ' ').trim();
+      };
+
+      selectorList.forEach(function (selector) {
+        const nodes = document.querySelectorAll(selector);
+
+        nodes.forEach(function (node) {
+          if (!node || node.hasAttribute('data-fh-price-toggle-note')) return;
+
+          let targetNode = null;
+
+          node.childNodes.forEach(function (child) {
+            if (!targetNode && child.nodeType === 3 && /MwSt\.?/i.test(child.textContent || '')) targetNode = child;
+          });
+
+          if (!targetNode) return;
+
+          const current = sanitizeText(targetNode.textContent);
+          const label = showNet ? netLabel : grossLabel;
+          const zzglMatch = current.match(/zzgl\.?\s*(.*)$/i);
+          const trailing = zzglMatch && zzglMatch[1] ? zzglMatch[1].trim() : '';
+          let nextText = label + ' zzgl.';
+
+          nextText += trailing ? ' ' + trailing : ' ';
+
+          targetNode.textContent = nextText;
+        });
+      });
+    }
+
+    const scheduleVatReferenceUpdate = (function () {
+      let rafId = null;
+      let timeoutId = null;
+      let lastValue = null;
+
+      function clearPending() {
+        if (rafId != null && typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
+          window.cancelAnimationFrame(rafId);
+        }
+
+        if (timeoutId != null && typeof window !== 'undefined' && typeof window.clearTimeout === 'function') {
+          window.clearTimeout(timeoutId);
+        }
+
+        rafId = null;
+        timeoutId = null;
+      }
+
+      return function schedule(showNet) {
+        lastValue = !!showNet;
+
+        updateVatReferenceNotes(lastValue);
+
+        clearPending();
+
+        if (typeof window === 'undefined') return;
+
+        const callback = function () {
+          rafId = null;
+          timeoutId = null;
+          updateVatReferenceNotes(lastValue);
+        };
+
+        if (typeof window.requestAnimationFrame === 'function') rafId = window.requestAnimationFrame(callback);
+        else timeoutId = window.setTimeout(callback, 16);
+      };
+    })();
+
     const priceDisplayManager = (function () {
       const managerState = {
         rafId: null,
@@ -390,6 +467,12 @@ fhOnReady(function () {
 
         traverseValue(store.state, showNet, seen);
 
+        if (store && store.state && store.state.itemList && Array.isArray(store.state.itemList.items)) {
+          store.state.itemList.items = store.state.itemList.items.slice();
+        }
+
+        scheduleVatReferenceUpdate(showNet);
+
         if (typeof document !== 'undefined' && document.documentElement) {
           document.documentElement.setAttribute('data-fh-show-net-prices', showNet ? 'net' : 'gross');
         }
@@ -481,6 +564,8 @@ fhOnReady(function () {
       if (netOption) netOption.setAttribute('aria-hidden', isGross ? 'true' : 'false');
 
       if (noteElement) noteElement.textContent = isNet ? 'Preise ohne MwSt' : 'Preise mit MwSt';
+
+      scheduleVatReferenceUpdate(showNet);
     }
 
     function applyStateToStore(store, desiredState) {
