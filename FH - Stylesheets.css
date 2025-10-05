@@ -1119,13 +1119,23 @@
   gap: 8px;
 }
 
-.fh-header__panel-link {
+.fh-header__panel-link { 
   display: block;
   padding: 4px 0;
   color: #1a1a1a;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
+}
+
+.fh-header__panel-account-type {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .fh-header__panel-link:hover,
