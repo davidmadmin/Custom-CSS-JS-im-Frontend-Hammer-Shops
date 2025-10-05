@@ -482,6 +482,138 @@ fhOnReady(function () {
       return null;
     }
 
+    function collectGraduatedPriceLists(sources) {
+      const lists = [];
+      const seenObjects = typeof WeakSet === 'function' ? new WeakSet() : null;
+      const seenLists = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+      function addList(candidate) {
+        if (!Array.isArray(candidate) || !candidate.length) return;
+
+        if (seenLists) {
+          if (seenLists.has(candidate)) return;
+
+          seenLists.add(candidate);
+        }
+
+        lists.push(candidate);
+      }
+
+      function traverse(value, depth) {
+        if (!value || typeof value !== 'object' || depth > 6) return;
+
+        if (seenObjects) {
+          if (seenObjects.has(value)) return;
+
+          seenObjects.add(value);
+        }
+
+        if (Array.isArray(value)) {
+          if (value.length && value[0] && typeof value[0] === 'object' && value[0].price) addList(value);
+
+          for (let index = 0; index < value.length; index += 1) traverse(value[index], depth + 1);
+
+          return;
+        }
+
+        if (Array.isArray(value.graduatedPrices)) addList(value.graduatedPrices);
+
+        if (value.prices && typeof value.prices === 'object') {
+          if (Array.isArray(value.prices.graduatedPrices)) addList(value.prices.graduatedPrices);
+
+          traverse(value.prices, depth + 1);
+        }
+
+        const keys = Object.keys(value);
+
+        for (let keyIndex = 0; keyIndex < keys.length; keyIndex += 1) {
+          traverse(value[keys[keyIndex]], depth + 1);
+        }
+      }
+
+      for (let sourceIndex = 0; sourceIndex < sources.length; sourceIndex += 1) {
+        traverse(sources[sourceIndex], 0);
+      }
+
+      return lists;
+    }
+
+    function pickGraduatedPriceList(lists, desiredLength) {
+      if (!Array.isArray(lists) || !lists.length) return null;
+
+      let fallback = null;
+
+      for (let index = 0; index < lists.length; index += 1) {
+        const list = lists[index];
+
+        if (!Array.isArray(list) || !list.length) continue;
+
+        if (!fallback) fallback = list;
+
+        if (typeof desiredLength === 'number' && list.length === desiredLength) return list;
+      }
+
+      return fallback;
+    }
+
+    function updateGraduatedPriceTable(element, rootInstance) {
+      if (!element || !rootInstance) return;
+
+      const table = element.querySelector('.graduated-prices-table');
+
+      if (!table) return;
+
+      const rows = table.querySelectorAll('tbody tr');
+
+      if (!rows.length) return;
+
+      const lists = collectGraduatedPriceLists([
+        rootInstance.item,
+        rootInstance.itemData,
+        rootInstance.itemDataRef,
+        rootInstance.itemSlotData,
+      ]);
+
+      const priceList = pickGraduatedPriceList(lists, rows.length);
+
+      if (!priceList) return;
+
+      rows.forEach(function (row, rowIndex) {
+        const entry = priceList[rowIndex];
+
+        if (!entry || typeof entry !== 'object') return;
+
+        const priceCell = row.querySelector('.graduated-price');
+
+        if (!priceCell) return;
+
+        const formattedPrice =
+          (entry.price && typeof entry.price.formatted === 'string' && entry.price.formatted) ||
+          (typeof entry.formatted === 'string' && entry.formatted) ||
+          null;
+
+        if (typeof formattedPrice !== 'string') return;
+
+        let textNode = null;
+
+        for (let nodeIndex = 0; nodeIndex < priceCell.childNodes.length; nodeIndex += 1) {
+          const child = priceCell.childNodes[nodeIndex];
+
+          if (child && child.nodeType === 3) {
+            textNode = child;
+            break;
+          }
+        }
+
+        if (!textNode) {
+          textNode = document.createTextNode('');
+          priceCell.insertBefore(textNode, priceCell.firstChild || null);
+        }
+
+        textNode.textContent = formattedPrice;
+      });
+    }
+
     function updateCategoryItemData(showNet) {
       if (typeof document === 'undefined') return;
 
@@ -524,6 +656,8 @@ fhOnReady(function () {
         applyToTarget(rootInstance.itemSlotData);
 
         if (typeof rootInstance.$forceUpdate === 'function') rootInstance.$forceUpdate();
+
+        updateGraduatedPriceTable(element, rootInstance);
       });
     }
 
