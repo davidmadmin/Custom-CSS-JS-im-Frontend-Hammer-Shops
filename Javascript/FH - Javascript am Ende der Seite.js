@@ -2657,6 +2657,51 @@ fhOnReady(function () {
 });
 // End Section: FH wish list flyout preview
 
+// Section: Close account and wishlist menus when basket preview opens
+fhOnReady(function () {
+  const body = document.body;
+
+  if (!body) return;
+
+  function closeMenus() {
+    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+      window.fhAccountMenu.close();
+    }
+
+    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+      window.fhWishlistMenu.close();
+    }
+  }
+
+  function handleBasketStateChange() {
+    if (body.classList.contains('basket-open')) closeMenus();
+  }
+
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.toggle-basket-preview')) closeMenus();
+  });
+
+  const observer = new MutationObserver(function (mutations) {
+    for (let index = 0; index < mutations.length; index += 1) {
+      const mutation = mutations[index];
+
+      if (mutation.type === 'attributes') {
+        handleBasketStateChange();
+        break;
+      }
+    }
+  });
+
+  observer.observe(body, { attributes: true, attributeFilter: ['class'] });
+
+  handleBasketStateChange();
+
+  window.addEventListener('beforeunload', function () {
+    observer.disconnect();
+  });
+});
+// End Section: Close account and wishlist menus when basket preview opens
+
 // Section: Basket preview attribute cleanup
 fhOnReady(function () {
   const attributeKeywords = ['inhalt', 'abmess', 'länge', 'laenge', 'breite', 'höhe', 'hoehe'];
