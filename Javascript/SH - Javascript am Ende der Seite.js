@@ -681,6 +681,65 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
   // End Section: Trusted Shops Badge toggle during search overlay
 
+  // Section: Close account and wishlist menus when basket preview opens
+  function installBasketPreviewMenuClosers() {
+    var body = document.body;
+
+    if (!body) return;
+
+    function closeMenus() {
+      if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+        window.fhAccountMenu.close();
+      }
+
+      if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+        window.fhWishlistMenu.close();
+      }
+
+      if (window.shAccountMenu && typeof window.shAccountMenu.close === 'function') {
+        window.shAccountMenu.close();
+      }
+
+      if (window.shWishlistMenu && typeof window.shWishlistMenu.close === 'function') {
+        window.shWishlistMenu.close();
+      }
+    }
+
+    function handleBasketStateChange() {
+      if (body.classList.contains('basket-open')) closeMenus();
+    }
+
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('.toggle-basket-preview')) closeMenus();
+    });
+
+    var observer = new MutationObserver(function (mutations) {
+      for (var index = 0; index < mutations.length; index += 1) {
+        var mutation = mutations[index];
+
+        if (mutation.type === 'attributes') {
+          handleBasketStateChange();
+          break;
+        }
+      }
+    });
+
+    observer.observe(body, { attributes: true, attributeFilter: ['class'] });
+
+    handleBasketStateChange();
+
+    window.addEventListener('beforeunload', function () {
+      observer.disconnect();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', installBasketPreviewMenuClosers);
+  } else {
+    installBasketPreviewMenuClosers();
+  }
+  // End Section: Close account and wishlist menus when basket preview opens
+
   // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
   function patchBasketButton() {
