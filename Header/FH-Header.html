@@ -119,11 +119,6 @@
               class="fh-header__customer-segment"
               v-if="$store.state.user && $store.state.user.userData && [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
             >
-              <span
-                class="fh-header__customer-badge"
-                v-text="({ 1: 'Standardkonto', 12: 'Firmenkunde', 16: 'Firmenkunde', 21: 'Firmenkunde' })[Number($store.state.user.userData.classId)]"
-                v-cloak
-              ></span>
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--standard"
                 v-if="Number($store.state.user.userData.classId) === 1"
@@ -194,6 +189,14 @@
               <a href="/my-account/orders" class="fh-header__panel-link">Meine Bestellungen</a>
               <a href="/hammer-praemien" class="fh-header__panel-link">Hammer Punkte einlösen</a>
             </nav>
+            <div
+              class="fh-header__panel-text fh-header__account-type"
+              v-if="$store.state.user && $store.state.user.userData && [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
+              v-cloak
+            >
+              <span v-if="Number($store.state.user.userData.classId) === 1">Konto: Standardkonto</span>
+              <span v-else>Konto: Firmenkunden</span>
+            </div>
             <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
           </div>
         </div>
