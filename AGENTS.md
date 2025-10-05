@@ -26,6 +26,14 @@ Ich möchte den Header und Footer für die Hammer-Shops (FH und SH) auf Basis vo
 | **SEO/Markup**      | Schema.org JSON-LD      | BreadcrumbList, Product Schema                               | Strukturierte Daten für Suchmaschinen                      |
 | **Trust/Widgets**   | Trusted Shops u. a.     | Drittanbieter-JS                                             | Reviews, Trustbadges, Rechtliches                          |
 
+## Primäre Referenzen & Ressourcen
+
+* **REST-API-Dokumentation:** https://developers.plentymarkets.com/en-gb/plentymarkets-rest-api/index.html – Ziehe diese Quelle immer heran, wenn du Datenflüsse, Endpunkte oder Datenstrukturen verstehen oder erweitern musst. Für reine CSS- oder HTML-Änderungen ist ein Blick in die API-Dokumentation in der Regel nicht erforderlich.
+* **IO-Plugin:** https://github.com/plentymarkets/plugin-io – Das IO-Plugin liefert wesentliche Shop-Funktionalitäten (Routing, Controller, Widgets). Prüfe vor komplexeren JS-Anpassungen, ob hier bereits passende Hooks oder Komponenten existieren. Bei kosmetischen Anpassungen kann dieses Nachschlagen entfallen.
+* **plentyShop LTS / Ceres:** https://github.com/plentymarkets/plugin-ceres – Bleibt die maßgebliche Grundlage für Templates, Vue-Komponenten und Styles. Für tiefgreifende Layout- oder Logikänderungen ist der Abgleich Pflicht, während bei isolierten Style-Overrides ein kurzer Plausibilitätscheck genügt.
+
+> **Hinweis:** Nutze diese Ressourcen gezielt. Wenn du z. B. lediglich Farben, Abstände oder Schriftgrößen in einer bestehenden CSS-Datei änderst, reicht es, die lokale Struktur zu kennen. Erst wenn Backend-Daten, Komponenten oder Shop-Flows betroffen sind, sollten IO-Plugin und REST-API eingehend geprüft werden.
+
 ## Stil- und Strukturvorgaben
 
 * Arbeite mit sauber dokumentierten HTML-Strukturen. Inline-CSS ist erlaubt, darf aber keine Skripte einbetten.
