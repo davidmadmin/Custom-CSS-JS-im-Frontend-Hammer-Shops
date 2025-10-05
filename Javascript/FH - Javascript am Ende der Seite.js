@@ -438,6 +438,7 @@ fhOnReady(function () {
         scheduleUpdate: schedule,
         ensureMutationObserver: ensureObserver,
         applyImmediately: applyNow,
+        formatCurrency: formatCurrency,
       };
     })();
 
@@ -482,6 +483,170 @@ fhOnReady(function () {
       return null;
     }
 
+    function extractGraduatedPricesFromCandidate(candidate, seen) {
+      if (!candidate || typeof candidate !== 'object') return null;
+
+      if (typeof candidate.nodeType === 'number' && typeof candidate.nodeName === 'string') return null;
+
+      if (typeof window !== 'undefined' && candidate === window) return null;
+
+      if (typeof document !== 'undefined' && (candidate === document || candidate === document.body)) return null;
+
+      if (seen) {
+        if (seen.has(candidate)) return null;
+
+        seen.add(candidate);
+      }
+
+      if (Array.isArray(candidate)) {
+        for (let index = 0; index < candidate.length; index += 1) {
+          const nested = extractGraduatedPricesFromCandidate(candidate[index], seen);
+
+          if (nested) return nested;
+        }
+
+        return null;
+      }
+
+      if (Array.isArray(candidate.graduatedPrices) && candidate.graduatedPrices.length) {
+        return candidate.graduatedPrices;
+      }
+
+      if (candidate.prices && candidate.prices !== candidate) {
+        const nested = extractGraduatedPricesFromCandidate(candidate.prices, seen);
+
+        if (nested) return nested;
+      }
+
+      if (candidate.variation && candidate.variation !== candidate) {
+        const nested = extractGraduatedPricesFromCandidate(candidate.variation, seen);
+
+        if (nested) return nested;
+      }
+
+      if (candidate.data && candidate.data !== candidate) {
+        const nested = extractGraduatedPricesFromCandidate(candidate.data, seen);
+
+        if (nested) return nested;
+      }
+
+      return null;
+    }
+
+    function findGraduatedPriceEntries(instance) {
+      if (!instance || typeof instance !== 'object') return null;
+
+      const candidates = [
+        instance.prices,
+        instance.item,
+        instance.itemData,
+        instance.itemDataRef,
+        instance.itemSlotData,
+        instance.$props && instance.$props.item,
+        instance.$props && instance.$props.itemData,
+        instance.$props && instance.$props.itemDataRef,
+        instance.$props && instance.$props.itemSlotData,
+        instance.$data,
+        instance.$data && instance.$data.item,
+        instance.$data && instance.$data.itemData,
+        instance.$data && instance.$data.prices,
+      ];
+
+      for (let index = 0; index < candidates.length; index += 1) {
+        const candidate = candidates[index];
+
+        if (!candidate) continue;
+
+        const seen = typeof WeakSet === 'function' ? new WeakSet() : null;
+        const entries = extractGraduatedPricesFromCandidate(candidate, seen);
+
+        if (entries) return entries;
+      }
+
+      return null;
+    }
+
+    function formatGraduatedPriceEntry(entry, showNet) {
+      if (!entry || typeof entry !== 'object') return null;
+
+      const priceCandidates = [];
+
+      if (entry.price && typeof entry.price === 'object') priceCandidates.push(entry.price);
+      if (entry.unitPrice && typeof entry.unitPrice === 'object') priceCandidates.push(entry.unitPrice);
+      if (entry.totalPrice && typeof entry.totalPrice === 'object') priceCandidates.push(entry.totalPrice);
+
+      for (let index = 0; index < priceCandidates.length; index += 1) {
+        const price = priceCandidates[index];
+
+        if (price && typeof price.formatted === 'string' && price.formatted) return price.formatted;
+      }
+
+      let numeric = null;
+      let currency = null;
+
+      for (let index = 0; index < priceCandidates.length; index += 1) {
+        const price = priceCandidates[index];
+
+        if (!price || typeof price !== 'object') continue;
+
+        if (numeric == null && typeof price.value === 'number' && isFinite(price.value)) numeric = price.value;
+
+        if (!currency && typeof price.currency === 'string' && price.currency) currency = price.currency;
+      }
+
+      if (entry.data && typeof entry.data === 'object') {
+        if (!currency && typeof entry.data.currency === 'string' && entry.data.currency) currency = entry.data.currency;
+
+        const raw = showNet ? entry.data.priceNet : entry.data.price;
+
+        if (numeric == null && typeof raw === 'number' && isFinite(raw)) numeric = raw;
+      }
+
+      if (numeric == null) return null;
+
+      if (priceDisplayManager && typeof priceDisplayManager.formatCurrency === 'function') {
+        const formatted = priceDisplayManager.formatCurrency(numeric, currency || null, null);
+
+        if (typeof formatted === 'string' && formatted) return formatted;
+      }
+
+      const fallback = numeric.toFixed(2);
+
+      return currency ? fallback + ' ' + currency : fallback;
+    }
+
+    function updateGraduatedPriceTablesForElement(element, instance, showNet) {
+      if (!element || !instance) return;
+
+      const entries = findGraduatedPriceEntries(instance);
+
+      if (!entries || !entries.length) return;
+
+      const tables = element.querySelectorAll('.graduated-prices-table');
+
+      if (!tables.length) return;
+
+      tables.forEach(function (table) {
+        const rows = table.querySelectorAll('tbody tr');
+
+        if (!rows.length) return;
+
+        rows.forEach(function (row, rowIndex) {
+          const priceCell = row.querySelector('.graduated-price');
+
+          if (!priceCell) return;
+
+          const entry = entries[rowIndex];
+
+          if (!entry) return;
+
+          const formatted = formatGraduatedPriceEntry(entry, showNet);
+
+          if (typeof formatted === 'string' && formatted) priceCell.textContent = formatted;
+        });
+      });
+    }
+
     function updateCategoryItemData(showNet) {
       if (typeof document === 'undefined') return;
 
@@ -524,6 +689,8 @@ fhOnReady(function () {
         applyToTarget(rootInstance.itemSlotData);
 
         if (typeof rootInstance.$forceUpdate === 'function') rootInstance.$forceUpdate();
+
+        updateGraduatedPriceTablesForElement(element, rootInstance, showNet);
       });
     }
 
