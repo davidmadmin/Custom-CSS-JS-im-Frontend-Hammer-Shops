@@ -11,6 +11,14 @@ Dieses Repository sammelt alle CSS- und JavaScript-Anpassungen, mit denen wir di
   3. Änderungen an diesem Repository müssen mit den jeweiligen Twig- und Vue-Komponenten aus Ceres abgeglichen werden, damit IDs, Klassen und Slots korrekt angesprochen werden.
 * **Priorität:** Wenn Entscheidungen zwischen Inline-Anpassungen hier und nativen Ceres-Funktionen zu treffen sind, gilt: Header- und Footer-Neubauten haben Vorrang, danach greifen zusätzliche Styles oder Skripte.
 
+### Relevante Dokumentation & Ressourcen
+
+* **plentyShop LTS / Ceres:** https://github.com/plentymarkets/plugin-ceres – Maßgeblich für Layouts, Slots und Komponenten. Bei strukturellen Änderungen (neue Blöcke, erweiterte Vue-Logik etc.) ist ein Abgleich Pflicht; bei rein optischen Anpassungen genügt in der Regel das lokale Wissen über die bestehende Struktur.
+* **IO-Plugin:** https://github.com/plentymarkets/plugin-io – Ergänzt das Frontend um Controller, Routing und Widgets. Ziehe die Doku bzw. den Code heran, wenn du neue Funktionen, Datenbindungen oder API-Aufrufe planst. Für reine CSS- oder HTML-Korrekturen muss das IO-Plugin meist nicht konsultiert werden.
+* **Plentymarkets REST-API:** https://developers.plentymarkets.com/en-gb/plentymarkets-rest-api/index.html – Liefert Details zu allen Endpunkten, Datenstrukturen und Berechtigungen. Nutze sie, sobald du mit serverseitigen Daten arbeitest oder neue API-Calls hinzufügst. Bei Aufgaben ohne Backend-Bezug (z. B. Farbänderungen) kann dieser Schritt entfallen.
+
+> **Faustregel:** Greife auf IO-Plugin, REST-API und Ceres-Quellen zu, sobald deine Arbeit über reine Styling-Overrides hinausgeht. Für schnelle Anpassungen an Farben, Abständen oder Schriftgrößen reicht meist ein Blick in die bestehende CSS- oder Template-Struktur dieses Repos.
+
 ## Arbeitsweise für Header- und Footer-Neubau
 
 * Der Header und Footer werden in PlentyLTS vollständig neu aufgebaut. Verwende dieses Repository, um die benötigten HTML-Gerüste (innerhalb der zulässigen Content-Boxen), CSS-Overrides und unterstützenden JavaScript-Hooks vorzubereiten.
