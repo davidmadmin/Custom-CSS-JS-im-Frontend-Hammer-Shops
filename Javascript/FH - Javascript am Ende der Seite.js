@@ -441,6 +441,160 @@ fhOnReady(function () {
       };
     })();
 
+    function updateSingleItemVatWidgets(showNet) {
+      if (typeof document === 'undefined') return;
+
+      const prefix = showNet ? '* zzgl. ges. MwSt. zzgl. ' : '* inkl. ges. MwSt. zzgl. ';
+      const vatSpans = document.querySelectorAll('.widget.widget-code.widget-none.vat .widget-inner > span');
+
+      vatSpans.forEach(function (span) {
+        if (!span) return;
+
+        let firstTextNode = null;
+
+        for (let index = 0; index < span.childNodes.length; index += 1) {
+          const node = span.childNodes[index];
+
+          if (node && node.nodeType === 3) {
+            firstTextNode = node;
+            break;
+          }
+        }
+
+        if (!firstTextNode) {
+          firstTextNode = document.createTextNode('');
+          span.insertBefore(firstTextNode, span.firstChild || null);
+        }
+
+        firstTextNode.textContent = prefix;
+      });
+    }
+
+    function findVueInstance(element) {
+      let current = element;
+
+      for (let depth = 0; depth < 20 && current; depth += 1) {
+        if (current.__vue__) return current.__vue__;
+
+        current = current.parentNode;
+      }
+
+      return null;
+    }
+
+    function updateCategoryItemData(showNet) {
+      if (typeof document === 'undefined') return;
+
+      if (!priceDisplayManager || typeof priceDisplayManager.applyImmediately !== 'function') return;
+
+      const elements = document.querySelectorAll('.cmp-product-thumb');
+
+      if (!elements.length) return;
+
+      const seenObjects = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+      function applyToTarget(target) {
+        if (!target || typeof target !== 'object') return;
+
+        if (seenObjects) {
+          if (seenObjects.has(target)) return;
+
+          seenObjects.add(target);
+        }
+
+        priceDisplayManager.applyImmediately({ state: target }, showNet);
+      }
+
+      elements.forEach(function (element) {
+        const instance = element.__vue__ || findVueInstance(element);
+
+        if (!instance) return;
+
+        let rootInstance = instance;
+
+        for (let depth = 0; depth < 10 && rootInstance && rootInstance.$el !== element; depth += 1) {
+          rootInstance = rootInstance.$parent;
+        }
+
+        if (!rootInstance || rootInstance.$el !== element) return;
+
+        applyToTarget(rootInstance.item);
+        applyToTarget(rootInstance.itemData);
+        applyToTarget(rootInstance.itemDataRef);
+        applyToTarget(rootInstance.itemSlotData);
+
+        if (typeof rootInstance.$forceUpdate === 'function') rootInstance.$forceUpdate();
+      });
+    }
+
+    function updatePageDisplays(showNet) {
+      updateSingleItemVatWidgets(showNet);
+      updateCategoryItemData(showNet);
+    }
+
+    let pageDisplayUpdateHandle = null;
+
+    function schedulePageDisplayUpdate(showNet, immediate) {
+      if (pageDisplayUpdateHandle) {
+        if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
+          window.cancelAnimationFrame(pageDisplayUpdateHandle);
+        } else if (typeof window !== 'undefined' && typeof window.clearTimeout === 'function') {
+          window.clearTimeout(pageDisplayUpdateHandle);
+        }
+
+        pageDisplayUpdateHandle = null;
+      }
+
+      const runner = function () {
+        pageDisplayUpdateHandle = null;
+        updatePageDisplays(showNet);
+      };
+
+      if (immediate) {
+        runner();
+        return;
+      }
+
+      if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+        pageDisplayUpdateHandle = window.requestAnimationFrame(runner);
+      } else if (typeof window !== 'undefined' && typeof window.setTimeout === 'function') {
+        pageDisplayUpdateHandle = window.setTimeout(runner, 0);
+      } else {
+        runner();
+      }
+    }
+
+    let categoryMutationObserver = null;
+
+    function ensureCategoryMutationObserver() {
+      if (categoryMutationObserver || typeof MutationObserver !== 'function' || typeof document === 'undefined') return;
+
+      categoryMutationObserver = new MutationObserver(function (mutations) {
+        for (let index = 0; index < mutations.length; index += 1) {
+          const mutation = mutations[index];
+
+          if (!mutation || !mutation.addedNodes) continue;
+
+          const nodes = mutation.addedNodes;
+
+          for (let nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
+            const node = nodes[nodeIndex];
+
+            if (!node || node.nodeType !== 1) continue;
+
+            if ((node.classList && node.classList.contains('cmp-product-thumb')) ||
+              (typeof node.querySelector === 'function' && node.querySelector('.cmp-product-thumb'))
+            ) {
+              schedulePageDisplayUpdate(currentShowNet);
+              return;
+            }
+          }
+        }
+      });
+
+      if (document.body) categoryMutationObserver.observe(document.body, { childList: true, subtree: true });
+    }
+
     function readStoredPreference() {
       try {
         const raw = window.sessionStorage.getItem(STORAGE_KEY);
@@ -487,6 +641,7 @@ fhOnReady(function () {
       const changed = setStoreShowNetPrices(store, desiredState);
 
       if (store) priceDisplayManager.scheduleUpdate(store, desiredState);
+      schedulePageDisplayUpdate(desiredState);
 
       if (changed) refreshBasketTotals(store);
     }
@@ -505,6 +660,7 @@ fhOnReady(function () {
           updateToggleUi(normalized);
           persistPreference(normalized);
           if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, normalized);
+          schedulePageDisplayUpdate(normalized);
         }
       );
     }
@@ -533,7 +689,6 @@ fhOnReady(function () {
       priceDisplayManager.ensureMutationObserver(store, function () {
         return currentShowNet;
       });
-      priceDisplayManager.scheduleUpdate(store, currentShowNet);
     }
 
     function scheduleStoreIntegration(delay) {
@@ -564,6 +719,8 @@ fhOnReady(function () {
     if (typeof window !== 'undefined' && window.App && window.App.initialData) {
       window.App.initialData.showNetPrices = !!currentShowNet;
     }
+    schedulePageDisplayUpdate(currentShowNet, true);
+    ensureCategoryMutationObserver();
 
     priceToggleButton.addEventListener('click', function (event) {
       event.preventDefault();
@@ -578,6 +735,7 @@ fhOnReady(function () {
       else if (typeof document !== 'undefined' && document.documentElement) {
         document.documentElement.setAttribute('data-fh-show-net-prices', currentShowNet ? 'net' : 'gross');
       }
+      schedulePageDisplayUpdate(currentShowNet);
       scheduleStoreIntegration(0);
     });
 
