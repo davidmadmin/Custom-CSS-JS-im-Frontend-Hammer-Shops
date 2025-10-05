@@ -482,6 +482,136 @@ fhOnReady(function () {
       return null;
     }
 
+    function readGraduatedPricesFromSource(source) {
+      if (!source || typeof source !== 'object') return null;
+
+      if (Array.isArray(source)) return source.length ? source : null;
+
+      if (source.prices && Array.isArray(source.prices.graduatedPrices) && source.prices.graduatedPrices.length) {
+        return source.prices.graduatedPrices;
+      }
+
+      if (source.graduatedPrices && Array.isArray(source.graduatedPrices) && source.graduatedPrices.length) {
+        return source.graduatedPrices;
+      }
+
+      if (source.variation && source.variation.prices) {
+        const variationPrices = source.variation.prices;
+
+        if (
+          variationPrices &&
+          Array.isArray(variationPrices.graduatedPrices) &&
+          variationPrices.graduatedPrices.length
+        ) {
+          return variationPrices.graduatedPrices;
+        }
+      }
+
+      if (source.data && typeof source.data === 'object') {
+        const nested = readGraduatedPricesFromSource(source.data);
+
+        if (nested && nested.length) return nested;
+      }
+
+      if (source.item && typeof source.item === 'object') {
+        const nested = readGraduatedPricesFromSource(source.item);
+
+        if (nested && nested.length) return nested;
+      }
+
+      return null;
+    }
+
+    function collectGraduatedPricesFromInstance(instance) {
+      if (!instance || typeof instance !== 'object') return null;
+
+      const candidates = [];
+
+      candidates.push(instance.item);
+      candidates.push(instance.itemData);
+      candidates.push(instance.itemDataRef);
+      candidates.push(instance.itemSlotData);
+
+      if (instance.$props && typeof instance.$props === 'object') {
+        candidates.push(instance.$props.item);
+        candidates.push(instance.$props.itemData);
+        candidates.push(instance.$props.itemDataRef);
+      }
+
+      if (instance.$data && typeof instance.$data === 'object') {
+        candidates.push(instance.$data.item);
+        candidates.push(instance.$data.itemData);
+        candidates.push(instance.$data.itemDataRef);
+      }
+
+      for (let index = 0; index < candidates.length; index += 1) {
+        const candidate = candidates[index];
+
+        if (!candidate || typeof candidate !== 'object') continue;
+
+        const prices = readGraduatedPricesFromSource(candidate);
+
+        if (prices && prices.length) return prices;
+      }
+
+      return null;
+    }
+
+    function updateGraduatedPriceTables(element, instance) {
+      if (!element || !instance || typeof document === 'undefined') return;
+
+      const rows = element.querySelectorAll('.graduated-prices-table tbody tr');
+
+      if (!rows || !rows.length) return;
+
+      const graduatedPrices = collectGraduatedPricesFromInstance(instance);
+
+      if (!graduatedPrices || !graduatedPrices.length) return;
+
+      const count = Math.min(rows.length, graduatedPrices.length);
+
+      for (let index = 0; index < count; index += 1) {
+        const row = rows[index];
+
+        if (!row) continue;
+
+        const priceCell = row.querySelector('.graduated-price');
+
+        if (!priceCell) continue;
+
+        const entry = graduatedPrices[index];
+
+        if (!entry || typeof entry !== 'object') continue;
+
+        const priceObject = entry.price || entry.unitPrice || (entry.totalPrice ? entry.totalPrice : null);
+        let formatted = priceObject && typeof priceObject.formatted === 'string' ? priceObject.formatted : null;
+
+        if ((!formatted || !formatted.trim()) && entry.data && typeof entry.data.formattedPrice === 'string') {
+          formatted = entry.data.formattedPrice;
+        }
+
+        if (!formatted || !formatted.trim()) continue;
+
+        let textNode = null;
+
+        for (let nodeIndex = 0; nodeIndex < priceCell.childNodes.length; nodeIndex += 1) {
+          const node = priceCell.childNodes[nodeIndex];
+
+          if (node && node.nodeType === 3) {
+            textNode = node;
+            break;
+          }
+        }
+
+        if (!textNode) {
+          textNode = document.createTextNode('');
+          priceCell.insertBefore(textNode, priceCell.firstChild || null);
+        }
+
+        textNode.textContent = formatted;
+      }
+    }
+
     function updateCategoryItemData(showNet) {
       if (typeof document === 'undefined') return;
 
@@ -523,7 +653,19 @@ fhOnReady(function () {
         applyToTarget(rootInstance.itemDataRef);
         applyToTarget(rootInstance.itemSlotData);
 
-        if (typeof rootInstance.$forceUpdate === 'function') rootInstance.$forceUpdate();
+        updateGraduatedPriceTables(element, rootInstance);
+
+        if (typeof rootInstance.$forceUpdate === 'function') {
+          rootInstance.$forceUpdate();
+
+          if (typeof rootInstance.$nextTick === 'function') {
+            rootInstance.$nextTick(function () {
+              updateGraduatedPriceTables(element, rootInstance);
+            });
+          } else {
+            updateGraduatedPriceTables(element, rootInstance);
+          }
+        }
       });
     }
 
