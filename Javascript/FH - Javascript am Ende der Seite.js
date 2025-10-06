@@ -2225,6 +2225,9 @@ fhOnReady(function () {
       increaseButton.setAttribute('data-testing', 'quantity-btn-increase');
       increaseButton.textContent = '+';
 
+      const quantityControls = document.createElement('div');
+      quantityControls.className = 'qty-controls fh-wishlist-qty-controls';
+
       function formatQuantityDisplay(value) {
         if (Number.isInteger(value)) return String(value);
 
@@ -2366,9 +2369,10 @@ fhOnReady(function () {
           });
       });
 
-      qtyBox.appendChild(decreaseButton);
       qtyBox.appendChild(quantityInput);
-      qtyBox.appendChild(increaseButton);
+      quantityControls.appendChild(increaseButton);
+      quantityControls.appendChild(decreaseButton);
+      qtyBox.appendChild(quantityControls);
       quantityWrapper.appendChild(qtyBox);
 
       updateQuantity(normalizeQuantity(currentQuantity));
