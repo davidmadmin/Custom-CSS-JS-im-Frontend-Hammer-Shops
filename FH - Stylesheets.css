@@ -959,6 +959,12 @@ body,
   font-size: 15px;
 }
 
+.fh-header__customer-contact-role {
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fh-color-navy-blue) 85%, #ffffff 15%);
+  letter-spacing: 0.2px;
+}
+
 .fh-header__contact-button {
   display: inline-flex;
   align-items: center;
@@ -1188,6 +1194,12 @@ body,
 
 .fh-header__account-type {
   margin-bottom: 16px;
+}
+
+.fh-header__customer-id {
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--fh-color-navy-blue);
 }
 
 .fh-header__logout {

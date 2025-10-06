@@ -132,8 +132,9 @@
                 v-else-if="Number($store.state.user.userData.classId) === 12"
                 v-cloak
               >
-                <div class="fh-header__customer-contact-heading">Ihr persönlicher Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Ulrich Vorländer</div>
+                <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
                 <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
               </div>
               <div
@@ -141,8 +142,9 @@
                 v-else-if="Number($store.state.user.userData.classId) === 16"
                 v-cloak
               >
-                <div class="fh-header__customer-contact-heading">Ihr persönlicher Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Andreas Fischermann</div>
+                <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
                 <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
               </div>
               <div
@@ -150,8 +152,9 @@
                 v-else-if="Number($store.state.user.userData.classId) === 21"
                 v-cloak
               >
-                <div class="fh-header__customer-contact-heading">Ihr persönlicher Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Gabriele Sprenger</div>
+                <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
                 <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
               </div>
             </div>
@@ -196,6 +199,13 @@
             >
               <span v-if="Number($store.state.user.userData.classId) === 1">Konto: Standardkonto</span>
               <span v-else>Konto: Firmenkunde</span>
+            </div>
+            <div
+              class="fh-header__panel-text fh-header__customer-id"
+              v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.id"
+              v-cloak
+            >
+              Kunden-ID: <span v-text="$store.state.user.userData.id"></span>
             </div>
             <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
           </div>
