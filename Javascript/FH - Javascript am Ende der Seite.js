@@ -203,6 +203,7 @@ fhOnReady(function () {
     let currentShowNet = false;
     let hasIntegratedStore = false;
     let storeWatcherCleanup = null;
+    let isRestoringPreference = false;
     let storeSyncTimeoutId = null;
     let lastKnownStore = null;
 
@@ -527,9 +528,65 @@ fhOnReady(function () {
       });
     }
 
+    function toggleTotalsEntry(selector, shouldShow) {
+      if (typeof document === 'undefined') return;
+
+      const entries = document.querySelectorAll(selector);
+
+      entries.forEach(function (entry) {
+        if (!(entry instanceof HTMLElement)) return;
+
+        entry.hidden = !shouldShow;
+
+        const label = entry.previousElementSibling;
+
+        if (label instanceof HTMLElement && label.tagName === 'DT') {
+          label.hidden = !shouldShow;
+        }
+      });
+    }
+
+    function updateTotalsHighlight(selector, isActive) {
+      if (typeof document === 'undefined') return;
+
+      const values = document.querySelectorAll(selector);
+
+      values.forEach(function (value) {
+        if (!(value instanceof HTMLElement)) return;
+
+        value.classList.remove('font-weight-bold');
+        value.classList.toggle('fh-cart-total-active', isActive);
+        value.classList.toggle('fh-cart-total-inactive', !isActive);
+
+        const label = value.previousElementSibling;
+
+        if (label instanceof HTMLElement && label.tagName === 'DT') {
+          label.classList.remove('font-weight-bold');
+          label.classList.toggle('fh-cart-total-active', isActive);
+          label.classList.toggle('fh-cart-total-inactive', !isActive);
+        }
+      });
+    }
+
+    function updateCartTotalsDisplay(showNet) {
+      const isNet = !!showNet;
+      const isGross = !isNet;
+
+      toggleTotalsEntry('[data-testing="item-sum-net"]', isNet);
+      toggleTotalsEntry('[data-testing="item-sum"]', isGross);
+      toggleTotalsEntry('[data-testing="shipping-amount-net"]', isNet);
+      toggleTotalsEntry('[data-testing="shipping-amount"]', isGross);
+      toggleTotalsEntry('[data-testing="vat-amount"]', isGross);
+      toggleTotalsEntry('[data-testing="basket-sub-amount"]', false);
+
+      updateTotalsHighlight('[data-testing="basket-amount-net"]', isNet);
+      updateTotalsHighlight('[data-testing="basket-amount"]', isGross);
+    }
+
     function updatePageDisplays(showNet) {
       updateSingleItemVatWidgets(showNet);
       updateCategoryItemData(showNet);
+      updateCartTotalsDisplay(showNet);
     }
 
     let pageDisplayUpdateHandle = null;
@@ -656,10 +713,34 @@ fhOnReady(function () {
         function (value) {
           const normalized = !!value;
 
+          if (!isRestoringPreference) {
+            const storedPreference = readStoredPreference();
+
+            if ((storedPreference === true || storedPreference === false) && storedPreference !== normalized) {
+              isRestoringPreference = true;
+              try {
+                currentShowNet = storedPreference;
+                updateToggleUi(storedPreference);
+                if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, storedPreference);
+                else if (typeof document !== 'undefined' && document.documentElement) {
+                  document.documentElement.setAttribute('data-fh-show-net-prices', storedPreference ? 'net' : 'gross');
+                }
+                schedulePageDisplayUpdate(storedPreference);
+                applyStateToStore(store, storedPreference);
+              } finally {
+                isRestoringPreference = false;
+              }
+              return;
+            }
+          }
+
           currentShowNet = normalized;
           updateToggleUi(normalized);
           persistPreference(normalized);
           if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, normalized);
+          else if (typeof document !== 'undefined' && document.documentElement) {
+            document.documentElement.setAttribute('data-fh-show-net-prices', normalized ? 'net' : 'gross');
+          }
           schedulePageDisplayUpdate(normalized);
         }
       );
