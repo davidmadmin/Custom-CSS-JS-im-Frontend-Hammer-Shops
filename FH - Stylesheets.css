@@ -7,6 +7,13 @@
   --fh-color-navy-blue: #1f2937; /* Dark blue tone from the header gradient */
   --fh-color-dark-blue: #0f172a; /* Deep dark blue accent */
   --fh-color-light-blue: #eef3fd; /* Light blue from footer icon backgrounds */
+  --fh-color-surface: #ffffff; /* Neutral surface base without any tint */
+  --fh-color-input-surface: #f3f4f6; /* Soft grey for input backgrounds */
+}
+
+body,
+#page-body {
+  background-color: var(--fh-color-surface);
 }
 
 .price.h1 {
@@ -138,7 +145,7 @@
   width: 100vw;
   height: 100%;
   transform: translateX(-50%);
-  background: linear-gradient(180deg, #ffffff 0%, var(--fh-color-light-blue) 40%, var(--fh-color-light-blue) 100%);
+  background: var(--fh-color-surface);
   border-top: 6px solid var(--fh-color-dark-blue);
   box-sizing: border-box;
   z-index: -1;
@@ -645,8 +652,8 @@
   font-size: 15px;
   line-height: 1.4;
   color: var(--fh-color-navy-blue);
-  background-color: var(--fh-color-light-blue);
-  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--fh-color-dark-blue) 8%, transparent);
+  background-color: var(--fh-color-input-surface);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .fh-header__search-clear {
