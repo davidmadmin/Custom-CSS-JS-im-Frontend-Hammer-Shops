@@ -1968,36 +1968,6 @@ fhOnReady(function () {
     };
   }
 
-  function getBasePrice(item) {
-    if (!item || !item.prices) return '';
-
-    if (item.prices.specialOffer && item.prices.specialOffer.basePrice) {
-      const basePrice = item.prices.specialOffer.basePrice;
-
-      if (typeof basePrice === 'string') {
-        const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
-
-        if (normalized === 'n/a') return '';
-      }
-
-      return basePrice;
-    }
-
-    if (item.prices.default && item.prices.default.basePrice) {
-      const basePrice = item.prices.default.basePrice;
-
-      if (typeof basePrice === 'string') {
-        const normalized = basePrice.replace(/\s+/g, '').toLowerCase();
-
-        if (normalized === 'n/a') return '';
-      }
-
-      return basePrice;
-    }
-
-    return '';
-  }
-
   function getRemoveWishListActionName(store) {
     return resolveStoreAction(store, ['wishList/removeWishListItem', 'removeWishListItem']);
   }
@@ -2057,22 +2027,6 @@ fhOnReady(function () {
         element.textContent = formatPrice(getUnitPrice(item));
       });
 
-      const basePriceElements = list.querySelectorAll('[data-fh-wishlist-base-price]');
-
-      basePriceElements.forEach(function (element) {
-        if (!element || !element.__fhWishlistItem) return;
-
-        const item = element.__fhWishlistItem;
-        const baseText = getBasePrice(item);
-
-        if (baseText) {
-          element.textContent = baseText;
-          element.style.display = '';
-        } else {
-          element.textContent = '';
-          element.style.display = 'none';
-        }
-      });
     };
 
     runUpdate();
@@ -2206,21 +2160,6 @@ fhOnReady(function () {
 
       priceLine.appendChild(priceValue);
 
-      const basePriceText = getBasePrice(item);
-      const basePrice = document.createElement('span');
-      basePrice.className = 'fh-wishlist-item-base-price';
-      basePrice.setAttribute('data-fh-wishlist-base-price', 'base');
-      basePrice.__fhWishlistItem = item;
-      basePrice.style.whiteSpace = 'nowrap';
-      if (basePriceText) {
-        basePrice.textContent = basePriceText;
-        basePrice.style.display = '';
-      } else {
-        basePrice.textContent = '';
-        basePrice.style.display = 'none';
-      }
-      priceLine.appendChild(basePrice);
-
       const actionRow = document.createElement('div');
       actionRow.style.display = 'flex';
       actionRow.style.alignItems = 'center';
@@ -2260,64 +2199,31 @@ fhOnReady(function () {
       const quantityPrecision = Math.min(6, Math.max(getDecimalPlaces(minQuantity), getDecimalPlaces(intervalQuantity)));
 
       const quantityWrapper = document.createElement('div');
-      quantityWrapper.className = 'fh-wishlist-qty-wrapper d-flex align-items-center';
-      quantityWrapper.style.gap = '8px';
-      quantityWrapper.style.flex = '0 0 auto';
+      quantityWrapper.className = 'fh-wishlist-qty-wrapper';
 
       const qtyBox = document.createElement('div');
-      qtyBox.className = 'qty-box d-flex align-items-stretch';
-      qtyBox.style.height = '40px';
-      qtyBox.style.border = '1px solid #d8e2ef';
-      qtyBox.style.borderRadius = '8px';
-      qtyBox.style.backgroundColor = '#ffffff';
-      qtyBox.style.overflow = 'hidden';
+      qtyBox.className = 'qty-box fh-wishlist-qty-box';
 
       const decreaseButton = document.createElement('button');
       decreaseButton.type = 'button';
-      decreaseButton.className = 'btn qty-btn btn-appearance d-flex align-items-center justify-content-center';
+      decreaseButton.className = 'qty-btn fh-wishlist-qty-btn';
       decreaseButton.setAttribute('aria-label', 'Menge verringern');
       decreaseButton.setAttribute('data-testing', 'quantity-btn-decrease');
-      decreaseButton.style.width = '36px';
-      decreaseButton.style.height = '100%';
-      decreaseButton.style.border = 'none';
-      decreaseButton.style.background = 'transparent';
-      decreaseButton.style.color = 'var(--fh-color-dark-blue)';
-
-      const decreaseIcon = document.createElement('i');
-      decreaseIcon.className = 'fa fa-minus default-float';
-      decreaseIcon.setAttribute('aria-hidden', 'true');
-      decreaseButton.appendChild(decreaseIcon);
+      decreaseButton.textContent = '−';
 
       const quantityInput = document.createElement('input');
-      quantityInput.className = 'qty-input text-center';
+      quantityInput.className = 'qty-input fh-wishlist-qty-input';
       quantityInput.type = 'text';
       quantityInput.setAttribute('aria-label', 'Menge wählen');
+      quantityInput.setAttribute('inputmode', quantityPrecision > 0 ? 'decimal' : 'numeric');
       quantityInput.disabled = !isSaleable(item);
-      quantityInput.style.height = '100%';
-      quantityInput.style.width = '56px';
-      quantityInput.style.border = 'none';
-      quantityInput.style.background = 'transparent';
-      quantityInput.style.fontSize = '14px';
-      quantityInput.style.fontWeight = '600';
-      quantityInput.style.padding = '0';
-      quantityInput.style.color = 'var(--fh-color-dark-blue)';
-      quantityInput.style.textAlign = 'center';
 
       const increaseButton = document.createElement('button');
       increaseButton.type = 'button';
-      increaseButton.className = 'btn qty-btn btn-appearance d-flex align-items-center justify-content-center';
+      increaseButton.className = 'qty-btn fh-wishlist-qty-btn';
       increaseButton.setAttribute('aria-label', 'Menge erhöhen');
       increaseButton.setAttribute('data-testing', 'quantity-btn-increase');
-      increaseButton.style.width = '36px';
-      increaseButton.style.height = '100%';
-      increaseButton.style.border = 'none';
-      increaseButton.style.background = 'transparent';
-      increaseButton.style.color = 'var(--fh-color-dark-blue)';
-
-      const increaseIcon = document.createElement('i');
-      increaseIcon.className = 'fa fa-plus default-float';
-      increaseIcon.setAttribute('aria-hidden', 'true');
-      increaseButton.appendChild(increaseIcon);
+      increaseButton.textContent = '+';
 
       function formatQuantityDisplay(value) {
         if (Number.isInteger(value)) return String(value);
