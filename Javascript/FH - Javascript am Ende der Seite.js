@@ -699,9 +699,13 @@ fhOnReady(function () {
 
       const storedPreference = readStoredPreference();
       const storeValue = getStoreShowNetPrices(store);
+      const isGuest = Boolean(store && store.getters && store.getters.isLoggedIn === false);
 
       if (!hasIntegratedStore) {
-        if (storedPreference === true || storedPreference === false) {
+        if (isGuest) {
+          currentShowNet = false;
+          persistPreference(false);
+        } else if (storedPreference === true || storedPreference === false) {
           currentShowNet = storedPreference;
         } else if (typeof storeValue === 'boolean') {
           currentShowNet = storeValue;
