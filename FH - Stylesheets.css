@@ -35,6 +35,20 @@ body,
 
 /* End Section: Custom Schriftarten + Preis Text Stylings */
 
+/* Section: Cart totals toggle styling */
+.cmp-totals dt.fh-cart-total-active,
+.cmp-totals dd.fh-cart-total-active {
+  font-weight: 700;
+  color: var(--fh-color-bright-blue, #31a5f0);
+}
+
+.cmp-totals dt.fh-cart-total-inactive,
+.cmp-totals dd.fh-cart-total-inactive {
+  font-weight: 400;
+  color: inherit;
+}
+/* End Section: Cart totals toggle styling */
+
 /* Section: FH Header Base Layout */
 .fh-header {
   position: relative;
