@@ -2114,6 +2114,97 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 }
 /* End Section: Merkliste Button Styling */
 
+/* Section: FH Wishlist flyout styling */
+.fh-header__wishlist-list .fh-wishlist-item-price {
+  color: var(--fh-color-bright-blue);
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-box {
+  --fh-wishlist-qty-height: 52px;
+  --fh-wishlist-qty-button-size: calc(var(--fh-wishlist-qty-height) / 2);
+  display: flex;
+  align-items: stretch;
+  min-width: 116px;
+  height: var(--fh-wishlist-qty-height);
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-input {
+  flex: 1 1 auto;
+  min-width: 64px;
+  border: none;
+  background: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--fh-color-dark-blue);
+  text-align: center;
+  padding: 0;
+  outline: none;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-input:focus {
+  box-shadow: inset 0 0 0 2px var(--fh-color-bright-blue);
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-controls {
+  display: flex;
+  flex-direction: column;
+  width: var(--fh-wishlist-qty-button-size);
+  height: 100%;
+  border-left: 1px solid #cbd5e1;
+  background: #f1f5f9;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn {
+  flex: 0 0 var(--fh-wishlist-qty-button-size);
+  height: var(--fh-wishlist-qty-button-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--fh-color-dark-blue);
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn + .qty-btn {
+  border-top: 1px solid #cbd5e1;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn:hover,
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn:focus {
+  background: var(--fh-color-bright-blue);
+  color: #ffffff;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn.disabled,
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn:disabled {
+  background: transparent;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+/* End Section: FH Wishlist flyout styling */
+
 /* Section: Body Top Margin Fix */
 div.widget.widget-grid.widget-two-col.row.mt-5 {
   margin-top: 1rem !important;
