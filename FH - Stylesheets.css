@@ -8,12 +8,14 @@
   --fh-color-dark-blue: #0f172a; /* Deep dark blue accent */
   --fh-color-light-blue: #eef3fd; /* Light blue from footer icon backgrounds */
   --fh-color-surface: #ffffff; /* Neutral surface base without any tint */
+  --fh-color-body-surface: #f6f7fb; /* Subtle light grey body background */
   --fh-color-input-surface: #f3f4f6; /* Soft grey for input backgrounds */
+  --fh-shadow-elevation-soft: 0 24px 48px -32px rgba(15, 23, 42, 0.35); /* Modern diffused shadow */
 }
 
 body,
 #page-body {
-  background-color: var(--fh-color-surface);
+  background-color: var(--fh-color-body-surface);
 }
 
 .price.h1 {
@@ -1954,7 +1956,23 @@ body.fh-mobile-menu-open {
 }
 
 #page-header {
-  background-color: #ffffff !important;
+  position: relative;
+  z-index: 0;
+  background-color: transparent !important;
+}
+
+#page-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 100%;
+  transform: translateX(-50%);
+  background-color: var(--fh-color-surface);
+  box-shadow: var(--fh-shadow-elevation-soft);
+  pointer-events: none;
+  z-index: -1;
 }
 
 #page-header > div {
