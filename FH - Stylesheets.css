@@ -1193,12 +1193,16 @@ body,
 }
 
 .fh-header__account-type {
-  margin-bottom: 16px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--fh-color-navy-blue);
 }
 
 .fh-header__customer-id {
-  margin-bottom: 16px;
-  font-size: 13px;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 12px;
   color: var(--fh-color-navy-blue);
 }
 
