@@ -219,14 +219,34 @@
             <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
             <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
           </svg>
-          <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-          <span class="fh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-          <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-          <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+          <span
+            class="fh-header__basket-total"
+            aria-hidden="true"
+            v-if="!($store.getters.isLoggedIn && $store.state.basket.showNetPrices)"
+            v-basket-item-sum="$store.state.basket.data.itemSum"
+          >0,00 €</span>
+          <span
+            class="fh-header__basket-total"
+            aria-hidden="true"
+            v-else
+            v-cloak
+            v-basket-item-sum="$store.state.basket.data.itemSumNet"
+          >0,00 €</span>
+          <span
+            class="fh-header__sr-only"
+            v-if="!($store.getters.isLoggedIn && $store.state.basket.showNetPrices)"
+            v-basket-item-sum="$store.state.basket.data.itemSum"
+          >0,00 €</span>
+          <span
+            class="fh-header__sr-only"
+            v-else
+            v-cloak
+            v-basket-item-sum="$store.state.basket.data.itemSumNet"
+          >0,00 €</span>
         </a>
         <basket-preview
           v-if="$store.state.lazyComponent.components['basket-preview']"
-          :show-net-prices="$store.state.basket.showNetPrices"
+          :show-net-prices="$store.getters.isLoggedIn && $store.state.basket.showNetPrices"
           :visible-fields="[
             'basketValueNet',
             'basketValueGross',
