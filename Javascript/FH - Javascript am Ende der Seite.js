@@ -1972,12 +1972,100 @@ fhOnReady(function () {
     return resolveStoreAction(store, ['wishList/removeWishListItem', 'removeWishListItem']);
   }
 
-  function getUnitPrice(item) {
+  function resolveWishlistShowNetPreference(override) {
+    if (override === true || override === false) return override;
+
+    if (typeof document !== 'undefined' && document.documentElement) {
+      const attribute = document.documentElement.getAttribute('data-fh-show-net-prices');
+
+      if (attribute === 'net') return true;
+      if (attribute === 'gross') return false;
+    }
+
+    if (typeof window !== 'undefined' && window.App && window.App.initialData) {
+      const initial = window.App.initialData;
+
+      if (initial && initial.showNetPrices === true) return true;
+      if (initial && initial.showNetPrices === false) return false;
+    }
+
+    return false;
+  }
+
+  function pickNumericCandidate(source, keys) {
+    if (!source || typeof source !== 'object' || !Array.isArray(keys)) return null;
+
+    for (let index = 0; index < keys.length; index += 1) {
+      const key = keys[index];
+
+      if (!key) continue;
+
+      const value = source[key];
+
+      if (typeof value === 'number' && isFinite(value)) return value;
+    }
+
+    return null;
+  }
+
+  function getPrimaryPriceContainer(item) {
+    if (!item || !item.prices) return null;
+
+    const prices = item.prices;
+    const preferred = [prices.specialOffer, prices.default];
+
+    for (let idx = 0; idx < preferred.length; idx += 1) {
+      const candidate = preferred[idx];
+
+      if (candidate && typeof candidate === 'object') return candidate;
+    }
+
+    return null;
+  }
+
+  function pickUnitPriceValue(container, showNet) {
+    if (!container || typeof container !== 'object') return null;
+
+    const data = container.data && typeof container.data === 'object' ? container.data : null;
+    const unitPrice = container.unitPrice && typeof container.unitPrice === 'object' ? container.unitPrice : null;
+    const preferenceOrder = showNet ? ['unitPriceNet', 'unitPrice'] : ['unitPrice', 'unitPriceNet'];
+    const extendedOrder = showNet ? preferenceOrder.concat(['net', 'value', 'gross']) : preferenceOrder.concat(['value', 'gross', 'net']);
+
+    if (data) {
+      const dataValue = pickNumericCandidate(data, preferenceOrder);
+
+      if (dataValue !== null) return dataValue;
+    }
+
+    if (unitPrice) {
+      const unitPriceValue = pickNumericCandidate(unitPrice, extendedOrder);
+
+      if (unitPriceValue !== null) return unitPriceValue;
+    }
+
+    if (container.price && typeof container.price === 'object') {
+      const priceValue = pickNumericCandidate(container.price, extendedOrder);
+
+      if (priceValue !== null) return priceValue;
+    }
+
+    return null;
+  }
+
+  function getUnitPrice(item, showNetOverride) {
     if (!item || !item.prices) return 0;
 
-    if (item.prices.specialOffer && item.prices.specialOffer.unitPrice && typeof item.prices.specialOffer.unitPrice.value !== 'undefined') return item.prices.specialOffer.unitPrice.value;
+    const showNet = resolveWishlistShowNetPreference(showNetOverride);
+    const container = getPrimaryPriceContainer(item);
+    const value = pickUnitPriceValue(container, showNet);
 
-    if (item.prices.default && item.prices.default.unitPrice && typeof item.prices.default.unitPrice.value !== 'undefined') return item.prices.default.unitPrice.value;
+    if (typeof value === 'number' && isFinite(value)) return value;
+
+    if (container && container.unitPrice && typeof container.unitPrice.value === 'number') return container.unitPrice.value;
+
+    if (container && container.price && typeof container.price.value === 'number') return container.price.value;
+
+    if (item.prices.default && item.prices.default.unitPrice && typeof item.prices.default.unitPrice.value === 'number') return item.prices.default.unitPrice.value;
 
     return 0;
   }
@@ -2014,8 +2102,10 @@ fhOnReady(function () {
     }
   }
 
-  function updateWishlistPriceDisplays() {
+  function updateWishlistPriceDisplays(showNetOverride) {
     if (!list) return;
+
+    const showNet = resolveWishlistShowNetPreference(showNetOverride);
 
     const runUpdate = function () {
       const priceElements = list.querySelectorAll('[data-fh-wishlist-price]');
@@ -2024,7 +2114,7 @@ fhOnReady(function () {
         if (!element || !element.__fhWishlistItem) return;
 
         const item = element.__fhWishlistItem;
-        element.textContent = formatPrice(getUnitPrice(item));
+        element.textContent = formatPrice(getUnitPrice(item, showNet));
       });
 
     };
@@ -2040,6 +2130,7 @@ fhOnReady(function () {
     clearList();
 
     const items = Array.isArray(documents) ? documents : [];
+    const showNet = resolveWishlistShowNetPreference();
 
     if (!items.length) { showEmptyState(true); return; }
 
@@ -2155,7 +2246,7 @@ fhOnReady(function () {
       priceValue.className = 'fh-wishlist-item-price';
       priceValue.setAttribute('data-fh-wishlist-price', 'unit');
       priceValue.__fhWishlistItem = item;
-      priceValue.textContent = formatPrice(getUnitPrice(item));
+      priceValue.textContent = formatPrice(getUnitPrice(item, showNet));
       priceValue.style.whiteSpace = 'nowrap';
 
       priceLine.appendChild(priceValue);
@@ -2431,7 +2522,7 @@ fhOnReady(function () {
       list.appendChild(li);
     });
 
-    updateWishlistPriceDisplays();
+    updateWishlistPriceDisplays(showNet);
 
     if (list.lastElementChild) list.lastElementChild.style.borderBottom = 'none';
   }
@@ -2633,8 +2724,8 @@ fhOnReady(function () {
   window.fhWishlistMenu.refresh = function () {
     return loadWishListItems();
   };
-  window.fhWishlistMenu.updatePrices = function () {
-    updateWishlistPriceDisplays();
+  window.fhWishlistMenu.updatePrices = function (showNet) {
+    updateWishlistPriceDisplays(showNet);
   };
 });
 // End Section: FH wish list flyout preview
