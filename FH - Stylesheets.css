@@ -2114,6 +2114,51 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 }
 /* End Section: Merkliste Button Styling */
 
+/* Section: FH Wishlist flyout styling */
+.fh-header__wishlist-list .fh-wishlist-item-price {
+  color: var(--fh-color-bright-blue);
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+}
+
+.fh-header__wishlist-list .fh-wishlist-item-base-price {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.fh-header__wishlist-list .qty-box {
+  min-width: 128px;
+  height: 40px;
+  border: 1px solid #d8e2ef;
+  border-radius: 8px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.fh-header__wishlist-list .qty-box .qty-input {
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--fh-color-dark-blue);
+}
+
+.fh-header__wishlist-list .qty-box .qty-btn {
+  width: 36px;
+  border: none;
+  background: transparent;
+  color: var(--fh-color-dark-blue);
+  padding: 0;
+}
+
+.fh-header__wishlist-list .qty-box .qty-btn.disabled,
+.fh-header__wishlist-list .qty-box .qty-btn:disabled {
+  color: #94a3b8;
+}
+/* End Section: FH Wishlist flyout styling */
+
 /* Section: Body Top Margin Fix */
 div.widget.widget-grid.widget-two-col.row.mt-5 {
   margin-top: 1rem !important;

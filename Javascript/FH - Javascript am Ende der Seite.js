@@ -530,6 +530,13 @@ fhOnReady(function () {
     function updatePageDisplays(showNet) {
       updateSingleItemVatWidgets(showNet);
       updateCategoryItemData(showNet);
+      if (typeof window !== 'undefined' && window.fhWishlistMenu && typeof window.fhWishlistMenu.updatePrices === 'function') {
+        try {
+          window.fhWishlistMenu.updatePrices(showNet);
+        } catch (error) {
+          /* Suppress wishlist price update errors to avoid blocking the toggle. */
+        }
+      }
     }
 
     let pageDisplayUpdateHandle = null;
@@ -2037,6 +2044,44 @@ fhOnReady(function () {
     }
   }
 
+  function updateWishlistPriceDisplays() {
+    if (!list) return;
+
+    const runUpdate = function () {
+      const priceElements = list.querySelectorAll('[data-fh-wishlist-price]');
+
+      priceElements.forEach(function (element) {
+        if (!element || !element.__fhWishlistItem) return;
+
+        const item = element.__fhWishlistItem;
+        element.textContent = formatPrice(getUnitPrice(item));
+      });
+
+      const basePriceElements = list.querySelectorAll('[data-fh-wishlist-base-price]');
+
+      basePriceElements.forEach(function (element) {
+        if (!element || !element.__fhWishlistItem) return;
+
+        const item = element.__fhWishlistItem;
+        const baseText = getBasePrice(item);
+
+        if (baseText) {
+          element.textContent = baseText;
+          element.style.display = '';
+        } else {
+          element.textContent = '';
+          element.style.display = 'none';
+        }
+      });
+    };
+
+    runUpdate();
+
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(runUpdate);
+    }
+  }
+
   function updateList(documents) {
     clearList();
 
@@ -2153,23 +2198,28 @@ fhOnReady(function () {
       priceLine.style.marginTop = '0';
 
       const priceValue = document.createElement('strong');
+      priceValue.className = 'fh-wishlist-item-price';
+      priceValue.setAttribute('data-fh-wishlist-price', 'unit');
+      priceValue.__fhWishlistItem = item;
       priceValue.textContent = formatPrice(getUnitPrice(item));
-      priceValue.style.fontSize = '13px';
-      priceValue.style.color = 'var(--fh-color-navy-blue)';
       priceValue.style.whiteSpace = 'nowrap';
 
       priceLine.appendChild(priceValue);
 
       const basePriceText = getBasePrice(item);
-
+      const basePrice = document.createElement('span');
+      basePrice.className = 'fh-wishlist-item-base-price';
+      basePrice.setAttribute('data-fh-wishlist-base-price', 'base');
+      basePrice.__fhWishlistItem = item;
+      basePrice.style.whiteSpace = 'nowrap';
       if (basePriceText) {
-        const basePrice = document.createElement('span');
         basePrice.textContent = basePriceText;
-        basePrice.style.fontSize = '12px';
-        basePrice.style.color = '#64748b';
-        basePrice.style.whiteSpace = 'nowrap';
-        priceLine.appendChild(basePrice);
+        basePrice.style.display = '';
+      } else {
+        basePrice.textContent = '';
+        basePrice.style.display = 'none';
       }
+      priceLine.appendChild(basePrice);
 
       const actionRow = document.createElement('div');
       actionRow.style.display = 'flex';
@@ -2210,68 +2260,64 @@ fhOnReady(function () {
       const quantityPrecision = Math.min(6, Math.max(getDecimalPlaces(minQuantity), getDecimalPlaces(intervalQuantity)));
 
       const quantityWrapper = document.createElement('div');
-      quantityWrapper.style.display = 'flex';
-      quantityWrapper.style.alignItems = 'center';
-      quantityWrapper.style.gap = '6px';
+      quantityWrapper.className = 'fh-wishlist-qty-wrapper d-flex align-items-center';
+      quantityWrapper.style.gap = '8px';
       quantityWrapper.style.flex = '0 0 auto';
 
       const qtyBox = document.createElement('div');
-      qtyBox.className = 'qty-box d-flex h-100';
-      qtyBox.style.maxWidth = '88px';
-      qtyBox.style.height = '34px';
+      qtyBox.className = 'qty-box d-flex align-items-stretch';
+      qtyBox.style.height = '40px';
       qtyBox.style.border = '1px solid #d8e2ef';
-      qtyBox.style.borderRadius = '10px';
-      qtyBox.style.backgroundColor = 'var(--fh-color-light-blue)';
+      qtyBox.style.borderRadius = '8px';
+      qtyBox.style.backgroundColor = '#ffffff';
       qtyBox.style.overflow = 'hidden';
-
-      const quantityInput = document.createElement('input');
-      quantityInput.className = 'qty-input text-center';
-      quantityInput.type = 'text';
-      quantityInput.setAttribute('aria-label', 'Menge wählen');
-      quantityInput.disabled = !isSaleable(item);
-      quantityInput.style.height = '34px';
-      quantityInput.style.width = '48px';
-      quantityInput.style.border = 'none';
-      quantityInput.style.background = 'transparent';
-      quantityInput.style.fontSize = '13px';
-      quantityInput.style.padding = '0';
-      quantityInput.style.color = 'var(--fh-color-dark-blue)';
-      quantityInput.style.textAlign = 'center';
-
-      const qtyButtonContainer = document.createElement('div');
-      qtyButtonContainer.className = 'qty-btn-container d-flex flex-column';
-      qtyButtonContainer.style.width = '26px';
-      qtyButtonContainer.style.gap = '2px';
-      qtyButtonContainer.style.height = '100%';
-      qtyButtonContainer.style.padding = '2px';
-
-      const increaseButton = document.createElement('button');
-      increaseButton.type = 'button';
-      increaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
-      increaseButton.style.height = 'calc(50% - 1px)';
-      increaseButton.style.fontSize = '12px';
-      increaseButton.style.border = 'none';
-      increaseButton.style.backgroundColor = 'transparent';
-      increaseButton.style.color = 'var(--fh-color-dark-blue)';
-
-      const increaseIcon = document.createElement('i');
-      increaseIcon.className = 'fa fa-plus default-float';
-      increaseIcon.setAttribute('aria-hidden', 'true');
-      increaseButton.appendChild(increaseIcon);
 
       const decreaseButton = document.createElement('button');
       decreaseButton.type = 'button';
-      decreaseButton.className = 'btn qty-btn flex-fill d-flex justify-content-center p-0 btn-appearance';
-      decreaseButton.style.height = 'calc(50% - 1px)';
-      decreaseButton.style.fontSize = '12px';
+      decreaseButton.className = 'btn qty-btn btn-appearance d-flex align-items-center justify-content-center';
+      decreaseButton.setAttribute('aria-label', 'Menge verringern');
+      decreaseButton.setAttribute('data-testing', 'quantity-btn-decrease');
+      decreaseButton.style.width = '36px';
+      decreaseButton.style.height = '100%';
       decreaseButton.style.border = 'none';
-      decreaseButton.style.backgroundColor = 'transparent';
+      decreaseButton.style.background = 'transparent';
       decreaseButton.style.color = 'var(--fh-color-dark-blue)';
 
       const decreaseIcon = document.createElement('i');
       decreaseIcon.className = 'fa fa-minus default-float';
       decreaseIcon.setAttribute('aria-hidden', 'true');
       decreaseButton.appendChild(decreaseIcon);
+
+      const quantityInput = document.createElement('input');
+      quantityInput.className = 'qty-input text-center';
+      quantityInput.type = 'text';
+      quantityInput.setAttribute('aria-label', 'Menge wählen');
+      quantityInput.disabled = !isSaleable(item);
+      quantityInput.style.height = '100%';
+      quantityInput.style.width = '56px';
+      quantityInput.style.border = 'none';
+      quantityInput.style.background = 'transparent';
+      quantityInput.style.fontSize = '14px';
+      quantityInput.style.fontWeight = '600';
+      quantityInput.style.padding = '0';
+      quantityInput.style.color = 'var(--fh-color-dark-blue)';
+      quantityInput.style.textAlign = 'center';
+
+      const increaseButton = document.createElement('button');
+      increaseButton.type = 'button';
+      increaseButton.className = 'btn qty-btn btn-appearance d-flex align-items-center justify-content-center';
+      increaseButton.setAttribute('aria-label', 'Menge erhöhen');
+      increaseButton.setAttribute('data-testing', 'quantity-btn-increase');
+      increaseButton.style.width = '36px';
+      increaseButton.style.height = '100%';
+      increaseButton.style.border = 'none';
+      increaseButton.style.background = 'transparent';
+      increaseButton.style.color = 'var(--fh-color-dark-blue)';
+
+      const increaseIcon = document.createElement('i');
+      increaseIcon.className = 'fa fa-plus default-float';
+      increaseIcon.setAttribute('aria-hidden', 'true');
+      increaseButton.appendChild(increaseIcon);
 
       function formatQuantityDisplay(value) {
         if (Number.isInteger(value)) return String(value);
@@ -2414,10 +2460,9 @@ fhOnReady(function () {
           });
       });
 
-      qtyButtonContainer.appendChild(increaseButton);
-      qtyButtonContainer.appendChild(decreaseButton);
+      qtyBox.appendChild(decreaseButton);
       qtyBox.appendChild(quantityInput);
-      qtyBox.appendChild(qtyButtonContainer);
+      qtyBox.appendChild(increaseButton);
       quantityWrapper.appendChild(qtyBox);
 
       updateQuantity(normalizeQuantity(currentQuantity));
@@ -2475,6 +2520,8 @@ fhOnReady(function () {
 
       list.appendChild(li);
     });
+
+    updateWishlistPriceDisplays();
 
     if (list.lastElementChild) list.lastElementChild.style.borderBottom = 'none';
   }
@@ -2675,6 +2722,9 @@ fhOnReady(function () {
   };
   window.fhWishlistMenu.refresh = function () {
     return loadWishListItems();
+  };
+  window.fhWishlistMenu.updatePrices = function () {
+    updateWishlistPriceDisplays();
   };
 });
 // End Section: FH wish list flyout preview
