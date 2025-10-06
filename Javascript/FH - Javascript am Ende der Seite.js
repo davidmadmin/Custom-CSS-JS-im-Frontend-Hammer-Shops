@@ -635,6 +635,10 @@ fhOnReady(function () {
       if (netOption) netOption.setAttribute('aria-hidden', isGross ? 'true' : 'false');
 
       if (noteElement) noteElement.textContent = isNet ? 'Preise ohne MwSt' : 'Preise mit MwSt';
+
+      if (typeof document !== 'undefined' && document.documentElement) {
+        document.documentElement.setAttribute('data-fh-show-net-prices', isNet ? 'net' : 'gross');
+      }
     }
 
     function applyStateToStore(store, desiredState) {
@@ -655,11 +659,29 @@ fhOnReady(function () {
         },
         function (value) {
           const normalized = !!value;
+          const storedPreference = readStoredPreference();
+          const hasStoredPreference = storedPreference === true || storedPreference === false;
+
+          if (hasStoredPreference && normalized !== storedPreference) {
+            currentShowNet = storedPreference;
+            updateToggleUi(storedPreference);
+            persistPreference(storedPreference);
+
+            if (lastKnownStore) {
+              applyStateToStore(lastKnownStore, storedPreference);
+            } else {
+              priceDisplayManager.scheduleUpdate(store, storedPreference);
+              schedulePageDisplayUpdate(storedPreference);
+            }
+
+            return;
+          }
 
           currentShowNet = normalized;
           updateToggleUi(normalized);
           persistPreference(normalized);
           if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, normalized);
+          else priceDisplayManager.scheduleUpdate(store, normalized);
           schedulePageDisplayUpdate(normalized);
         }
       );

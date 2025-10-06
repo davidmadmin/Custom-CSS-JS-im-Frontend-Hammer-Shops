@@ -214,7 +214,19 @@
           <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
           <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
         </a>
-        <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="$store.state.basket.showNetPrices" :visible-fields="['basketValueGross','shippingCostsGross','totalSumNet','totalSumGross']"></basket-preview>
+        <basket-preview
+          v-if="$store.state.lazyComponent.components['basket-preview']"
+          :show-net-prices="$store.state.basket.showNetPrices"
+          :visible-fields="[
+            'basketValueNet',
+            'basketValueGross',
+            'shippingCostsNet',
+            'shippingCostsGross',
+            'vats',
+            'totalSumNet',
+            'totalSumGross'
+          ]"
+        ></basket-preview>
       </div>
     </div>
   </div>

@@ -2383,3 +2383,40 @@ button[data-testing="quantity-btn-decrease"],
   padding-right: 0px;
 }
 /* End Section: Method list item label padding */
+
+/* Section: Basket preview totals visibility */
+:root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="item-sum"],
+:root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="shipping-amount"],
+:root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="vat-amount"],
+:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="item-sum"]),
+:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="shipping-amount"]),
+:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="vat-amount"]) {
+  display: none !important;
+}
+
+:root[data-fh-show-net-prices="gross"] .cmp-totals dd[data-testing="item-sum-net"],
+:root[data-fh-show-net-prices="gross"] .cmp-totals dd[data-testing="shipping-amount-net"],
+:root[data-fh-show-net-prices="gross"] .cmp-totals dt:has(+ dd[data-testing="item-sum-net"]),
+:root[data-fh-show-net-prices="gross"] .cmp-totals dt:has(+ dd[data-testing="shipping-amount-net"]) {
+  display: none !important;
+}
+
+:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount"]),
+:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dd[data-testing="basket-amount"],
+:root[data-fh-show-net-prices="gross"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount-net"]),
+:root[data-fh-show-net-prices="gross"] .cmp-totals .totalSum dd[data-testing="basket-amount-net"] {
+  opacity: 0.6;
+}
+
+:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount-net"]),
+:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dd[data-testing="basket-amount-net"],
+:root[data-fh-show-net-prices="gross"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount"]),
+:root[data-fh-show-net-prices="gross"] .cmp-totals .totalSum dd[data-testing="basket-amount"] {
+  opacity: 1;
+}
+
+.cmp-totals .totalSum dt,
+.cmp-totals .totalSum dd {
+  transition: opacity 0.2s ease;
+}
+/* End Section: Basket preview totals visibility */
