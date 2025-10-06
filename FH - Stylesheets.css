@@ -2390,16 +2390,10 @@ button[data-testing="quantity-btn-decrease"],
   font-weight: 400 !important;
 }
 
-:root[data-fh-show-net-prices="gross"] .cmp-totals dl > hr {
-  display: none !important;
-}
-
 :root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="item-sum"],
 :root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="shipping-amount"],
-:root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="vat-amount"],
 :root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="item-sum"]),
-:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="shipping-amount"]),
-:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="vat-amount"]) {
+:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="shipping-amount"]) {
   display: none !important;
 }
 
