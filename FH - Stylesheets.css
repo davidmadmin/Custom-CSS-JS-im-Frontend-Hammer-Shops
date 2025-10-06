@@ -8,7 +8,7 @@
   --fh-color-dark-blue: #0f172a; /* Deep dark blue accent */
   --fh-color-light-blue: #eef3fd; /* Light blue from footer icon backgrounds */
   --fh-color-surface: #ffffff; /* Neutral surface base without any tint */
-  --fh-color-body-surface: #f6f7fb; /* Subtle light grey body background */
+  --fh-color-body-surface: #fbfbfb; /* Subtle light grey body background */
   --fh-color-input-surface: #f3f4f6; /* Soft grey for input backgrounds */
   --fh-shadow-elevation-soft: 0 24px 48px -32px rgba(15, 23, 42, 0.35); /* Modern diffused shadow */
 }
