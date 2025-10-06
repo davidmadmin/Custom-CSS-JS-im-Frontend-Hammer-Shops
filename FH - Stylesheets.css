@@ -2131,10 +2131,12 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 }
 
 .fh-header__wishlist-list .fh-wishlist-qty-box {
+  --fh-wishlist-qty-height: 52px;
+  --fh-wishlist-qty-button-size: calc(var(--fh-wishlist-qty-height) / 2);
   display: flex;
   align-items: stretch;
-  min-width: 122px;
-  height: 48px;
+  min-width: 116px;
+  height: var(--fh-wishlist-qty-height);
   border: 1px solid #cbd5e1;
   border-radius: 12px;
   overflow: hidden;
@@ -2144,7 +2146,7 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 
 .fh-header__wishlist-list .fh-wishlist-qty-input {
   flex: 1 1 auto;
-  min-width: 60px;
+  min-width: 64px;
   border: none;
   background: #ffffff;
   font-weight: 600;
@@ -2162,13 +2164,15 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 .fh-header__wishlist-list .fh-wishlist-qty-controls {
   display: flex;
   flex-direction: column;
-  width: 44px;
+  width: var(--fh-wishlist-qty-button-size);
+  height: 100%;
   border-left: 1px solid #cbd5e1;
   background: #f1f5f9;
 }
 
 .fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn {
-  flex: 1 1 50%;
+  flex: 0 0 var(--fh-wishlist-qty-button-size);
+  height: var(--fh-wishlist-qty-button-size);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2176,7 +2180,7 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
   background: transparent;
   color: var(--fh-color-dark-blue);
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   line-height: 1;
   padding: 0;
   margin: 0;
