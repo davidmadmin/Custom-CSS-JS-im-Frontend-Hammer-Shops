@@ -2047,7 +2047,7 @@ fhOnReady(function () {
       imageLink.style.height = '60px';
       imageLink.style.borderRadius = '10px';
       imageLink.style.overflow = 'hidden';
-      imageLink.style.backgroundColor = '#f8fafc';
+      imageLink.style.backgroundColor = 'var(--fh-color-light-blue)';
       imageLink.style.gridRow = '1 / span 3';
       imageLink.style.alignSelf = 'start';
 
@@ -2085,7 +2085,7 @@ fhOnReady(function () {
       nameLink.style.display = 'block';
       nameLink.style.fontSize = '13px';
       nameLink.style.fontWeight = '600';
-      nameLink.style.color = '#1f2937';
+      nameLink.style.color = 'var(--fh-color-navy-blue)';
       nameLink.style.textDecoration = 'none';
       nameLink.style.lineHeight = '1.35';
       nameLink.style.wordBreak = 'break-word';
@@ -2133,7 +2133,7 @@ fhOnReady(function () {
       const priceValue = document.createElement('strong');
       priceValue.textContent = formatPrice(getUnitPrice(item));
       priceValue.style.fontSize = '13px';
-      priceValue.style.color = '#1f2937';
+      priceValue.style.color = 'var(--fh-color-navy-blue)';
       priceValue.style.whiteSpace = 'nowrap';
 
       priceLine.appendChild(priceValue);
@@ -2199,7 +2199,7 @@ fhOnReady(function () {
       qtyBox.style.height = '34px';
       qtyBox.style.border = '1px solid #d8e2ef';
       qtyBox.style.borderRadius = '10px';
-      qtyBox.style.backgroundColor = '#f8fafc';
+      qtyBox.style.backgroundColor = 'var(--fh-color-light-blue)';
       qtyBox.style.overflow = 'hidden';
 
       const quantityInput = document.createElement('input');
@@ -2213,7 +2213,7 @@ fhOnReady(function () {
       quantityInput.style.background = 'transparent';
       quantityInput.style.fontSize = '13px';
       quantityInput.style.padding = '0';
-      quantityInput.style.color = '#0f172a';
+      quantityInput.style.color = 'var(--fh-color-dark-blue)';
       quantityInput.style.textAlign = 'center';
 
       const qtyButtonContainer = document.createElement('div');
@@ -2230,7 +2230,7 @@ fhOnReady(function () {
       increaseButton.style.fontSize = '12px';
       increaseButton.style.border = 'none';
       increaseButton.style.backgroundColor = 'transparent';
-      increaseButton.style.color = '#0f172a';
+      increaseButton.style.color = 'var(--fh-color-dark-blue)';
 
       const increaseIcon = document.createElement('i');
       increaseIcon.className = 'fa fa-plus default-float';
@@ -2244,7 +2244,7 @@ fhOnReady(function () {
       decreaseButton.style.fontSize = '12px';
       decreaseButton.style.border = 'none';
       decreaseButton.style.backgroundColor = 'transparent';
-      decreaseButton.style.color = '#0f172a';
+      decreaseButton.style.color = 'var(--fh-color-dark-blue)';
 
       const decreaseIcon = document.createElement('i');
       decreaseIcon.className = 'fa fa-minus default-float';
@@ -3160,10 +3160,13 @@ fhOnReady(function () {
 
   function getPrimaryColor() {
     const styles = getComputedStyle(document.documentElement);
-    return (styles.getPropertyValue('--primary') ||
-            styles.getPropertyValue('--color-primary') ||
-            styles.getPropertyValue('--bs-primary') ||
-            '#31a5f0').trim();
+    return (
+      styles.getPropertyValue('--fh-color-bright-blue') ||
+      styles.getPropertyValue('--primary') ||
+      styles.getPropertyValue('--color-primary') ||
+      styles.getPropertyValue('--bs-primary') ||
+      'var(--fh-color-bright-blue)'
+    ).trim();
   }
 
   const primaryColor = getPrimaryColor();
