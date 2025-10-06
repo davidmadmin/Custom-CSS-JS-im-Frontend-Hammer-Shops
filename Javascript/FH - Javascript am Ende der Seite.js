@@ -200,6 +200,7 @@ fhOnReady(function () {
     const netOption = priceToggleRoot.querySelector("[data-fh-price-toggle-option='net']");
     const noteElement = priceToggleRoot.querySelector('[data-fh-price-toggle-note]');
     const STORAGE_KEY = 'fh:price-display:show-net-prices';
+    const STORAGE_SOURCE_KEY = STORAGE_KEY + ':source';
     let currentShowNet = false;
     let hasIntegratedStore = false;
     let storeWatcherCleanup = null;
@@ -616,9 +617,27 @@ fhOnReady(function () {
       return null;
     }
 
-    function persistPreference(value) {
+    function readStoredPreferenceSource() {
+      try {
+        const source = window.sessionStorage.getItem(STORAGE_SOURCE_KEY);
+
+        if (source === 'user' || source === 'store' || source === 'guest') return source;
+      } catch (error) {
+        /* Ignore storage access issues (e.g. Safari private mode). */
+      }
+
+      return null;
+    }
+
+    function persistPreference(value, source) {
       try {
         window.sessionStorage.setItem(STORAGE_KEY, value ? '1' : '0');
+
+        if (source === 'user' || source === 'store' || source === 'guest') {
+          window.sessionStorage.setItem(STORAGE_SOURCE_KEY, source);
+        } else {
+          window.sessionStorage.removeItem(STORAGE_SOURCE_KEY);
+        }
       } catch (error) {
         /* Ignore storage access issues (e.g. Safari private mode). */
       }
@@ -667,12 +686,29 @@ fhOnReady(function () {
         function (value) {
           const normalized = !!value;
           const storedPreference = readStoredPreference();
+          const storedPreferenceSource = readStoredPreferenceSource();
           const hasStoredPreference = storedPreference === true || storedPreference === false;
+          const isGuest = Boolean(store && store.getters && store.getters.isLoggedIn === false);
 
           if (hasStoredPreference && normalized !== storedPreference) {
+            if (storedPreferenceSource === 'guest' && !isGuest) {
+              currentShowNet = normalized;
+              updateToggleUi(normalized);
+              persistPreference(normalized, 'store');
+
+              if (lastKnownStore) {
+                applyStateToStore(lastKnownStore, normalized);
+              } else {
+                priceDisplayManager.scheduleUpdate(store, normalized);
+                schedulePageDisplayUpdate(normalized);
+              }
+
+              return;
+            }
+
             currentShowNet = storedPreference;
             updateToggleUi(storedPreference);
-            persistPreference(storedPreference);
+            persistPreference(storedPreference, storedPreferenceSource);
 
             if (lastKnownStore) {
               applyStateToStore(lastKnownStore, storedPreference);
@@ -686,7 +722,7 @@ fhOnReady(function () {
 
           currentShowNet = normalized;
           updateToggleUi(normalized);
-          persistPreference(normalized);
+          persistPreference(normalized, 'store');
           if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, normalized);
           else priceDisplayManager.scheduleUpdate(store, normalized);
           schedulePageDisplayUpdate(normalized);
@@ -698,18 +734,24 @@ fhOnReady(function () {
       if (!store) return;
 
       const storedPreference = readStoredPreference();
+      const storedPreferenceSource = readStoredPreferenceSource();
       const storeValue = getStoreShowNetPrices(store);
       const isGuest = Boolean(store && store.getters && store.getters.isLoggedIn === false);
 
       if (!hasIntegratedStore) {
         if (isGuest) {
           currentShowNet = false;
-          persistPreference(false);
+          persistPreference(false, 'guest');
         } else if (storedPreference === true || storedPreference === false) {
-          currentShowNet = storedPreference;
+          if (storedPreferenceSource === 'guest' && typeof storeValue === 'boolean') {
+            currentShowNet = storeValue;
+            persistPreference(storeValue, 'store');
+          } else {
+            currentShowNet = storedPreference;
+          }
         } else if (typeof storeValue === 'boolean') {
           currentShowNet = storeValue;
-          persistPreference(storeValue);
+          persistPreference(storeValue, 'store');
         }
 
         hasIntegratedStore = true;
@@ -760,7 +802,7 @@ fhOnReady(function () {
 
       currentShowNet = !currentShowNet;
       updateToggleUi(currentShowNet);
-      persistPreference(currentShowNet);
+      persistPreference(currentShowNet, 'user');
       if (typeof window !== 'undefined' && window.App && window.App.initialData) {
         window.App.initialData.showNetPrices = !!currentShowNet;
       }
