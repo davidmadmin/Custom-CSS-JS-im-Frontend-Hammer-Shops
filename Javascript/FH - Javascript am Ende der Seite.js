@@ -2461,8 +2461,8 @@ fhOnReady(function () {
       });
 
       qtyBox.appendChild(quantityInput);
-      quantityControls.appendChild(decreaseButton);
       quantityControls.appendChild(increaseButton);
+      quantityControls.appendChild(decreaseButton);
       qtyBox.appendChild(quantityControls);
       quantityWrapper.appendChild(qtyBox);
 

@@ -2190,17 +2190,17 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 
 .fh-header__wishlist-list .fh-wishlist-qty-controls {
   display: flex;
-  flex-direction: row;
-  width: calc(var(--fh-wishlist-qty-button-size) * 2);
+  flex-direction: column;
+  width: var(--fh-wishlist-qty-button-size);
   height: 100%;
   border-left: 1px solid #cbd5e1;
   background: #f1f5f9;
 }
 
 .fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn {
-  flex: 0 0 var(--fh-wishlist-qty-button-size);
-  height: 100%;
-  width: var(--fh-wishlist-qty-button-size);
+  flex: 1 1 50%;
+  height: 50%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2216,8 +2216,8 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 }
 
 .fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn + .qty-btn {
-  border-top: none;
-  border-left: 1px solid #cbd5e1;
+  border-top: 1px solid #cbd5e1;
+  border-left: none;
 }
 
 .fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn:hover,
