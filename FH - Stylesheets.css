@@ -47,6 +47,10 @@ body,
   border-color: #f6f6f6;
   padding: 12px;
 }
+
+.widget-item-grid .cmp-product-thumb:hover {
+  border-color: var(--fh-color-bright-blue);
+}
 /* End Section: Default plenty product card styling */
 
 /* End Section: Custom Schriftarten + Preis Text Stylings */
