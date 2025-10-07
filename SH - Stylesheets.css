@@ -19,6 +19,15 @@
 }
 /* End Section: Artikel Preview Card Preis Styling */
 
+/* Section: Default plenty product card styling */
+.widget-item-grid .cmp-product-thumb {
+  margin-bottom: 0 !important;
+  border: solid;
+  border-radius: 6px;
+  border-color: #f6f6f6;
+}
+/* End Section: Default plenty product card styling */
+
 /* Section: Trustbadge ausblenden */
 .basket-open .widget_container_overlay,
 .basket-open #trustami-mobile-view,

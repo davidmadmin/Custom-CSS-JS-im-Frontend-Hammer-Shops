@@ -33,6 +33,15 @@ body,
 }
 /* End Section: Artikel Preview Card Preis Styling */
 
+/* Section: Default plenty product card styling */
+.widget-item-grid .cmp-product-thumb {
+  margin-bottom: 0 !important;
+  border: solid;
+  border-radius: 6px;
+  border-color: #f6f6f6;
+}
+/* End Section: Default plenty product card styling */
+
 /* End Section: Custom Schriftarten + Preis Text Stylings */
 
 /* Section: FH Header Base Layout */
