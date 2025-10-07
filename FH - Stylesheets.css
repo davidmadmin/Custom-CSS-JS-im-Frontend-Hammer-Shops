@@ -2156,14 +2156,14 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 }
 
 .fh-header__wishlist-list .fh-wishlist-qty-box {
-  --fh-wishlist-qty-height: 52px;
+  --fh-wishlist-qty-height: 34px;
   --fh-wishlist-qty-button-size: calc(var(--fh-wishlist-qty-height) / 2);
   display: flex;
   align-items: stretch;
-  min-width: 116px;
+  min-width: calc(clamp(38px, 3ch + 10px, 60px) + var(--fh-wishlist-qty-button-size));
   height: var(--fh-wishlist-qty-height);
   border: 1px solid #cbd5e1;
-  border-radius: 12px;
+  border-radius: 6px;
   overflow: hidden;
   background-color: #ffffff;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
@@ -2171,7 +2171,8 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 
 .fh-header__wishlist-list .fh-wishlist-qty-input {
   flex: 1 1 auto;
-  min-width: 64px;
+  min-width: clamp(38px, 3ch + 10px, 60px);
+  width: clamp(38px, 3ch + 10px, 60px);
   border: none;
   background: #ffffff;
   font-weight: 600;
@@ -2179,6 +2180,8 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
   color: var(--fh-color-dark-blue);
   text-align: center;
   padding: 0;
+  height: 100%;
+  line-height: var(--fh-wishlist-qty-height);
   outline: none;
 }
 
@@ -2198,6 +2201,7 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 .fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn {
   flex: 0 0 var(--fh-wishlist-qty-button-size);
   height: var(--fh-wishlist-qty-button-size);
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2212,8 +2216,17 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn[data-testing="quantity-btn-increase"] {
+  order: 0;
+}
+
+.fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn[data-testing="quantity-btn-decrease"] {
+  order: 1;
+}
+
 .fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn + .qty-btn {
   border-top: 1px solid #cbd5e1;
+  border-left: none;
 }
 
 .fh-header__wishlist-list .fh-wishlist-qty-controls .qty-btn:hover,
