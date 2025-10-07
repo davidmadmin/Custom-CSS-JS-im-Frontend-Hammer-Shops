@@ -3171,6 +3171,9 @@ fhOnReady(function () {
       body: '<p>Wir versprechen Ihnen, dass Ihr Paket noch am selben Arbeitstag unser Lager verlässt, sofern Sie bis 13:00 Uhr Ihre bezahlte Bestellung bei uns aufgeben.</p><p>Dies ist unser <strong>Hammer Versandversprechen</strong>.</p>',
       placement: 'right',
       inline: false,
+      resolveHost: function (target) {
+        return target && target.parentElement ? target.parentElement : target;
+      },
     },
     {
       target: '.free-shipping-bar__label',
@@ -3178,6 +3181,11 @@ fhOnReady(function () {
       body: '<p>Sie erhalten kostenlosen Standardversand via DHL (1-3 Tage reguläre Lieferzeit), wenn Ihr Brutto-Warenwert 150&nbsp;Euro erreicht hat.</p><p>Gratisversand ist nur für Lieferungen nach Deutschland verfügbar.</p>',
       placement: 'top',
       inline: true,
+      resolveHost: function (target) {
+        if (!target) return null;
+        var wrapper = target.closest('.free-shipping-bar__text');
+        return wrapper || target;
+      },
     },
     {
       target: '.fh-header__customer-contact-heading',
@@ -3222,23 +3230,37 @@ fhOnReady(function () {
 
   var idCounter = 0;
 
-  configs.forEach(function (config) {
-    createInfoCard(config);
+  configs.forEach(function (config, index) {
+    createInfoCard(config, index);
   });
 
-  function createInfoCard(config) {
+  function createInfoCard(config, index) {
     var target = document.querySelector(config.target);
 
     if (!target) return;
-    if (target.querySelector(':scope > .hs-info-card')) return;
+
+    var host = target;
+
+    if (config.resolveHost && typeof config.resolveHost === 'function') {
+      host = config.resolveHost(target) || target;
+    } else if (config.hostSelector) {
+      host = document.querySelector(config.hostSelector) || target;
+    }
+
+    if (!host) return;
+
+    var infoKey = config.key || String(index);
+
+    if (host.querySelector(':scope > .hs-info-card[data-hs-info-key="' + infoKey + '"]')) return;
 
     var inlinePlacement = !!config.inline;
 
-    target.classList.add('hs-info-target');
-    target.setAttribute('data-hs-info-inline', inlinePlacement ? 'true' : 'false');
+    host.classList.add('hs-info-target');
+    host.setAttribute('data-hs-info-inline', inlinePlacement ? 'true' : 'false');
 
     var container = document.createElement('div');
     container.className = 'hs-info-card';
+    container.setAttribute('data-hs-info-key', infoKey);
 
     var trigger = document.createElement('button');
     trigger.type = 'button';
@@ -3293,7 +3315,7 @@ fhOnReady(function () {
     container.appendChild(trigger);
     container.appendChild(panel);
 
-    target.appendChild(container);
+    host.appendChild(container);
 
     var isOpen = false;
     var isPinned = false;
@@ -3542,7 +3564,9 @@ fhOnReady(function () {
     if (!content) {
       content = document.createElement('span');
       content.className = 'free-shipping-bar__text-content';
-      container.appendChild(content);
+      const card = container.querySelector(':scope > .hs-info-card');
+      if (card && card.parentNode === container) container.insertBefore(content, card);
+      else container.appendChild(content);
     }
 
     let label = content.querySelector('.free-shipping-bar__label');
@@ -3591,7 +3615,9 @@ fhOnReady(function () {
     label.textContent = message;
     next.appendChild(label);
 
-    container.appendChild(next);
+    const card = container.querySelector(':scope > .hs-info-card');
+    if (card && card.parentNode === container) container.insertBefore(next, card);
+    else container.appendChild(next);
   }
 
   function update(bar, text, shine, state) {
