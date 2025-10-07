@@ -19,6 +19,12 @@
 }
 /* End Section: Artikel Preview Card Preis Styling */
 
+/* Section: Artikelpaket Badge ausblenden */
+.cmp-product-thumb .badge.badge-bundle {
+  display: none !important;
+}
+/* End Section: Artikelpaket Badge ausblenden */
+
 /* Section: Default plenty product card styling */
 .widget-item-grid .cmp-product-thumb {
   margin-bottom: 0 !important;
