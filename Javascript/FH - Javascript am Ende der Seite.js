@@ -3282,12 +3282,64 @@ fhOnReady(function () {
     return { wrapper, bar, text, shine };
   }
 
-  function animateTextChange(container, message, reached) {
-    const current = container.querySelector('.free-shipping-bar__text-content');
+  function createCheckIcon() {
+    const check = document.createElement('span');
+    check.className = 'free-shipping-bar__check';
+    check.setAttribute('aria-hidden', 'true');
 
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('role', 'presentation');
+    svg.setAttribute('focusable', 'false');
+    svg.setAttribute('aria-hidden', 'true');
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M5 13l4 4L19 7');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'currentColor');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round');
+
+    svg.appendChild(path);
+    check.appendChild(svg);
+
+    return check;
+  }
+
+  function ensureTextContent(container) {
+    let content = container.querySelector('.free-shipping-bar__text-content');
+    if (!content) {
+      content = document.createElement('span');
+      content.className = 'free-shipping-bar__text-content';
+      container.appendChild(content);
+    }
+
+    let label = content.querySelector('.free-shipping-bar__label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'free-shipping-bar__label';
+      content.appendChild(label);
+    }
+
+    return { content, label };
+  }
+
+  function setRegularText(container, message) {
+    const { content, label } = ensureTextContent(container);
+    content.classList.remove('free-shipping-bar__text-content--celebrate-enter');
+    content.classList.remove('free-shipping-bar__text-content--celebrate-exit');
+
+    const check = content.querySelector('.free-shipping-bar__check');
+    if (check) check.remove();
+
+    if (label.textContent !== message) label.textContent = message;
+  }
+
+  function celebrateText(container, message) {
+    const current = container.querySelector('.free-shipping-bar__text-content');
     if (current) {
-      current.classList.remove('free-shipping-bar__text-content--enter');
-      current.classList.add('free-shipping-bar__text-content--exit');
+      current.classList.add('free-shipping-bar__text-content--celebrate-exit');
       current.addEventListener(
         'animationend',
         () => {
@@ -3298,15 +3350,11 @@ fhOnReady(function () {
     }
 
     const next = document.createElement('span');
-    next.className = 'free-shipping-bar__text-content';
-    if (reached) next.classList.add('free-shipping-bar__text-content--success');
+    next.className =
+      'free-shipping-bar__text-content free-shipping-bar__text-content--celebrate-enter';
 
-    if (reached) {
-      const check = document.createElement('span');
-      check.className = 'free-shipping-bar__check';
-      check.setAttribute('aria-hidden', 'true');
-      next.appendChild(check);
-    }
+    const check = createCheckIcon();
+    next.appendChild(check);
 
     const label = document.createElement('span');
     label.className = 'free-shipping-bar__label';
@@ -3314,10 +3362,6 @@ fhOnReady(function () {
     next.appendChild(label);
 
     container.appendChild(next);
-
-    requestAnimationFrame(() => {
-      next.classList.add('free-shipping-bar__text-content--enter');
-    });
   }
 
   function update(bar, text, shine, state) {
@@ -3340,11 +3384,14 @@ fhOnReady(function () {
       ? 'Gratisversand erreicht!'
       : `Noch ${formatEuro(Math.max(THRESHOLD - total, 0))} bis zum Gratisversand`;
 
-    if (state.message !== message || state.reached !== reached) {
-      animateTextChange(text, message, reached);
-      state.message = message;
-      state.reached = reached;
+    if (reached) {
+      if (!state.reached) celebrateText(text, message);
+    } else if (state.reached || state.message !== message) {
+      setRegularText(text, message);
     }
+
+    state.message = message;
+    state.reached = reached;
   }
 
   function toggleFreeShippingBar() {
