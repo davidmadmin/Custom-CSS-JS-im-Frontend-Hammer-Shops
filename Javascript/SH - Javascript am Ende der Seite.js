@@ -1,5 +1,16 @@
 // Section: Global scripts for all pages
 
+function shOnReady(callback) {
+  if (typeof callback !== 'function') return;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', callback);
+    return;
+  }
+
+  callback();
+}
+
 // Section: Bestell-Versand Countdown Code
 (function () {
   function getBerlinTime() {
@@ -232,6 +243,236 @@
   waitForCountdownDiv();
   setInterval(waitForCountdownDiv, 1000);
 })();
+
+// Section: Contextual info cards
+shOnReady(function () {
+  var configs = [
+    {
+      target: '#cutoff-countdown',
+      title: 'Bestell-Countdown',
+      body: '<p>Wir versprechen Ihnen, dass Ihr Paket noch am selben Arbeitstag unser Lager verlässt, sofern Sie bis 13:00 Uhr Ihre bezahlte Bestellung bei uns aufgeben.</p><p>Dies ist unser <strong>Hammer Versandversprechen</strong>.</p>',
+      placement: 'right',
+      inline: false,
+    },
+    {
+      target: '.free-shipping-bar__label',
+      title: 'Gratisversand-Balken',
+      body: '<p>Sie erhalten kostenlosen Standardversand via DHL (1-3 Tage reguläre Lieferzeit), wenn Ihr Brutto-Warenwert 150&nbsp;Euro erreicht hat.</p><p>Gratisversand ist nur für Lieferungen nach Deutschland verfügbar.</p>',
+      placement: 'top',
+      inline: true,
+    },
+    {
+      target: '.fh-header__customer-contact-heading',
+      title: 'Ihr Ansprechpartner',
+      body: '<p>Da Sie ein besonders geschätzter Kunde von uns sind, erhalten Sie direkten Zugriff zu einem unserer Produktexperten &amp; Kundenbetreuer.</p><p>Wenden Sie sich gerne direkt an Ihren Ansprechpartner, um exklusiven Zugriff auf besondere Angebote und mehr zu erhalten.</p>',
+      placement: 'right',
+      inline: false,
+    },
+    {
+      target: '.fh-header__panel-title',
+      title: 'Merkliste',
+      body: '<p>Wenn Sie nicht eingeloggt sind, wird Ihre Merkliste im Browser gespeichert.</p><p>Eingeloggt dagegen sicher in Ihrem Kundenkonto – jeweils bis Sie die Einträge oder Daten löschen.</p>',
+      placement: 'right',
+      inline: false,
+    },
+  ];
+
+  if (!configs.length) return;
+
+  var registry = window.hsInfoCardRegistry;
+
+  if (!registry || !registry.overlay || !registry.overlay.isConnected) {
+    var overlay = document.createElement('div');
+    overlay.className = 'hs-info-card-overlay';
+    overlay.setAttribute('data-hs-info-overlay', 'true');
+    overlay.setAttribute('hidden', '');
+    document.body.appendChild(overlay);
+
+    registry = {
+      overlay: overlay,
+      activeCard: null,
+    };
+
+    overlay.addEventListener('click', function () {
+      if (registry.activeCard && typeof registry.activeCard.close === 'function') {
+        registry.activeCard.close();
+      }
+    });
+  }
+
+  window.hsInfoCardRegistry = registry;
+
+  var idCounter = 0;
+
+  configs.forEach(function (config) {
+    createInfoCard(config);
+  });
+
+  function createInfoCard(config) {
+    var target = document.querySelector(config.target);
+
+    if (!target) return;
+    if (target.querySelector(':scope > .hs-info-card')) return;
+
+    var inlinePlacement = !!config.inline;
+
+    target.classList.add('hs-info-target');
+    target.setAttribute('data-hs-info-inline', inlinePlacement ? 'true' : 'false');
+
+    var container = document.createElement('div');
+    container.className = 'hs-info-card';
+
+    var trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'hs-info-card__trigger';
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-label', config.title + ' – weitere Informationen');
+
+    var triggerIcon = document.createElement('span');
+    triggerIcon.setAttribute('aria-hidden', 'true');
+    triggerIcon.textContent = 'ℹ️';
+    trigger.appendChild(triggerIcon);
+
+    idCounter += 1;
+    var panelId = 'hs-info-card-panel-' + idCounter;
+    var titleId = 'hs-info-card-title-' + idCounter;
+
+    trigger.setAttribute('aria-controls', panelId);
+
+    var panel = document.createElement('div');
+    var panelPlacement = config.placement === 'top' ? 'top' : 'right';
+    panel.className = 'hs-info-card__panel hs-info-card__panel--' + panelPlacement;
+    panel.id = panelId;
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'false');
+    panel.setAttribute('aria-hidden', 'true');
+    panel.setAttribute('aria-labelledby', titleId);
+
+    var header = document.createElement('div');
+    header.className = 'hs-info-card__header';
+
+    var closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'hs-info-card__close';
+    closeButton.setAttribute('aria-label', 'Information schließen');
+    closeButton.textContent = '×';
+
+    var titleElement = document.createElement('div');
+    titleElement.className = 'hs-info-card__title';
+    titleElement.id = titleId;
+    titleElement.textContent = config.title;
+
+    header.appendChild(closeButton);
+    header.appendChild(titleElement);
+
+    var body = document.createElement('div');
+    body.className = 'hs-info-card__body';
+    body.innerHTML = config.body;
+
+    panel.appendChild(header);
+    panel.appendChild(body);
+
+    container.appendChild(trigger);
+    container.appendChild(panel);
+
+    target.appendChild(container);
+
+    var isOpen = false;
+    var isPinned = false;
+
+    var api = {
+      close: closeCard,
+    };
+
+    function openCard(pinned) {
+      if (isOpen && pinned && isPinned) return;
+
+      if (registry.activeCard && registry.activeCard !== api && typeof registry.activeCard.close === 'function') {
+        registry.activeCard.close();
+      }
+
+      isOpen = true;
+      if (pinned) isPinned = true;
+
+      trigger.setAttribute('aria-expanded', 'true');
+      panel.classList.add('is-visible');
+      panel.setAttribute('aria-hidden', 'false');
+
+      registry.activeCard = api;
+
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        registry.overlay.classList.add('is-active');
+        registry.overlay.removeAttribute('hidden');
+      }
+
+      document.addEventListener('pointerdown', handleDocumentPointer, true);
+      document.addEventListener('keydown', handleKeydown, true);
+    }
+
+    function closeCard() {
+      if (!isOpen) return;
+
+      isOpen = false;
+      isPinned = false;
+
+      trigger.setAttribute('aria-expanded', 'false');
+      panel.classList.remove('is-visible');
+      panel.setAttribute('aria-hidden', 'true');
+
+      if (registry.activeCard === api) {
+        registry.activeCard = null;
+      }
+
+      if (!registry.activeCard && registry.overlay) {
+        registry.overlay.classList.remove('is-active');
+        if (!registry.overlay.hasAttribute('hidden')) {
+          registry.overlay.setAttribute('hidden', '');
+        }
+      }
+
+      document.removeEventListener('pointerdown', handleDocumentPointer, true);
+      document.removeEventListener('keydown', handleKeydown, true);
+    }
+
+    function handleDocumentPointer(event) {
+      if (!isOpen) return;
+      if (container.contains(event.target)) return;
+      closeCard();
+    }
+
+    function handleKeydown(event) {
+      if (!isOpen) return;
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        event.preventDefault();
+        closeCard();
+        trigger.focus();
+      }
+    }
+
+    container.addEventListener('mouseenter', function () {
+      if (!isPinned) openCard(false);
+    });
+
+    container.addEventListener('mouseleave', function () {
+      if (!isPinned) closeCard();
+    });
+
+    trigger.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (isPinned) {
+        closeCard();
+      } else {
+        openCard(true);
+      }
+    });
+
+    closeButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeCard();
+    });
+  }
+});
+// End Section: Contextual info cards
 // End Section: Bestell-Versand Countdown Code
 
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
