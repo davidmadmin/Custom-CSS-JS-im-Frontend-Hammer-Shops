@@ -3258,40 +3258,140 @@ fhOnReady(function () {
   function createBar(id) {
     const wrapper = document.createElement('div');
     wrapper.id = id;
-    wrapper.style.marginTop = '0px';
-    wrapper.style.marginBottom = '30px';
+    wrapper.className = 'free-shipping-bar';
 
     const text = document.createElement('div');
-    text.style.fontSize = '0.9rem';
-    text.style.fontWeight = '600';
-    text.style.marginBottom = '0.5rem';
+    text.className = 'free-shipping-bar__text';
+    text.setAttribute('role', 'status');
+    text.setAttribute('aria-live', 'polite');
     wrapper.appendChild(text);
 
-    const bg = document.createElement('div');
-    bg.style.width = '100%';
-    bg.style.height = '8px';
-    bg.style.background = '#e0e0e0';
-    bg.style.borderRadius = '4px';
-    bg.style.overflow = 'hidden';
-    wrapper.appendChild(bg);
+    const progress = document.createElement('div');
+    progress.className = 'free-shipping-bar__progress';
+    wrapper.appendChild(progress);
 
     const bar = document.createElement('div');
-    bar.style.height = '100%';
-    bar.style.width = '0%';
+    bar.className = 'free-shipping-bar__progress-fill';
     bar.style.background = primaryColor;
-    bar.style.transition = 'width 0.3s ease';
-    bg.appendChild(bar);
+    progress.appendChild(bar);
 
-    return { wrapper, bar, text };
+    const shine = document.createElement('div');
+    shine.className = 'free-shipping-bar__shine';
+    bar.appendChild(shine);
+
+    return { wrapper, bar, text, shine };
   }
 
-  function update(bar, text) {
-    const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
-    const ratio = Math.min(total / THRESHOLD, 1);
-    bar.style.width = (ratio * 100) + '%';
-    if (total < THRESHOLD) text.textContent = `Noch ${formatEuro(THRESHOLD - total)} bis zum Gratisversand`; else {
-      text.textContent = 'Gratisversand erreicht!';
+  function createCheckIcon() {
+    const check = document.createElement('span');
+    check.className = 'free-shipping-bar__check';
+    check.setAttribute('aria-hidden', 'true');
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('role', 'presentation');
+    svg.setAttribute('focusable', 'false');
+    svg.setAttribute('aria-hidden', 'true');
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M5 13l4 4L19 7');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'currentColor');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round');
+
+    svg.appendChild(path);
+    check.appendChild(svg);
+
+    return check;
+  }
+
+  function ensureTextContent(container) {
+    let content = container.querySelector('.free-shipping-bar__text-content');
+    if (!content) {
+      content = document.createElement('span');
+      content.className = 'free-shipping-bar__text-content';
+      container.appendChild(content);
     }
+
+    let label = content.querySelector('.free-shipping-bar__label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'free-shipping-bar__label';
+      content.appendChild(label);
+    }
+
+    return { content, label };
+  }
+
+  function setRegularText(container, message) {
+    const { content, label } = ensureTextContent(container);
+    content.classList.remove('free-shipping-bar__text-content--celebrate-enter');
+    content.classList.remove('free-shipping-bar__text-content--celebrate-exit');
+
+    const check = content.querySelector('.free-shipping-bar__check');
+    if (check) check.remove();
+
+    if (label.textContent !== message) label.textContent = message;
+  }
+
+  function celebrateText(container, message) {
+    const current = container.querySelector('.free-shipping-bar__text-content');
+    if (current) {
+      current.classList.add('free-shipping-bar__text-content--celebrate-exit');
+      current.addEventListener(
+        'animationend',
+        () => {
+          current.remove();
+        },
+        { once: true }
+      );
+    }
+
+    const next = document.createElement('span');
+    next.className =
+      'free-shipping-bar__text-content free-shipping-bar__text-content--celebrate-enter';
+
+    const check = createCheckIcon();
+    next.appendChild(check);
+
+    const label = document.createElement('span');
+    label.className = 'free-shipping-bar__label';
+    label.textContent = message;
+    next.appendChild(label);
+
+    container.appendChild(next);
+  }
+
+  function update(bar, text, shine, state) {
+    const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
+    const ratio = THRESHOLD === 0 ? 1 : total / THRESHOLD;
+    const reached = total >= THRESHOLD;
+    const widthRatio = reached ? 1 : Math.max(Math.min(ratio, 1), 0.02);
+
+    bar.style.width = (widthRatio * 100).toFixed(2) + '%';
+
+    const wrapper = bar.closest('.free-shipping-bar');
+    if (wrapper) wrapper.classList.toggle('free-shipping-bar--reached', reached);
+
+    if (shine) {
+      if (reached) shine.classList.add('free-shipping-bar__shine--paused');
+      else shine.classList.remove('free-shipping-bar__shine--paused');
+    }
+
+    const message = reached
+      ? 'Gratisversand erreicht!'
+      : `Noch ${formatEuro(Math.max(THRESHOLD - total, 0))} bis zum Gratisversand`;
+
+    if (reached) {
+      if (!state.reached) celebrateText(text, message);
+    } else if (state.reached || state.message !== message) {
+      setRegularText(text, message);
+    }
+
+    state.message = message;
+    state.reached = reached;
   }
 
   function toggleFreeShippingBar() {
@@ -3312,10 +3412,11 @@ fhOnReady(function () {
   const observer = new MutationObserver(() => {
     const totals = document.querySelector('.cmp-totals');
     if (totals && !document.getElementById('free-shipping-bar')) {
-      const { wrapper, bar, text } = createBar('free-shipping-bar');
+      const { wrapper, bar, text, shine } = createBar('free-shipping-bar');
       totals.parentNode.insertBefore(wrapper, totals);
-      update(bar, text);
-      setInterval(() => update(bar, text), 1000);
+      const state = { message: '', reached: false };
+      update(bar, text, shine, state);
+      setInterval(() => update(bar, text, shine, state), 1000);
     }
     toggleFreeShippingBar();
   });

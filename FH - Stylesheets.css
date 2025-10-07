@@ -55,6 +55,146 @@ body,
 
 /* End Section: Custom Schriftarten + Preis Text Stylings */
 
+/* Section: Gratisversand Fortschrittsbalken Styling */
+.free-shipping-bar {
+  margin: 0 0 30px;
+  padding: 0;
+  color: #111111;
+}
+
+.free-shipping-bar__text {
+  display: grid;
+  grid-template-rows: 1fr;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.free-shipping-bar__text-content {
+  grid-row: 1 / 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  line-height: 1.5;
+}
+
+.free-shipping-bar__text-content--celebrate-enter {
+  animation: free-shipping-bar-text-celebrate-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.free-shipping-bar__text-content--celebrate-exit {
+  animation: free-shipping-bar-text-celebrate-exit 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.free-shipping-bar__label {
+  display: inline-block;
+  line-height: 1.45;
+}
+
+.free-shipping-bar__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(15, 157, 88, 0.12);
+  border: 1px solid rgba(15, 157, 88, 0.45);
+  box-shadow: 0 6px 14px rgba(15, 157, 88, 0.18);
+  color: #0f9d58;
+}
+
+.free-shipping-bar__check svg {
+  width: 14px;
+  height: 14px;
+}
+
+.free-shipping-bar__progress {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  background: rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.free-shipping-bar__progress-fill {
+  position: relative;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: inset 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.free-shipping-bar--reached .free-shipping-bar__progress-fill {
+  box-shadow: inset 0 0 0 rgba(0, 0, 0, 0), 0 6px 18px rgba(15, 157, 88, 0.2);
+}
+
+.free-shipping-bar__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.38) 45%,
+    rgba(255, 255, 255, 0.12) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-100%);
+  animation: free-shipping-bar-shine 16s linear infinite;
+  opacity: 0.28;
+  pointer-events: none;
+  will-change: transform;
+  transition: opacity 0.6s ease;
+}
+
+.free-shipping-bar__shine--paused {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+@keyframes free-shipping-bar-text-celebrate-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.9);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes free-shipping-bar-text-celebrate-exit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.94);
+  }
+}
+
+@keyframes free-shipping-bar-shine {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+/* End Section: Gratisversand Fortschrittsbalken Styling */
+
 /* Section: FH Header Base Layout */
 .fh-header {
   position: relative;
