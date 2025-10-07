@@ -2705,3 +2705,208 @@ button[data-testing="quantity-btn-decrease"],
   transition: opacity 0.2s ease, font-weight 0.2s ease;
 }
 /* End Section: Basket preview totals visibility */
+
+/* Section: FH Info Card Tooltips */
+.fh-info-card-target {
+  position: relative;
+  overflow: visible;
+}
+
+.fh-info-card-target--inline {
+  display: inline-block;
+}
+
+.fh-info-card__trigger {
+  position: absolute;
+  top: 50%;
+  right: -1.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #ffffff;
+  color: var(--fh-color-dark-blue, #1f2937);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 18px 36px -24px rgba(15, 23, 42, 0.45);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
+  transform: translateY(-50%);
+}
+
+.fh-info-card-target[data-info-icon-placement='top-center'] > .fh-info-card__trigger {
+  top: 0;
+  left: 50%;
+  right: auto;
+  transform: translate(-50%, -120%);
+}
+
+.fh-info-card__trigger:hover,
+.fh-info-card__trigger:focus-visible {
+  background: var(--fh-color-light-blue, #f1f5f9);
+  border-color: var(--fh-color-bright-blue, #31a5f0);
+  color: var(--fh-color-bright-blue, #31a5f0);
+  box-shadow: 0 16px 32px -18px rgba(49, 165, 240, 0.45);
+}
+
+.fh-info-card__trigger:focus-visible {
+  outline: none;
+}
+
+.fh-info-card__trigger-icon {
+  pointer-events: none;
+}
+
+.fh-info-card__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fh-info-card {
+  position: absolute;
+  z-index: 1400;
+  width: clamp(240px, 28vw, 320px);
+  max-width: calc(100vw - 32px);
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  box-shadow: var(--fh-shadow-elevation-soft, 0 32px 64px -32px rgba(15, 23, 42, 0.55));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
+  --fh-info-card-translate-x: 0;
+  --fh-info-card-offset-y: 0;
+  --fh-info-card-open-offset-y: 0;
+  --fh-info-card-scale: 0.96;
+  --fh-info-card-open-scale: 1;
+  transform: translate(var(--fh-info-card-translate-x), var(--fh-info-card-offset-y)) scale(var(--fh-info-card-scale));
+}
+
+.fh-info-card[data-card-placement='right-center'] {
+  top: 50%;
+  left: calc(100% + 18px);
+  --fh-info-card-translate-x: 0;
+  --fh-info-card-offset-y: -50%;
+  --fh-info-card-open-offset-y: -50%;
+}
+
+.fh-info-card[data-card-placement='top-center'] {
+  bottom: calc(100% + 18px);
+  left: 50%;
+  --fh-info-card-translate-x: -50%;
+  --fh-info-card-offset-y: -0.85rem;
+  --fh-info-card-open-offset-y: -0.35rem;
+}
+
+.fh-info-card--visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(var(--fh-info-card-translate-x), var(--fh-info-card-open-offset-y)) scale(var(--fh-info-card-open-scale));
+}
+
+.fh-info-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.1rem;
+  background: #f1f5f9;
+  color: var(--fh-color-dark-blue, #0f172a);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.fh-info-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.fh-info-card__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.fh-info-card__close:hover,
+.fh-info-card__close:focus-visible {
+  background: rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.12);
+  outline: none;
+}
+
+.fh-info-card__body {
+  padding: 1.1rem;
+  color: #1f2937;
+  line-height: 1.6;
+  background: #ffffff;
+}
+
+.fh-info-card__body p {
+  margin-bottom: 0.85rem;
+}
+
+.fh-info-card__body p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .fh-info-card-target {
+    position: static;
+  }
+
+  .fh-info-card-target[data-info-icon-placement='right-center'] > .fh-info-card__trigger {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    margin-left: 0.5rem;
+  }
+
+  .fh-info-card-target[data-info-icon-placement='top-center'] > .fh-info-card__trigger {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: none;
+    margin-left: 0.5rem;
+  }
+
+  .fh-info-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    width: min(90vw, 360px);
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    --fh-info-card-translate-x: -50%;
+    --fh-info-card-offset-y: -56%;
+    --fh-info-card-open-offset-y: -50%;
+  }
+}
+/* End Section: FH Info Card Tooltips */
