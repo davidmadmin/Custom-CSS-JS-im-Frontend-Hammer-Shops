@@ -606,21 +606,43 @@ fhOnReady(function () {
       try {
         const raw = window.sessionStorage.getItem(STORAGE_KEY);
 
-        if (raw === '1') return true;
+        if (!raw) return { value: null, source: null };
 
-        if (raw === '0') return false;
+        const valueKey = raw.charAt(raw.length - 1);
+        const value = valueKey === '1' ? true : valueKey === '0' ? false : null;
+        const sourceKey = raw.length > 1 ? raw.charAt(0) : '';
+        const prefixedSource = sourceKey === 'u' ? 'user' : sourceKey === 's' ? 'store' : sourceKey === 'g' ? 'guest' : null;
+        const legacySource = window.sessionStorage.getItem(STORAGE_KEY + ':source');
+        const source = prefixedSource || (legacySource === 'user' || legacySource === 'store' || legacySource === 'guest'
+          ? legacySource
+          : null);
+
+        return { value, source };
       } catch (error) {
         /* Ignore storage access issues (e.g. Safari private mode). */
       }
 
-      return null;
+      return { value: null, source: null };
     }
 
-    function persistPreference(value) {
+    function persistPreference(value, source) {
       try {
-        window.sessionStorage.setItem(STORAGE_KEY, value ? '1' : '0');
+        if (value === true || value === false) {
+          const prefix = source === 'user' ? 'u' : source === 'store' ? 's' : source === 'guest' ? 'g' : '';
+          window.sessionStorage.setItem(STORAGE_KEY, prefix + (value ? '1' : '0'));
+          window.sessionStorage.removeItem(STORAGE_KEY + ':source');
+        } else {
+          window.sessionStorage.removeItem(STORAGE_KEY);
+          window.sessionStorage.removeItem(STORAGE_KEY + ':source');
+        }
       } catch (error) {
         /* Ignore storage access issues (e.g. Safari private mode). */
+      }
+    }
+
+    function syncInitialData(showNet) {
+      if (typeof window !== 'undefined' && window.App && window.App.initialData) {
+        window.App.initialData.showNetPrices = !!showNet;
       }
     }
 
@@ -666,29 +688,33 @@ fhOnReady(function () {
         },
         function (value) {
           const normalized = !!value;
-          const storedPreference = readStoredPreference();
+          const { value: storedPreference, source: storedPreferenceSource } = readStoredPreference();
           const hasStoredPreference = storedPreference === true || storedPreference === false;
+          const isGuest = Boolean(store && store.getters && store.getters.isLoggedIn === false);
 
           if (hasStoredPreference && normalized !== storedPreference) {
+            if (storedPreferenceSource === 'guest' && !isGuest) {
+              currentShowNet = normalized;
+              updateToggleUi(normalized);
+              persistPreference(normalized, 'store');
+              applyStateToStore(lastKnownStore || store, normalized);
+
+              return;
+            }
+
             currentShowNet = storedPreference;
             updateToggleUi(storedPreference);
-            persistPreference(storedPreference);
+            persistPreference(storedPreference, storedPreferenceSource);
 
-            if (lastKnownStore) {
-              applyStateToStore(lastKnownStore, storedPreference);
-            } else {
-              priceDisplayManager.scheduleUpdate(store, storedPreference);
-              schedulePageDisplayUpdate(storedPreference);
-            }
+            applyStateToStore(lastKnownStore || store, storedPreference);
 
             return;
           }
 
           currentShowNet = normalized;
           updateToggleUi(normalized);
-          persistPreference(normalized);
-          if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, normalized);
-          else priceDisplayManager.scheduleUpdate(store, normalized);
+          persistPreference(normalized, 'store');
+          priceDisplayManager.scheduleUpdate(lastKnownStore || store, normalized);
           schedulePageDisplayUpdate(normalized);
         }
       );
@@ -697,15 +723,24 @@ fhOnReady(function () {
     function integrateWithStore(store) {
       if (!store) return;
 
-      const storedPreference = readStoredPreference();
+      const { value: storedPreference, source: storedPreferenceSource } = readStoredPreference();
       const storeValue = getStoreShowNetPrices(store);
+      const isGuest = Boolean(store && store.getters && store.getters.isLoggedIn === false);
 
       if (!hasIntegratedStore) {
-        if (storedPreference === true || storedPreference === false) {
-          currentShowNet = storedPreference;
+        if (isGuest) {
+          currentShowNet = false;
+          persistPreference(false, 'guest');
+        } else if (storedPreference === true || storedPreference === false) {
+          if (storedPreferenceSource === 'guest' && typeof storeValue === 'boolean') {
+            currentShowNet = storeValue;
+            persistPreference(storeValue, 'store');
+          } else {
+            currentShowNet = storedPreference;
+          }
         } else if (typeof storeValue === 'boolean') {
           currentShowNet = storeValue;
-          persistPreference(storeValue);
+          persistPreference(storeValue, 'store');
         }
 
         hasIntegratedStore = true;
@@ -737,17 +772,12 @@ fhOnReady(function () {
       }, typeof delay === 'number' ? delay : 0);
     }
 
-    const initialPreference = readStoredPreference();
+    const { value: initialPreference } = readStoredPreference();
 
     if (initialPreference === true || initialPreference === false) currentShowNet = initialPreference;
 
     updateToggleUi(currentShowNet);
-    if (typeof document !== 'undefined' && document.documentElement) {
-      document.documentElement.setAttribute('data-fh-show-net-prices', currentShowNet ? 'net' : 'gross');
-    }
-    if (typeof window !== 'undefined' && window.App && window.App.initialData) {
-      window.App.initialData.showNetPrices = !!currentShowNet;
-    }
+    syncInitialData(currentShowNet);
     schedulePageDisplayUpdate(currentShowNet, true);
     ensureCategoryMutationObserver();
 
@@ -756,14 +786,9 @@ fhOnReady(function () {
 
       currentShowNet = !currentShowNet;
       updateToggleUi(currentShowNet);
-      persistPreference(currentShowNet);
-      if (typeof window !== 'undefined' && window.App && window.App.initialData) {
-        window.App.initialData.showNetPrices = !!currentShowNet;
-      }
+      persistPreference(currentShowNet, 'user');
+      syncInitialData(currentShowNet);
       if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, currentShowNet);
-      else if (typeof document !== 'undefined' && document.documentElement) {
-        document.documentElement.setAttribute('data-fh-show-net-prices', currentShowNet ? 'net' : 'gross');
-      }
       schedulePageDisplayUpdate(currentShowNet);
       scheduleStoreIntegration(0);
     });
