@@ -1,5 +1,244 @@
 // Section: Global scripts for all pages
 
+function shOnReady(callback) {
+  if (typeof callback !== 'function') return;
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', callback); return; }
+
+  callback();
+}
+
+function shCreateInfoCard(options) {
+  if (!options || !options.targetSelector) return null;
+
+  var target = document.querySelector(options.targetSelector);
+
+  if (!target) return null;
+
+  if (target.getAttribute('data-sh-info-card') === 'initialized') return null;
+
+  target.setAttribute('data-sh-info-card', 'initialized');
+
+  var iconPlacement = options.iconPlacement || 'right-center';
+  var cardPlacement = options.cardPlacement || 'right-center';
+
+  target.classList.add('sh-info-card-target');
+  target.setAttribute('data-info-icon-placement', iconPlacement);
+
+  if (window.getComputedStyle(target).display === 'inline') target.classList.add('sh-info-card-target--inline');
+
+  var trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'sh-info-card__trigger';
+  trigger.setAttribute('aria-expanded', 'false');
+  trigger.setAttribute('aria-label', (options.title || 'Weitere Informationen') + ' – mehr Details anzeigen');
+
+  var triggerIcon = document.createElement('span');
+  triggerIcon.className = 'sh-info-card__trigger-icon';
+  triggerIcon.setAttribute('aria-hidden', 'true');
+  triggerIcon.textContent = 'ℹ️';
+  trigger.appendChild(triggerIcon);
+
+  var srLabel = document.createElement('span');
+  srLabel.className = 'sh-info-card__sr-only';
+  srLabel.textContent = 'Weitere Informationen öffnen';
+  trigger.appendChild(srLabel);
+
+  var card = document.createElement('aside');
+  card.className = 'sh-info-card';
+  card.setAttribute('data-card-placement', cardPlacement);
+  card.setAttribute('aria-hidden', 'true');
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-label', options.title || 'Information');
+
+  var header = document.createElement('header');
+  header.className = 'sh-info-card__header';
+
+  var closeButton = document.createElement('button');
+  closeButton.type = 'button';
+  closeButton.className = 'sh-info-card__close';
+  closeButton.setAttribute('aria-label', 'Info schließen');
+  closeButton.textContent = '×';
+
+  var title = document.createElement('h3');
+  title.className = 'sh-info-card__title';
+  title.textContent = options.title || '';
+
+  header.appendChild(closeButton);
+  header.appendChild(title);
+
+  var body = document.createElement('div');
+  body.className = 'sh-info-card__body';
+
+  if (typeof options.body === 'string') {
+    body.innerHTML = options.body;
+  } else if (options.body instanceof Node) {
+    body.appendChild(options.body);
+  }
+
+  card.appendChild(header);
+  card.appendChild(body);
+
+  target.appendChild(trigger);
+  target.appendChild(card);
+
+  var state = {
+    pinned: false,
+    hoveredTrigger: false,
+    hoveredCard: false,
+    closeTimer: null,
+  };
+
+  function openCard() {
+    clearTimeout(state.closeTimer);
+
+    if (card.classList.contains('sh-info-card--visible')) return;
+
+    card.classList.add('sh-info-card--visible');
+    card.setAttribute('aria-hidden', 'false');
+    trigger.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeCard() {
+    clearTimeout(state.closeTimer);
+
+    if (!card.classList.contains('sh-info-card--visible')) return;
+
+    card.classList.remove('sh-info-card--visible');
+    card.setAttribute('aria-hidden', 'true');
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  function scheduleClose() {
+    if (state.pinned) return;
+
+    clearTimeout(state.closeTimer);
+
+    state.closeTimer = setTimeout(function () {
+      if (!state.hoveredTrigger && !state.hoveredCard && !state.pinned) closeCard();
+    }, 150);
+  }
+
+  trigger.addEventListener('mouseenter', function () {
+    state.hoveredTrigger = true;
+    openCard();
+  });
+
+  trigger.addEventListener('mouseleave', function () {
+    state.hoveredTrigger = false;
+    scheduleClose();
+  });
+
+  card.addEventListener('mouseenter', function () {
+    state.hoveredCard = true;
+    openCard();
+  });
+
+  card.addEventListener('mouseleave', function () {
+    state.hoveredCard = false;
+    scheduleClose();
+  });
+
+  trigger.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    state.pinned = !state.pinned;
+
+    if (state.pinned) {
+      openCard();
+    } else {
+      closeCard();
+    }
+  });
+
+  closeButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    state.pinned = false;
+    closeCard();
+  });
+
+  document.addEventListener('click', function (event) {
+    if (!card.classList.contains('sh-info-card--visible')) return;
+
+    if (target.contains(event.target)) return;
+
+    state.pinned = false;
+    closeCard();
+  });
+
+  return {
+    open: openCard,
+    close: closeCard,
+  };
+}
+
+// Section: SH Info Card Tooltips
+shOnReady(function () {
+  function ensureInfoCard(config, retries) {
+    var instance = shCreateInfoCard(config);
+
+    if (instance || retries <= 0) return;
+
+    setTimeout(function () {
+      ensureInfoCard(config, retries - 1);
+    }, 300);
+  }
+
+  var retries = 10;
+
+  var bestellCountdownBody = [
+    '<p>Wir versprechen Ihnen, dass Ihr Paket noch am selben Arbeitstag unser Lager verlässt, sofern Sie bis 13:00 Uhr Ihre bezahlte Bestellung bei uns aufgeben.</p>',
+    '<p>Dies ist unser <strong>Hammer Versandversprechen</strong>.</p>',
+  ].join('');
+
+  ensureInfoCard({
+    targetSelector: '#cutoff-countdown',
+    title: 'Bestell-Countdown',
+    body: bestellCountdownBody,
+    iconPlacement: 'right-center',
+    cardPlacement: 'right-center',
+  }, retries);
+
+  var gratisversandBody = [
+    '<p>Sie erhalten kostenlosen Standardversand via DHL (1–3 Tage reguläre Lieferzeit), sobald Ihr Brutto-Warenwert 150&nbsp;Euro erreicht hat.</p>',
+    '<p>Gratisversand ist nur für Lieferungen nach Deutschland verfügbar.</p>',
+  ].join('');
+
+  ensureInfoCard({
+    targetSelector: '.free-shipping-bar__label',
+    title: 'Gratisversand-Balken',
+    body: gratisversandBody,
+    iconPlacement: 'right-center',
+    cardPlacement: 'top-center',
+  }, retries);
+
+  var ansprechpartnerBody = [
+    '<p>Da Sie ein besonders geschätzter Kunde von uns sind, erhalten Sie direkten Zugriff zu einem unserer Produktexperten &amp; Kundenbetreuer.</p>',
+    '<p>Wenden Sie sich gerne direkt an Ihren Ansprechpartner, um exklusiven Zugriff auf besondere Angebote und mehr zu erhalten.</p>',
+  ].join('');
+
+  ensureInfoCard({
+    targetSelector: '.fh-header__customer-contact-heading',
+    title: 'Ihr Ansprechpartner',
+    body: ansprechpartnerBody,
+    iconPlacement: 'right-center',
+    cardPlacement: 'right-center',
+  }, retries);
+
+  var merklisteBody = [
+    '<p>Wenn Sie nicht eingeloggt sind, wird Ihre Merkliste im Browser gespeichert. Eingeloggt dagegen sicher in Ihrem Kundenkonto – jeweils bis Sie die Einträge oder Daten löschen.</p>',
+  ].join('');
+
+  ensureInfoCard({
+    targetSelector: '.fh-header__panel-title',
+    title: 'Merkliste',
+    body: merklisteBody,
+    iconPlacement: 'right-center',
+    cardPlacement: 'right-center',
+  }, retries);
+});
+
 // Section: Bestell-Versand Countdown Code
 (function () {
   function getBerlinTime() {
