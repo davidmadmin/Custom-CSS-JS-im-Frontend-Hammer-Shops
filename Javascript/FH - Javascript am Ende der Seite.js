@@ -35,9 +35,14 @@ fhOnReady(function () {
 
   applyGreeting();
 
-  const container = document.querySelector('[data-fh-account-menu-container]');
+  const containers = Array.prototype.slice.call(document.querySelectorAll('[data-fh-account-menu-container]'));
+  let primaryInteractiveMenuAssigned = false;
 
-  if (container) {
+  containers.forEach(function (container) {
+    if (!container || container.__fhAccountMenuInitialized) return;
+
+    container.__fhAccountMenuInitialized = true;
+
     const observer = new MutationObserver(function () {
       applyGreeting(container);
     });
@@ -47,66 +52,76 @@ fhOnReady(function () {
       subtree: true,
       characterData: true,
     });
-  }
 
-  if (!container) return;
+    applyGreeting(container);
 
-  const toggleButton = container.querySelector('[data-fh-account-menu-toggle]');
-  const menu = container.querySelector('[data-fh-account-menu]');
+    const menu = container.querySelector('[data-fh-account-menu]');
 
-  if (!toggleButton || !menu) return;
+    if (!menu) return;
 
-  let isOpen = false;
+    const toggleButton = container.querySelector('[data-fh-account-menu-toggle]');
+    const isStatic = container.hasAttribute('data-fh-account-menu-static') || !toggleButton;
+    let isOpen = false;
 
-  function openMenu() {
-    if (isOpen) return;
+    function openMenu() {
+      if (isOpen) return;
 
-    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') window.fhWishlistMenu.close();
+      if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') window.fhWishlistMenu.close();
 
-    menu.style.display = 'block';
-    menu.setAttribute('aria-hidden', 'false');
-    toggleButton.setAttribute('aria-expanded', 'true');
-    document.addEventListener('click', handleDocumentClick);
-    document.addEventListener('keydown', handleKeydown);
-    isOpen = true;
-  }
+      menu.style.display = 'block';
+      menu.setAttribute('aria-hidden', 'false');
 
-  function closeMenu() {
-    if (!isOpen) return;
+      if (toggleButton) toggleButton.setAttribute('aria-expanded', 'true');
 
-    menu.style.display = 'none';
-    menu.setAttribute('aria-hidden', 'true');
-    toggleButton.setAttribute('aria-expanded', 'false');
-    document.removeEventListener('click', handleDocumentClick);
-    document.removeEventListener('keydown', handleKeydown);
-    isOpen = false;
-  }
-
-  function handleDocumentClick(event) {
-    if (!container.contains(event.target)) closeMenu();
-  }
-
-  function handleKeydown(event) {
-    if (event.key === 'Escape' || event.key === 'Esc') {
-      closeMenu();
-      toggleButton.focus();
+      document.addEventListener('click', handleDocumentClick);
+      document.addEventListener('keydown', handleKeydown);
+      isOpen = true;
     }
-  }
 
-  toggleButton.addEventListener('click', function (event) {
-    event.preventDefault();
-    event.stopPropagation();
+    function closeMenu() {
+      if (!isOpen) return;
 
-    if (isOpen) closeMenu(); else {
-      openMenu();
+      menu.style.display = 'none';
+      menu.setAttribute('aria-hidden', 'true');
+
+      if (toggleButton) toggleButton.setAttribute('aria-expanded', 'false');
+
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeydown);
+      isOpen = false;
     }
-  });
 
-  menu.addEventListener('click', function (event) {
-    const trigger = event.target.closest('[data-fh-login-trigger], [data-fh-registration-trigger], [data-fh-account-close]');
+    function handleDocumentClick(event) {
+      if (!container.contains(event.target)) closeMenu();
+    }
 
-    if (trigger) closeMenu();
-  });
+    function handleKeydown(event) {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        closeMenu();
+
+        if (toggleButton) toggleButton.focus();
+      }
+    }
+
+    if (!isStatic && toggleButton) {
+      toggleButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (isOpen) closeMenu(); else {
+          openMenu();
+        }
+      });
+
+      menu.addEventListener('click', function (event) {
+        const trigger = event.target.closest('[data-fh-login-trigger], [data-fh-registration-trigger], [data-fh-account-close]');
+
+        if (trigger) closeMenu();
+      });
+    } else {
+      menu.style.display = 'block';
+      menu.setAttribute('aria-hidden', 'false');
+    }
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
@@ -814,13 +829,19 @@ fhOnReady(function () {
     }
   });
 
-  priceToggleObserver.observe(menu, { childList: true, subtree: true });
+    priceToggleObserver.observe(menu, { childList: true, subtree: true });
+
+    if (!isStatic && toggleButton && !primaryInteractiveMenuAssigned) {
+      window.fhAccountMenu = window.fhAccountMenu || {};
+      window.fhAccountMenu.close = closeMenu;
+      window.fhAccountMenu.isOpen = function () {
+        return isOpen;
+      };
+      primaryInteractiveMenuAssigned = true;
+    }
+  });
 
   window.fhAccountMenu = window.fhAccountMenu || {};
-  window.fhAccountMenu.close = closeMenu;
-  window.fhAccountMenu.isOpen = function () {
-    return isOpen;
-  };
 });
 // End Section: FH account menu toggle behaviour
 
