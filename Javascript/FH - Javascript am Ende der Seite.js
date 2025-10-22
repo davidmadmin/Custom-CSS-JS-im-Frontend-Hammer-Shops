@@ -3611,6 +3611,180 @@ fhOnReady(function () {
 // End Section: Animierte Suchplatzhalter Vorschläge
 
 
+// Section: Produktdetail Tabs als Toggle-Panels
+fhOnReady(function () {
+  var NAV_SELECTOR = '.single .nav.nav-tabs';
+  var navs = document.querySelectorAll(NAV_SELECTOR);
+
+  if (!navs.length) return;
+
+  function normaliseLabel(value) {
+    if (typeof value !== 'string') return '';
+    return value.replace(/\s+/g, ' ').trim();
+  }
+
+  function extractTargetId(link) {
+    if (!link || typeof link.getAttribute !== 'function') return null;
+
+    var rawTarget = link.getAttribute('data-target') || link.getAttribute('href') || link.getAttribute('aria-controls');
+
+    if (!rawTarget) return null;
+
+    var trimmed = rawTarget.trim();
+
+    if (!trimmed) return null;
+
+    var hashIndex = trimmed.indexOf('#');
+
+    if (hashIndex >= 0) return normaliseLabel(trimmed.slice(hashIndex + 1));
+
+    return normaliseLabel(trimmed.replace(/^#/, ''));
+  }
+
+  function findTabContent(nav) {
+    if (!(nav instanceof HTMLElement)) return null;
+
+    var sibling = nav.nextElementSibling;
+
+    while (sibling) {
+      if (sibling instanceof HTMLElement && sibling.classList.contains('tab-content')) return sibling;
+
+      sibling = sibling.nextElementSibling;
+    }
+
+    var parent = nav.parentElement;
+
+    while (parent) {
+      var candidate = parent.querySelector('.tab-content');
+
+      if (candidate) return candidate;
+
+      parent = parent.parentElement;
+    }
+
+    var singleRoot = nav.closest('.single');
+
+    if (singleRoot) {
+      var fallback = singleRoot.querySelector('.tab-content');
+
+      if (fallback) return fallback;
+    }
+
+    return null;
+  }
+
+  function updatePaneState(pane, button, content, isOpen) {
+    if (!(pane instanceof HTMLElement) || !(button instanceof HTMLElement) || !(content instanceof HTMLElement)) return;
+
+    var open = !!isOpen;
+
+    pane.classList.toggle('is-open', open);
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    content.hidden = !open;
+    content.setAttribute('aria-hidden', open ? 'false' : 'true');
+  }
+
+  Array.prototype.forEach.call(navs, function (nav) {
+    if (!(nav instanceof HTMLElement)) return;
+
+    if (nav.dataset.fhTabsTransformed === 'true') return;
+
+    var tabContent = findTabContent(nav);
+
+    if (!(tabContent instanceof HTMLElement) || tabContent.classList.contains('fh-tab-toggle-ready')) return;
+
+    var navLinks = Array.prototype.slice.call(nav.querySelectorAll('.nav-link'));
+
+    if (!navLinks.length) return;
+
+    var panes = Array.prototype.slice.call(tabContent.querySelectorAll('.tab-pane'));
+
+    if (!panes.length) return;
+
+    var labelsById = {};
+
+    navLinks.forEach(function (link) {
+      var targetId = extractTargetId(link);
+
+      if (!targetId) return;
+
+      labelsById[targetId] = normaliseLabel(link.textContent || link.innerText || '');
+    });
+
+    tabContent.classList.add('fh-tab-toggle-ready');
+    tabContent.setAttribute('data-fh-tabs-transformed', 'true');
+
+    panes.forEach(function (pane, index) {
+      if (!(pane instanceof HTMLElement)) return;
+
+      var existingId = normaliseLabel(pane.id || '');
+      var paneId = existingId || 'fh-product-tab-pane-' + index;
+
+      if (!pane.id) pane.id = paneId;
+
+      pane.classList.remove('active', 'show', 'fade');
+
+      if (pane.hasAttribute('role')) pane.removeAttribute('role');
+
+      if (pane.hasAttribute('aria-labelledby')) pane.removeAttribute('aria-labelledby');
+
+      pane.classList.add('fh-tab-toggle-pane');
+
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'fh-tab-toggle-button';
+
+      var buttonId = paneId + '--toggle';
+
+      button.id = buttonId;
+
+      var label = labelsById[paneId] || normaliseLabel(pane.getAttribute('data-title') || '');
+
+      if (!label) label = 'Abschnitt ' + (index + 1);
+
+      button.textContent = label;
+
+      var content = document.createElement('div');
+
+      content.className = 'fh-tab-toggle-content';
+
+      var contentId = paneId + '--content';
+
+      content.id = contentId;
+      content.setAttribute('role', 'region');
+      content.setAttribute('aria-labelledby', buttonId);
+
+      button.setAttribute('aria-controls', contentId);
+
+      var fragment = document.createDocumentFragment();
+
+      while (pane.firstChild) fragment.appendChild(pane.firstChild);
+
+      content.appendChild(fragment);
+
+      pane.appendChild(button);
+      pane.appendChild(content);
+
+      var isMandatory = index === 0;
+
+      updatePaneState(pane, button, content, isMandatory);
+
+      button.addEventListener('click', function () {
+        var currentlyOpen = pane.classList.contains('is-open');
+
+        if (currentlyOpen && isMandatory) return;
+
+        updatePaneState(pane, button, content, !currentlyOpen);
+      });
+    });
+
+    nav.dataset.fhTabsTransformed = 'true';
+    nav.setAttribute('aria-hidden', 'true');
+    nav.style.display = 'none';
+  });
+});
+// End Section: Produktdetail Tabs als Toggle-Panels
+
 // Section: Trusted Shops Badge toggle during search overlay
 fhOnReady(function () {
   var BODY_CLASS = 'fh-search-overlay-open';

@@ -115,7 +115,7 @@ body,
   transform: translateY(-1px);
 }
 
-.single .tab-content {
+.single .tab-content:not(.fh-tab-toggle-ready) {
   background-color: var(--fh-color-surface);
   border-radius: 6px;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -124,11 +124,108 @@ body,
   transition: transform 0.3s ease;
 }
 
-.single .tab-content:hover {
+.single .tab-content:not(.fh-tab-toggle-ready):hover {
   transform: translateY(-2px);
 }
 
+.single .tab-content {
+  position: relative;
+}
+
 .single .tab-content table {
+  margin-bottom: 0;
+}
+
+.single .tab-content.fh-tab-toggle-ready {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-pane {
+  display: block;
+  background-color: var(--fh-color-surface);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-pane.is-open {
+  border-color: rgba(49, 165, 240, 0.55);
+  box-shadow: 0 18px 46px -32px rgba(15, 23, 42, 0.55);
+  transform: translateY(-1px);
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-pane.is-open .fh-tab-toggle-button {
+  color: var(--fh-color-dark-blue);
+  background-color: rgba(49, 165, 240, 0.08);
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: none;
+  background: transparent;
+  color: var(--fh-color-navy-blue);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: left;
+  padding: 1rem 1.35rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-button:hover,
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-button:focus {
+  background-color: rgba(49, 165, 240, 0.12);
+  color: var(--fh-color-dark-blue);
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 165, 240, 0.35);
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-button::after {
+  content: "";
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-pane.is-open .fh-tab-toggle-button::after {
+  transform: rotate(-135deg);
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-content {
+  padding: 0 1.35rem 1.5rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  color: var(--fh-color-dark-blue);
+  line-height: 1.6;
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-content > :first-child {
+  margin-top: 1rem;
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-content > :last-child {
+  margin-bottom: 0;
+}
+
+.single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-content table {
   margin-bottom: 0;
 }
 
@@ -148,9 +245,23 @@ body,
     font-size: 0.95rem;
   }
 
-  .single .tab-content {
+  .single .tab-content:not(.fh-tab-toggle-ready) {
     padding: 1.5rem 1.25rem;
     margin-top: 1.25rem;
+  }
+
+  .single .tab-content.fh-tab-toggle-ready {
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-button {
+    padding: 0.85rem 1.05rem;
+    font-size: 0.95rem;
+  }
+
+  .single .tab-content.fh-tab-toggle-ready .fh-tab-toggle-content {
+    padding: 0 1.05rem 1.1rem;
   }
 }
 /* End Section: Produktseite Tab-Komponente Modernisierung */
