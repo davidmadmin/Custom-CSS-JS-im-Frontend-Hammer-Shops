@@ -105,17 +105,15 @@
 
 .single .tab-content {
   background-color: var(--sh-color-surface);
-  border-radius: 18px;
+  border-radius: 6px;
   border: 1px solid rgba(17, 24, 39, 0.08);
-  box-shadow: var(--sh-shadow-elevation-soft);
   padding: 2rem 2.25rem;
   margin-top: 1.75rem;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .single .tab-content:hover {
   transform: translateY(-2px);
-  box-shadow: 0 28px 60px -40px rgba(17, 24, 39, 0.45);
 }
 
 .single .tab-content table {
