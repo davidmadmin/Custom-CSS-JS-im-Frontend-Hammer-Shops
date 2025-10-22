@@ -2,6 +2,13 @@
 
 @import url("https://use.typekit.net/lwl7tyw.css");
 
+:root {
+  --sh-color-primary: #f20000;
+  --sh-color-primary-dark: #a80000;
+  --sh-color-surface: #ffffff;
+  --sh-shadow-elevation-soft: 0 12px 30px rgba(15, 23, 42, 0.12);
+}
+
 .price.h1 {
   font-family: "industry", sans-serif;
   font-weight: 600;
@@ -43,6 +50,100 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
 }
 /* End Section: Produktseite Kauf-Panel Hervorhebung */
+
+/* Section: Produktseite Tab-Komponente Modernisierung */
+.single .nav.nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border: none;
+  background: linear-gradient(135deg, rgba(242, 0, 0, 0.12), rgba(242, 0, 0, 0.04));
+  border-radius: 14px;
+  padding: 0.45rem;
+  margin-bottom: 0;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(242, 0, 0, 0.18);
+}
+
+.single .nav.nav-tabs .nav-item {
+  margin-bottom: 0;
+  flex: 1 1 160px;
+  min-width: 140px;
+}
+
+.single .nav.nav-tabs .nav-link {
+  width: 100%;
+  text-align: center;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.75rem 1.25rem;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.single .nav.nav-tabs .nav-link:hover,
+.single .nav.nav-tabs .nav-link:focus {
+  background-color: rgba(242, 0, 0, 0.16);
+  color: var(--sh-color-primary-dark);
+  text-decoration: none;
+}
+
+.single .nav.nav-tabs .nav-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(242, 0, 0, 0.35);
+}
+
+.single .nav.nav-tabs .nav-link.active {
+  background-color: var(--sh-color-surface);
+  color: var(--sh-color-primary-dark);
+  box-shadow: 0 16px 32px -24px rgba(242, 0, 0, 0.45), 0 6px 18px -12px rgba(17, 24, 39, 0.25);
+  transform: translateY(-1px);
+}
+
+.single .tab-content {
+  background-color: var(--sh-color-surface);
+  border-radius: 18px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  box-shadow: var(--sh-shadow-elevation-soft);
+  padding: 2rem 2.25rem;
+  margin-top: 1.75rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.single .tab-content:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 60px -40px rgba(17, 24, 39, 0.45);
+}
+
+.single .tab-content table {
+  margin-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+  .single .nav.nav-tabs {
+    gap: 0.35rem;
+    padding: 0.35rem;
+  }
+
+  .single .nav.nav-tabs .nav-item {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .single .nav.nav-tabs .nav-link {
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .single .tab-content {
+    padding: 1.5rem 1.25rem;
+    margin-top: 1.25rem;
+  }
+}
+/* End Section: Produktseite Tab-Komponente Modernisierung */
 
 /* Section: Verfügbarkeitshinweis Produktseite */
 #kjvItemAvailabilityText {
