@@ -927,6 +927,223 @@ document.addEventListener("DOMContentLoaded", function () {
     patchBasketButton();
   });
 
-  // End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
+// End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
+})();
+
+(function () {
+  function ensureId(element, prefix) {
+    if (!element) return "";
+
+    if (element.id) return element.id;
+
+    const uniqueId = prefix + Math.random().toString(36).slice(2, 10);
+
+    element.id = uniqueId;
+
+    return uniqueId;
+  }
+
+  function findNavItemAncestor(node) {
+    let current = node && node.parentElement;
+
+    while (current) {
+      if (current.classList && current.classList.contains("nav-item")) return current;
+
+      current = current.parentElement;
+    }
+
+    return null;
+  }
+
+  function setOpenState(wrapper, pane, trigger, shouldOpen) {
+    if (!wrapper || !pane || !trigger) return;
+
+    if (shouldOpen) {
+      wrapper.classList.add("is-open");
+      pane.removeAttribute("hidden");
+      pane.setAttribute("aria-hidden", "false");
+      trigger.setAttribute("aria-expanded", "true");
+    } else {
+      wrapper.classList.remove("is-open");
+      pane.setAttribute("aria-hidden", "true");
+      pane.setAttribute("hidden", "hidden");
+      trigger.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  function convertNavToToggles(nav) {
+    if (!nav || nav.dataset.shTabsAsToggles === "true") return;
+
+    const container = nav.parentElement;
+
+    if (!container) return;
+
+    const tabContent = container.querySelector(".tab-content");
+
+    if (!tabContent) return;
+
+    const links = Array.from(nav.querySelectorAll(".nav-link"));
+
+    if (!links.length) return;
+
+    const toggleCandidates = [];
+    let hasMissingPane = false;
+
+    links.forEach(function (link, index) {
+      let targetSelector = link.getAttribute("data-target") || link.getAttribute("href") || "";
+
+      if (!targetSelector) {
+        hasMissingPane = true;
+        return;
+      }
+
+      const hashIndex = targetSelector.indexOf("#");
+
+      if (hashIndex > -1) targetSelector = targetSelector.slice(hashIndex);
+
+      if (!targetSelector || targetSelector.charAt(0) !== "#") {
+        hasMissingPane = true;
+        return;
+      }
+
+      const pane = tabContent.querySelector(targetSelector);
+
+      if (!pane) {
+        hasMissingPane = true;
+        return;
+      }
+
+      toggleCandidates.push({ link: link, pane: pane, index: index });
+    });
+
+    if (hasMissingPane || !toggleCandidates.length || toggleCandidates.length !== links.length) return;
+
+    const accordion = document.createElement("div");
+    accordion.className = "sh-tab-toggle-group";
+
+    toggleCandidates.forEach(function (entry, position) {
+      const trigger = entry.link;
+      const pane = entry.pane;
+      const wrapper = document.createElement("section");
+
+      wrapper.className = "sh-tab-toggle";
+
+      const parentItem = typeof trigger.closest === "function" ? trigger.closest(".nav-item") : findNavItemAncestor(trigger);
+
+      if (parentItem && parentItem.parentElement) parentItem.parentElement.removeChild(parentItem);
+      else if (trigger.parentElement === nav) nav.removeChild(trigger);
+      else if (trigger.parentElement) trigger.parentElement.removeChild(trigger);
+
+      trigger.classList.remove("active");
+      trigger.classList.add("sh-tab-toggle__trigger");
+      trigger.removeAttribute("data-toggle");
+      trigger.removeAttribute("role");
+      trigger.removeAttribute("aria-selected");
+
+      const paneId = ensureId(pane, "shTabPane-");
+      const triggerId = ensureId(trigger, "shTabTrigger-");
+
+      trigger.setAttribute("href", "#" + paneId);
+      trigger.setAttribute("aria-controls", paneId);
+      trigger.setAttribute("role", "button");
+
+      pane.setAttribute("aria-labelledby", triggerId);
+      pane.setAttribute("role", "region");
+      pane.classList.remove("active", "show", "fade");
+      pane.classList.add("sh-tab-toggle__content");
+      pane.style.removeProperty("display");
+      pane.removeAttribute("aria-expanded");
+
+      wrapper.appendChild(trigger);
+      wrapper.appendChild(pane);
+
+      const shouldOpen = position === 0;
+
+      setOpenState(wrapper, pane, trigger, shouldOpen);
+
+      const handleToggle = function (event) {
+        if (event) event.preventDefault();
+
+        setOpenState(wrapper, pane, trigger, !wrapper.classList.contains("is-open"));
+      };
+
+      trigger.addEventListener("click", handleToggle);
+      trigger.addEventListener("keydown", function (event) {
+        if (event.key === " " || event.key === "Spacebar") {
+          event.preventDefault();
+          handleToggle();
+        }
+      });
+
+      accordion.appendChild(wrapper);
+    });
+
+    container.insertBefore(accordion, nav);
+    nav.dataset.shTabsAsToggles = "true";
+    nav.remove();
+
+    if (tabContent.parentElement && !tabContent.children.length) {
+      tabContent.parentElement.removeChild(tabContent);
+    }
+  }
+
+  function convertAll(root) {
+    const scope = root && typeof root.querySelectorAll === "function" ? root : document;
+    const navs = scope.querySelectorAll(".single .nav.nav-tabs");
+
+    navs.forEach(convertNavToToggles);
+  }
+
+  function onReady() {
+    convertAll(document);
+
+    document.addEventListener("plenty:pageLoaded", function (event) {
+      const target = event && event.target && typeof event.target.querySelectorAll === "function" ? event.target : document;
+
+      convertAll(target);
+    });
+
+    if (typeof MutationObserver === "function") {
+      let pending = false;
+      const schedule = window.requestAnimationFrame || function (callback) {
+        return window.setTimeout(callback, 16);
+      };
+
+      const observer = new MutationObserver(function (mutations) {
+        let shouldCheck = false;
+
+        for (let i = 0; i < mutations.length && !shouldCheck; i += 1) {
+          const mutation = mutations[i];
+
+          for (let j = 0; j < mutation.addedNodes.length && !shouldCheck; j += 1) {
+            const node = mutation.addedNodes[j];
+
+            if (!node || node.nodeType !== 1) continue;
+
+            if (node.matches && node.matches(".single .nav.nav-tabs")) shouldCheck = true;
+            else if (node.querySelector && node.querySelector(".single .nav.nav-tabs")) shouldCheck = true;
+          }
+        }
+
+        if (!shouldCheck || pending) return;
+
+        pending = true;
+
+        schedule(function () {
+          pending = false;
+          convertAll(document);
+        });
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      window.addEventListener("beforeunload", function () {
+        observer.disconnect();
+      });
+    }
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", onReady);
+  else onReady();
 })();
