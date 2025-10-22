@@ -34,6 +34,16 @@
 }
 /* End Section: Default plenty product card styling */
 
+/* Section: Produktseite Kauf-Panel Hervorhebung */
+.elevated-bg {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+}
+/* End Section: Produktseite Kauf-Panel Hervorhebung */
+
 /* Section: Trustbadge ausblenden */
 .basket-open .widget_container_overlay,
 .basket-open #trustami-mobile-view,
