@@ -44,6 +44,20 @@
 }
 /* End Section: Produktseite Kauf-Panel Hervorhebung */
 
+/* Section: Produktverfügbarkeit Hinweis Styling */
+#kjvItemAvailabilityText {
+  background-color: rgb(220, 252, 231);
+  padding: 6px;
+  border-radius: 6px;
+  font-size: smaller;
+  color: rgb(22, 101, 52);
+}
+
+#kjvItemAvailabilityIcon {
+  display: none !important;
+}
+/* End Section: Produktverfügbarkeit Hinweis Styling */
+
 /* Section: Trustbadge ausblenden */
 .basket-open .widget_container_overlay,
 .basket-open #trustami-mobile-view,
