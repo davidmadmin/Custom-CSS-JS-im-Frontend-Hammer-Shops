@@ -63,6 +63,20 @@ body,
 }
 /* End Section: Produktseite Kauf-Panel Hervorhebung */
 
+/* Section: Verfügbarkeitshinweis Produktseite */
+#kjvItemAvailabilityText {
+  background-color: rgb(220, 252, 231);
+  padding: 6px;
+  border-radius: 6px;
+  font-size: smaller;
+  color: rgb(22, 101, 52);
+}
+
+#kjvItemAvailabilityIcon {
+  display: none !important;
+}
+/* End Section: Verfügbarkeitshinweis Produktseite */
+
 /* End Section: Custom Schriftarten + Preis Text Stylings */
 
 /* Section: Gratisversand Fortschrittsbalken Styling */
