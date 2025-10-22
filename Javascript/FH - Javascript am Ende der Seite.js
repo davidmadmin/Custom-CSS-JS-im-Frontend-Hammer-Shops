@@ -1670,8 +1670,64 @@ fhOnReady(function () {
     if (attribute === 'aria-label' || attribute === 'title') target.setAttribute(attribute, 'Merkliste');
   }
 
+  function hasVueDirectiveAttributes(element) {
+    if (!element || !element.hasAttributes || !element.hasAttributes()) return false;
+
+    const attributes = element.attributes;
+
+    for (let index = 0; index < attributes.length; index += 1) {
+      const attribute = attributes[index];
+
+      if (!attribute || !attribute.name) continue;
+
+      const name = attribute.name.trim();
+
+      if (!name) continue;
+
+      if (name.indexOf('v-') === 0 || name.indexOf(':') === 0 || name.indexOf('@') === 0) return true;
+    }
+
+    return false;
+  }
+
+  function hasUnenhancedWishlistButtons(root) {
+    if (!root) return false;
+
+    function isEnhancableButton(element) {
+      if (!element || element.nodeType !== 1) return false;
+
+      if (!element.matches || !element.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) return false;
+
+      if (hasVueDirectiveAttributes(element)) return false;
+
+      if (element.dataset && element.dataset.fhWishlistEnhanced === 'true') return false;
+
+      if (!element.dataset && element.getAttribute && element.getAttribute('data-fh-wishlist-enhanced') === 'true') return false;
+
+      return true;
+    }
+
+    if (root.nodeType === 1 && isEnhancableButton(root)) return true;
+
+    if (!root.querySelectorAll) return false;
+
+    const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+
+    for (let index = 0; index < buttons.length; index += 1) {
+      if (isEnhancableButton(buttons[index])) return true;
+    }
+
+    return false;
+  }
+
   function enhanceButton(button) {
-    if (!button || !(button instanceof HTMLElement)) return;
+    if (!button || button.nodeType !== 1) return false;
+
+    if (button.dataset && button.dataset.fhWishlistEnhanced === 'true') return false;
+
+    if (!button.dataset && button.getAttribute && button.getAttribute('data-fh-wishlist-enhanced') === 'true') return false;
+
+    if (hasVueDirectiveAttributes(button)) return false;
 
     button.classList.add('fh-wishlist-button');
 
@@ -1721,36 +1777,95 @@ fhOnReady(function () {
     srOnlyElements.forEach(function (element) {
       element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
     });
+
+    if (button.dataset) button.dataset.fhWishlistEnhanced = 'true'; else button.setAttribute('data-fh-wishlist-enhanced', 'true');
+
+    return true;
   }
 
   function enhanceWishlistButtons(root) {
-    if (!root) return;
+    if (!root) return false;
 
-    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) enhanceButton(root);
+    let enhanced = false;
+
+    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) {
+      if (enhanceButton(root)) enhanced = true;
+    }
 
     if (root.querySelectorAll) {
       const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
       buttons.forEach(function (button) {
-        enhanceButton(button);
+        if (enhanceButton(button)) enhanced = true;
       });
     }
+
+    return enhanced;
   }
 
-  enhanceWishlistButtons(document);
+  function waitForVueHydration(callback) {
+    if (typeof callback !== 'function') return;
 
-  if (document.body) {
-    const observer = new MutationObserver(function (mutations) {
+    const maxWait = 4000;
+    const interval = 50;
+    const start = Date.now();
+
+    function tryInvoke() {
+      if (window.vueApp && typeof window.vueApp.$nextTick === 'function') {
+        window.vueApp.$nextTick(function () {
+          callback(true);
+        });
+        return true;
+      }
+
+      if (window.vueApp && window.Vue && typeof window.Vue.nextTick === 'function') {
+        window.Vue.nextTick(function () {
+          callback(true);
+        });
+        return true;
+      }
+
+      if (Date.now() - start >= maxWait) {
+        callback(false);
+        return true;
+      }
+
+      return false;
+    }
+
+    if (tryInvoke()) return;
+
+    setTimeout(function poll() {
+      if (tryInvoke()) return;
+
+      setTimeout(poll, interval);
+    }, interval);
+  }
+
+  function runWishlistEnhancements() {
+    enhanceWishlistButtons(document);
+
+    if (!document.body || !hasUnenhancedWishlistButtons(document)) return;
+
+    const observer = new MutationObserver(function (mutations, obs) {
+      let hasEnhanced = false;
+
       mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (node) {
           if (node.nodeType !== 1) return;
 
-          enhanceWishlistButtons(node);
+          if (enhanceWishlistButtons(node)) hasEnhanced = true;
         });
       });
+
+      if (hasEnhanced || !hasUnenhancedWishlistButtons(document)) obs.disconnect();
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
   }
+
+  waitForVueHydration(function () {
+    runWishlistEnhancements();
+  });
 });
 // End Section: FH Merkliste button enhancements
 
