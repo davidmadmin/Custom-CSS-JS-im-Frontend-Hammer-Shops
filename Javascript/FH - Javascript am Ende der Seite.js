@@ -359,10 +359,16 @@ fhOnReady(function () {
         return !!(candidate && typeof candidate === 'object' && candidate.default && typeof candidate.default === 'object' && candidate.default.data);
       }
 
-      function traverseValue(value, showNet, seen) {
+      const MAX_TRAVERSE_DEPTH = 60;
+
+      function traverseValue(value, showNet, seen, depth) {
         if (!value || typeof value !== 'object') return;
 
-        if (seen) {
+        const currentDepth = typeof depth === 'number' ? depth : 0;
+
+        if (currentDepth > MAX_TRAVERSE_DEPTH) return;
+
+        if (seen && typeof seen.has === 'function' && typeof seen.add === 'function') {
           if (seen.has(value)) return;
           seen.add(value);
         }
@@ -370,7 +376,9 @@ fhOnReady(function () {
         if (value.prices && isPriceCollection(value.prices)) updatePriceCollection(value.prices, showNet);
 
         if (Array.isArray(value)) {
-          for (let index = 0; index < value.length; index += 1) traverseValue(value[index], showNet, seen);
+          for (let index = 0; index < value.length; index += 1) {
+            traverseValue(value[index], showNet, seen, currentDepth + 1);
+          }
           return;
         }
 
@@ -379,16 +387,20 @@ fhOnReady(function () {
         for (let idx = 0; idx < keys.length; idx += 1) {
           const child = value[keys[idx]];
 
-          if (child && typeof child === 'object') traverseValue(child, showNet, seen);
+          if (child && typeof child === 'object') {
+            traverseValue(child, showNet, seen, currentDepth + 1);
+          }
         }
       }
 
       function applyNow(store, showNet) {
         if (!store || !store.state) return;
 
-        const seen = typeof WeakSet === 'function' ? new WeakSet() : null;
+        const seen = typeof WeakSet === 'function'
+          ? new WeakSet()
+          : (typeof Set === 'function' ? new Set() : null);
 
-        traverseValue(store.state, showNet, seen);
+        traverseValue(store.state, showNet, seen, 0);
 
         if (typeof document !== 'undefined' && document.documentElement) {
           document.documentElement.setAttribute('data-fh-show-net-prices', showNet ? 'net' : 'gross');
@@ -491,7 +503,9 @@ fhOnReady(function () {
 
       if (!elements.length) return;
 
-      const seenObjects = typeof WeakSet === 'function' ? new WeakSet() : null;
+      const seenObjects = typeof WeakSet === 'function'
+        ? new WeakSet()
+        : (typeof Set === 'function' ? new Set() : null);
 
       function applyToTarget(target) {
         if (!target || typeof target !== 'object') return;
@@ -502,7 +516,13 @@ fhOnReady(function () {
           seenObjects.add(target);
         }
 
-        priceDisplayManager.applyImmediately({ state: target }, showNet);
+        try {
+          priceDisplayManager.applyImmediately({ state: target }, showNet);
+        } catch (error) {
+          if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+            console.warn('FH price toggle: failed to update target data', error);
+          }
+        }
       }
 
       elements.forEach(function (element) {
