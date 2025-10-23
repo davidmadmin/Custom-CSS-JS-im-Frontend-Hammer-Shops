@@ -1946,20 +1946,26 @@ fhOnReady(function () {
     const collection = Array.isArray(images.variation) && images.variation.length
       ? images.variation
       : (Array.isArray(images.all) ? images.all : []);
+    const normalized = collection.filter(function (entry) {
+      return entry && typeof entry === 'object';
+    });
 
-    if (!collection.length) return null;
+    if (!normalized.length) return null;
 
-    const sorted = collection.slice().sort(function (a, b) {
-      const posA = typeof a.position === 'number' ? a.position : 0;
-      const posB = typeof b.position === 'number' ? b.position : 0;
+    const sorted = normalized.slice().sort(function (a, b) {
+      const posA = a && typeof a.position === 'number' ? a.position : Number.MAX_SAFE_INTEGER;
+      const posB = b && typeof b.position === 'number' ? b.position : Number.MAX_SAFE_INTEGER;
       return posA - posB;
     });
 
-    const candidate = sorted[0] || collection[0];
+    const candidate = sorted[0] || normalized[0];
 
-    if (!candidate) return null;
+    if (!candidate || typeof candidate !== 'object') return null;
 
     const url = candidate.urlPreview || candidate.urlMiddle || candidate.urlSecondPreview || candidate.url;
+
+    if (!url) return null;
+
     const alt = (candidate.names && (candidate.names.alternate || candidate.names.name)) || '';
 
     return {
