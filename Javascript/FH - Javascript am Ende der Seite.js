@@ -206,11 +206,105 @@ fhOnReady(function () {
     let storeSyncTimeoutId = null;
     let lastKnownStore = null;
 
+    function createObjectMemo() {
+      if (typeof WeakSet === 'function') return new WeakSet();
+      if (typeof Set === 'function') return new Set();
+
+      const entries = [];
+
+      return {
+        add(value) {
+          if (entries.indexOf(value) === -1) entries.push(value);
+        },
+        has(value) {
+          return entries.indexOf(value) !== -1;
+        },
+      };
+    }
+
+    function memoHas(memo, value) {
+      return !!(memo && typeof memo.has === 'function' && memo.has(value));
+    }
+
+    function memoAdd(memo, value) {
+      if (!memo || typeof memo.add !== 'function') return;
+
+      try {
+        memo.add(value);
+      } catch (error) {
+        /* Ignore memoisation errors (e.g. WeakSet rejecting primitives). */
+      }
+    }
+
+    function isLikelyDomNode(value) {
+      if (!value || typeof value !== 'object') return false;
+
+      if (typeof window !== 'undefined' && value === window) return true;
+
+      if (typeof document !== 'undefined') {
+        if (value === document || value === document.documentElement) return true;
+      }
+
+      if (typeof Node !== 'undefined' && value instanceof Node) return true;
+
+      return typeof value.nodeType === 'number' && typeof value.cloneNode === 'function';
+    }
+
+    function hasPriceDataWithinDepth(candidate, depth, memo) {
+      if (!candidate || typeof candidate !== 'object' || isLikelyDomNode(candidate)) return false;
+      if (typeof depth !== 'number' || depth < 0) return false;
+
+      if (memoHas(memo, candidate)) return false;
+      memoAdd(memo, candidate);
+
+      if (candidate.prices && typeof candidate.prices === 'object') return true;
+
+      if (
+        candidate.default &&
+        typeof candidate.default === 'object' &&
+        candidate.default.data &&
+        typeof candidate.default.data === 'object'
+      ) {
+        return true;
+      }
+
+      if (Array.isArray(candidate)) {
+        for (let index = 0; index < candidate.length && index < 5; index += 1) {
+          if (hasPriceDataWithinDepth(candidate[index], depth - 1, memo)) return true;
+        }
+
+        return false;
+      }
+
+      const keys = Object.keys(candidate);
+
+      for (let idx = 0; idx < keys.length && idx < 20; idx += 1) {
+        const key = keys[idx];
+
+        if (typeof key === 'string' && key.charAt(0) === '_') continue;
+
+        const child = candidate[key];
+
+        if (!child || typeof child !== 'object') continue;
+
+        if (hasPriceDataWithinDepth(child, depth - 1, memo)) return true;
+      }
+
+      return false;
+    }
+
+    function isRelevantPriceTarget(target) {
+      if (!target || typeof target !== 'object' || isLikelyDomNode(target)) return false;
+
+      return hasPriceDataWithinDepth(target, 4, createObjectMemo());
+    }
+
     const priceDisplayManager = (function () {
       const managerState = {
         rafId: null,
         lastApplied: null,
         observerInstalled: false,
+        traversalErrorLogged: false,
       };
 
       function getCurrencyFormatter() {
@@ -359,18 +453,27 @@ fhOnReady(function () {
         return !!(candidate && typeof candidate === 'object' && candidate.default && typeof candidate.default === 'object' && candidate.default.data);
       }
 
-      function traverseValue(value, showNet, seen) {
-        if (!value || typeof value !== 'object') return;
+      const MAX_TRAVERSAL_DEPTH = 500;
 
-        if (seen) {
-          if (seen.has(value)) return;
-          seen.add(value);
-        }
+      function traverseValue(value, showNet, seen, depth) {
+        if (!value || typeof value !== 'object') return;
+        if (isLikelyDomNode(value)) return;
+        if (typeof window !== 'undefined' && value === window) return;
+        if (typeof document !== 'undefined' && (value === document || value === document.documentElement)) return;
+
+        const nextDepth = typeof depth === 'number' ? depth : 0;
+
+        if (nextDepth > MAX_TRAVERSAL_DEPTH) return;
+
+        if (memoHas(seen, value)) return;
+        memoAdd(seen, value);
 
         if (value.prices && isPriceCollection(value.prices)) updatePriceCollection(value.prices, showNet);
 
         if (Array.isArray(value)) {
-          for (let index = 0; index < value.length; index += 1) traverseValue(value[index], showNet, seen);
+          for (let index = 0; index < value.length; index += 1) {
+            traverseValue(value[index], showNet, seen, nextDepth + 1);
+          }
           return;
         }
 
@@ -379,16 +482,26 @@ fhOnReady(function () {
         for (let idx = 0; idx < keys.length; idx += 1) {
           const child = value[keys[idx]];
 
-          if (child && typeof child === 'object') traverseValue(child, showNet, seen);
+          if (!child || typeof child !== 'object') continue;
+          if (isLikelyDomNode(child)) continue;
+
+          traverseValue(child, showNet, seen, nextDepth + 1);
         }
       }
 
       function applyNow(store, showNet) {
         if (!store || !store.state) return;
 
-        const seen = typeof WeakSet === 'function' ? new WeakSet() : null;
+        const seen = createObjectMemo();
 
-        traverseValue(store.state, showNet, seen);
+        try {
+          traverseValue(store.state, showNet, seen, 0);
+        } catch (error) {
+          if (!managerState.traversalErrorLogged && typeof console !== 'undefined' && typeof console.warn === 'function') {
+            console.warn('[FH][PriceToggle] Failed to traverse price data', error);
+            managerState.traversalErrorLogged = true;
+          }
+        }
 
         if (typeof document !== 'undefined' && document.documentElement) {
           document.documentElement.setAttribute('data-fh-show-net-prices', showNet ? 'net' : 'gross');
@@ -491,18 +604,24 @@ fhOnReady(function () {
 
       if (!elements.length) return;
 
-      const seenObjects = typeof WeakSet === 'function' ? new WeakSet() : null;
+      const seenObjects = createObjectMemo();
+      let categoryPriceUpdateErrorLogged = false;
 
       function applyToTarget(target) {
-        if (!target || typeof target !== 'object') return;
+        if (!target || typeof target !== 'object' || isLikelyDomNode(target)) return;
+        if (!isRelevantPriceTarget(target)) return;
+        if (memoHas(seenObjects, target)) return;
 
-        if (seenObjects) {
-          if (seenObjects.has(target)) return;
+        memoAdd(seenObjects, target);
 
-          seenObjects.add(target);
+        try {
+          priceDisplayManager.applyImmediately({ state: target }, showNet);
+        } catch (error) {
+          if (!categoryPriceUpdateErrorLogged && typeof console !== 'undefined' && typeof console.warn === 'function') {
+            console.warn('[FH][PriceToggle] Failed to update category item prices', error);
+            categoryPriceUpdateErrorLogged = true;
+          }
         }
-
-        priceDisplayManager.applyImmediately({ state: target }, showNet);
       }
 
       elements.forEach(function (element) {
