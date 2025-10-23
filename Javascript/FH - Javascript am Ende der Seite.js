@@ -1943,15 +1943,19 @@ fhOnReady(function () {
 
     if (!images) return null;
 
-    const collection = Array.isArray(images.variation) && images.variation.length
+    const rawCollection = Array.isArray(images.variation) && images.variation.length
       ? images.variation
       : (Array.isArray(images.all) ? images.all : []);
+
+    const collection = rawCollection.filter(function (entry) {
+      return !!entry && typeof entry === 'object';
+    });
 
     if (!collection.length) return null;
 
     const sorted = collection.slice().sort(function (a, b) {
-      const posA = typeof a.position === 'number' ? a.position : 0;
-      const posB = typeof b.position === 'number' ? b.position : 0;
+      const posA = a && typeof a.position === 'number' ? a.position : Number.MAX_SAFE_INTEGER;
+      const posB = b && typeof b.position === 'number' ? b.position : Number.MAX_SAFE_INTEGER;
       return posA - posB;
     });
 
@@ -1960,6 +1964,9 @@ fhOnReady(function () {
     if (!candidate) return null;
 
     const url = candidate.urlPreview || candidate.urlMiddle || candidate.urlSecondPreview || candidate.url;
+
+    if (!url) return null;
+
     const alt = (candidate.names && (candidate.names.alternate || candidate.names.name)) || '';
 
     return {
