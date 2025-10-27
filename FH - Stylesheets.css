@@ -2187,9 +2187,12 @@ body.fh-mobile-menu-open {
 }
 
 #page-header {
-  position: relative;
-  z-index: 0;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 1020;
   background-color: transparent !important;
+  isolation: isolate;
 }
 
 #page-header::before {
