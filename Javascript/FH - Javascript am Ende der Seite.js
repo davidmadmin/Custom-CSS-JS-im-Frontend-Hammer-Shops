@@ -296,7 +296,8 @@ fhOnReady(function () {
       function updatePriceContainer(container, showNet) {
         if (!container || typeof container !== 'object') return;
 
-        const raw = container.data;
+        const rawData = container.data;
+        const raw = rawData && typeof rawData === 'object' ? rawData : container;
 
         if (!raw || typeof raw !== 'object') return;
 
