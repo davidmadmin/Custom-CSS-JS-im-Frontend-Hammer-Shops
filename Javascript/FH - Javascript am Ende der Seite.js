@@ -305,8 +305,41 @@ fhOnReady(function () {
         const priceValue = pickNumericValue(raw, 'price', 'priceNet', showNet, container.price && container.price.value);
         assignFormatted(container.price, priceValue, currency, container.price && container.price.formatted);
 
-        const unitPriceValue = pickNumericValue(raw, 'unitPrice', 'unitPriceNet', showNet, container.unitPrice && container.unitPrice.value);
-        assignFormatted(container.unitPrice, unitPriceValue, currency, container.unitPrice && container.unitPrice.formatted);
+        let unitPriceValue = pickNumericValue(
+          raw,
+          'unitPrice',
+          'unitPriceNet',
+          showNet,
+          container.unitPrice && container.unitPrice.value
+        );
+
+        const hasExplicitUnitNet = raw && typeof raw.unitPriceNet === 'number' && isFinite(raw.unitPriceNet);
+
+        if (
+          showNet &&
+          !hasExplicitUnitNet &&
+          raw &&
+          typeof raw === 'object' &&
+          typeof raw.priceNet === 'number' &&
+          isFinite(raw.priceNet)
+        ) {
+          unitPriceValue = raw.priceNet;
+        } else if ((unitPriceValue == null || !isFinite(unitPriceValue)) && raw && typeof raw === 'object') {
+          unitPriceValue = pickNumericValue(
+            raw,
+            'price',
+            'priceNet',
+            showNet,
+            container.unitPrice && container.unitPrice.value
+          );
+        }
+
+        assignFormatted(
+          container.unitPrice,
+          unitPriceValue,
+          currency,
+          container.unitPrice && container.unitPrice.formatted
+        );
 
         if (Object.prototype.hasOwnProperty.call(container, 'totalPrice')) {
           const totalValue = pickNumericValue(raw, 'totalPrice', 'totalPriceNet', showNet, container.totalPrice && container.totalPrice.value);
