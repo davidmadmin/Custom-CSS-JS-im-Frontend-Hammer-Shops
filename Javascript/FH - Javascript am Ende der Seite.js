@@ -305,8 +305,23 @@ fhOnReady(function () {
         const priceValue = pickNumericValue(raw, 'price', 'priceNet', showNet, container.price && container.price.value);
         assignFormatted(container.price, priceValue, currency, container.price && container.price.formatted);
 
-        const unitPriceValue = pickNumericValue(raw, 'unitPrice', 'unitPriceNet', showNet, container.unitPrice && container.unitPrice.value);
+        let unitPriceValue = pickUnitPriceValue(container, showNet);
+
+        if (typeof unitPriceValue !== 'number' || !isFinite(unitPriceValue)) {
+          unitPriceValue = pickNumericValue(
+            raw,
+            'unitPrice',
+            'unitPriceNet',
+            showNet,
+            container.unitPrice && container.unitPrice.value
+          );
+        }
+
         assignFormatted(container.unitPrice, unitPriceValue, currency, container.unitPrice && container.unitPrice.formatted);
+
+        if (raw && typeof raw === 'object' && typeof unitPriceValue === 'number' && isFinite(unitPriceValue)) {
+          if (showNet) raw.unitPriceNet = unitPriceValue; else raw.unitPrice = unitPriceValue;
+        }
 
         if (Object.prototype.hasOwnProperty.call(container, 'totalPrice')) {
           const totalValue = pickNumericValue(raw, 'totalPrice', 'totalPriceNet', showNet, container.totalPrice && container.totalPrice.value);
