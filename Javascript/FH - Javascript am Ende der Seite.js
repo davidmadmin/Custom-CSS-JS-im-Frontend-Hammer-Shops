@@ -274,6 +274,30 @@ fhOnReady(function () {
 
         if (typeof candidate.net === 'number' && isFinite(candidate.net)) return candidate.net;
 
+        if (typeof candidate.price === 'number' && isFinite(candidate.price)) return candidate.price;
+
+        if (candidate.price && typeof candidate.price === 'object') {
+          const nested = getNumeric(candidate.price);
+
+          if (nested !== null) return nested;
+        }
+
+        if (typeof candidate.from === 'number' && isFinite(candidate.from)) return candidate.from;
+
+        if (candidate.from && typeof candidate.from === 'object') {
+          const nestedFrom = getNumeric(candidate.from);
+
+          if (nestedFrom !== null) return nestedFrom;
+        }
+
+        if (typeof candidate.min === 'number' && isFinite(candidate.min)) return candidate.min;
+
+        if (candidate.min && typeof candidate.min === 'object') {
+          const nestedMin = getNumeric(candidate.min);
+
+          if (nestedMin !== null) return nestedMin;
+        }
+
         return null;
       }
 
@@ -304,8 +328,12 @@ fhOnReady(function () {
       function assignFormatted(target, value, currency, fallback) {
         if (!target || typeof target !== 'object') return;
 
-        if (Object.prototype.hasOwnProperty.call(target, 'value') && typeof value === 'number' && isFinite(value)) {
-          target.value = value;
+        if (typeof value === 'number' && isFinite(value)) {
+          if (Object.prototype.hasOwnProperty.call(target, 'value')) target.value = value;
+
+          if (Object.prototype.hasOwnProperty.call(target, 'gross')) target.gross = value;
+
+          if (Object.prototype.hasOwnProperty.call(target, 'net')) target.net = value;
         }
 
         if (Object.prototype.hasOwnProperty.call(target, 'formatted')) {
@@ -313,6 +341,43 @@ fhOnReady(function () {
           const fallbackValue = typeof existing === 'undefined' ? fallback : existing;
 
           target.formatted = formatCurrency(value, currency, fallbackValue);
+        }
+
+        if (target.price && typeof target.price === 'object') {
+          assignFormatted(target.price, value, currency, target.price.formatted || fallback);
+        }
+
+        if (target.unitPrice && typeof target.unitPrice === 'object') {
+          assignFormatted(target.unitPrice, value, currency, target.unitPrice.formatted || fallback);
+        }
+      }
+
+      function assignPrimitive(target, key, value, currency, fallback) {
+        if (!target || typeof target !== 'object' || !Object.prototype.hasOwnProperty.call(target, key)) return;
+
+        const current = target[key];
+
+        if (current && typeof current === 'object') {
+          assignFormatted(current, value, currency, fallback);
+          return;
+        }
+
+        const shouldAssignNumeric = typeof value === 'number' && isFinite(value);
+
+        if (shouldAssignNumeric && (typeof current === 'number' || current == null)) {
+          target[key] = value;
+        }
+
+        if (typeof current === 'string' || (!shouldAssignNumeric && typeof fallback === 'string')) {
+          const fallbackValue = typeof current === 'string' ? current : fallback;
+
+          target[key] = formatCurrency(value, currency, fallbackValue);
+        }
+
+        const formattedKey = key + 'Formatted';
+
+        if (Object.prototype.hasOwnProperty.call(target, formattedKey)) {
+          target[formattedKey] = formatCurrency(value, currency, target[formattedKey]);
         }
       }
 
@@ -327,20 +392,40 @@ fhOnReady(function () {
 
         const currency = raw.currency || (container.price && container.price.currency) || (window.App && App.activeCurrency) || 'EUR';
 
-        const priceValue = pickNumericValue(raw, 'price', 'priceNet', showNet, container.price && container.price.value);
+        const priceValueFallback = container.price && typeof container.price === 'object'
+          ? container.price.value
+          : container.price;
+        const priceValue = pickNumericValue(raw, 'price', 'priceNet', showNet, priceValueFallback);
         assignFormatted(container.price, priceValue, currency, container.price && container.price.formatted);
+        assignPrimitive(container, 'price', priceValue, currency, priceValueFallback);
+        assignPrimitive(container, 'priceNet', showNet ? priceValue : container.priceNet, currency, container.priceNet);
 
-        const unitPriceValue = pickNumericValue(raw, 'unitPrice', 'unitPriceNet', showNet, container.unitPrice && container.unitPrice.value);
+        const unitPriceFallback = container.unitPrice && typeof container.unitPrice === 'object'
+          ? container.unitPrice.value
+          : container.unitPrice;
+        const unitPriceValue = pickNumericValue(raw, 'unitPrice', 'unitPriceNet', showNet, unitPriceFallback);
         assignFormatted(container.unitPrice, unitPriceValue, currency, container.unitPrice && container.unitPrice.formatted);
+        assignPrimitive(container, 'unitPrice', unitPriceValue, currency, unitPriceFallback);
+        assignPrimitive(container, 'unitPriceNet', showNet ? unitPriceValue : container.unitPriceNet, currency, container.unitPriceNet);
 
         if (Object.prototype.hasOwnProperty.call(container, 'totalPrice')) {
-          const totalValue = pickNumericValue(raw, 'totalPrice', 'totalPriceNet', showNet, container.totalPrice && container.totalPrice.value);
+          const totalFallback = container.totalPrice && typeof container.totalPrice === 'object'
+            ? container.totalPrice.value
+            : container.totalPrice;
+          const totalValue = pickNumericValue(raw, 'totalPrice', 'totalPriceNet', showNet, totalFallback);
           assignFormatted(container.totalPrice, totalValue, currency, container.totalPrice && container.totalPrice.formatted);
+          assignPrimitive(container, 'totalPrice', totalValue, currency, totalFallback);
+          assignPrimitive(container, 'totalPriceNet', showNet ? totalValue : container.totalPriceNet, currency, container.totalPriceNet);
         }
 
         if (Object.prototype.hasOwnProperty.call(container, 'lowestPrice')) {
-          const lowestValue = pickNumericValue(raw, 'lowestPrice', 'lowestPriceNet', showNet, container.lowestPrice && container.lowestPrice.value);
+          const lowestFallback = container.lowestPrice && typeof container.lowestPrice === 'object'
+            ? container.lowestPrice.value
+            : container.lowestPrice;
+          const lowestValue = pickNumericValue(raw, 'lowestPrice', 'lowestPriceNet', showNet, lowestFallback);
           assignFormatted(container.lowestPrice, lowestValue, currency, container.lowestPrice && container.lowestPrice.formatted);
+          assignPrimitive(container, 'lowestPrice', lowestValue, currency, lowestFallback);
+          assignPrimitive(container, 'lowestPriceNet', showNet ? lowestValue : container.lowestPriceNet, currency, container.lowestPriceNet);
         }
 
         if (Object.prototype.hasOwnProperty.call(container, 'basePrice')) {
@@ -348,6 +433,10 @@ fhOnReady(function () {
 
           if (typeof baseValue === 'number' && isFinite(baseValue)) {
             container.basePrice = formatCurrency(baseValue, currency, container.basePrice);
+          }
+
+          if (showNet && Object.prototype.hasOwnProperty.call(container, 'basePriceNet')) {
+            container.basePriceNet = formatCurrency(baseValue, currency, container.basePriceNet);
           }
         }
 
