@@ -261,21 +261,36 @@ fhOnReady(function () {
 
       const formatCurrency = getCurrencyFormatter();
 
-      function pickNumericValue(source, grossKey, netKey, showNet, fallback) {
-        if (!source || typeof source !== 'object') return typeof fallback === 'number' ? fallback : null;
+      function extractNumeric(candidate) {
+        if (typeof candidate === 'number' && isFinite(candidate)) return candidate;
 
-        const gross = source[grossKey];
-        const net = netKey ? source[netKey] : undefined;
+        if (!candidate || typeof candidate !== 'object') return null;
+
+        if (typeof candidate.value === 'number' && isFinite(candidate.value)) return candidate.value;
+        if (typeof candidate.amount === 'number' && isFinite(candidate.amount)) return candidate.amount;
+        if (typeof candidate.price === 'number' && isFinite(candidate.price)) return candidate.price;
+        if (typeof candidate.net === 'number' && isFinite(candidate.net)) return candidate.net;
+        if (typeof candidate.gross === 'number' && isFinite(candidate.gross)) return candidate.gross;
+
+        return null;
+      }
+
+      function pickNumericValue(source, grossKey, netKey, showNet, fallback) {
+        if (!source || typeof source !== 'object') return extractNumeric(fallback);
+
+        const gross = extractNumeric(source[grossKey]);
+        const net = netKey ? extractNumeric(source[netKey]) : null;
+        const fallbackValue = extractNumeric(fallback);
 
         if (showNet) {
-          if (typeof net === 'number' && isFinite(net)) return net;
-          if (typeof gross === 'number' && isFinite(gross)) return gross;
+          if (net !== null) return net;
+          if (gross !== null) return gross;
         } else {
-          if (typeof gross === 'number' && isFinite(gross)) return gross;
-          if (typeof net === 'number' && isFinite(net)) return net;
+          if (gross !== null) return gross;
+          if (net !== null) return net;
         }
 
-        return typeof fallback === 'number' && isFinite(fallback) ? fallback : null;
+        return fallbackValue;
       }
 
       function assignFormatted(target, value, currency, fallback) {
@@ -296,7 +311,7 @@ fhOnReady(function () {
       function updatePriceContainer(container, showNet) {
         if (!container || typeof container !== 'object') return;
 
-        const raw = container.data;
+        const raw = container && typeof container.data === 'object' ? container.data : container;
 
         if (!raw || typeof raw !== 'object') return;
 
