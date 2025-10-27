@@ -261,21 +261,44 @@ fhOnReady(function () {
 
       const formatCurrency = getCurrencyFormatter();
 
+      function getNumeric(candidate) {
+        if (typeof candidate === 'number' && isFinite(candidate)) return candidate;
+
+        if (!candidate || typeof candidate !== 'object') return null;
+
+        if (typeof candidate.value === 'number' && isFinite(candidate.value)) return candidate.value;
+
+        if (typeof candidate.amount === 'number' && isFinite(candidate.amount)) return candidate.amount;
+
+        if (typeof candidate.gross === 'number' && isFinite(candidate.gross)) return candidate.gross;
+
+        if (typeof candidate.net === 'number' && isFinite(candidate.net)) return candidate.net;
+
+        return null;
+      }
+
       function pickNumericValue(source, grossKey, netKey, showNet, fallback) {
-        if (!source || typeof source !== 'object') return typeof fallback === 'number' ? fallback : null;
-
-        const gross = source[grossKey];
-        const net = netKey ? source[netKey] : undefined;
-
-        if (showNet) {
-          if (typeof net === 'number' && isFinite(net)) return net;
-          if (typeof gross === 'number' && isFinite(gross)) return gross;
-        } else {
-          if (typeof gross === 'number' && isFinite(gross)) return gross;
-          if (typeof net === 'number' && isFinite(net)) return net;
+        if (!source || typeof source !== 'object') {
+          return typeof fallback === 'number' && isFinite(fallback) ? fallback : null;
         }
 
-        return typeof fallback === 'number' && isFinite(fallback) ? fallback : null;
+        const grossCandidate = Object.prototype.hasOwnProperty.call(source, grossKey) ? source[grossKey] : undefined;
+        const netCandidate = netKey && Object.prototype.hasOwnProperty.call(source, netKey) ? source[netKey] : undefined;
+
+        const gross = getNumeric(grossCandidate);
+        const net = getNumeric(netCandidate);
+
+        if (showNet) {
+          if (net !== null) return net;
+          if (gross !== null) return gross;
+        } else {
+          if (gross !== null) return gross;
+          if (net !== null) return net;
+        }
+
+        const fallbackNumeric = getNumeric(fallback);
+
+        return fallbackNumeric !== null ? fallbackNumeric : null;
       }
 
       function assignFormatted(target, value, currency, fallback) {
@@ -296,7 +319,9 @@ fhOnReady(function () {
       function updatePriceContainer(container, showNet) {
         if (!container || typeof container !== 'object') return;
 
-        const raw = container.data;
+        const raw = container && typeof container === 'object' && container.data && typeof container.data === 'object'
+          ? container.data
+          : container;
 
         if (!raw || typeof raw !== 'object') return;
 
@@ -356,7 +381,19 @@ fhOnReady(function () {
       }
 
       function isPriceCollection(candidate) {
-        return !!(candidate && typeof candidate === 'object' && candidate.default && typeof candidate.default === 'object' && candidate.default.data);
+        if (!candidate || typeof candidate !== 'object') return false;
+
+        const defaultContainer = candidate.default;
+
+        if (!defaultContainer || typeof defaultContainer !== 'object') return false;
+
+        if (defaultContainer.data && typeof defaultContainer.data === 'object') return true;
+
+        return !!(
+          (defaultContainer.price && typeof defaultContainer.price === 'object') ||
+          (defaultContainer.unitPrice && typeof defaultContainer.unitPrice === 'object') ||
+          Object.prototype.hasOwnProperty.call(defaultContainer, 'basePrice')
+        );
       }
 
       function traverseValue(value, showNet, seen) {
