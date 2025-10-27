@@ -289,7 +289,30 @@ fhOnReady(function () {
           const existing = target.formatted;
           const fallbackValue = typeof existing === 'undefined' ? fallback : existing;
 
-          target.formatted = formatCurrency(value, currency, fallbackValue);
+          let formattedValue = formatCurrency(value, currency, fallbackValue);
+
+          if (typeof fallbackValue === 'string' && typeof formattedValue === 'string' && formattedValue !== fallbackValue) {
+            const fallbackTrimmedLeft = fallbackValue.replace(/^\s+/, '');
+            const abMatch = fallbackTrimmedLeft.match(/^ab([\s\u00a0]+)/i);
+
+            if (abMatch) {
+              const leadingWhitespaceLength = fallbackValue.length - fallbackTrimmedLeft.length;
+              const leadingWhitespace = leadingWhitespaceLength > 0 ? fallbackValue.slice(0, leadingWhitespaceLength) : '';
+              const prefix = leadingWhitespace + abMatch[0];
+
+              formattedValue = prefix + formattedValue.replace(/^[\s\u00a0]+/, '');
+            }
+
+            if (typeof target.prefix === 'string' && target.prefix.trim().length) {
+              const trimmedPrefix = target.prefix;
+
+              if (!formattedValue.startsWith(trimmedPrefix)) {
+                formattedValue = trimmedPrefix + formattedValue;
+              }
+            }
+          }
+
+          target.formatted = formattedValue;
         }
       }
 
@@ -522,6 +545,11 @@ fhOnReady(function () {
         applyToTarget(rootInstance.itemData);
         applyToTarget(rootInstance.itemDataRef);
         applyToTarget(rootInstance.itemSlotData);
+        applyToTarget(rootInstance.$data);
+        applyToTarget(rootInstance.$props);
+        if (rootInstance.$options && rootInstance.$options.propsData) {
+          applyToTarget(rootInstance.$options.propsData);
+        }
 
         if (typeof rootInstance.$forceUpdate === 'function') rootInstance.$forceUpdate();
       });
