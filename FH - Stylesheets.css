@@ -1539,7 +1539,6 @@ body,
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.4px;
-  text-transform: uppercase;
 }
 
 .fh-header__nav-item {
@@ -1558,6 +1557,7 @@ body,
   color: #1a1a1a;
   text-decoration: none;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .fh-header__nav-icon {
@@ -1622,6 +1622,18 @@ body,
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.fh-header__dropdown-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fh-header__dropdown-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fh-header__dropdown-grid--one {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .fh-header__dropdown-heading {
   margin: 0 0 12px;
   font-size: 16px;
@@ -1635,6 +1647,7 @@ body,
   padding: 6px 0;
   color: #555555;
   text-decoration: none;
+  text-transform: none;
 }
 
 .fh-header__dropdown-group {
@@ -1663,6 +1676,13 @@ body,
   color: #111827;
   text-decoration: none;
   transition: color 0.2s ease;
+  text-transform: none;
+}
+
+.fh-header__dropdown-link--text,
+.fh-header__dropdown-sublink--text {
+  pointer-events: none;
+  color: #1a1a1a;
 }
 
 .fh-header__dropdown-sublink:hover,
@@ -1892,6 +1912,11 @@ body,
 
 .fh-header__mobile-submenu-link--all {
   font-weight: 700;
+}
+
+.fh-header__mobile-submenu-link--text {
+  pointer-events: none;
+  cursor: default;
 }
 
 .fh-header__mobile-submenu-list li:last-child .fh-header__mobile-submenu-link {
