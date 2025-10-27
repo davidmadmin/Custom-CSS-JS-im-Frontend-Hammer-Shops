@@ -1675,36 +1675,60 @@ fhOnReady(function () {
 
     button.classList.add('fh-wishlist-button');
 
-    const existingCustomIcons = button.querySelectorAll('.fh-wishlist-button-icon');
-    existingCustomIcons.forEach(function (icon) {
-      icon.remove();
-    });
+    let iconWrapper = button.querySelector('.fh-wishlist-button-icon');
 
-    const defaultIcons = button.querySelectorAll('i[class*="fa"], i.fa');
-    defaultIcons.forEach(function (icon) {
-      icon.remove();
-    });
+    if (!iconWrapper) {
+      const defaultIcon = button.querySelector('i[class*="fa"], i.fa');
 
-    Array.from(button.childNodes).forEach(function (node) {
-      if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim().length > 0) node.parentNode.removeChild(node);
-    });
+      if (defaultIcon) {
+        iconWrapper = defaultIcon;
+      }
+    }
 
-    const iconWrapper = document.createElement('span');
+    if (!iconWrapper) {
+      iconWrapper = document.createElement('span');
+    }
+
     iconWrapper.className = 'fh-wishlist-button-icon';
     iconWrapper.setAttribute('aria-hidden', 'true');
-    iconWrapper.innerHTML = iconMarkup;
+
+    if (iconWrapper.innerHTML !== iconMarkup) iconWrapper.innerHTML = iconMarkup;
+
+    if (iconWrapper.parentNode !== button || button.firstChild !== iconWrapper) button.insertBefore(iconWrapper, button.firstChild || null);
+
+    const textNodes = [];
+
+    for (let index = 0; index < button.childNodes.length; index += 1) {
+      const node = button.childNodes[index];
+
+      if (node && node.nodeType === 3 && node.textContent && node.textContent.trim().length > 0) textNodes.push(node);
+    }
 
     let labelWrapper = button.querySelector('.fh-wishlist-button-label');
+    const baseLabel = labelWrapper ? labelWrapper.textContent : textNodes.map(function (node) {
+      return node.textContent;
+    }).join(' ');
+    const nextLabel = replaceWishlistWord(baseLabel) || 'Merkliste';
 
     if (!labelWrapper) {
       labelWrapper = document.createElement('span');
       labelWrapper.className = 'fh-wishlist-button-label';
-      button.appendChild(labelWrapper);
+      labelWrapper.textContent = nextLabel;
+
+      if (textNodes.length && textNodes[0].parentNode === button) {
+        button.replaceChild(labelWrapper, textNodes[0]);
+      } else {
+        button.appendChild(labelWrapper);
+      }
+    } else if (labelWrapper.textContent !== nextLabel) {
+      labelWrapper.textContent = nextLabel;
     }
 
-    labelWrapper.textContent = 'Merkliste';
+    textNodes.forEach(function (node) {
+      const replaced = replaceWishlistWord(node.textContent);
 
-    button.insertBefore(iconWrapper, button.firstChild);
+      if (typeof replaced === 'string' && replaced !== node.textContent) node.textContent = replaced;
+    });
 
     updateAttribute(button, 'aria-label');
     updateAttribute(button, 'title');
@@ -1721,12 +1745,17 @@ fhOnReady(function () {
     srOnlyElements.forEach(function (element) {
       element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
     });
+
+    button.setAttribute('data-fh-wishlist-enhanced', 'true');
   }
 
   function enhanceWishlistButtons(root) {
     if (!root) return;
 
-    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) enhanceButton(root);
+    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) {
+      enhanceButton(root);
+      return;
+    }
 
     if (root.querySelectorAll) {
       const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
@@ -1736,13 +1765,21 @@ fhOnReady(function () {
     }
   }
 
-  enhanceWishlistButtons(document);
+  let wishlistButtonsInitialized = false;
 
-  if (document.body) {
+  function startWishlistButtonEnhancements() {
+    if (wishlistButtonsInitialized) return;
+
+    wishlistButtonsInitialized = true;
+
+    enhanceWishlistButtons(document);
+
+    if (!document.body || typeof MutationObserver !== 'function') return;
+
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (node) {
-          if (node.nodeType !== 1) return;
+          if (!node || node.nodeType !== 1) return;
 
           enhanceWishlistButtons(node);
         });
@@ -1751,6 +1788,38 @@ fhOnReady(function () {
 
     observer.observe(document.body, { childList: true, subtree: true });
   }
+
+  function scheduleWishlistButtonEnhancements(delay) {
+    if (wishlistButtonsInitialized) return;
+
+    const triggerStart = function () {
+      if (wishlistButtonsInitialized) return;
+
+      startWishlistButtonEnhancements();
+    };
+
+    if (window.vueApp && typeof window.vueApp.$nextTick === 'function') {
+      window.vueApp.$nextTick(function () {
+        if (typeof window.requestAnimationFrame === 'function') window.requestAnimationFrame(triggerStart);
+        else triggerStart();
+      });
+
+      return;
+    }
+
+    if (document.readyState === 'complete') {
+      if (typeof window.requestAnimationFrame === 'function') window.requestAnimationFrame(triggerStart);
+      else triggerStart();
+
+      return;
+    }
+
+    window.setTimeout(function () {
+      scheduleWishlistButtonEnhancements(typeof delay === 'number' && delay > 0 ? Math.min(delay * 1.5, 500) : 100);
+    }, typeof delay === 'number' && delay > 0 ? delay : 100);
+  }
+
+  scheduleWishlistButtonEnhancements(50);
 });
 // End Section: FH Merkliste button enhancements
 
