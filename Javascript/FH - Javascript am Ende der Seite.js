@@ -296,30 +296,74 @@ fhOnReady(function () {
       function updatePriceContainer(container, showNet) {
         if (!container || typeof container !== 'object') return;
 
-        const raw = container.data;
+        const rawCandidate = container.data && typeof container.data === 'object' ? container.data : container;
 
-        if (!raw || typeof raw !== 'object') return;
+        if (!rawCandidate || typeof rawCandidate !== 'object') return;
 
-        const currency = raw.currency || (container.price && container.price.currency) || (window.App && App.activeCurrency) || 'EUR';
+        const currency =
+          rawCandidate.currency ||
+          (container.price && container.price.currency) ||
+          (rawCandidate.price && rawCandidate.price.currency) ||
+          (window.App && App.activeCurrency) ||
+          'EUR';
 
-        const priceValue = pickNumericValue(raw, 'price', 'priceNet', showNet, container.price && container.price.value);
+        const priceValue = pickNumericValue(
+          rawCandidate,
+          'price',
+          'priceNet',
+          showNet,
+          container.price && container.price.value
+        );
         assignFormatted(container.price, priceValue, currency, container.price && container.price.formatted);
 
-        const unitPriceValue = pickNumericValue(raw, 'unitPrice', 'unitPriceNet', showNet, container.unitPrice && container.unitPrice.value);
-        assignFormatted(container.unitPrice, unitPriceValue, currency, container.unitPrice && container.unitPrice.formatted);
+        const unitPriceValue = pickNumericValue(
+          rawCandidate,
+          'unitPrice',
+          'unitPriceNet',
+          showNet,
+          container.unitPrice && container.unitPrice.value
+        );
+        assignFormatted(
+          container.unitPrice,
+          unitPriceValue,
+          currency,
+          container.unitPrice && container.unitPrice.formatted
+        );
 
         if (Object.prototype.hasOwnProperty.call(container, 'totalPrice')) {
-          const totalValue = pickNumericValue(raw, 'totalPrice', 'totalPriceNet', showNet, container.totalPrice && container.totalPrice.value);
-          assignFormatted(container.totalPrice, totalValue, currency, container.totalPrice && container.totalPrice.formatted);
+          const totalValue = pickNumericValue(
+            rawCandidate,
+            'totalPrice',
+            'totalPriceNet',
+            showNet,
+            container.totalPrice && container.totalPrice.value
+          );
+          assignFormatted(
+            container.totalPrice,
+            totalValue,
+            currency,
+            container.totalPrice && container.totalPrice.formatted
+          );
         }
 
         if (Object.prototype.hasOwnProperty.call(container, 'lowestPrice')) {
-          const lowestValue = pickNumericValue(raw, 'lowestPrice', 'lowestPriceNet', showNet, container.lowestPrice && container.lowestPrice.value);
-          assignFormatted(container.lowestPrice, lowestValue, currency, container.lowestPrice && container.lowestPrice.formatted);
+          const lowestValue = pickNumericValue(
+            rawCandidate,
+            'lowestPrice',
+            'lowestPriceNet',
+            showNet,
+            container.lowestPrice && container.lowestPrice.value
+          );
+          assignFormatted(
+            container.lowestPrice,
+            lowestValue,
+            currency,
+            container.lowestPrice && container.lowestPrice.formatted
+          );
         }
 
         if (Object.prototype.hasOwnProperty.call(container, 'basePrice')) {
-          const baseValue = pickNumericValue(raw, 'basePrice', 'basePriceNet', showNet, null);
+          const baseValue = pickNumericValue(rawCandidate, 'basePrice', 'basePriceNet', showNet, null);
 
           if (typeof baseValue === 'number' && isFinite(baseValue)) {
             container.basePrice = formatCurrency(baseValue, currency, container.basePrice);
@@ -327,13 +371,25 @@ fhOnReady(function () {
         }
 
         if (container.contactClassDiscount && Object.prototype.hasOwnProperty.call(container.contactClassDiscount, 'amount')) {
-          const discountValue = pickNumericValue(raw, 'customerClassDiscount', 'customerClassDiscountNet', showNet, container.contactClassDiscount.amount);
+          const discountValue = pickNumericValue(
+            rawCandidate,
+            'customerClassDiscount',
+            'customerClassDiscountNet',
+            showNet,
+            container.contactClassDiscount.amount
+          );
 
           if (typeof discountValue === 'number' && isFinite(discountValue)) container.contactClassDiscount.amount = discountValue;
         }
 
         if (container.categoryDiscount && Object.prototype.hasOwnProperty.call(container.categoryDiscount, 'amount')) {
-          const discountValue = pickNumericValue(raw, 'categoryDiscount', 'categoryDiscountNet', showNet, container.categoryDiscount.amount);
+          const discountValue = pickNumericValue(
+            rawCandidate,
+            'categoryDiscount',
+            'categoryDiscountNet',
+            showNet,
+            container.categoryDiscount.amount
+          );
 
           if (typeof discountValue === 'number' && isFinite(discountValue)) container.categoryDiscount.amount = discountValue;
         }
