@@ -108,6 +108,10 @@ body,
   flex-direction: column;
 }
 
+.widget-item-grid .cmp-product-thumb .thumb-body .prices {
+  margin-top: auto;
+}
+
 .widget-item-grid .cmp-product-thumb .thumb-footer {
   margin-top: auto;
 }
