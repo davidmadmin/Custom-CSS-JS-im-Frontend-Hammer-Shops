@@ -2381,57 +2381,106 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 
 /* End Section: Allgemeines Button-Styling für .btn-primary */
 
-/* Section: Merkliste Button Styling */
-.widget.widget-add-to-wish-list .btn {
-  border: 2px solid var(--fh-color-bright-blue) !important;
+/* Section: Merkliste Button Redesign */
+.widget.widget-add-to-wish-list .btn .fa-heart {
+  display: none !important;
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button {
+  --fh-wishlist-primary: var(--fh-color-bright-blue);
+  --fh-wishlist-background: var(--fh-color-light-blue);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1.5rem;
+  border: 2px solid var(--fh-wishlist-primary);
   border-radius: 999px;
-  padding: 0.4rem 1.1rem;
+  background-color: var(--fh-wishlist-background);
+  color: var(--fh-color-dark-blue);
   font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--fh-color-dark-blue) !important;
-  background-color: var(--fh-color-light-blue) !important;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px color-mix(in srgb, var(--fh-color-bright-blue) 15%, transparent);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  line-height: 1.2;
+  font-size: 0.875rem;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  box-shadow: 0 10px 24px rgba(23, 95, 180, 0.18);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.15rem;
-  height: 1.15rem;
-  color: inherit;
-}
-
-.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.widget.widget-add-to-wish-list .btn .fh-wishlist-button-label {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-.widget.widget-add-to-wish-list .btn:hover,
-.widget.widget-add-to-wish-list .btn:focus {
-  color: #ffffff !important;
-  background-color: var(--fh-color-bright-blue) !important;
-  border-color: var(--fh-color-bright-blue) !important;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--fh-color-bright-blue) 20%, transparent);
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button:hover,
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button:focus {
+  color: #ffffff;
+  background-color: var(--fh-color-bright-blue);
+  border-color: var(--fh-color-bright-blue);
+  box-shadow: 0 14px 30px rgba(23, 95, 180, 0.28);
   text-decoration: none;
 }
 
-.widget.widget-add-to-wish-list .btn:active {
-  transform: translateY(1px);
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button:focus-visible {
+  outline: 3px solid rgba(23, 95, 180, 0.35);
+  outline-offset: 3px;
 }
-/* End Section: Merkliste Button Styling */
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 6px 18px rgba(23, 95, 180, 0.25);
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button.fh-wishlist-button--active {
+  color: #ffffff;
+  background-color: var(--fh-color-bright-blue);
+  border-color: var(--fh-color-bright-blue);
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button .fh-wishlist-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.75);
+  color: var(--fh-color-bright-blue);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button .fh-wishlist-button__icon::before {
+  content: '\2764';
+  font-family: 'Arial', sans-serif;
+  transform: translateY(-1px);
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button:hover .fh-wishlist-button__icon,
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button:focus .fh-wishlist-button__icon,
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button.fh-wishlist-button--active .fh-wishlist-button__icon {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button .fh-wishlist-button__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button .fh-wishlist-button__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+/* End Section: Merkliste Button Redesign */
 
 /* Section: FH Wishlist flyout styling */
 .fh-header__wishlist-list .fh-wishlist-item-price {
