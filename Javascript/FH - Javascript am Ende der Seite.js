@@ -1707,6 +1707,17 @@ fhOnReady(function () {
     if (attribute === 'aria-label' || attribute === 'title') target.setAttribute(attribute, 'Merkliste');
   }
 
+  function isButtonEnhanced(button) {
+    if (!button || !(button instanceof HTMLElement)) return false;
+
+    if (button.dataset && button.dataset.fhWishlistEnhanced === 'true') return true;
+
+    return (
+      button.classList.contains('fh-wishlist-button') &&
+      !!button.querySelector('.fh-wishlist-button-icon')
+    );
+  }
+
   function enhanceButton(button) {
     if (!button || !(button instanceof HTMLElement)) return;
 
@@ -1758,17 +1769,21 @@ fhOnReady(function () {
     srOnlyElements.forEach(function (element) {
       element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
     });
+
+    if (button.dataset) button.dataset.fhWishlistEnhanced = 'true';
   }
 
   function enhanceWishlistButtons(root) {
     if (!root) return;
 
-    if (root.nodeType === 1 && root.matches && root.matches(wishlistButtonSelector)) enhanceButton(root);
+    if (root.nodeType === 1 && root.matches && root.matches(wishlistButtonSelector)) {
+      if (!isButtonEnhanced(root)) enhanceButton(root);
+    }
 
     if (root.querySelectorAll) {
       const buttons = root.querySelectorAll(wishlistButtonSelector);
       buttons.forEach(function (button) {
-        enhanceButton(button);
+        if (!isButtonEnhanced(button)) enhanceButton(button);
       });
     }
   }
@@ -1792,18 +1807,26 @@ fhOnReady(function () {
             if (parentElement && typeof parentElement.closest === 'function') {
               const button = parentElement.closest(wishlistButtonSelector);
 
-              if (button) enhanceButton(button);
+              if (button && !isButtonEnhanced(button)) enhanceButton(button);
             }
 
             return;
           }
 
           if (node.nodeType === Node.ELEMENT_NODE) {
+            if (
+              node.classList &&
+              (node.classList.contains('fh-wishlist-button-icon') ||
+                node.classList.contains('fh-wishlist-button-label'))
+            ) {
+              return;
+            }
+
             if (typeof node.closest === 'function') {
               const button = node.closest(wishlistButtonSelector);
 
               if (button) {
-                enhanceButton(button);
+                if (!isButtonEnhanced(button)) enhanceButton(button);
                 return;
               }
             }
