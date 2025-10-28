@@ -1964,7 +1964,7 @@ body,
   .fh-header--search-hidden .fh-header__main {
     row-gap: 0;
     padding-bottom: 12px;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .fh-header--search-hidden .fh-header__search-area {
