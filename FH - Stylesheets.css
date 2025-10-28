@@ -1847,8 +1847,8 @@ body,
   padding: 6px 12px 6px 8px;
   border: 1px solid transparent;
   border-radius: 999px;
-  background-color: transparent;
-  color: #1a1a1a;
+  background-color: color-mix(in srgb, var(--fh-color-dark-blue) 6%, transparent);
+  color: var(--fh-color-dark-blue);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -1860,7 +1860,7 @@ body,
 .fh-header__mobile-submenu-back:hover,
 .fh-header__mobile-submenu-back:focus {
   color: var(--fh-color-dark-blue);
-  background-color: color-mix(in srgb, var(--fh-color-dark-blue) 6%, transparent);
+  background-color: color-mix(in srgb, var(--fh-color-dark-blue) 12%, transparent);
   text-decoration: none;
   border-color: transparent;
 }
