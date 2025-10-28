@@ -102,6 +102,16 @@ body,
   width: 100%;
 }
 
+.widget-item-grid .cmp-product-thumb .thumb-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.widget-item-grid .cmp-product-thumb .thumb-content .thumb-meta {
+  margin-top: auto;
+}
+
 .widget-item-grid .cmp-product-thumb .thumb-body {
   flex: 1 1 auto;
   display: flex;
