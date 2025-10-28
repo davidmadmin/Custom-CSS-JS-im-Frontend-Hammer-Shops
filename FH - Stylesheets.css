@@ -2381,24 +2381,76 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
 
 /* End Section: Allgemeines Button-Styling für .btn-primary */
 
-/* Section: Merkliste Button Styling */
-.widget.widget-add-to-wish-list .btn {
-  border: 2px solid var(--fh-color-bright-blue) !important;
-  border-radius: 999px;
-  padding: 0.4rem 1.1rem;
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--fh-color-dark-blue) !important;
-  background-color: var(--fh-color-light-blue) !important;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px color-mix(in srgb, var(--fh-color-bright-blue) 15%, transparent);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  line-height: 1.2;
+/* Section: Rebuilt Merkliste button styling */
+.widget.widget-add-to-wish-list .fa-heart,
+.widget.widget-add-to-wish-list [class*="fa-heart"] {
+  display: none !important;
 }
 
-.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon {
+.widget.widget-add-to-wish-list button,
+.widget.widget-add-to-wish-list .btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.4rem;
+  border-radius: 999px;
+  border: 2px solid var(--fh-color-bright-blue) !important;
+  background-color: #ffffff !important;
+  color: var(--fh-color-dark-blue) !important;
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--fh-color-bright-blue) 65%, transparent);
+}
+
+.widget.widget-add-to-wish-list button.fh-wishlist-toggle,
+.widget.widget-add-to-wish-list .btn.fh-wishlist-toggle {
+  gap: 0.65rem;
+}
+
+.widget.widget-add-to-wish-list button:hover,
+.widget.widget-add-to-wish-list button:focus,
+.widget.widget-add-to-wish-list .btn:hover,
+.widget.widget-add-to-wish-list .btn:focus {
+  background-color: var(--fh-color-bright-blue) !important;
+  color: #ffffff !important;
+  border-color: var(--fh-color-bright-blue) !important;
+  box-shadow: 0 6px 12px color-mix(in srgb, var(--fh-color-bright-blue) 25%, transparent);
+  text-decoration: none;
+}
+
+.widget.widget-add-to-wish-list button:focus-visible,
+.widget.widget-add-to-wish-list .btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--fh-color-bright-blue) 65%, transparent);
+  outline-offset: 2px;
+}
+
+.widget.widget-add-to-wish-list button:active,
+.widget.widget-add-to-wish-list .btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--fh-color-bright-blue) 35%, transparent);
+}
+
+.widget.widget-add-to-wish-list button[aria-pressed="true"],
+.widget.widget-add-to-wish-list .btn[aria-pressed="true"],
+.widget.widget-add-to-wish-list button.is-active,
+.widget.widget-add-to-wish-list .btn.is-active,
+.widget.widget-add-to-wish-list button.is-on,
+.widget.widget-add-to-wish-list .btn.is-on {
+  background-color: var(--fh-color-bright-blue) !important;
+  color: #ffffff !important;
+  border-color: var(--fh-color-bright-blue) !important;
+  box-shadow: 0 6px 12px color-mix(in srgb, var(--fh-color-bright-blue) 25%, transparent);
+}
+
+.widget.widget-add-to-wish-list .fh-wishlist-toggle__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2407,31 +2459,19 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
   color: inherit;
 }
 
-.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon svg {
+.widget.widget-add-to-wish-list .fh-wishlist-toggle__icon svg {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
 }
 
-.widget.widget-add-to-wish-list .btn .fh-wishlist-button-label {
+.widget.widget-add-to-wish-list .fh-wishlist-toggle__label {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
+  color: inherit;
 }
-
-.widget.widget-add-to-wish-list .btn:hover,
-.widget.widget-add-to-wish-list .btn:focus {
-  color: #ffffff !important;
-  background-color: var(--fh-color-bright-blue) !important;
-  border-color: var(--fh-color-bright-blue) !important;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--fh-color-bright-blue) 20%, transparent);
-  text-decoration: none;
-}
-
-.widget.widget-add-to-wish-list .btn:active {
-  transform: translateY(1px);
-}
-/* End Section: Merkliste Button Styling */
+/* End Section: Rebuilt Merkliste button styling */
 
 /* Section: FH Wishlist flyout styling */
 .fh-header__wishlist-list .fh-wishlist-item-price {
