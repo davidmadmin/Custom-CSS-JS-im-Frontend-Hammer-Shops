@@ -1582,6 +1582,15 @@ body,
   color: var(--fh-color-bright-blue);
 }
 
+.fh-header__nav-link--pending {
+  position: relative;
+  color: var(--fh-color-dark-blue);
+  font-weight: 600;
+  background-color: color-mix(in srgb, var(--fh-color-bright-blue) 18%, transparent);
+  box-shadow: inset 4px 0 0 var(--fh-color-bright-blue);
+  border-radius: 8px;
+}
+
 .fh-header__nav-link:hover,
 .fh-header__nav-link:focus {
   color: var(--fh-color-dark-blue);
@@ -1924,6 +1933,14 @@ body,
 .fh-header__mobile-submenu-link--text {
   pointer-events: none;
   cursor: default;
+}
+
+.fh-header__mobile-submenu-link--pending {
+  position: relative;
+  color: var(--fh-color-dark-blue);
+  font-weight: 600;
+  background-color: color-mix(in srgb, var(--fh-color-bright-blue) 18%, transparent);
+  box-shadow: inset 4px 0 0 var(--fh-color-bright-blue);
 }
 
 .fh-header__mobile-submenu-list li:last-child .fh-header__mobile-submenu-link {
