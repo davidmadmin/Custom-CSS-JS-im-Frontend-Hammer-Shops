@@ -3242,6 +3242,18 @@ fhOnReady(function () {
     return Array.from(root.querySelectorAll(`select[id*="${fragment}"]`));
   }
 
+  function unlockCountryOptions(root = document) {
+    COUNTRY_SELECT_ID_FRAGMENTS.forEach((fragment) => {
+      findCountrySelects(fragment, root).forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          option.disabled = false;
+          option.removeAttribute('disabled');
+          option.classList.remove('disabled');
+        });
+      });
+    });
+  }
+
   function isGermanySelected() {
     return COUNTRY_SELECT_ID_FRAGMENTS.some((fragment) =>
       findCountrySelects(fragment).some((select) => select.value === '1')
@@ -3454,6 +3466,7 @@ fhOnReady(function () {
       update(bar, text, shine, state);
       setInterval(() => update(bar, text, shine, state), 1000);
     }
+    unlockCountryOptions();
     toggleFreeShippingBar();
   });
   observer.observe(document.body, { childList: true, subtree: true });
@@ -3467,10 +3480,12 @@ fhOnReady(function () {
         e.target.matches('input[type="radio"][id^="ShippingProfileID"]') ||
         e.target.matches(countrySelectors)
       ) {
+        unlockCountryOptions();
         toggleFreeShippingBar();
       }
     });
-  });
+    unlockCountryOptions();
+});
 // End Section: Gratisversand Fortschritt Balken
 
 // ===============================
