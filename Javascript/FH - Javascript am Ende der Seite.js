@@ -1682,105 +1682,162 @@ fhOnReady(function () {
 });
 // End Section: FH mobile search row scroll hide/show
 
-// Section: FH Merkliste button enhancements
+// Section: FH Merkliste button rebuild
 fhOnReady(function () {
-  const iconMarkup =
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
+  const BUTTON_SELECTOR = '.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn';
+  const LABEL_CLASS = 'fh-wishlist-action-label';
+  const TEXT_ADD = 'Zur Merkliste hinzufügen';
+  const TEXT_REMOVE = 'Zur Merkliste entfernen';
+  const observedButtons = new WeakMap();
 
-  function replaceWishlistWord(value) {
-    if (typeof value !== 'string' || value.length === 0) return value;
+  function cleanupButton(button) {
+    if (!(button instanceof HTMLElement)) return;
 
-    return value.replace(/Wunschliste|Merkzettel/gi, 'Merkliste');
-  }
+    const legacyElements = button.querySelectorAll('.fh-wishlist-button-icon, .fh-wishlist-button-label');
+    legacyElements.forEach(function (element) {
+      element.remove();
+    });
 
-  function updateAttribute(target, attribute) {
-    if (!target || !attribute) return;
-
-    if (target.hasAttribute(attribute)) {
-      const currentValue = target.getAttribute(attribute);
-      const nextValue = replaceWishlistWord(currentValue);
-
-      if (typeof nextValue === 'string' && nextValue.length > 0) { target.setAttribute(attribute, nextValue); return; }
-    }
-
-    if (attribute === 'aria-label' || attribute === 'title') target.setAttribute(attribute, 'Merkliste');
-  }
-
-  function enhanceButton(button) {
-    if (!button || !(button instanceof HTMLElement)) return;
-
-    button.classList.add('fh-wishlist-button');
-
-    const existingCustomIcons = button.querySelectorAll('.fh-wishlist-button-icon');
-    existingCustomIcons.forEach(function (icon) {
+    const fontAwesomeHearts = button.querySelectorAll('.fa-heart, [class*="fa-heart"]');
+    fontAwesomeHearts.forEach(function (icon) {
       icon.remove();
     });
 
-    const defaultIcons = button.querySelectorAll('i[class*="fa"], i.fa');
-    defaultIcons.forEach(function (icon) {
-      icon.remove();
+    Array.from(button.children).forEach(function (child) {
+      if (!(child instanceof HTMLElement)) return;
+
+      if (child.classList.contains('sr-only') || child.classList.contains('visually-hidden')) return;
+      if (child.classList.contains(LABEL_CLASS)) return;
+
+      const tagName = child.tagName ? child.tagName.toLowerCase() : '';
+
+      if (tagName === 'i' || tagName === 'svg') { child.remove(); return; }
+
+      if (child.tagName && child.tagName.toLowerCase() === 'span') child.remove();
     });
 
     Array.from(button.childNodes).forEach(function (node) {
       if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim().length > 0) node.parentNode.removeChild(node);
     });
-
-    const iconWrapper = document.createElement('span');
-    iconWrapper.className = 'fh-wishlist-button-icon';
-    iconWrapper.setAttribute('aria-hidden', 'true');
-    iconWrapper.innerHTML = iconMarkup;
-
-    let labelWrapper = button.querySelector('.fh-wishlist-button-label');
-
-    if (!labelWrapper) {
-      labelWrapper = document.createElement('span');
-      labelWrapper.className = 'fh-wishlist-button-label';
-      button.appendChild(labelWrapper);
-    }
-
-    labelWrapper.textContent = 'Merkliste';
-
-    button.insertBefore(iconWrapper, button.firstChild);
-
-    updateAttribute(button, 'aria-label');
-    updateAttribute(button, 'title');
-
-    if (button.dataset) {
-      if (button.dataset.originalTitle) button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
-
-      if (button.dataset.titleAdd) button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
-
-      if (button.dataset.titleRemove) button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
-    }
-
-    const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
-    srOnlyElements.forEach(function (element) {
-      element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
-    });
   }
 
-  function enhanceWishlistButtons(root) {
+  function ensureLabel(button) {
+    let label = button.querySelector('.' + LABEL_CLASS);
+
+    if (!label) {
+      label = document.createElement('span');
+      label.className = LABEL_CLASS;
+      button.appendChild(label);
+    }
+
+    return label;
+  }
+
+  function isActive(button) {
+    if (!button) return false;
+
+    if (button.classList.contains('is-wish-list-item') || button.classList.contains('active')) return true;
+
+    const ariaPressed = button.getAttribute('aria-pressed');
+    if (ariaPressed === 'true') return true;
+
+    const dataset = button.dataset || {};
+    if (dataset.isOnWishList === 'true' || dataset.state === 'added' || dataset.wishListState === 'added') return true;
+
+    if (button.getAttribute('data-wish-list-state') === 'added') return true;
+
+    return false;
+  }
+
+  function updateTooltip(button, active) {
+    const tooltipText = active ? TEXT_REMOVE : TEXT_ADD;
+
+    button.setAttribute('aria-label', tooltipText);
+    button.setAttribute('title', tooltipText);
+
+    if (button.dataset) {
+      button.dataset.titleAdd = TEXT_ADD;
+      button.dataset.titleRemove = TEXT_REMOVE;
+      button.dataset.originalTitle = tooltipText;
+    }
+
+    if (button.hasAttribute('data-original-title')) button.setAttribute('data-original-title', tooltipText);
+  }
+
+  function updateScreenReaderText(button, text) {
+    const srElement = button.querySelector('.sr-only, .visually-hidden');
+    if (srElement) srElement.textContent = text;
+  }
+
+  function syncButton(button) {
+    if (!(button instanceof HTMLElement)) return;
+
+    const label = ensureLabel(button);
+    const active = isActive(button);
+    const nextText = active ? TEXT_REMOVE : TEXT_ADD;
+
+    label.textContent = nextText;
+    updateScreenReaderText(button, nextText);
+    updateTooltip(button, active);
+  }
+
+  function observeButton(button) {
+    if (observedButtons.has(button)) {
+      syncButton(button);
+      return;
+    }
+
+    button.classList.add('fh-wishlist-action-button');
+
+    cleanupButton(button);
+    syncButton(button);
+
+    button.addEventListener('click', function () {
+      window.setTimeout(function () {
+        syncButton(button);
+      }, 0);
+    });
+
+    const observer = new MutationObserver(function (mutations) {
+      let shouldSync = false;
+
+      mutations.forEach(function (mutation) {
+        if (mutation.type === 'attributes') shouldSync = true;
+      });
+
+      if (shouldSync) syncButton(button);
+    });
+
+    observer.observe(button, {
+      attributes: true,
+      attributeFilter: ['class', 'aria-pressed', 'data-original-title', 'data-state', 'data-is-on-wish-list', 'data-wish-list-state'],
+    });
+
+    observedButtons.set(button, observer);
+  }
+
+  function scan(root) {
     if (!root) return;
 
-    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) enhanceButton(root);
+    if (root.matches && root.matches(BUTTON_SELECTOR)) observeButton(root);
 
     if (root.querySelectorAll) {
-      const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+      const buttons = root.querySelectorAll(BUTTON_SELECTOR);
       buttons.forEach(function (button) {
-        enhanceButton(button);
+        observeButton(button);
       });
     }
   }
 
-  enhanceWishlistButtons(document);
+  scan(document);
 
   if (document.body) {
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (node) {
-          if (node.nodeType !== 1) return;
+          if (!(node instanceof HTMLElement)) return;
 
-          enhanceWishlistButtons(node);
+          scan(node);
         });
       });
     });
@@ -1788,7 +1845,7 @@ fhOnReady(function () {
     observer.observe(document.body, { childList: true, subtree: true });
   }
 });
-// End Section: FH Merkliste button enhancements
+// End Section: FH Merkliste button rebuild
 
 // Section: FH wish list flyout preview
 fhOnReady(function () {
