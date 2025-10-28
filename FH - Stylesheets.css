@@ -1521,7 +1521,7 @@ body,
   background: none;
   color: #1a1a1a;
   cursor: pointer;
-  align-self: flex-start;
+  flex-shrink: 0;
 }
 
 .fh-header__mobile-close-icon {
@@ -1760,6 +1760,7 @@ body,
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
 }
 
 .fh-header__mobile-breadcrumb {
@@ -1810,7 +1811,7 @@ body,
 }
 
 .fh-header__mobile-submenu-title {
-  flex: 1 1 auto;
+  margin: 0;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.4px;
@@ -2054,7 +2055,8 @@ body,
 
   .fh-header__mobile-close {
     display: inline-flex;
-    margin: 0 0 24px;
+    margin: 0;
+    margin-left: auto;
   }
 
   .fh-header__mobile-close-icon {
