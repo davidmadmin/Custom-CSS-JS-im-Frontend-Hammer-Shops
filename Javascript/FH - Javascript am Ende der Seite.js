@@ -1396,6 +1396,34 @@ fhOnReady(function () {
     if (firstLink instanceof HTMLElement) firstLink.focus();
   }
 
+  function clearPendingSelection() {
+    menu.classList.remove('fh-header__nav--pending');
+
+    var pendingLinks = menu.querySelectorAll('[data-fh-mobile-pending="true"]');
+
+    pendingLinks.forEach(function (link) {
+      link.removeAttribute('data-fh-mobile-pending');
+      link.classList.remove('fh-header__nav-link--pending');
+      link.classList.remove('fh-header__mobile-submenu-link--pending');
+    });
+  }
+
+  function markPendingSelection(link) {
+    if (!(link instanceof HTMLElement)) return;
+
+    clearPendingSelection();
+
+    link.setAttribute('data-fh-mobile-pending', 'true');
+
+    if (link.classList.contains('fh-header__mobile-submenu-link')) {
+      link.classList.add('fh-header__mobile-submenu-link--pending');
+    } else {
+      link.classList.add('fh-header__nav-link--pending');
+    }
+
+    menu.classList.add('fh-header__nav--pending');
+  }
+
   function openMenu() {
     if (isOpen) return;
 
@@ -1421,6 +1449,7 @@ fhOnReady(function () {
     menu.classList.remove('fh-header__nav--open');
     menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
     document.body.classList.remove('fh-mobile-menu-open');
+    clearPendingSelection();
     setExpandedState(false);
     const wasSuppressed = suppressPersistence;
     suppressPersistence = true;
@@ -1474,7 +1503,12 @@ fhOnReady(function () {
     const navLink = event.target && event.target.closest('.fh-header__nav-link');
 
     if (navLink && !navLink.closest('.dropdown-menu')) {
-      if (!desktopMedia.matches && navLink.hasAttribute('data-fh-mobile-submenu-target')) return;
+      if (!desktopMedia.matches) {
+        if (navLink.hasAttribute('data-fh-mobile-submenu-target')) return;
+
+        markPendingSelection(navLink);
+        return;
+      }
 
       closeMenu();
     }
@@ -1519,7 +1553,9 @@ fhOnReady(function () {
 
       const submenuLink = event.target && event.target.closest('.fh-header__mobile-submenu-link');
 
-      if (submenuLink && !submenuLink.hasAttribute('data-fh-mobile-submenu-target')) closeMenu();
+      if (submenuLink && !submenuLink.hasAttribute('data-fh-mobile-submenu-target')) {
+        markPendingSelection(submenuLink);
+      }
     });
 
     updatePanelState({ skipFocus: true, preventRootFocus: true });
