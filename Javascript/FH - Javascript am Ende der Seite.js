@@ -1686,6 +1686,7 @@ fhOnReady(function () {
 fhOnReady(function () {
   const iconMarkup =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
+  const wishlistButtonSelector = '.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn';
 
   function replaceWishlistWord(value) {
     if (typeof value !== 'string' || value.length === 0) return value;
@@ -1762,10 +1763,10 @@ fhOnReady(function () {
   function enhanceWishlistButtons(root) {
     if (!root) return;
 
-    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) enhanceButton(root);
+    if (root.nodeType === 1 && root.matches && root.matches(wishlistButtonSelector)) enhanceButton(root);
 
     if (root.querySelectorAll) {
-      const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+      const buttons = root.querySelectorAll(wishlistButtonSelector);
       buttons.forEach(function (button) {
         enhanceButton(button);
       });
@@ -1778,9 +1779,37 @@ fhOnReady(function () {
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (node) {
-          if (node.nodeType !== 1) return;
+          if (!node) return;
 
-          enhanceWishlistButtons(node);
+          if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+            enhanceWishlistButtons(node);
+            return;
+          }
+
+          if (node.nodeType === Node.TEXT_NODE) {
+            const parentElement = node.parentElement;
+
+            if (parentElement && typeof parentElement.closest === 'function') {
+              const button = parentElement.closest(wishlistButtonSelector);
+
+              if (button) enhanceButton(button);
+            }
+
+            return;
+          }
+
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (typeof node.closest === 'function') {
+              const button = node.closest(wishlistButtonSelector);
+
+              if (button) {
+                enhanceButton(button);
+                return;
+              }
+            }
+
+            enhanceWishlistButtons(node);
+          }
         });
       });
     });
