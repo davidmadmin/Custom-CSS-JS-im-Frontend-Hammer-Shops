@@ -102,7 +102,7 @@ body,
   width: 100%;
 }
 
-.widget-item-grid .cmp-product-thumb > div {
+.widget-item-grid .cmp-product-thumb > .thumb-body {
   display: flex;
   flex-direction: column;
   height: 100%;
