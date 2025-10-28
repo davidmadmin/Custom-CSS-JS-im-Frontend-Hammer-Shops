@@ -34,6 +34,34 @@
 }
 /* End Section: Default plenty product card styling */
 
+/* Section: Produktkarten gleichmäßige Höhe */
+.widget-item-grid .row > [class*="col-"] {
+  display: flex;
+}
+
+.widget-item-grid .cmp-product-thumb {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+}
+
+.widget-item-grid .cmp-product-thumb .thumb-inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.widget-item-grid .cmp-product-thumb .thumb-body {
+  flex: 1 1 auto;
+}
+
+.widget-item-grid .cmp-product-thumb .thumb-footer {
+  margin-top: auto;
+}
+/* End Section: Produktkarten gleichmäßige Höhe */
+
 /* Section: Produktseite Kauf-Panel Hervorhebung */
 .elevated-bg {
   background-color: #ffffff;
