@@ -1738,7 +1738,7 @@ fhOnReady(function () {
       button.appendChild(labelWrapper);
     }
 
-    labelWrapper.textContent = 'Merkliste';
+    if (labelWrapper.textContent !== 'Merkliste') labelWrapper.textContent = 'Merkliste';
 
     button.insertBefore(iconWrapper, button.firstChild);
 
@@ -1746,30 +1746,60 @@ fhOnReady(function () {
     updateAttribute(button, 'title');
 
     if (button.dataset) {
-      if (button.dataset.originalTitle) button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
+      const datasetKeys = [
+        ['originalTitle', 'Merkliste'],
+        ['titleAdd', 'Merkliste'],
+        ['titleRemove', 'Merkliste']
+      ];
 
-      if (button.dataset.titleAdd) button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
+      datasetKeys.forEach(function (entry) {
+        const key = entry[0];
+        const fallback = entry[1];
 
-      if (button.dataset.titleRemove) button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
+        if (!Object.prototype.hasOwnProperty.call(button.dataset, key)) return;
+
+        const currentValue = button.dataset[key];
+        const replacedValue = replaceWishlistWord(currentValue);
+        const finalValue = (typeof replacedValue === 'string' && replacedValue.length > 0) ? replacedValue : fallback;
+
+        if (typeof finalValue === 'string' && currentValue !== finalValue) button.dataset[key] = finalValue;
+      });
     }
 
     const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
     srOnlyElements.forEach(function (element) {
-      element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
+      const nextValue = replaceWishlistWord(element.textContent) || 'Merkliste';
+
+      if (element.textContent !== nextValue) element.textContent = nextValue;
     });
   }
 
-  function enhanceWishlistButtons(root) {
-    if (!root) return;
+  const wishlistSelector = '.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn';
 
-    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) enhanceButton(root);
+  function collectWishlistButtons(root) {
+    const buttons = [];
 
-    if (root.querySelectorAll) {
-      const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
-      buttons.forEach(function (button) {
-        enhanceButton(button);
+    if (!root) return buttons;
+
+    const isElement = root.nodeType === 1;
+    const isFragment = root.nodeType === 11;
+    const isDocument = root.nodeType === 9;
+
+    if (isElement && root.matches && root.matches(wishlistSelector)) buttons.push(root);
+
+    if ((isElement || isFragment || isDocument) && root.querySelectorAll) {
+      root.querySelectorAll(wishlistSelector).forEach(function (button) {
+        buttons.push(button);
       });
     }
+
+    return buttons;
+  }
+
+  function enhanceWishlistButtons(root) {
+    collectWishlistButtons(root).forEach(function (button) {
+      enhanceButton(button);
+    });
   }
 
   enhanceWishlistButtons(document);
@@ -1777,15 +1807,26 @@ fhOnReady(function () {
   if (document.body) {
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
-        mutation.addedNodes.forEach(function (node) {
-          if (node.nodeType !== 1) return;
+        if (!mutation) return;
 
-          enhanceWishlistButtons(node);
-        });
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(function (node) {
+            enhanceWishlistButtons(node);
+          });
+
+          enhanceWishlistButtons(mutation.target);
+        }
+
+        if (mutation.type === 'attributes') enhanceWishlistButtons(mutation.target);
       });
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['title', 'aria-label', 'data-original-title', 'data-title-add', 'data-title-remove']
+    });
   }
 });
 // End Section: FH Merkliste button enhancements
