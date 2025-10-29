@@ -2482,8 +2482,10 @@ fhOnReady(function () {
     hasSubscribedToStore = true;
   }
 
-  function loadWishListItems() {
+  function loadWishListItems(options) {
     return new Promise(function (resolve, reject) {
+      const config = options || {};
+      const forceReload = config.forceReload === true;
       const store = getVueStore();
 
       if (!store) {
@@ -2500,13 +2502,55 @@ fhOnReady(function () {
       showLoading(true);
       showError('');
 
+      const wishListState = store.state && store.state.wishList ? store.state.wishList : {};
+      const isInitialLoadFlag = typeof wishListState.isWishListInitiallyLoading === 'boolean'
+        ? wishListState.isWishListInitiallyLoading
+        : null;
+      const hasCompletedInitialLoad = isInitialLoadFlag === false;
+      const shouldFetchDirectly = forceReload || hasCompletedInitialLoad;
+
+      function resolveWithDocuments(documents) {
+        notifyWishListUpdated(documents);
+        showLoading(false);
+        resolve(documents);
+      }
+
+      function rejectWithError(error) {
+        showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
+        showLoading(false);
+        reject(error);
+      }
+
+      if (shouldFetchDirectly) {
+        fetch('/rest/io/itemWishList', { credentials: 'same-origin' })
+          .then(function (response) {
+            if (!response.ok) throw new Error('wish-list-fetch-failed');
+            return response.text();
+          })
+          .then(function (body) {
+            if (!body) return { documents: [] };
+
+            try {
+              return JSON.parse(body);
+            } catch (error) {
+              throw new Error('wish-list-parse-failed');
+            }
+          })
+          .then(function (payload) {
+            const documents = payload && Array.isArray(payload.documents) ? payload.documents : [];
+            resolveWithDocuments(documents);
+          })
+          .catch(function (error) {
+            rejectWithError(error);
+          });
+        return;
+      }
+
       if (!actionName) {
         const items = store.state && store.state.wishList && store.state.wishList.wishListItems
           ? store.state.wishList.wishListItems
           : [];
-        notifyWishListUpdated(items);
-        showLoading(false);
-        resolve(items);
+        resolveWithDocuments(items);
         return;
       }
 
@@ -2520,14 +2564,10 @@ fhOnReady(function () {
             documents = store.state.wishList.wishListItems;
           }
 
-          notifyWishListUpdated(documents);
-          showLoading(false);
-          resolve(documents);
+          resolveWithDocuments(documents);
         })
         .catch(function (error) {
-          showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
-          showLoading(false);
-          reject(error);
+          rejectWithError(error);
         });
     });
   }
@@ -2643,12 +2683,14 @@ fhOnReady(function () {
         return null;
       })
       .then(function () {
-        return loadWishListItems();
+        return loadWishListItems({ forceReload: true });
       })
       .then(function () {
+        showLoading(false);
         return openMenuWithOptions({ refresh: false });
       })
       .catch(function () {
+        showLoading(false);
         openMenuWithOptions({ refresh: true });
       });
   });
