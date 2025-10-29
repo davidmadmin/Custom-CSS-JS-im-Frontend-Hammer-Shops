@@ -16,8 +16,12 @@
 /* Utility class so body widgets (e.g. Doofinder recommendations) can span the full viewport width. */
 .sh-full-viewport-container,
 .doofinder-product-recommendation-fw {
-  max-width: 100%;
-  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   padding-left: 0;
   padding-right: 0;
 }

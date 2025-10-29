@@ -373,7 +373,17 @@ body,
 
 /* Utility class so body widgets (e.g. Doofinder recommendations) can span the full viewport width. */
 .fh-full-viewport-container,
-.doofinder-product-recommendation-fw,
+.doofinder-product-recommendation-fw {
+  position: relative;
+  box-sizing: border-box;
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding-left: 0;
+  padding-right: 0;
+}
+
 #vue-app > div.footer.container-max.d-print-none {
   max-width: 100%;
   width: 100%;
