@@ -11,6 +11,23 @@
 
 /* End Section: Custom Schriftarten + Preis Text Stylings */
 
+/* Section: Layout Utilities */
+
+/* Utility class so body widgets (e.g. Doofinder recommendations) can span the full viewport width. */
+.sh-full-viewport-container,
+.doofinder-product-recommendation-fw {
+  position: relative;
+  box-sizing: border-box;
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* End Section: Layout Utilities */
+
 /* Section: Artikel Preview Card Preis Styling */
 .price {
   color: #f20000 !important;
