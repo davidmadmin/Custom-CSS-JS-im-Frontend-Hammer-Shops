@@ -369,15 +369,21 @@ body,
   opacity: 0;
 }
 
-/* Section: FH Footer Base Layout */
+/* Section: Layout Utilities */
 
-/* Override the plentyShop container restriction so the footer can span the full viewport width. */
+/* Utility class so body widgets (e.g. Doofinder recommendations) can span the full viewport width. */
+.fh-full-viewport-container,
+.doofinder-product-recommendation-fw,
 #vue-app > div.footer.container-max.d-print-none {
   max-width: 100%;
   width: 100%;
   padding-left: 0;
   padding-right: 0;
 }
+
+/* End Section: Layout Utilities */
+
+/* Section: FH Footer Base Layout */
 
 .fh-footer {
   position: relative;
