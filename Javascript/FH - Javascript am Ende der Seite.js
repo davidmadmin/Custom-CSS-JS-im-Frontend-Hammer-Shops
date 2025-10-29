@@ -1686,6 +1686,12 @@ fhOnReady(function () {
 fhOnReady(function () {
   const iconMarkup =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
+  const wishlistButtonSelector = '.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn';
+  let isEnhancingWishlistButton = false;
+
+  function isWishlistButton(node) {
+    return !!(node && node.nodeType === 1 && node.matches && node.matches(wishlistButtonSelector));
+  }
 
   function replaceWishlistWord(value) {
     if (typeof value !== 'string' || value.length === 0) return value;
@@ -1709,63 +1715,71 @@ fhOnReady(function () {
   function enhanceButton(button) {
     if (!button || !(button instanceof HTMLElement)) return;
 
-    button.classList.add('fh-wishlist-button');
+    if (isEnhancingWishlistButton) return;
 
-    const existingCustomIcons = button.querySelectorAll('.fh-wishlist-button-icon');
-    existingCustomIcons.forEach(function (icon) {
-      icon.remove();
-    });
+    isEnhancingWishlistButton = true;
 
-    const defaultIcons = button.querySelectorAll('i[class*="fa"], i.fa');
-    defaultIcons.forEach(function (icon) {
-      icon.remove();
-    });
+    try {
+      button.classList.add('fh-wishlist-button');
 
-    Array.from(button.childNodes).forEach(function (node) {
-      if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim().length > 0) node.parentNode.removeChild(node);
-    });
+      const existingCustomIcons = button.querySelectorAll('.fh-wishlist-button-icon');
+      existingCustomIcons.forEach(function (icon) {
+        icon.remove();
+      });
 
-    const iconWrapper = document.createElement('span');
-    iconWrapper.className = 'fh-wishlist-button-icon';
-    iconWrapper.setAttribute('aria-hidden', 'true');
-    iconWrapper.innerHTML = iconMarkup;
+      const defaultIcons = button.querySelectorAll('i[class*="fa"], i.fa');
+      defaultIcons.forEach(function (icon) {
+        icon.remove();
+      });
 
-    let labelWrapper = button.querySelector('.fh-wishlist-button-label');
+      Array.from(button.childNodes).forEach(function (node) {
+        if (node.nodeType === Node.TEXT_NODE && node.textContent && node.textContent.trim().length > 0) node.parentNode.removeChild(node);
+      });
 
-    if (!labelWrapper) {
-      labelWrapper = document.createElement('span');
-      labelWrapper.className = 'fh-wishlist-button-label';
-      button.appendChild(labelWrapper);
+      const iconWrapper = document.createElement('span');
+      iconWrapper.className = 'fh-wishlist-button-icon';
+      iconWrapper.setAttribute('aria-hidden', 'true');
+      iconWrapper.innerHTML = iconMarkup;
+
+      let labelWrapper = button.querySelector('.fh-wishlist-button-label');
+
+      if (!labelWrapper) {
+        labelWrapper = document.createElement('span');
+        labelWrapper.className = 'fh-wishlist-button-label';
+        button.appendChild(labelWrapper);
+      }
+
+      labelWrapper.textContent = 'Merkliste';
+
+      button.insertBefore(iconWrapper, button.firstChild);
+
+      updateAttribute(button, 'aria-label');
+      updateAttribute(button, 'title');
+
+      if (button.dataset) {
+        if (button.dataset.originalTitle) button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
+
+        if (button.dataset.titleAdd) button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
+
+        if (button.dataset.titleRemove) button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
+      }
+
+      const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
+      srOnlyElements.forEach(function (element) {
+        element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
+      });
+    } finally {
+      isEnhancingWishlistButton = false;
     }
-
-    labelWrapper.textContent = 'Merkliste';
-
-    button.insertBefore(iconWrapper, button.firstChild);
-
-    updateAttribute(button, 'aria-label');
-    updateAttribute(button, 'title');
-
-    if (button.dataset) {
-      if (button.dataset.originalTitle) button.dataset.originalTitle = replaceWishlistWord(button.dataset.originalTitle) || 'Merkliste';
-
-      if (button.dataset.titleAdd) button.dataset.titleAdd = replaceWishlistWord(button.dataset.titleAdd) || 'Merkliste';
-
-      if (button.dataset.titleRemove) button.dataset.titleRemove = replaceWishlistWord(button.dataset.titleRemove) || 'Merkliste';
-    }
-
-    const srOnlyElements = button.querySelectorAll('.sr-only, .visually-hidden');
-    srOnlyElements.forEach(function (element) {
-      element.textContent = replaceWishlistWord(element.textContent) || 'Merkliste';
-    });
   }
 
   function enhanceWishlistButtons(root) {
     if (!root) return;
 
-    if (root.nodeType === 1 && root.matches && root.matches('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn')) enhanceButton(root);
+    if (isWishlistButton(root)) enhanceButton(root);
 
     if (root.querySelectorAll) {
-      const buttons = root.querySelectorAll('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+      const buttons = root.querySelectorAll(wishlistButtonSelector);
       buttons.forEach(function (button) {
         enhanceButton(button);
       });
@@ -1776,16 +1790,39 @@ fhOnReady(function () {
 
   if (document.body) {
     const observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
-        mutation.addedNodes.forEach(function (node) {
-          if (node.nodeType !== 1) return;
+      if (isEnhancingWishlistButton) return;
 
-          enhanceWishlistButtons(node);
-        });
+      mutations.forEach(function (mutation) {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(function (node) {
+            if (node.nodeType !== 1) return;
+
+            enhanceWishlistButtons(node);
+          });
+
+          if (isWishlistButton(mutation.target)) enhanceButton(mutation.target);
+          return;
+        }
+
+        if (mutation.type === 'attributes') {
+          if (isWishlistButton(mutation.target)) enhanceButton(mutation.target);
+          return;
+        }
+
+        if (mutation.type === 'characterData') {
+          const parentNode = mutation.target && mutation.target.parentNode;
+
+          if (isWishlistButton(parentNode)) enhanceButton(parentNode);
+        }
       });
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true
+    });
   }
 });
 // End Section: FH Merkliste button enhancements
