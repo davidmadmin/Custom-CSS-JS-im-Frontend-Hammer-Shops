@@ -19,6 +19,12 @@
 }
 /* End Section: Artikel Preview Card Preis Styling */
 
+/* Section: Artikel Preview Card UVP ausblenden */
+.widget-item-grid .cmp-product-thumb .prices .crossprice {
+  display: none !important;
+}
+/* End Section: Artikel Preview Card UVP ausblenden */
+
 /* Section: Artikelpaket Badge ausblenden */
 .cmp-product-thumb .badge.badge-bundle {
   display: none !important;
