@@ -2845,3 +2845,8 @@ button[data-testing="quantity-btn-decrease"],
   transition: opacity 0.2s ease, font-weight 0.2s ease;
 }
 /* End Section: Basket preview totals visibility */
+
+/* Section: Icon Visibility Adjustments */
+.fa-heart {
+  display: none !important;
+}
