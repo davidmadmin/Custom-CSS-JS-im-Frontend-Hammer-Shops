@@ -62,10 +62,7 @@ body,
 }
 
 .widget-item-grid .cmp-product-thumb .prices .crossprice {
-  display: inline-block;
-  text-decoration-thickness: 1px;
-  text-decoration-color: #9ca3af;
-  color: inherit;
+  display: none !important;
 }
 /* End Section: Artikel Preview Card Preis Layout */
 
