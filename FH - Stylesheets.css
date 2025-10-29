@@ -2411,6 +2411,10 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
   line-height: 1.2;
 }
 
+.widget.widget-add-to-wish-list .btn .fa {
+  display: none;
+}
+
 .widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon {
   display: inline-flex;
   align-items: center;

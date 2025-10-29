@@ -576,6 +576,39 @@ button[data-testing="quantity-btn-decrease"],
 }
 /* End Section: Basket preview totals visibility */
 
+/* Section: Merkliste Button Styling */
+.widget.widget-add-to-wish-list .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.widget.widget-add-to-wish-list .btn .fa {
+  display: none;
+}
+
+.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: inherit;
+}
+
+.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.widget.widget-add-to-wish-list .btn .fh-wishlist-button-label {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+/* End Section: Merkliste Button Styling */
+
 /* Section: Icon Visibility Adjustments */
 .fa-heart {
   display: none !important;
