@@ -63,7 +63,6 @@ fhOnReady(function () {
 
     if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') window.fhWishlistMenu.close();
 
-    menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
     document.addEventListener('click', handleDocumentClick);
@@ -74,7 +73,6 @@ fhOnReady(function () {
   function closeMenu() {
     if (!isOpen) return;
 
-    menu.style.display = 'none';
     menu.setAttribute('aria-hidden', 'true');
     toggleButton.setAttribute('aria-expanded', 'false');
     document.removeEventListener('click', handleDocumentClick);
@@ -844,7 +842,6 @@ fhOnReady(function () {
     if (!topBar) return;
 
     topBarHeight = topBar.scrollHeight || 0;
-    header.style.setProperty('--fh-top-bar-max-height', topBarHeight + 'px');
   }
 
   function applyScrollState() {
@@ -1265,7 +1262,6 @@ fhOnReady(function () {
       panel.setAttribute('aria-hidden', isActive ? 'false' : 'true');
     });
 
-    panelContainer.style.transform = '';
     menu.classList.toggle('fh-header__nav--submenu-open', depth > 0);
 
     if (menu instanceof HTMLElement) menu.scrollTop = 0;
@@ -1922,11 +1918,9 @@ fhOnReady(function () {
   }
 
   function showLoading(isLoading) {
-    if (loadingIndicator) loadingIndicator.style.display = isLoading ? 'block' : 'none';
   }
 
   function showEmptyState(isEmpty) {
-    if (emptyState) emptyState.style.display = isEmpty ? 'block' : 'none';
   }
 
   function showError(message) {
@@ -1934,9 +1928,7 @@ fhOnReady(function () {
 
     if (message) {
       errorState.textContent = message;
-      errorState.style.display = 'block';
     } else {
-      errorState.style.display = 'none';
     }
   }
 
@@ -2180,88 +2172,35 @@ fhOnReady(function () {
       const url = getItemUrl(item);
       const image = getPrimaryImage(item);
       const li = document.createElement('li');
-      li.style.display = 'grid';
-      li.style.gridTemplateColumns = '60px 1fr';
-      li.style.columnGap = '12px';
-      li.style.rowGap = '6px';
-      li.style.alignItems = 'flex-start';
-      li.style.padding = '8px 0';
-      li.style.borderBottom = '1px solid #e2e8f0';
 
       const imageLink = document.createElement('a');
       imageLink.href = url;
-      imageLink.style.display = 'block';
-      imageLink.style.width = '60px';
-      imageLink.style.height = '60px';
-      imageLink.style.borderRadius = '10px';
-      imageLink.style.overflow = 'hidden';
-      imageLink.style.backgroundColor = 'var(--fh-color-light-blue)';
-      imageLink.style.gridRow = '1 / span 3';
-      imageLink.style.alignSelf = 'start';
 
       if (image && image.url) {
         const img = document.createElement('img');
         img.src = image.url;
         img.alt = image.alt || '';
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'cover';
         imageLink.appendChild(img);
       } else {
         const placeholder = document.createElement('div');
         placeholder.textContent = 'Kein Bild';
-        placeholder.style.fontSize = '11px';
-        placeholder.style.color = '#94a3b8';
-        placeholder.style.display = 'flex';
-        placeholder.style.alignItems = 'center';
-        placeholder.style.justifyContent = 'center';
-        placeholder.style.width = '100%';
-        placeholder.style.height = '100%';
         imageLink.appendChild(placeholder);
       }
 
       const details = document.createElement('div');
-      details.style.display = 'flex';
-      details.style.flexDirection = 'column';
-      details.style.gap = '4px';
-      details.style.minWidth = '0';
-      details.style.gridColumn = '2 / 3';
 
       const nameLink = document.createElement('a');
       nameLink.href = url;
       nameLink.textContent = item && item.texts && item.texts.name1 ? item.texts.name1 : 'Artikel';
-      nameLink.style.display = 'block';
-      nameLink.style.fontSize = '13px';
-      nameLink.style.fontWeight = '600';
-      nameLink.style.color = 'var(--fh-color-navy-blue)';
-      nameLink.style.textDecoration = 'none';
-      nameLink.style.lineHeight = '1.35';
-      nameLink.style.wordBreak = 'break-word';
 
       const headerRow = document.createElement('div');
-      headerRow.style.display = 'flex';
-      headerRow.style.alignItems = 'flex-start';
-      headerRow.style.gap = '8px';
 
       const nameWrapper = document.createElement('div');
-      nameWrapper.style.flex = '1';
-      nameWrapper.style.minWidth = '0';
       nameWrapper.appendChild(nameLink);
 
       const removeButton = document.createElement('button');
       removeButton.type = 'button';
       removeButton.className = 'btn btn-sm text-danger p-0';
-      removeButton.style.display = 'inline-flex';
-      removeButton.style.alignItems = 'center';
-      removeButton.style.justifyContent = 'center';
-      removeButton.style.width = '28px';
-      removeButton.style.height = '28px';
-      removeButton.style.border = '1px solid #f1f5f9';
-      removeButton.style.borderRadius = '8px';
-      removeButton.style.backgroundColor = '#ffffff';
-      removeButton.style.color = '#dc2626';
-      removeButton.style.flex = '0 0 auto';
-      removeButton.style.transition = 'border-color 0.2s ease, background-color 0.2s ease';
       removeButton.setAttribute('aria-label', 'Artikel von der Merkliste entfernen');
 
       const removeIcon = document.createElement('i');
@@ -2273,38 +2212,21 @@ fhOnReady(function () {
       headerRow.appendChild(removeButton);
 
       const priceLine = document.createElement('div');
-      priceLine.style.display = 'flex';
-      priceLine.style.alignItems = 'baseline';
-      priceLine.style.gap = '6px';
-      priceLine.style.marginTop = '0';
 
       const priceValue = document.createElement('strong');
       priceValue.className = 'fh-wishlist-item-price';
       priceValue.setAttribute('data-fh-wishlist-price', 'unit');
       priceValue.__fhWishlistItem = item;
       priceValue.textContent = formatPrice(getUnitPrice(item, showNet));
-      priceValue.style.whiteSpace = 'nowrap';
 
       priceLine.appendChild(priceValue);
 
       const actionRow = document.createElement('div');
-      actionRow.style.display = 'flex';
-      actionRow.style.alignItems = 'center';
-      actionRow.style.gap = '10px';
-      actionRow.style.flexWrap = 'nowrap';
 
       const addToCartButton = document.createElement('button');
       addToCartButton.type = 'button';
       addToCartButton.textContent = 'In den Warenkorb';
       addToCartButton.className = 'btn btn-primary btn-appearance';
-      addToCartButton.style.flex = '1 1 auto';
-      addToCartButton.style.minWidth = '0';
-      addToCartButton.style.height = '34px';
-      addToCartButton.style.padding = '0 12px';
-      addToCartButton.style.fontSize = '12px';
-      addToCartButton.style.fontWeight = '600';
-      addToCartButton.style.borderRadius = '10px';
-      addToCartButton.style.whiteSpace = 'nowrap';
 
       const quantityDefaults = getQuantityDefaults(item);
       let currentQuantity = quantityDefaults.quantity;
@@ -2560,7 +2482,6 @@ fhOnReady(function () {
 
     updateWishlistPriceDisplays(showNet);
 
-    if (list.lastElementChild) list.lastElementChild.style.borderBottom = 'none';
   }
 
   function subscribeToWishList(store) {
@@ -2651,7 +2572,6 @@ fhOnReady(function () {
 
     if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') window.fhAccountMenu.close();
 
-    menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
     document.addEventListener('click', handleDocumentClick);
@@ -2700,7 +2620,6 @@ fhOnReady(function () {
   function closeMenu() {
     if (!isOpen) return;
 
-    menu.style.display = 'none';
     menu.setAttribute('aria-hidden', 'true');
     toggleButton.setAttribute('aria-expanded', 'false');
     document.removeEventListener('click', handleDocumentClick);
@@ -2848,7 +2767,6 @@ fhOnReady(function () {
 
     if (node.dataset && node.dataset.fhAttributeHidden === 'true') return;
 
-    node.style.display = 'none';
 
     if (node.dataset) node.dataset.fhAttributeHidden = 'true';
 
@@ -3102,7 +3020,7 @@ fhOnReady(function () {
     return (n === 1) ? singular : plural;
   }
   function formatTime(h, m, s, showSeconds, color) {
-    let t = '<span style="font-weight:bold;color:' + color + ';">';
+    let t = '<span>';
     if (h >= 24) {
       const days = Math.floor(h / 24);
       const remainingHours = h % 24;
@@ -3122,15 +3040,10 @@ fhOnReady(function () {
     return t + '</span>';
   }
   var iconUrl = "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/shipping_9288277.svg";
-  var iconHtml = '<img src="' + iconUrl + '" alt="" style="height:2.6em;width:auto;vertical-align:middle;display:block;">';
+  var iconHtml = '<img src="' + iconUrl + '" alt="">';
   function waitForCountdownDiv(){
     var elem = document.getElementById('cutoff-countdown');
     if (!elem) return setTimeout(waitForCountdownDiv, 300);
-    elem.style.display = "flex";
-    elem.style.alignItems = "flex-start";
-    elem.style.gap = "0.85em";
-    elem.style.color = "rgb(108, 117, 125)";
-    elem.style.setProperty('color', 'rgb(108, 117, 125)', 'important');
     var now = getBerlinTime();
     var day = now.getDay();
     var hour = now.getHours();
@@ -3185,11 +3098,11 @@ fhOnReady(function () {
         dateLabel = dayName + " den " + datum;
       }
     }
-    var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;">' +
-     '<span style="font-weight:600;">Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
-  '</div>';
-    elem.innerHTML = 
-      '<div style="display:flex;align-items:center;">' +
+    var textHtml = '<div>' +
+      '<span>Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
+    '</div>';
+    elem.innerHTML =
+      '<div>' +
         iconHtml +
       '</div>' +
       textHtml;
@@ -3267,19 +3180,6 @@ fhOnReady(function () {
     );
   }
 
-  function getPrimaryColor() {
-    const styles = getComputedStyle(document.documentElement);
-    return (
-      styles.getPropertyValue('--fh-color-bright-blue') ||
-      styles.getPropertyValue('--primary') ||
-      styles.getPropertyValue('--color-primary') ||
-      styles.getPropertyValue('--bs-primary') ||
-      'var(--fh-color-bright-blue)'
-    ).trim();
-  }
-
-  const primaryColor = getPrimaryColor();
-
   function parseEuro(el) {
     if (!el) return 0;
     return parseFloat(
@@ -3308,7 +3208,6 @@ fhOnReady(function () {
 
     const bar = document.createElement('div');
     bar.className = 'free-shipping-bar__progress-fill';
-    bar.style.background = primaryColor;
     progress.appendChild(bar);
 
     const shine = document.createElement('div');
@@ -3406,7 +3305,6 @@ fhOnReady(function () {
     const reached = total >= THRESHOLD;
     const widthRatio = reached ? 1 : Math.max(Math.min(ratio, 1), 0.02);
 
-    bar.style.width = (widthRatio * 100).toFixed(2) + '%';
 
     const wrapper = bar.closest('.free-shipping-bar');
     if (wrapper) wrapper.classList.toggle('free-shipping-bar--reached', reached);
@@ -3442,7 +3340,6 @@ fhOnReady(function () {
       (isCheckoutPage() && !isGermanySelected()) ||
       (inCartPreview && !isGermanySelectedInCartPreview()) ||
       (path.includes('/bestellbestaetigung') && total < THRESHOLD);
-    bar.style.display = hide ? 'none' : '';
   }
 
   const observer = new MutationObserver(() => {
@@ -3493,7 +3390,6 @@ fhOnReady(function () {
   const clearButton = document.querySelector('[data-search-clear]');
   const toggleClearButton = () => {
     if (!clearButton) return;
-    clearButton.style.display = searchInput.value ? 'flex' : 'none';
   };
 
   if (clearButton) {
@@ -3717,7 +3613,7 @@ function patchBasketButton() {
     });
 
     // Button-Text und Custom-Icon setzen, falls Icon fehlt (ohne Spinner!)
-    if (!weiterEinkaufenBtn.querySelector('i.fa-arrow-left')) weiterEinkaufenBtn.innerHTML = '<i class="fa fa-arrow-left" aria-hidden="true" style="margin-right:8px"></i>Weiter einkaufen';
+    if (!weiterEinkaufenBtn.querySelector('i.fa-arrow-left')) weiterEinkaufenBtn.innerHTML = '<i class="fa fa-arrow-left" aria-hidden="true"></i>Weiter einkaufen';
 
     if (!weiterEinkaufenBtn.classList.contains('weiter-einkaufen-patched')) {
       weiterEinkaufenBtn.addEventListener('click', function(e) {

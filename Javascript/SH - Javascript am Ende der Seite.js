@@ -120,7 +120,7 @@
     return n === 1 ? singular : plural;
   }
   function formatTime(h, m, s, showSeconds, color) {
-    let t = '<span style="font-weight:bold;color:' + color + ';">';
+    let t = '<span>';
     if (h >= 24) {
       const days = Math.floor(h / 24);
       const remainingHours = h % 24;
@@ -144,15 +144,10 @@
   var iconHtml =
     '<img src="' +
     iconUrl +
-    '" alt="" style="height:2.6em;width:auto;vertical-align:middle;display:block;">';
+    '" alt="">';
   function waitForCountdownDiv() {
     var elem = document.getElementById("cutoff-countdown");
     if (!elem) return setTimeout(waitForCountdownDiv, 300);
-    elem.style.display = "flex";
-    elem.style.alignItems = "flex-start";
-    elem.style.gap = "0.85em";
-    elem.style.color = "rgb(108, 117, 125)";
-    elem.style.setProperty("color", "rgb(108, 117, 125)", "important");
     var now = getBerlinTime();
     var day = now.getDay();
     var hour = now.getHours();
@@ -216,15 +211,15 @@
       }
     }
     var textHtml =
-      '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;">' +
-      '<span style="font-weight:600;">Bestellen Sie innerhalb ' +
+      '<div>' +
+      '<span>Bestellen Sie innerhalb ' +
       zeitHtml +
       ", damit Ihre Ware " +
       dateLabel +
       " unser Lager verlässt.   </span>" +
       "</div>";
     elem.innerHTML =
-      '<div style="display:flex;align-items:center;">' +
+      '<div>' +
       iconHtml +
       "</div>" +
       textHtml;
@@ -305,18 +300,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  function getPrimaryColor() {
-    const styles = getComputedStyle(document.documentElement);
-    return (
-      styles.getPropertyValue('--primary') ||
-      styles.getPropertyValue('--color-primary') ||
-      styles.getPropertyValue('--bs-primary') ||
-      '#f20000'
-    ).trim();
-  }
-
-  const primaryColor = getPrimaryColor();
-
   function parseEuro(el) {
     if (!el) return 0;
     return (
@@ -352,7 +335,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const bar = document.createElement('div');
     bar.className = 'free-shipping-bar__progress-fill';
-    bar.style.background = primaryColor;
     progress.appendChild(bar);
 
     const shine = document.createElement('div');
@@ -450,7 +432,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const reached = total >= THRESHOLD;
     const widthRatio = reached ? 1 : Math.max(Math.min(ratio, 1), 0.02);
 
-    bar.style.width = (widthRatio * 100).toFixed(2) + '%';
 
     const wrapper = bar.closest('.free-shipping-bar');
     if (wrapper) wrapper.classList.toggle('free-shipping-bar--reached', reached);
@@ -486,7 +467,6 @@ document.addEventListener("DOMContentLoaded", function () {
       (isCheckoutPage() && !isGermanySelected()) ||
       (inCartPreview && !isGermanySelectedInCartPreview()) ||
       (path.includes('/bestellbestaetigung') && total < THRESHOLD);
-    bar.style.display = hide ? 'none' : '';
   }
 
   const observer = new MutationObserver(() => {
@@ -543,7 +523,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const clearButton = document.querySelector("[data-search-clear]");
     const toggleClearButton = () => {
       if (!clearButton) return;
-      clearButton.style.display = searchInput.value ? "flex" : "none";
     };
 
     if (clearButton) {
@@ -868,7 +847,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Button-Text und Arrow setzen, falls Icon fehlt (kein Spinner!)
       if (!weiterEinkaufenBtn.querySelector("i.fa-arrow-left")) {
         weiterEinkaufenBtn.innerHTML =
-          '<i class="fa fa-arrow-left" aria-hidden="true" style="margin-right:8px"></i>Weiter einkaufen';
+          '<i class="fa fa-arrow-left" aria-hidden="true"></i>Weiter einkaufen';
       }
 
       // Eventlistener nur einmal hinzufügen
