@@ -2482,7 +2482,10 @@ fhOnReady(function () {
     hasSubscribedToStore = true;
   }
 
-  function loadWishListItems() {
+  function loadWishListItems(options) {
+    const config = options || {};
+    const forceReload = config.forceReload === true;
+
     return new Promise(function (resolve, reject) {
       const store = getVueStore();
 
@@ -2494,11 +2497,46 @@ fhOnReady(function () {
       }
 
       const actionName = resolveStoreAction(store, ['wishList/initWishListItems', 'initWishListItems']);
+      const wishListState = store.state && store.state.wishList ? store.state.wishList : {};
+      const storeInitialLoadFlag =
+        wishListState && typeof wishListState.isWishListInitiallyLoading === 'boolean'
+          ? wishListState.isWishListInitiallyLoading
+          : null;
+      const hasStoreFinishedInitialLoad = storeInitialLoadFlag === false ? true : hasLoadedOnce;
+      const shouldUseDirectFetch = forceReload || hasStoreFinishedInitialLoad;
 
       subscribeToWishList(store);
 
       showLoading(true);
       showError('');
+
+      if (shouldUseDirectFetch && typeof window.fetch === 'function') {
+        window
+          .fetch('/rest/io/itemWishList', { credentials: 'same-origin' })
+          .then(function (response) {
+            if (!response || !response.ok) throw new Error('wish-list-fetch-failed');
+
+            return response.json();
+          })
+          .then(function (payload) {
+            let documents = [];
+
+            if (Array.isArray(payload)) documents = payload; else if (payload && Array.isArray(payload.documents)) {
+              documents = payload.documents;
+            }
+
+            notifyWishListUpdated(documents);
+            showLoading(false);
+            resolve(documents);
+          })
+          .catch(function (error) {
+            showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
+            showLoading(false);
+            reject(error);
+          });
+
+        return;
+      }
 
       if (!actionName) {
         const items = store.state && store.state.wishList && store.state.wishList.wishListItems
@@ -2643,12 +2681,14 @@ fhOnReady(function () {
         return null;
       })
       .then(function () {
-        return loadWishListItems();
+        return loadWishListItems({ forceReload: true });
       })
       .then(function () {
+        showLoading(false);
         return openMenuWithOptions({ refresh: false });
       })
       .catch(function () {
+        showLoading(false);
         openMenuWithOptions({ refresh: true });
       });
   });
@@ -2662,7 +2702,7 @@ fhOnReady(function () {
     return openMenuWithOptions(options || {});
   };
   window.fhWishlistMenu.refresh = function () {
-    return loadWishListItems();
+    return loadWishListItems({ forceReload: true });
   };
   window.fhWishlistMenu.updatePrices = function (showNet) {
     updateWishlistPriceDisplays(showNet);
