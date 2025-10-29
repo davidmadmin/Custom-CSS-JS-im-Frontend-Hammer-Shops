@@ -857,6 +857,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var addTooltipText = 'Zur Merkliste hinzufügen';
     var removeTooltipText = 'Von der Merkliste entfernen';
     var attributeNames = ['title', 'data-original-title', 'aria-label', 'data-title-add', 'data-title-remove'];
+    var stateAttributeNames = ['aria-pressed', 'class', 'data-mode', 'data-added', 'data-in-wish-list'];
+    var observerAttributeNames = attributeNames.concat(stateAttributeNames);
 
     function normalizeTooltipValue(value) {
       if (!value) return value;
@@ -938,6 +940,37 @@ document.addEventListener("DOMContentLoaded", function () {
       if (button.getAttribute('data-title-remove') !== removeTooltipText) button.setAttribute('data-title-remove', removeTooltipText);
     }
 
+    function updateWishlistButtonState(button) {
+      if (!button) return;
+
+      var stateAttributes = ['title', 'data-original-title', 'aria-label'];
+      var hasRemoveText = stateAttributes.some(function (name) {
+        var value = button.getAttribute(name);
+
+        return typeof value === 'string' && value.trim() === removeTooltipText;
+      });
+
+      var dataMode = (button.getAttribute('data-mode') || '').toLowerCase();
+      var dataAdded = (button.getAttribute('data-added') || button.getAttribute('data-in-wish-list') || '').toLowerCase();
+      var ariaPressed = button.getAttribute('aria-pressed') === 'true';
+
+      var isActive =
+        hasRemoveText ||
+        ariaPressed ||
+        dataMode === 'remove' ||
+        dataAdded === 'true' ||
+        button.classList.contains('is-active') ||
+        button.classList.contains('is-wish-list-item') ||
+        button.classList.contains('is-wish-list') ||
+        button.classList.contains('added-to-wish-list');
+
+      button.classList.toggle('fh-wishlist-button--active', isActive);
+
+      var iconWrapper = button.querySelector('.fh-wishlist-button-icon');
+
+      if (iconWrapper) iconWrapper.classList.toggle('fh-wishlist-button-icon--active', isActive);
+    }
+
     function enhanceWishlistButton(button, options) {
       var fromObserver = options && options.fromObserver;
 
@@ -945,6 +978,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       ensureWishlistMarkup(button);
       normalizeWishlistAttributes(button);
+      updateWishlistButtonState(button);
       button.setAttribute('data-sh-wishlist-enhanced', 'true');
     }
 
@@ -959,7 +993,7 @@ document.addEventListener("DOMContentLoaded", function () {
         childList: true,
         subtree: false,
         attributes: true,
-        attributeFilter: attributeNames
+        attributeFilter: observerAttributeNames
       });
 
       button.__shWishlistObserver = observer;
