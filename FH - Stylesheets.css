@@ -1782,12 +1782,16 @@ body,
 .fh-header__dropdown-footer {
   grid-column: 1 / -1;
   margin-top: 16px;
-  padding-top: 16px;
+}
+
+.fh-header__dropdown-divider {
+  margin: 0 0 12px;
+  border: 0;
   border-top: 1px solid #eaeaea;
 }
 
 .fh-header__dropdown-footer-link {
-  display: inline-block;
+  display: block;
   color: var(--fh-color-navy-blue);
   font-weight: 600;
   text-decoration: none;
