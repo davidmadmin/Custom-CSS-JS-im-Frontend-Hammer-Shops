@@ -1702,6 +1702,18 @@ fhOnReady(function () {
   let hasSubscribedToStore = false;
   let wishListUpdateVersion = 0;
   const pendingWishListUpdateWaiters = [];
+  const relevantWishListMutations = (function () {
+    const baseMutationNames = [
+      'setWishListItems',
+      'removeWishListItem',
+      'addWishListItemToIndex',
+      'setWishListIds'
+    ];
+
+    return baseMutationNames.concat(baseMutationNames.map(function (name) {
+      return 'wishList/' + name;
+    }));
+  })();
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
@@ -2461,14 +2473,7 @@ fhOnReady(function () {
     store.subscribe(function (mutation, state) {
       if (!mutation || !mutation.type) return;
 
-      const relevantMutations = [
-        'setWishListItems',
-        'removeWishListItem',
-        'addWishListItemToIndex',
-        'setWishListIds'
-      ];
-
-      if (relevantMutations.indexOf(mutation.type) === -1) return;
+      if (relevantWishListMutations.indexOf(mutation.type) === -1) return;
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
       notifyWishListUpdated(items);
@@ -2621,6 +2626,13 @@ fhOnReady(function () {
     const store = getVueStore();
 
     if (store) subscribeToWishList(store);
+
+    if (!isOpen) {
+      showLoading(true);
+      openMenuWithOptions({ refresh: false });
+    } else {
+      showLoading(true);
+    }
 
     const waitPromise = store
       ? waitForNextWishListUpdate(4000)
