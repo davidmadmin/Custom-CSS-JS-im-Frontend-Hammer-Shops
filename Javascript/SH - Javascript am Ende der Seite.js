@@ -26,6 +26,17 @@
     return n < 10 ? "0" + n : n;
   }
 
+  function shOnReady(callback) {
+    if (typeof callback !== "function") return;
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", callback);
+      return;
+    }
+
+    callback();
+  }
+
   var holidayCache = {};
 
   function formatDateKey(date) {
@@ -839,6 +850,158 @@ document.addEventListener("DOMContentLoaded", function () {
     installBasketPreviewMenuClosers();
   }
   // End Section: Close account and wishlist menus when basket preview opens
+
+  // Section: SH wish list button enhancer
+  shOnReady(function () {
+    var wishlistHeartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
+    var addTooltipText = 'Zur Merkliste hinzufügen';
+    var removeTooltipText = 'Von der Merkliste entfernen';
+    var attributeNames = ['title', 'data-original-title', 'aria-label', 'data-title-add', 'data-title-remove'];
+
+    function normalizeTooltipValue(value) {
+      if (!value) return value;
+
+      var normalized = value.replace(/wunschliste/gi, 'Merkliste');
+
+      if (/entfern/i.test(normalized)) return removeTooltipText;
+
+      if (/hinzuf[üu]g/i.test(normalized)) return addTooltipText;
+
+      return normalized;
+    }
+
+    function ensureWishlistMarkup(button) {
+      if (!button) return;
+
+      var legacyIcons = button.querySelectorAll('i');
+
+      Array.prototype.forEach.call(legacyIcons, function (icon) {
+        if (!icon || !(icon.classList && icon.classList.contains('fa'))) return;
+
+        if (icon.parentNode) icon.parentNode.removeChild(icon);
+      });
+
+      var iconWrapper = button.querySelector('.fh-wishlist-button-icon');
+
+      if (!iconWrapper) {
+        iconWrapper = document.createElement('span');
+        iconWrapper.className = 'fh-wishlist-button-icon';
+        button.insertBefore(iconWrapper, button.firstChild);
+      }
+
+      if (iconWrapper.innerHTML !== wishlistHeartSvg) iconWrapper.innerHTML = wishlistHeartSvg;
+
+      var labelWrapper = button.querySelector('.fh-wishlist-button-label');
+
+      if (!labelWrapper) {
+        labelWrapper = document.createElement('span');
+        labelWrapper.className = 'fh-wishlist-button-label';
+        button.appendChild(labelWrapper);
+      }
+
+      labelWrapper.textContent = 'Merkliste';
+
+      if (iconWrapper.nextSibling !== labelWrapper) button.insertBefore(labelWrapper, iconWrapper.nextSibling);
+
+      Array.prototype.forEach.call(button.childNodes, function (node) {
+        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) node.parentNode.removeChild(node);
+      });
+
+      Array.prototype.forEach.call(button.children, function (child) {
+        if (child === iconWrapper || child === labelWrapper) return;
+
+        var className = typeof child.className === 'string' ? child.className : '';
+
+        if (/(^|\s)(sr-only|visually-hidden)(\s|$)/i.test(className)) return;
+
+        if (child.getAttribute && child.getAttribute('aria-hidden') === 'true') return;
+
+        if (child.closest('.fh-wishlist-button-icon') || child.closest('.fh-wishlist-button-label')) return;
+
+        child.parentNode.removeChild(child);
+      });
+    }
+
+    function normalizeWishlistAttributes(button) {
+      attributeNames.forEach(function (name) {
+        var value = button.getAttribute(name);
+
+        if (typeof value === 'string' && value.length) {
+          var normalized = normalizeTooltipValue(value);
+
+          if (normalized !== value) button.setAttribute(name, normalized);
+        }
+      });
+
+      if (button.getAttribute('data-title-add') !== addTooltipText) button.setAttribute('data-title-add', addTooltipText);
+
+      if (button.getAttribute('data-title-remove') !== removeTooltipText) button.setAttribute('data-title-remove', removeTooltipText);
+    }
+
+    function enhanceWishlistButton(button, options) {
+      var fromObserver = options && options.fromObserver;
+
+      if (!fromObserver && button.getAttribute('data-sh-wishlist-enhanced') === 'true') return;
+
+      ensureWishlistMarkup(button);
+      normalizeWishlistAttributes(button);
+      button.setAttribute('data-sh-wishlist-enhanced', 'true');
+    }
+
+    function observeWishlistButton(button) {
+      if (button.__shWishlistObserver) return;
+
+      var observer = new MutationObserver(function () {
+        enhanceWishlistButton(button, { fromObserver: true });
+      });
+
+      observer.observe(button, {
+        childList: true,
+        subtree: false,
+        attributes: true,
+        attributeFilter: attributeNames
+      });
+
+      button.__shWishlistObserver = observer;
+    }
+
+    function initWishlistButtons(root) {
+      var buttons = (root || document).querySelectorAll('.widget.widget-add-to-wish-list .btn');
+
+      Array.prototype.forEach.call(buttons, function (button) {
+        enhanceWishlistButton(button);
+        observeWishlistButton(button);
+      });
+    }
+
+    initWishlistButtons(document);
+
+    var body = document.body;
+
+    if (body) {
+      var rootObserver = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          Array.prototype.forEach.call(mutation.addedNodes, function (node) {
+            if (!node || (node.nodeType !== 1 && node.nodeType !== 11)) return;
+
+            if (node.nodeType === 1 && node.matches && node.matches('.widget.widget-add-to-wish-list .btn')) {
+              enhanceWishlistButton(node);
+              observeWishlistButton(node);
+            }
+
+            if (node.querySelectorAll) initWishlistButtons(node);
+          });
+        });
+      });
+
+      rootObserver.observe(body, { childList: true, subtree: true });
+
+      window.addEventListener('beforeunload', function () {
+        rootObserver.disconnect();
+      });
+    }
+  });
+  // End Section: SH wish list button enhancer
 
   // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
