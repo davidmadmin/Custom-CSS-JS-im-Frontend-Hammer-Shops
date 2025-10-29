@@ -2664,6 +2664,8 @@ fhOnReady(function () {
   const addTooltipText = 'Zur Merkliste hinzufügen';
   const removeTooltipText = 'Von der Merkliste entfernen';
   const attributeNames = ['title', 'data-original-title', 'aria-label', 'data-title-add', 'data-title-remove'];
+  const stateAttributeNames = ['aria-pressed', 'class', 'data-mode', 'data-added', 'data-in-wish-list'];
+  const observerAttributeNames = attributeNames.concat(stateAttributeNames);
 
   function normalizeTooltipValue(value) {
     if (!value) return value;
@@ -2745,6 +2747,37 @@ fhOnReady(function () {
     if (button.getAttribute('data-title-remove') !== removeTooltipText) button.setAttribute('data-title-remove', removeTooltipText);
   }
 
+  function updateWishlistButtonState(button) {
+    if (!button) return;
+
+    const stateAttributes = ['title', 'data-original-title', 'aria-label'];
+    const hasRemoveText = stateAttributes.some(function (name) {
+      const value = button.getAttribute(name);
+
+      return typeof value === 'string' && value.trim() === removeTooltipText;
+    });
+
+    const dataMode = (button.getAttribute('data-mode') || '').toLowerCase();
+    const dataAdded = (button.getAttribute('data-added') || button.getAttribute('data-in-wish-list') || '').toLowerCase();
+    const ariaPressed = button.getAttribute('aria-pressed') === 'true';
+
+    const isActive =
+      hasRemoveText ||
+      ariaPressed ||
+      dataMode === 'remove' ||
+      dataAdded === 'true' ||
+      button.classList.contains('is-active') ||
+      button.classList.contains('is-wish-list-item') ||
+      button.classList.contains('is-wish-list') ||
+      button.classList.contains('added-to-wish-list');
+
+    button.classList.toggle('fh-wishlist-button--active', isActive);
+
+    const iconWrapper = button.querySelector('.fh-wishlist-button-icon');
+
+    if (iconWrapper) iconWrapper.classList.toggle('fh-wishlist-button-icon--active', isActive);
+  }
+
   function enhanceWishlistButton(button, options) {
     const fromObserver = options && options.fromObserver;
 
@@ -2752,6 +2785,7 @@ fhOnReady(function () {
 
     ensureWishlistMarkup(button);
     normalizeWishlistAttributes(button);
+    updateWishlistButtonState(button);
     button.setAttribute('data-fh-wishlist-enhanced', 'true');
   }
 
@@ -2766,7 +2800,7 @@ fhOnReady(function () {
       childList: true,
       subtree: false,
       attributes: true,
-      attributeFilter: attributeNames
+      attributeFilter: observerAttributeNames
     });
 
     button.__fhWishlistObserver = observer;
