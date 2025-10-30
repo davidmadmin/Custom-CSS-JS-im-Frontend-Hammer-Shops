@@ -1701,13 +1701,26 @@ fhOnReady(function () {
   let hasLoadedOnce = false;
   let hasSubscribedToStore = false;
   let wishListUpdateVersion = 0;
+  let lastWishListUpdateMeta = {};
   const pendingWishListUpdateWaiters = [];
   const relevantWishListMutations = (function () {
     const baseMutationNames = [
       'setWishListItems',
       'removeWishListItem',
       'addWishListItemToIndex',
-      'setWishListIds'
+      'setWishListIds',
+      'addWishListId',
+      'removeWishListId'
+    ];
+
+    return baseMutationNames.concat(baseMutationNames.map(function (name) {
+      return 'wishList/' + name;
+    }));
+  })();
+  const wishListIdOnlyMutations = (function () {
+    const baseMutationNames = [
+      'addWishListId',
+      'removeWishListId'
     ];
 
     return baseMutationNames.concat(baseMutationNames.map(function (name) {
@@ -1772,10 +1785,12 @@ fhOnReady(function () {
     return null;
   }
 
-  function notifyWishListUpdated(items) {
+  function notifyWishListUpdated(items, meta) {
     const normalizedItems = Array.isArray(items) ? items : [];
+    const normalizedMeta = meta && typeof meta === 'object' ? meta : {};
     hasLoadedOnce = true;
     wishListUpdateVersion += 1;
+    lastWishListUpdateMeta = normalizedMeta;
     updateList(normalizedItems);
 
     if (!pendingWishListUpdateWaiters.length) return;
@@ -1787,7 +1802,7 @@ fhOnReady(function () {
       if (waiter.timeoutId) window.clearTimeout(waiter.timeoutId);
 
       try {
-        waiter.resolve({ items: normalizedItems, version: currentVersion });
+        waiter.resolve({ items: normalizedItems, version: currentVersion, meta: normalizedMeta });
       } catch (error) {
         // Ignore errors thrown inside resolver handlers
       }
@@ -1800,7 +1815,8 @@ fhOnReady(function () {
     return new Promise(function (resolve, reject) {
       if (wishListUpdateVersion > versionAtRegistration) {
         resolve({
-          version: wishListUpdateVersion
+          version: wishListUpdateVersion,
+          meta: lastWishListUpdateMeta
         });
         return;
       }
@@ -2473,10 +2489,28 @@ fhOnReady(function () {
     store.subscribe(function (mutation, state) {
       if (!mutation || !mutation.type) return;
 
-      if (relevantWishListMutations.indexOf(mutation.type) === -1) return;
+      const mutationType = mutation.type;
+
+      if (relevantWishListMutations.indexOf(mutationType) === -1) return;
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
-      notifyWishListUpdated(items);
+      const isIdOnlyUpdate = wishListIdOnlyMutations.indexOf(mutationType) !== -1;
+      let reloadPromise = null;
+
+      if (isIdOnlyUpdate) {
+        reloadPromise = loadWishListItems({ forceReload: true })
+          .catch(function (error) {
+            throw error;
+          })
+          .finally(function () {
+            showLoading(false);
+          });
+      }
+
+      notifyWishListUpdated(items, {
+        idOnlyUpdate: isIdOnlyUpdate,
+        reloadPromise: reloadPromise
+      });
     });
 
     hasSubscribedToStore = true;
@@ -2690,14 +2724,23 @@ fhOnReady(function () {
       .catch(function () {
         return null;
       })
-      .then(function () {
+      .then(function (result) {
+        if (result && result.meta && result.meta.reloadPromise) {
+          return result.meta.reloadPromise.catch(function () {
+            return loadWishListItems({ forceReload: true });
+          });
+        }
+
         return loadWishListItems({ forceReload: true });
       })
       .then(function () {
         return openMenuWithOptions({ refresh: false });
       })
       .catch(function () {
-        openMenuWithOptions({ refresh: true });
+        return openMenuWithOptions({ refresh: true });
+      })
+      .finally(function () {
+        showLoading(false);
       });
   });
 
