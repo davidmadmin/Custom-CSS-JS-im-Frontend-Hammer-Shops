@@ -1701,13 +1701,27 @@ fhOnReady(function () {
   let hasLoadedOnce = false;
   let hasSubscribedToStore = false;
   let wishListUpdateVersion = 0;
+  let pendingIdOnlyReloadPromise = null;
   const pendingWishListUpdateWaiters = [];
   const relevantWishListMutations = (function () {
     const baseMutationNames = [
       'setWishListItems',
       'removeWishListItem',
       'addWishListItemToIndex',
-      'setWishListIds'
+      'setWishListIds',
+      'addWishListId',
+      'removeWishListId'
+    ];
+
+    return baseMutationNames.concat(baseMutationNames.map(function (name) {
+      return 'wishList/' + name;
+    }));
+  })();
+  const idOnlyWishListMutations = (function () {
+    const baseMutationNames = [
+      'setWishListIds',
+      'addWishListId',
+      'removeWishListId'
     ];
 
     return baseMutationNames.concat(baseMutationNames.map(function (name) {
@@ -1772,11 +1786,13 @@ fhOnReady(function () {
     return null;
   }
 
-  function notifyWishListUpdated(items) {
+  function notifyWishListUpdated(items, details) {
     const normalizedItems = Array.isArray(items) ? items : [];
     hasLoadedOnce = true;
     wishListUpdateVersion += 1;
     updateList(normalizedItems);
+
+    const notifyDetails = details && typeof details === 'object' ? details : {};
 
     if (!pendingWishListUpdateWaiters.length) return;
 
@@ -1787,7 +1803,11 @@ fhOnReady(function () {
       if (waiter.timeoutId) window.clearTimeout(waiter.timeoutId);
 
       try {
-        waiter.resolve({ items: normalizedItems, version: currentVersion });
+        waiter.resolve({
+          items: normalizedItems,
+          version: currentVersion,
+          details: notifyDetails
+        });
       } catch (error) {
         // Ignore errors thrown inside resolver handlers
       }
@@ -1800,7 +1820,8 @@ fhOnReady(function () {
     return new Promise(function (resolve, reject) {
       if (wishListUpdateVersion > versionAtRegistration) {
         resolve({
-          version: wishListUpdateVersion
+          version: wishListUpdateVersion,
+          details: {}
         });
         return;
       }
@@ -2476,7 +2497,42 @@ fhOnReady(function () {
       if (relevantWishListMutations.indexOf(mutation.type) === -1) return;
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
-      notifyWishListUpdated(items);
+      const isIdOnlyMutation = idOnlyWishListMutations.indexOf(mutation.type) !== -1;
+
+      if (isIdOnlyMutation) {
+        if (!pendingIdOnlyReloadPromise) {
+          const reloadPromise = loadWishListItems({ forceReload: true });
+
+          pendingIdOnlyReloadPromise = reloadPromise
+            .then(function (result) {
+              pendingIdOnlyReloadPromise = null;
+              return result;
+            })
+            .catch(function (error) {
+              pendingIdOnlyReloadPromise = null;
+              throw error;
+            });
+        }
+
+        const finalizePromise = pendingIdOnlyReloadPromise;
+
+        notifyWishListUpdated(items, {
+          idOnly: true,
+          reloadPromise: finalizePromise
+        });
+
+        finalizePromise
+          .catch(function () {
+            return null;
+          })
+          .then(function () {
+            showLoading(false);
+          });
+
+        return;
+      }
+
+      notifyWishListUpdated(items, {});
     });
 
     hasSubscribedToStore = true;
@@ -2503,7 +2559,7 @@ fhOnReady(function () {
 
       function finalizeSuccess(items) {
         const documents = Array.isArray(items) ? items : [];
-        notifyWishListUpdated(documents);
+        notifyWishListUpdated(documents, {});
         showLoading(false);
         resolve(documents);
       }
@@ -2690,14 +2746,32 @@ fhOnReady(function () {
       .catch(function () {
         return null;
       })
-      .then(function () {
+      .then(function (updateResult) {
+        const details = updateResult && updateResult.details ? updateResult.details : {};
+        const reloadPromise = details && details.reloadPromise ? details.reloadPromise : null;
+
+        if (reloadPromise && typeof reloadPromise.then === 'function') {
+          return reloadPromise.catch(function () {
+            return loadWishListItems({ forceReload: true });
+          });
+        }
+
+        if (details.idOnly && pendingIdOnlyReloadPromise) {
+          return pendingIdOnlyReloadPromise.catch(function () {
+            return loadWishListItems({ forceReload: true });
+          });
+        }
+
         return loadWishListItems({ forceReload: true });
       })
       .then(function () {
         return openMenuWithOptions({ refresh: false });
       })
       .catch(function () {
-        openMenuWithOptions({ refresh: true });
+        return openMenuWithOptions({ refresh: true });
+      })
+      .then(function () {
+        showLoading(false);
       });
   });
 
