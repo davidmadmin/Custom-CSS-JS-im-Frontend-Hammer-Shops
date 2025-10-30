@@ -1701,13 +1701,27 @@ fhOnReady(function () {
   let hasLoadedOnce = false;
   let hasSubscribedToStore = false;
   let wishListUpdateVersion = 0;
+  let lastWishListUpdateMeta = {};
   const pendingWishListUpdateWaiters = [];
+  let hasSentInitialWishListFetch = false;
   const relevantWishListMutations = (function () {
     const baseMutationNames = [
       'setWishListItems',
       'removeWishListItem',
       'addWishListItemToIndex',
-      'setWishListIds'
+      'setWishListIds',
+      'addWishListId',
+      'removeWishListId'
+    ];
+
+    return baseMutationNames.concat(baseMutationNames.map(function (name) {
+      return 'wishList/' + name;
+    }));
+  })();
+  const wishListIdOnlyMutations = (function () {
+    const baseMutationNames = [
+      'addWishListId',
+      'removeWishListId'
     ];
 
     return baseMutationNames.concat(baseMutationNames.map(function (name) {
@@ -1772,11 +1786,20 @@ fhOnReady(function () {
     return null;
   }
 
-  function notifyWishListUpdated(items) {
+  function notifyWishListUpdated(items, meta) {
     const normalizedItems = Array.isArray(items) ? items : [];
+    const normalizedMeta = meta && typeof meta === 'object' ? meta : {};
+    const hasLoadedPreviously = hasLoadedOnce;
     hasLoadedOnce = true;
     wishListUpdateVersion += 1;
-    updateList(normalizedItems);
+    lastWishListUpdateMeta = normalizedMeta;
+    const shouldDeferRender =
+      !!normalizedMeta.idOnlyUpdate &&
+      !!normalizedMeta.reloadPromise &&
+      !normalizedItems.length &&
+      hasLoadedPreviously;
+
+    if (!shouldDeferRender) updateList(normalizedItems);
 
     if (!pendingWishListUpdateWaiters.length) return;
 
@@ -1787,7 +1810,7 @@ fhOnReady(function () {
       if (waiter.timeoutId) window.clearTimeout(waiter.timeoutId);
 
       try {
-        waiter.resolve({ items: normalizedItems, version: currentVersion });
+        waiter.resolve({ items: normalizedItems, version: currentVersion, meta: normalizedMeta });
       } catch (error) {
         // Ignore errors thrown inside resolver handlers
       }
@@ -1800,7 +1823,8 @@ fhOnReady(function () {
     return new Promise(function (resolve, reject) {
       if (wishListUpdateVersion > versionAtRegistration) {
         resolve({
-          version: wishListUpdateVersion
+          version: wishListUpdateVersion,
+          meta: lastWishListUpdateMeta
         });
         return;
       }
@@ -2066,6 +2090,28 @@ fhOnReady(function () {
     }
   }
 
+  function resolveWishListDocument(documentItem) {
+    if (!documentItem || typeof documentItem !== 'object') {
+      return { item: null, document: null };
+    }
+
+    if (documentItem.data && typeof documentItem.data === 'object') {
+      return { item: documentItem.data, document: documentItem };
+    }
+
+    const fallbackDocument = Object.assign({}, documentItem, {
+      id: typeof documentItem.id !== 'undefined'
+        ? documentItem.id
+        : (documentItem.variation && documentItem.variation.id ? documentItem.variation.id : null)
+    });
+
+    if (!fallbackDocument.data || typeof fallbackDocument.data !== 'object') {
+      fallbackDocument.data = documentItem;
+    }
+
+    return { item: fallbackDocument.data, document: fallbackDocument };
+  }
+
   function updateList(documents) {
     clearList();
 
@@ -2077,7 +2123,9 @@ fhOnReady(function () {
     showEmptyState(false);
 
     items.forEach(function (documentItem) {
-      const item = documentItem && documentItem.data ? documentItem.data : null;
+      const resolved = resolveWishListDocument(documentItem);
+      const item = resolved.item && typeof resolved.item === 'object' ? resolved.item : null;
+      const wishListItem = resolved.document && typeof resolved.document === 'object' ? resolved.document : null;
 
       if (!item) return;
 
@@ -2424,8 +2472,9 @@ fhOnReady(function () {
         const stateItems = store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)
           ? store.state.wishList.wishListItems
           : [];
+        const targetDocument = wishListItem || documentItem;
         const itemIndex = stateItems.findIndex(function (stateItem) {
-          return stateItem && stateItem.id === documentItem.id;
+          return stateItem && targetDocument && stateItem.id === targetDocument.id;
         });
 
         const originalIconClass = removeIcon.className;
@@ -2436,7 +2485,7 @@ fhOnReady(function () {
 
         store.dispatch(actionName, {
           id: variationId,
-          wishListItem: documentItem,
+          wishListItem: wishListItem || documentItem,
           index: itemIndex
         }).catch(function () {
           removeButton.disabled = false;
@@ -2473,10 +2522,28 @@ fhOnReady(function () {
     store.subscribe(function (mutation, state) {
       if (!mutation || !mutation.type) return;
 
-      if (relevantWishListMutations.indexOf(mutation.type) === -1) return;
+      const mutationType = mutation.type;
+
+      if (relevantWishListMutations.indexOf(mutationType) === -1) return;
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
-      notifyWishListUpdated(items);
+      const isIdOnlyUpdate = wishListIdOnlyMutations.indexOf(mutationType) !== -1;
+      let reloadPromise = null;
+
+      if (isIdOnlyUpdate) {
+        reloadPromise = loadWishListItems({ forceReload: true })
+          .catch(function (error) {
+            throw error;
+          })
+          .finally(function () {
+            showLoading(false);
+          });
+      }
+
+      notifyWishListUpdated(items, {
+        idOnlyUpdate: isIdOnlyUpdate,
+        reloadPromise: reloadPromise
+      });
     });
 
     hasSubscribedToStore = true;
@@ -2514,12 +2581,45 @@ fhOnReady(function () {
         reject(error);
       }
 
+      function extractDocumentsFromPayload(payload) {
+        if (!payload) return null;
+
+        if (Array.isArray(payload)) return payload;
+
+        if (payload && typeof payload === 'object') {
+          if (Array.isArray(payload.documents)) return payload.documents;
+          if (Array.isArray(payload.entries)) return payload.entries;
+          if (Array.isArray(payload.items)) return payload.items;
+          if (Array.isArray(payload.data)) return payload.data;
+
+          if (payload.documents && typeof payload.documents === 'object') {
+            const nestedDocuments = extractDocumentsFromPayload(payload.documents);
+            if (nestedDocuments) return nestedDocuments;
+          }
+
+          if (payload.itemWishList && typeof payload.itemWishList === 'object') {
+            const nestedWishList = extractDocumentsFromPayload(payload.itemWishList);
+            if (nestedWishList) return nestedWishList;
+          }
+        }
+
+        return null;
+      }
+
       function extractDocuments(result) {
-        if (Array.isArray(result)) return result;
-        if (result && Array.isArray(result.documents)) return result.documents;
+        const direct = extractDocumentsFromPayload(result);
+
+        if (direct) return direct;
+
+        if (result && typeof result === 'object') {
+          const fromData = extractDocumentsFromPayload(result.data);
+          if (fromData) return fromData;
+        }
+
         if (store && store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
           return store.state.wishList.wishListItems;
         }
+
         return [];
       }
 
@@ -2533,11 +2633,34 @@ fhOnReady(function () {
           return;
         }
 
-        fetchImpl('/rest/io/itemWishList', {
+        let requestUrl = '/rest/io/itemWishList';
+        const requestHeaders = {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        };
+
+        if (window.App && App.language) requestHeaders['Accept-Language'] = App.language;
+
+        const csrfTokenElement = typeof document !== 'undefined' ? document.getElementById('csrf-token') : null;
+        const csrfToken = csrfTokenElement && csrfTokenElement.value ? csrfTokenElement.value : null;
+
+        if (csrfToken) requestHeaders['X-CSRF-TOKEN'] = csrfToken;
+
+        const templateType = window.App && App.templateType ? App.templateType : null;
+
+        if (templateType) {
+          requestUrl += (requestUrl.indexOf('?') === -1 ? '?' : '&') + 'templateType=' + encodeURIComponent(templateType);
+        }
+
+        if (!hasSentInitialWishListFetch) {
+          requestUrl += (requestUrl.indexOf('?') === -1 ? '?' : '&') + 'initialRestCall=true';
+          hasSentInitialWishListFetch = true;
+        }
+
+        fetchImpl(requestUrl, {
           credentials: 'same-origin',
-          headers: {
-            'Accept': 'application/json'
-          }
+          headers: requestHeaders,
+          cache: 'no-store'
         })
           .then(function (response) {
             if (!response || !response.ok) throw new Error('wish-list-fetch-failed');
@@ -2690,14 +2813,23 @@ fhOnReady(function () {
       .catch(function () {
         return null;
       })
-      .then(function () {
+      .then(function (result) {
+        if (result && result.meta && result.meta.reloadPromise) {
+          return result.meta.reloadPromise.catch(function () {
+            return loadWishListItems({ forceReload: true });
+          });
+        }
+
         return loadWishListItems({ forceReload: true });
       })
       .then(function () {
         return openMenuWithOptions({ refresh: false });
       })
       .catch(function () {
-        openMenuWithOptions({ refresh: true });
+        return openMenuWithOptions({ refresh: true });
+      })
+      .finally(function () {
+        showLoading(false);
       });
   });
 
