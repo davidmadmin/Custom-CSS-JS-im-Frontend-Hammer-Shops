@@ -1788,10 +1788,15 @@ fhOnReady(function () {
   function notifyWishListUpdated(items, meta) {
     const normalizedItems = Array.isArray(items) ? items : [];
     const normalizedMeta = meta && typeof meta === 'object' ? meta : {};
-    hasLoadedOnce = true;
+    const shouldUpdateList = normalizedMeta.suppressListUpdate !== true;
+
     wishListUpdateVersion += 1;
     lastWishListUpdateMeta = normalizedMeta;
-    updateList(normalizedItems);
+
+    if (shouldUpdateList) {
+      hasLoadedOnce = true;
+      updateList(normalizedItems);
+    }
 
     if (!pendingWishListUpdateWaiters.length) return;
 
@@ -2495,6 +2500,7 @@ fhOnReady(function () {
 
       const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
       const isIdOnlyUpdate = wishListIdOnlyMutations.indexOf(mutationType) !== -1;
+      const suppressListUpdate = isIdOnlyUpdate && (!items || !items.length);
       let reloadPromise = null;
 
       if (isIdOnlyUpdate) {
@@ -2509,7 +2515,8 @@ fhOnReady(function () {
 
       notifyWishListUpdated(items, {
         idOnlyUpdate: isIdOnlyUpdate,
-        reloadPromise: reloadPromise
+        reloadPromise: reloadPromise,
+        suppressListUpdate: suppressListUpdate
       });
     });
 
