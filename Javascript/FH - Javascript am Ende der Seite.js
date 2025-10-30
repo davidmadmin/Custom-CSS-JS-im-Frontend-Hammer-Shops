@@ -2594,12 +2594,16 @@ fhOnReady(function () {
 
           if (payload.documents && typeof payload.documents === 'object') {
             const nestedDocuments = extractDocumentsFromPayload(payload.documents);
-            if (nestedDocuments) return nestedDocuments;
+            if (nestedDocuments !== null && nestedDocuments !== undefined) {
+              return nestedDocuments;
+            }
           }
 
           if (payload.itemWishList && typeof payload.itemWishList === 'object') {
             const nestedWishList = extractDocumentsFromPayload(payload.itemWishList);
-            if (nestedWishList) return nestedWishList;
+            if (nestedWishList !== null && nestedWishList !== undefined) {
+              return nestedWishList;
+            }
           }
         }
 
@@ -2609,11 +2613,11 @@ fhOnReady(function () {
       function extractDocuments(result) {
         const direct = extractDocumentsFromPayload(result);
 
-        if (direct) return direct;
+        if (direct !== null && direct !== undefined) return direct;
 
         if (result && typeof result === 'object') {
           const fromData = extractDocumentsFromPayload(result.data);
-          if (fromData) return fromData;
+          if (fromData !== null && fromData !== undefined) return fromData;
         }
 
         if (store && store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
