@@ -1763,7 +1763,7 @@ body,
   border-radius: 14px;
   border: 2px solid transparent;
   background:
-    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(#f5f5f5, #f5f5f5) padding-box,
     linear-gradient(120deg, #090909 0%, #090909 42%, rgba(255, 255, 255, 0.65) 56%, var(--fh-color-bright-blue) 100%) border-box;
   color: #0b1f3c;
   font-weight: 600;
@@ -1779,7 +1779,7 @@ body,
 .schlossfinder:hover,
 .schlossfinder:focus {
   background:
-    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(#ededed, #ededed) padding-box,
     linear-gradient(120deg, #161616 0%, #161616 40%, rgba(255, 255, 255, 0.8) 60%, #2aa0ee 100%) border-box;
   color: #051226;
   transform: translateY(-1px);
@@ -2276,7 +2276,7 @@ body,
 .fh-header__mobile-submenu-cta {
   margin-top: 12px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .fh-header__mobile-submenu-cta .schlossfinder {
