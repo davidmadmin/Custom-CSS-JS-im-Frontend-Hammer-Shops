@@ -1568,6 +1568,8 @@ body,
   background-color: var(--fh-color-bright-blue);
   color: #ffffff;
   text-decoration: none;
+  /* Keep the button anchored next to the other header icons and let extra width grow towards the right */
+  transform: translateX(calc(100% - 132px));
 }
 
 .fh-header__basket-link:hover,
@@ -2215,6 +2217,7 @@ body,
     justify-content: center;
     gap: 0;
     border-radius: 16px;
+    transform: none;
   }
 
   .fh-header__basket-total {
