@@ -198,7 +198,9 @@
               v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.classId != null"
               v-cloak
             >
-              <span v-if="$store.state.user.userData.classId == 1" v-cloak>Konto: Standardkonto</span>
+              <span v-if="Number($store.state.user.userData.classId) === 1" v-cloak>
+                Konto: Standardkonto
+              </span>
               <span v-else>Konto: Firmenkunde</span>
             </div>
             <div
