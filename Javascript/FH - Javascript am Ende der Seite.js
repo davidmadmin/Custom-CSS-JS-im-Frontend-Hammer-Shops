@@ -49,6 +49,74 @@ fhOnReady(function () {
     });
   }
 
+  const accountNav = document.querySelector('[data-fh-account-nav]');
+
+  if (accountNav) {
+    applyGreeting(accountNav);
+
+    const navObserver = new MutationObserver(function () {
+      applyGreeting(accountNav);
+    });
+
+    navObserver.observe(accountNav, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+
+    const navLinks = accountNav.querySelectorAll('[data-fh-account-nav-link]');
+
+    navLinks.forEach(function (link) {
+      const targetSelector = link.getAttribute('data-fh-account-nav-target');
+      if (!targetSelector) return;
+
+      const hash = link.hash ? link.hash.slice(1) : '';
+      let attempts = 0;
+
+      function ensureTargetId() {
+        const targetElement = document.querySelector(targetSelector);
+
+        if (!targetElement || !hash) return false;
+
+        if (!targetElement.id) targetElement.id = hash;
+
+        return true;
+      }
+
+      if (!ensureTargetId()) {
+        const intervalId = window.setInterval(function () {
+          attempts += 1;
+
+          if (ensureTargetId() || attempts >= 20) window.clearInterval(intervalId);
+        }, 250);
+      }
+
+      link.addEventListener('click', function (event) {
+        const targetElement = document.querySelector(targetSelector);
+
+        if (!targetElement) return;
+
+        event.preventDefault();
+
+        const offsetAttr = link.getAttribute('data-fh-account-nav-offset');
+        const offsetValue = Number(offsetAttr || 0);
+        const offset = Number.isFinite(offsetValue) ? offsetValue : 0;
+
+        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+        const scrollTop = targetPosition - offset;
+
+        window.scrollTo({
+          top: scrollTop < 0 ? 0 : scrollTop,
+          behavior: 'smooth',
+        });
+
+        if (link.hash && window.history && typeof window.history.replaceState === 'function') {
+          window.history.replaceState(null, '', link.hash);
+        }
+      });
+    });
+  }
+
   if (!container) return;
 
   const toggleButton = container.querySelector('[data-fh-account-menu-toggle]');
