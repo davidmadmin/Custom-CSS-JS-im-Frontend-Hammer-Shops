@@ -1780,13 +1780,8 @@ body,
 
 .fh-header__brand-logos {
   display: grid;
-  grid-template-columns: repeat(2, minmax(140px, 1fr));
-  gap: 28px 40px;
-}
-
-.fh-header__brand-logo-column {
-  display: grid;
-  gap: 20px;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  gap: 24px 32px;
 }
 
 .fh-header__brand-logo-link {
@@ -1850,8 +1845,7 @@ body,
 
 @media (max-width: 1200px) {
   .fh-header__brand-logos {
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
-    gap: 24px 32px;
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
   }
 }
 
@@ -1866,6 +1860,12 @@ body,
 
   .fh-header__brand-highlights {
     margin-top: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fh-header__brand-logos {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
   }
 }
 
