@@ -1550,7 +1550,7 @@ body,
 
 .fh-header__basket {
   position: relative;
-  justify-self: end;
+  justify-self: start;
   display: flex;
   align-items: center;
 }
