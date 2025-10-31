@@ -1,0 +1,69 @@
+<nav class="fh-account-nav" data-fh-account-nav data-fh-account-nav-root="/my-account" aria-label="Mein Konto Navigation">
+  <div class="fh-account-nav__panel">
+    <header class="fh-account-nav__header">
+      <div class="fh-header__panel-title">Mein Konto</div>
+      <p class="fh-header__panel-text">Schön, dass Sie wieder da sind!</p>
+    </header>
+    <div class="fh-account-nav__divider" aria-hidden="true"></div>
+    <div class="fh-header__panel-links fh-account-nav__links">
+      <a
+        href="/my-account"
+        class="fh-header__panel-link"
+        data-fh-account-nav-link
+        data-fh-account-nav-target="overview"
+        aria-current="page"
+      >
+        Kontoübersicht
+      </a>
+      <a
+        href="#bestellungen"
+        class="fh-header__panel-link"
+        data-fh-account-nav-link
+        data-fh-account-nav-target="bestellungen"
+      >
+        Meine Bestellungen
+      </a>
+      <a
+        href="#kontoeinstellungen"
+        class="fh-header__panel-link"
+        data-fh-account-nav-link
+        data-fh-account-nav-target="kontoeinstellungen"
+      >
+        Kontoeinstellungen
+      </a>
+    </div>
+    <div class="fh-account-nav__divider" aria-hidden="true"></div>
+    <div class="fh-header__panel-contact fh-account-nav__contact">
+      <div class="fh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
+      <div class="fh-header__panel-contact-line">
+        <a href="tel:02204910980" class="fh-header__panel-contact-chip">
+          <span class="fh-header__panel-contact-icon" aria-hidden="true">
+            <img
+              src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/phone.svg"
+              alt=""
+              class="fh-header__panel-contact-icon-image"
+            >
+          </span>
+          <span class="fh-header__panel-contact-text">02204 910 980</span>
+        </a>
+      </div>
+      <div class="fh-header__panel-contact-line">
+        <a href="mailto:service@fenster-hammer.de" class="fh-header__panel-contact-chip">
+          <span class="fh-header__panel-contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <path
+                d="M3 6.75A2.75 2.75 0 0 1 5.75 4h12.5A2.75 2.75 0 0 1 21 6.75v10.5A2.75 2.75 0 0 1 18.25 20H5.75A2.75 2.75 0 0 1 3 17.25Zm2.75-.25a.75.75 0 0 0-.75.75v.26l7 4.38 7-4.38V7.25a.75.75 0 0 0-.75-.75Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span class="fh-header__panel-contact-text">service@fenster-hammer.de</span>
+        </a>
+      </div>
+    </div>
+    <a href="#" v-logout class="fh-header__logout fh-account-nav__logout" data-fh-account-nav-logout>
+      <span class="fh-header__logout-icon" aria-hidden="true"></span>
+      <span class="fh-header__logout-label">Abmelden</span>
+    </a>
+  </div>
+</nav>
