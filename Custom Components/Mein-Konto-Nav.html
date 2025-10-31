@@ -1,0 +1,198 @@
+<section class="fh-account-nav fh-header__panel fh-header__panel--account" data-fh-account-nav-root>
+  <div v-if="!$store.getters.isLoggedIn" class="fh-account-nav__guest">
+    <div class="fh-header__panel-title mb-3">Ihr Konto</div>
+    <a
+      href="#login"
+      data-toggle="modal"
+      data-target="#login"
+      data-fh-login-trigger
+      class="fh-header__account-login"
+    >
+      Anmelden
+    </a>
+    <div class="fh-header__panel-inline my-3 fh-header__panel-text">
+      <span>oder</span>
+      <a
+        href="#registration"
+        data-toggle="modal"
+        data-target="#registration"
+        data-fh-registration-trigger
+        class="fh-header__account-register"
+      >
+        Registrieren
+      </a>
+    </div>
+    <div class="fh-header__panel-divider my-3"></div>
+    <div class="fh-header__panel-stack mb-3 text-body">
+      <div class="fh-header__panel-subtitle">Vorteile:</div>
+      <ul class="fh-header__panel-list">
+        <li>Gemerkte Adressdaten</li>
+        <li>Hammer Punkte sammeln</li>
+        <li>Einfacher Service</li>
+        <li>Bestellungen verfolgen</li>
+        <li>Bestehende Merkliste</li>
+        <li>Persönlicher Ansprechpartner*</li>
+      </ul>
+    </div>
+  </div>
+  <div v-else class="fh-account-nav__member">
+    <div class="fh-header__panel-stack mb-3 text-body">
+      <div class="fh-header__panel-title">
+        <span
+          v-if="
+            $store.state.user &&
+            $store.state.user.userData &&
+            $store.state.user.userData.lastName &&
+            (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) ||
+              $store.state.user.userData.formOfAddress ||
+              $store.state.user.userData.title)
+          "
+          v-cloak
+        >
+          <span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span>
+          <span
+            v-text="
+              (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) ||
+                $store.state.user.userData.formOfAddress ||
+                $store.state.user.userData.title) +
+              ' ' +
+              $store.state.user.userData.lastName
+            "
+            v-cloak
+          ></span>
+        </span>
+        <span v-else v-cloak>Hallo</span>
+      </div>
+      <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+      <div class="fh-header__price-toggle" data-fh-price-toggle-root v-if="$store.getters.isLoggedIn">
+        <div class="fh-header__price-toggle-row">
+          <button
+            type="button"
+            class="fh-header__price-toggle-button is-active"
+            data-fh-price-toggle
+            role="switch"
+            aria-checked="true"
+            aria-label="Preise mit Mehrwertsteuer anzeigen"
+          >
+            <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="gross">inkl. MwSt.</span>
+            <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="net">exkl. MwSt.</span>
+            <span class="fh-header__price-toggle-handle" aria-hidden="true"></span>
+          </button>
+          <span class="fh-header__price-toggle-note fh-header__price-toggle-status" data-fh-price-toggle-note>
+            Preise mit MwSt
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="fh-header__customer-segment"
+      v-if="
+        $store.state.user &&
+        $store.state.user.userData &&
+        [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))
+      "
+    >
+      <div
+        class="fh-header__customer-contact fh-header__customer-contact--standard"
+        v-if="Number($store.state.user.userData.classId) === 1"
+        v-cloak
+      >
+        <span class="fh-header__customer-contact-label">Ansprechpartner:</span>
+        <span class="fh-header__customer-contact-name">Standard</span>
+      </div>
+      <div
+        class="fh-header__customer-contact fh-header__customer-contact--personal"
+        v-else-if="Number($store.state.user.userData.classId) === 12"
+        v-cloak
+      >
+        <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+        <div class="fh-header__customer-contact-name">Ulrich Vorländer</div>
+        <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
+        <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+      </div>
+      <div
+        class="fh-header__customer-contact fh-header__customer-contact--personal"
+        v-else-if="Number($store.state.user.userData.classId) === 16"
+        v-cloak
+      >
+        <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+        <div class="fh-header__customer-contact-name">Andreas Fischermann</div>
+        <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
+        <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+      </div>
+      <div
+        class="fh-header__customer-contact fh-header__customer-contact--personal"
+        v-else-if="Number($store.state.user.userData.classId) === 21"
+        v-cloak
+      >
+        <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+        <div class="fh-header__customer-contact-name">Gabriele Sprenger</div>
+        <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
+        <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+      </div>
+    </div>
+    <div class="fh-header__panel-divider mb-3"></div>
+    <div
+      class="fh-header__panel-contact"
+      v-if="
+        !($store.state.user &&
+          $store.state.user.userData &&
+          [12, 16, 21].includes(Number($store.state.user.userData.classId)))
+      "
+    >
+      <div class="fh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
+      <div class="fh-header__panel-contact-line">
+        <a href="tel:02204910980" class="fh-header__panel-contact-chip">
+          <span class="fh-header__panel-contact-icon" aria-hidden="true">
+            <img
+              src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/phone.svg"
+              alt=""
+              class="fh-header__panel-contact-icon-image"
+            >
+          </span>
+          <span class="fh-header__panel-contact-text">02204 910 980</span>
+        </a>
+        <span class="fh-header__panel-contact-separator">oder</span>
+      </div>
+      <div class="fh-header__panel-contact-line">
+        <a href="mailto:service@fenster-hammer.de" class="fh-header__panel-contact-chip">
+          <span class="fh-header__panel-contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <path
+                d="M3 6.75A2.75 2.75 0 0 1 5.75 4h12.5A2.75 2.75 0 0 1 21 6.75v10.5A2.75 2.75 0 0 1 18.25 20H5.75A2.75 2.75 0 0 1 3 17.25Zm2.75-.25a.75.75 0 0 0-.75.75v.26l7 4.38 7-4.38V7.25a.75.75 0 0 0-.75-.75Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span class="fh-header__panel-contact-text">service@fenster-hammer.de</span>
+        </a>
+      </div>
+    </div>
+    <nav class="fh-account-nav__links fh-header__panel-links mb-3" aria-label="Mein Konto">
+      <a href="#account-uebersicht" class="fh-header__panel-link" aria-current="page">Kontoübersicht</a>
+      <a href="#bestellungen" class="fh-header__panel-link">Meine Bestellungen</a>
+      <a href="#kontoeinstellungen" class="fh-header__panel-link">Kontoeinstellungen</a>
+    </nav>
+    <div
+      class="fh-header__panel-text fh-header__account-type"
+      v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.classId != null"
+      v-cloak
+    >
+      <span v-if="![1, 12, 16, 21].includes(Number($store.state.user.userData.classId))" v-cloak>
+        Konto: Standardkonto
+      </span>
+      <span v-else>Konto: Firmenkunde</span>
+    </div>
+    <div
+      class="fh-header__panel-text fh-header__customer-id"
+      v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.id"
+      v-cloak
+    >
+      Kunden-ID: <span v-text="$store.state.user.userData.id"></span>
+    </div>
+    <a href="#" v-logout class="fh-header__logout">
+      <span class="fh-header__logout-icon" aria-hidden="true"></span>
+      <span class="fh-header__logout-label">Abmelden</span>
+    </a>
+  </div>
+</section>
