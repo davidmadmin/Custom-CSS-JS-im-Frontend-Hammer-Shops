@@ -117,11 +117,11 @@
             </div>
             <div
               class="fh-header__customer-segment"
-              v-if="$store.state.user && $store.state.user.userData && [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
+              v-if="$store.state.user && $store.state.user.userData && ['1', '12', '16', '21'].includes(String($store.state.user.userData.classId))"
             >
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--standard"
-                v-if="Number($store.state.user.userData.classId) === 1"
+                v-if="String($store.state.user.userData.classId) === '1'"
                 v-cloak
               >
                 <span class="fh-header__customer-contact-label">Ansprechpartner:</span>
@@ -129,7 +129,7 @@
               </div>
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--personal"
-                v-else-if="Number($store.state.user.userData.classId) === 12"
+                v-else-if="String($store.state.user.userData.classId) === '12'"
                 v-cloak
               >
                 <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
@@ -139,7 +139,7 @@
               </div>
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--personal"
-                v-else-if="Number($store.state.user.userData.classId) === 16"
+                v-else-if="String($store.state.user.userData.classId) === '16'"
                 v-cloak
               >
                 <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
@@ -149,7 +149,7 @@
               </div>
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--personal"
-                v-else-if="Number($store.state.user.userData.classId) === 21"
+                v-else-if="String($store.state.user.userData.classId) === '21'"
                 v-cloak
               >
                 <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
@@ -161,14 +161,14 @@
             <div class="fh-header__panel-divider mb-3"></div>
             <div
               class="fh-header__panel-contact"
-              v-if="!($store.state.user && $store.state.user.userData && [12, 16, 21].includes(Number($store.state.user.userData.classId)))"
+              v-if="!($store.state.user && $store.state.user.userData && ['12', '16', '21'].includes(String($store.state.user.userData.classId)))"
             >
               <div class="fh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
               <div class="fh-header__panel-contact-line">
                 <a href="tel:02204910980" class="fh-header__panel-contact-chip">
                   <span class="fh-header__panel-contact-icon" aria-hidden="true">
                     <img
-                      v-if="$store.state.user && $store.state.user.userData && Number($store.state.user.userData.classId) === 1"
+                      v-if="$store.state.user && $store.state.user.userData && String($store.state.user.userData.classId) === '1'"
                       src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/phone.svg"
                       alt=""
                       width="24"
@@ -200,16 +200,16 @@
               </div>
             </div>
             <nav class="fh-header__panel-links mb-3">
-              <a href="#my-account" class="fh-header__panel-link">Kontoübersicht</a>
-              <a href="#bestellungen" class="fh-header__panel-link">Meine Bestellungen</a>
-              <a href="#kontoeinstellungen" class="fh-header__panel-link">Kontoeinstellungen</a>
+              <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
+              <a href="/my-account#bestellungen" class="fh-header__panel-link">Meine Bestellungen</a>
+              <a href="/my-account#kontoeinstellungen" class="fh-header__panel-link">Kontoeinstellungen</a>
             </nav>
             <div
               class="fh-header__panel-text fh-header__account-type"
               v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.classId != null"
               v-cloak
             >
-              <span v-if="Number($store.state.user.userData.classId) === 1">Konto: Standardkonto</span>
+              <span v-if="String($store.state.user.userData.classId) === '1'">Konto: Standardkonto</span>
               <span v-else>Konto: Firmenkunde</span>
             </div>
             <div
