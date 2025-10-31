@@ -1774,14 +1774,15 @@ body,
 }
 
 .fh-header__dropdown-grid--brands {
-  grid-template-columns: minmax(0, 1fr) 1px minmax(220px, 1fr);
+  grid-template-columns: minmax(0, 1fr) 1px minmax(240px, 0.9fr);
   align-items: stretch;
+  column-gap: 36px;
 }
 
 .fh-header__brand-logos {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 24px;
+  gap: 32px;
   align-items: center;
   justify-items: center;
 }
@@ -1790,11 +1791,11 @@ body,
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 
 .fh-header__brand-logo {
-  max-height: 56px;
+  max-height: 68px;
   width: auto;
   transition: transform 0.2s ease;
 }
@@ -1809,7 +1810,7 @@ body,
   background: #e5e7eb;
   align-self: stretch;
   min-height: 100%;
-  margin: 0 8px;
+  margin: 0 18px;
 }
 
 .fh-header__brand-highlights {
@@ -1847,18 +1848,19 @@ body,
 
 @media (max-width: 1200px) {
   .fh-header__brand-logos {
-    gap: 20px 24px;
+    gap: 28px 24px;
   }
 }
 
 @media (max-width: 992px) {
   .fh-header__dropdown-grid--brands {
     grid-template-columns: 1fr;
+    column-gap: 0;
   }
 
   .fh-header__brand-logos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px 20px;
+    gap: 22px 24px;
   }
 
   .fh-header__brand-divider {
@@ -1873,6 +1875,7 @@ body,
 @media (max-width: 576px) {
   .fh-header__brand-logos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
   }
 }
 
