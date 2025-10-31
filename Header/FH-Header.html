@@ -188,9 +188,8 @@
             </div>
             <nav class="fh-header__panel-links mb-3">
               <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
-              <a href="/kontoeinstellungen" class="fh-header__panel-link">Kontoeinstellungen</a>
               <a href="/bestellungen" class="fh-header__panel-link">Meine Bestellungen</a>
-              <a href="/hammer-praemien" class="fh-header__panel-link">Hammer Punkte einlösen</a>
+              <a href="/kontoeinstellungen" class="fh-header__panel-link">Kontoeinstellungen</a>
             </nav>
             <div
               class="fh-header__panel-text fh-header__account-type"
@@ -207,7 +206,10 @@
             >
               Kunden-ID: <span v-text="$store.state.user.userData.id"></span>
             </div>
-            <a href="#" v-logout data-fh-account-close class="fh-header__logout">Abmelden</a>
+            <a href="#" v-logout data-fh-account-close class="fh-header__logout">
+              <span class="fh-header__logout-icon" aria-hidden="true"></span>
+              <span class="fh-header__logout-label">Abmelden</span>
+            </a>
           </div>
         </div>
       </div>
