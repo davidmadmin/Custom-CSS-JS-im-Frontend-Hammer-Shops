@@ -1556,18 +1556,20 @@ body,
 }
 
 .fh-header__basket-link {
+  --fh-header-basket-base-width: 132px;
   position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 0 18px;
-  min-width: 132px;
+  min-width: var(--fh-header-basket-base-width, 132px);
   height: 46px;
   border: 1px solid var(--fh-color-bright-blue);
   border-radius: 14px;
   background-color: var(--fh-color-bright-blue);
   color: #ffffff;
   text-decoration: none;
+  transform: translateX(calc(100% - var(--fh-header-basket-base-width, 132px)));
 }
 
 .fh-header__basket-link:hover,
@@ -2208,6 +2210,7 @@ body,
   }
 
   .fh-header__basket-link {
+    --fh-header-basket-base-width: 48px;
     min-width: 0;
     width: 48px;
     height: 48px;
@@ -2215,6 +2218,7 @@ body,
     justify-content: center;
     gap: 0;
     border-radius: 16px;
+    transform: translateX(0);
   }
 
   .fh-header__basket-total {
