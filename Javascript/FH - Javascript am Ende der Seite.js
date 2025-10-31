@@ -824,6 +824,100 @@ fhOnReady(function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH account page navigation
+fhOnReady(function () {
+  const nav = document.querySelector('[data-fh-account-nav]');
+
+  if (!nav) return;
+
+  const links = Array.prototype.slice.call(nav.querySelectorAll('[data-fh-account-nav-link]'));
+
+  if (!links.length) return;
+
+  const pathParser = document.createElement('a');
+  const rootTarget = 'overview';
+  const rootPath = normalisePath(nav.getAttribute('data-fh-account-nav-root') || '/my-account');
+
+  function normaliseTarget(value) {
+    if (typeof value !== 'string') return rootTarget;
+
+    let normalised = value.trim();
+
+    if (!normalised) return rootTarget;
+
+    if (normalised.charAt(0) === '#') normalised = normalised.slice(1);
+
+    if (!normalised) return rootTarget;
+
+    return normalised.toLowerCase();
+  }
+
+  function normalisePath(value) {
+    if (typeof value !== 'string' || !value) return '/';
+
+    pathParser.href = value;
+
+    const path = pathParser.pathname || '/';
+
+    return path.replace(/\/+$/, '') || '/';
+  }
+
+  function extractHash(value) {
+    if (typeof value !== 'string') return '';
+
+    const index = value.indexOf('#');
+
+    return index === -1 ? '' : value.slice(index);
+  }
+
+  function applyActive(targetValue) {
+    const activeTarget = normaliseTarget(targetValue);
+
+    links.forEach(function (link) {
+      const linkTarget = normaliseTarget(
+        link.getAttribute('data-fh-account-nav-target') || link.hash || extractHash(link.getAttribute('href') || '')
+      );
+
+      if (linkTarget === activeTarget) {
+        link.setAttribute('aria-current', 'page');
+        link.classList.add('is-active');
+      } else {
+        link.removeAttribute('aria-current');
+        link.classList.remove('is-active');
+      }
+    });
+  }
+
+  applyActive(window.location.hash);
+
+  window.addEventListener('hashchange', function () {
+    applyActive(window.location.hash);
+  });
+
+  nav.addEventListener('click', function (event) {
+    const trigger = event.target.closest('[data-fh-account-nav-link]');
+
+    if (!trigger) return;
+
+    const href = trigger.getAttribute('href') || '';
+    const targetHint = trigger.getAttribute('data-fh-account-nav-target');
+    const nextTarget = targetHint || trigger.hash || extractHash(href);
+
+    if (
+      href &&
+      !trigger.hash &&
+      extractHash(href) === '' &&
+      normalisePath(href) === rootPath &&
+      normalisePath(window.location && window.location.pathname) === rootPath
+    ) {
+      event.preventDefault();
+    }
+
+    applyActive(nextTarget);
+  });
+});
+// End Section: FH account page navigation
+
 // Section: FH desktop header scroll behaviour
 fhOnReady(function () {
   const header = document.querySelector('[data-fh-header-root]');
