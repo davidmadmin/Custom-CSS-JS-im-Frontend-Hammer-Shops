@@ -1780,24 +1780,25 @@ body,
 
 .fh-header__brand-logos {
   display: grid;
-  grid-template-columns: repeat(2, minmax(120px, 1fr));
-  gap: 20px 32px;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 24px 40px;
 }
 
 .fh-header__brand-logo-column {
   display: grid;
-  gap: 20px;
+  gap: 24px;
 }
 
 .fh-header__brand-logo-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 0;
+  padding: 8px 0;
+  min-height: 88px;
 }
 
 .fh-header__brand-logo {
-  max-height: 40px;
+  max-height: 56px;
   width: auto;
   transition: transform 0.2s ease;
 }
