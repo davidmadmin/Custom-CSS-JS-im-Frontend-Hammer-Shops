@@ -199,7 +199,7 @@
               v-cloak
             >
               <span
-                v-if="[1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
+                v-if="Number($store.state.user.userData.classId) === 1"
                 v-cloak
               >
                 Konto: Standardkonto
