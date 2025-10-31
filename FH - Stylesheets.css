@@ -3107,3 +3107,63 @@ button[data-testing="quantity-btn-decrease"],
 .fa-heart {
   display: none !important;
 }
+
+/* Section: Mein Konto Navigation */
+.fh-account-nav {
+  margin: 24px auto 48px;
+  padding: 0 16px;
+}
+
+.fh-account-nav__panel.fh-header__panel {
+  position: static;
+  top: auto;
+  right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 24px;
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--fh-color-dark-blue) 14%, transparent);
+}
+
+.fh-account-nav__panel .fh-header__panel-divider {
+  margin: 4px 0 12px;
+}
+
+.fh-account-nav__header .fh-header__panel-title {
+  font-size: 20px;
+}
+
+.fh-account-nav__links {
+  margin-top: 4px;
+}
+
+.fh-account-nav__links .fh-header__panel-link {
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .fh-account-nav {
+    padding: 0;
+  }
+
+  .fh-account-nav__panel.fh-header__panel {
+    max-width: 380px;
+  }
+}
+
+@media (min-width: 992px) {
+  .fh-account-nav {
+    display: flex;
+    justify-content: flex-start;
+    margin: 32px 0 56px;
+  }
+
+  .fh-account-nav__panel.fh-header__panel {
+    margin: 0;
+  }
+}
+/* End Section: Mein Konto Navigation */
+
