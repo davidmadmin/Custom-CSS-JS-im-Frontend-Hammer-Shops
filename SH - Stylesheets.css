@@ -15,6 +15,10 @@
   border-radius: 3px !important;
 }
 
+.card {
+  border-radius: 12px !important;
+}
+
 /* End Section: Border radius utility classes */
 
 .price.h1 {
