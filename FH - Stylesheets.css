@@ -1470,8 +1470,10 @@ body,
 }
 
 .fh-header__logout {
-  display: block;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 11px 16px;
   background-color: var(--fh-color-light-blue);
   color: var(--fh-color-navy-blue);
@@ -1479,13 +1481,40 @@ body,
   border-radius: 10px;
   font-weight: 600;
   font-size: 14px;
+  gap: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.fh-header__logout-icon {
+  width: 0;
+  height: 20px;
+  margin-right: 0;
+  background-image: url("https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/log-out-icon.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0;
+  transform: translateX(12px);
+  transition: width 0.2s ease, margin-right 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  flex: 0 0 auto;
+}
+
+.fh-header__logout:hover .fh-header__logout-icon,
+.fh-header__logout:focus .fh-header__logout-icon {
+  width: 20px;
+  margin-right: 8px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fh-header__logout-label {
+  line-height: 1.2;
 }
 
 .fh-header__logout:hover,
 .fh-header__logout:focus {
-  color: var(--fh-color-dark-blue);
+  color: #ffffff;
   text-decoration: none;
-  background-color: var(--fh-color-light-blue);
+  background-color: #d32f2f;
 }
 
 .fh-header__wishlist-list {
