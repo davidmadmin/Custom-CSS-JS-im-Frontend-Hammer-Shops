@@ -1773,6 +1773,109 @@ body,
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.fh-header__dropdown-grid--brands {
+  grid-template-columns: minmax(0, 1fr) 1px minmax(220px, 1fr);
+  align-items: stretch;
+}
+
+.fh-header__brand-logos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 24px;
+  align-items: center;
+  justify-items: center;
+}
+
+.fh-header__brand-logo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.fh-header__brand-logo {
+  max-height: 56px;
+  width: auto;
+  transition: transform 0.2s ease;
+}
+
+.fh-header__brand-logo-link:hover .fh-header__brand-logo,
+.fh-header__brand-logo-link:focus .fh-header__brand-logo {
+  transform: scale(1.05);
+}
+
+.fh-header__brand-divider {
+  width: 1px;
+  background: #e5e7eb;
+  align-self: stretch;
+  min-height: 100%;
+  margin: 0 8px;
+}
+
+.fh-header__brand-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fh-header__brand-highlights-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+.fh-header__brand-highlights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.fh-header__brand-highlights-link {
+  color: #555555;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.fh-header__brand-highlights-link:hover,
+.fh-header__brand-highlights-link:focus {
+  color: var(--fh-color-bright-blue);
+}
+
+@media (max-width: 1200px) {
+  .fh-header__brand-logos {
+    gap: 20px 24px;
+  }
+}
+
+@media (max-width: 992px) {
+  .fh-header__dropdown-grid--brands {
+    grid-template-columns: 1fr;
+  }
+
+  .fh-header__brand-logos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 20px;
+  }
+
+  .fh-header__brand-divider {
+    display: none;
+  }
+
+  .fh-header__brand-highlights {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .fh-header__brand-logos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .fh-header__dropdown-link {
   display: block;
   padding: 6px 0;
