@@ -961,11 +961,24 @@ body,
 }
 
 .fh-header__actions {
-  display: grid;
-  grid-auto-flow: column;
+  display: flex;
+  flex-direction: row-reverse;
   align-items: center;
-  column-gap: 20px;
+  gap: 20px;
+  justify-content: flex-start;
   justify-self: end;
+}
+
+.fh-header__actions > .fh-header__basket {
+  order: 1;
+}
+
+.fh-header__actions > .fh-account-menu-container {
+  order: 2;
+}
+
+.fh-header__actions > .fh-wishlist-menu-container {
+  order: 3;
 }
 
 .fh-header__icon-button {
@@ -2177,6 +2190,9 @@ body,
 
   .fh-header__actions {
     grid-area: actions;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
     justify-self: end;
     column-gap: 12px;
   }
