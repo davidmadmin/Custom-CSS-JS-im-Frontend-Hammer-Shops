@@ -1061,6 +1061,12 @@ body,
   box-shadow: 0 18px 36px color-mix(in srgb, var(--fh-color-dark-blue) 8%, transparent);
 }
 
+.fh-account-nav__header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 @media (min-width: 768px) {
   .fh-account-nav__panel {
     padding: 28px;
@@ -1090,6 +1096,12 @@ body,
 .fh-account-nav__links .fh-header__panel-link.is-active::before {
   opacity: 1;
   transform: scale(1);
+}
+
+.fh-account-nav__details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .fh-account-nav__logout {

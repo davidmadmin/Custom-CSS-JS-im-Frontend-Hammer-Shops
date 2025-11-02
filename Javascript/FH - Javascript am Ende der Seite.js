@@ -821,6 +821,9 @@ fhOnReady(function () {
   window.fhAccountMenu.isOpen = function () {
     return isOpen;
   };
+  window.fhAccountMenu.installPriceToggle = function (root) {
+    return attemptInstallPriceToggle(root);
+  };
 });
 // End Section: FH account menu toggle behaviour
 
@@ -833,6 +836,12 @@ fhOnReady(function () {
   const links = Array.prototype.slice.call(nav.querySelectorAll('[data-fh-account-nav-link]'));
 
   if (!links.length) return;
+
+  const priceToggleRoot = nav.querySelector('[data-fh-price-toggle-root]');
+
+  if (priceToggleRoot && window.fhAccountMenu && typeof window.fhAccountMenu.installPriceToggle === 'function') {
+    window.fhAccountMenu.installPriceToggle(priceToggleRoot);
+  }
 
   const pathParser = document.createElement('a');
   const rootTarget = 'overview';
