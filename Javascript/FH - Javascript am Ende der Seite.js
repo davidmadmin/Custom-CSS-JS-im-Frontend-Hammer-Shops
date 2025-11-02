@@ -821,9 +821,38 @@ fhOnReady(function () {
   window.fhAccountMenu.isOpen = function () {
     return isOpen;
   };
+  window.fhAccountMenu.applyGreeting = function (root) {
+    applyGreeting(root);
+  };
   window.fhAccountMenu.installPriceToggle = function (root) {
     return attemptInstallPriceToggle(root);
   };
+
+  if (typeof window !== 'undefined') {
+    let readyEvent = null;
+
+    if (typeof window.CustomEvent === 'function') {
+      try {
+        readyEvent = new CustomEvent('fh:account-menu:ready');
+      } catch (error) {
+        readyEvent = null;
+      }
+    } else if (typeof document !== 'undefined' && typeof document.createEvent === 'function') {
+      readyEvent = document.createEvent('CustomEvent');
+
+      if (readyEvent && typeof readyEvent.initCustomEvent === 'function') {
+        readyEvent.initCustomEvent('fh:account-menu:ready', false, false, null);
+      }
+    }
+
+    if (readyEvent) {
+      try {
+        window.dispatchEvent(readyEvent);
+      } catch (error) {
+        /* Ignore dispatch errors to avoid breaking account interactions. */
+      }
+    }
+  }
 });
 // End Section: FH account menu toggle behaviour
 
@@ -839,8 +868,38 @@ fhOnReady(function () {
 
   const priceToggleRoot = nav.querySelector('[data-fh-price-toggle-root]');
 
-  if (priceToggleRoot && window.fhAccountMenu && typeof window.fhAccountMenu.installPriceToggle === 'function') {
+  function applyNavGreeting() {
+    if (!window.fhAccountMenu || typeof window.fhAccountMenu.applyGreeting !== 'function') return false;
+
+    window.fhAccountMenu.applyGreeting(nav);
+
+    return true;
+  }
+
+  function installNavPriceToggle() {
+    if (!priceToggleRoot) return true;
+
+    if (!window.fhAccountMenu || typeof window.fhAccountMenu.installPriceToggle !== 'function') return false;
+
     window.fhAccountMenu.installPriceToggle(priceToggleRoot);
+
+    return true;
+  }
+
+  const priceToggleInstalled = installNavPriceToggle();
+  const greetingApplied = applyNavGreeting();
+
+  if (!priceToggleInstalled || !greetingApplied) {
+    const handleAccountMenuReady = function () {
+      const installed = priceToggleInstalled || installNavPriceToggle();
+      const greetingReady = greetingApplied || applyNavGreeting();
+
+      if (installed && greetingReady) {
+        window.removeEventListener('fh:account-menu:ready', handleAccountMenuReady);
+      }
+    };
+
+    window.addEventListener('fh:account-menu:ready', handleAccountMenuReady);
   }
 
   const pathParser = document.createElement('a');
