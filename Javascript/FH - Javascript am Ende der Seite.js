@@ -33,6 +33,9 @@ fhOnReady(function () {
     });
   }
 
+  window.fhAccountMenu = window.fhAccountMenu || {};
+  window.fhAccountMenu.applyGreeting = applyGreeting;
+
   applyGreeting();
 
   const container = document.querySelector('[data-fh-account-menu-container]');
@@ -205,6 +208,7 @@ fhOnReady(function () {
     let storeWatcherCleanup = null;
     let storeSyncTimeoutId = null;
     let lastKnownStore = null;
+    const PRICE_TOGGLE_EVENT_NAME = 'fh:price-toggle-change';
 
     const priceDisplayManager = (function () {
       const managerState = {
@@ -602,6 +606,30 @@ fhOnReady(function () {
       if (document.body) categoryMutationObserver.observe(document.body, { childList: true, subtree: true });
     }
 
+    function broadcastState(showNet) {
+      if (typeof document === 'undefined') return;
+
+      let event = null;
+
+      try {
+        event = new CustomEvent(PRICE_TOGGLE_EVENT_NAME, {
+          detail: { showNet: !!showNet },
+        });
+      } catch (error) {
+        if (typeof document.createEvent === 'function') {
+          event = document.createEvent('CustomEvent');
+
+          if (event && typeof event.initCustomEvent === 'function') {
+            event.initCustomEvent(PRICE_TOGGLE_EVENT_NAME, false, false, { showNet: !!showNet });
+          } else {
+            event = null;
+          }
+        }
+      }
+
+      if (event) document.dispatchEvent(event);
+    }
+
     function readStoredPreference() {
       try {
         const raw = window.sessionStorage.getItem(STORAGE_KEY);
@@ -624,7 +652,7 @@ fhOnReady(function () {
       }
     }
 
-    function updateToggleUi(showNet) {
+    function updateToggleUi(showNet, shouldBroadcast) {
       const isNet = !!showNet;
       const isGross = !isNet;
 
@@ -646,6 +674,8 @@ fhOnReady(function () {
       if (typeof document !== 'undefined' && document.documentElement) {
         document.documentElement.setAttribute('data-fh-show-net-prices', isNet ? 'net' : 'gross');
       }
+
+      if (shouldBroadcast) broadcastState(showNet);
     }
 
     function applyStateToStore(store, desiredState) {
@@ -671,7 +701,7 @@ fhOnReady(function () {
 
           if (hasStoredPreference && normalized !== storedPreference) {
             currentShowNet = storedPreference;
-            updateToggleUi(storedPreference);
+            updateToggleUi(storedPreference, true);
             persistPreference(storedPreference);
 
             if (lastKnownStore) {
@@ -685,7 +715,7 @@ fhOnReady(function () {
           }
 
           currentShowNet = normalized;
-          updateToggleUi(normalized);
+          updateToggleUi(normalized, true);
           persistPreference(normalized);
           if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, normalized);
           else priceDisplayManager.scheduleUpdate(store, normalized);
@@ -712,7 +742,7 @@ fhOnReady(function () {
       }
 
       lastKnownStore = store;
-      updateToggleUi(currentShowNet);
+      updateToggleUi(currentShowNet, false);
       applyStateToStore(store, currentShowNet);
       ensureStoreWatcher(store);
       priceDisplayManager.ensureMutationObserver(store, function () {
@@ -741,7 +771,7 @@ fhOnReady(function () {
 
     if (initialPreference === true || initialPreference === false) currentShowNet = initialPreference;
 
-    updateToggleUi(currentShowNet);
+    updateToggleUi(currentShowNet, false);
     if (typeof document !== 'undefined' && document.documentElement) {
       document.documentElement.setAttribute('data-fh-show-net-prices', currentShowNet ? 'net' : 'gross');
     }
@@ -751,11 +781,31 @@ fhOnReady(function () {
     schedulePageDisplayUpdate(currentShowNet, true);
     ensureCategoryMutationObserver();
 
+    function handleExternalToggle(event) {
+      if (!event || !event.detail) return;
+
+      const desired = !!event.detail.showNet;
+
+      if (desired === currentShowNet) return;
+
+      currentShowNet = desired;
+      updateToggleUi(currentShowNet, false);
+      persistPreference(currentShowNet);
+      if (typeof window !== 'undefined' && window.App && window.App.initialData) {
+        window.App.initialData.showNetPrices = !!currentShowNet;
+      }
+      if (lastKnownStore) priceDisplayManager.scheduleUpdate(lastKnownStore, currentShowNet);
+      schedulePageDisplayUpdate(currentShowNet);
+      scheduleStoreIntegration(0);
+    }
+
+    document.addEventListener(PRICE_TOGGLE_EVENT_NAME, handleExternalToggle);
+
     priceToggleButton.addEventListener('click', function (event) {
       event.preventDefault();
 
       currentShowNet = !currentShowNet;
-      updateToggleUi(currentShowNet);
+      updateToggleUi(currentShowNet, true);
       persistPreference(currentShowNet);
       if (typeof window !== 'undefined' && window.App && window.App.initialData) {
         window.App.initialData.showNetPrices = !!currentShowNet;
@@ -821,8 +871,123 @@ fhOnReady(function () {
   window.fhAccountMenu.isOpen = function () {
     return isOpen;
   };
+  window.fhAccountMenu.installPriceToggle = function (root) {
+    return attemptInstallPriceToggle(root);
+  };
 });
 // End Section: FH account menu toggle behaviour
+
+// Section: FH account page navigation
+fhOnReady(function () {
+  const nav = document.querySelector('[data-fh-account-nav]');
+
+  if (!nav) return;
+
+  const links = Array.prototype.slice.call(nav.querySelectorAll('[data-fh-account-nav-link]'));
+
+  if (!links.length) return;
+
+  const priceToggleRoot = nav.querySelector('[data-fh-price-toggle-root]');
+
+  if (priceToggleRoot && window.fhAccountMenu && typeof window.fhAccountMenu.installPriceToggle === 'function') {
+    window.fhAccountMenu.installPriceToggle(priceToggleRoot);
+  }
+
+  if (window.fhAccountMenu && typeof window.fhAccountMenu.applyGreeting === 'function') {
+    window.fhAccountMenu.applyGreeting(nav);
+
+    if (typeof MutationObserver === 'function') {
+      const greetingObserver = new MutationObserver(function () {
+        window.fhAccountMenu.applyGreeting(nav);
+      });
+
+      greetingObserver.observe(nav, { childList: true, subtree: true, characterData: true });
+    }
+  }
+
+  const pathParser = document.createElement('a');
+  const rootTarget = 'overview';
+  const rootPath = normalisePath(nav.getAttribute('data-fh-account-nav-root') || '/my-account');
+
+  function normaliseTarget(value) {
+    if (typeof value !== 'string') return rootTarget;
+
+    let normalised = value.trim();
+
+    if (!normalised) return rootTarget;
+
+    if (normalised.charAt(0) === '#') normalised = normalised.slice(1);
+
+    if (!normalised) return rootTarget;
+
+    return normalised.toLowerCase();
+  }
+
+  function normalisePath(value) {
+    if (typeof value !== 'string' || !value) return '/';
+
+    pathParser.href = value;
+
+    const path = pathParser.pathname || '/';
+
+    return path.replace(/\/+$/, '') || '/';
+  }
+
+  function extractHash(value) {
+    if (typeof value !== 'string') return '';
+
+    const index = value.indexOf('#');
+
+    return index === -1 ? '' : value.slice(index);
+  }
+
+  function applyActive(targetValue) {
+    const activeTarget = normaliseTarget(targetValue);
+
+    links.forEach(function (link) {
+      const linkTarget = normaliseTarget(
+        link.getAttribute('data-fh-account-nav-target') || link.hash || extractHash(link.getAttribute('href') || '')
+      );
+
+      if (linkTarget === activeTarget) {
+        link.setAttribute('aria-current', 'page');
+        link.classList.add('is-active');
+      } else {
+        link.removeAttribute('aria-current');
+        link.classList.remove('is-active');
+      }
+    });
+  }
+
+  applyActive(window.location.hash);
+
+  window.addEventListener('hashchange', function () {
+    applyActive(window.location.hash);
+  });
+
+  nav.addEventListener('click', function (event) {
+    const trigger = event.target.closest('[data-fh-account-nav-link]');
+
+    if (!trigger) return;
+
+    const href = trigger.getAttribute('href') || '';
+    const targetHint = trigger.getAttribute('data-fh-account-nav-target');
+    const nextTarget = targetHint || trigger.hash || extractHash(href);
+
+    if (
+      href &&
+      !trigger.hash &&
+      extractHash(href) === '' &&
+      normalisePath(href) === rootPath &&
+      normalisePath(window.location && window.location.pathname) === rootPath
+    ) {
+      event.preventDefault();
+    }
+
+    applyActive(nextTarget);
+  });
+});
+// End Section: FH account page navigation
 
 // Section: FH desktop header scroll behaviour
 fhOnReady(function () {
