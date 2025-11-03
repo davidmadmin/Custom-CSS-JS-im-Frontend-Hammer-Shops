@@ -3134,30 +3134,30 @@ button[data-testing="quantity-btn-decrease"],
 }
 
 :root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="item-sum"],
+:root[data-fh-show-net-prices="net"] .cmp-totals dt[data-fh-total-key="item-sum"],
 :root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="shipping-amount"],
-:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="item-sum"]),
-:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="shipping-amount"]) {
+:root[data-fh-show-net-prices="net"] .cmp-totals dt[data-fh-total-key="shipping-amount"] {
   display: none !important;
 }
 
 :root:not([data-fh-show-net-prices="net"]) .cmp-totals dd[data-testing="item-sum-net"],
+:root:not([data-fh-show-net-prices="net"]) .cmp-totals dt[data-fh-total-key="item-sum-net"],
 :root:not([data-fh-show-net-prices="net"]) .cmp-totals dd[data-testing="shipping-amount-net"],
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals dt:has(+ dd[data-testing="item-sum-net"]),
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals dt:has(+ dd[data-testing="shipping-amount-net"]) {
+:root:not([data-fh-show-net-prices="net"]) .cmp-totals dt[data-fh-total-key="shipping-amount-net"] {
   display: none !important;
 }
 
-:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount"]),
+:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt[data-fh-total-key="basket-amount"],
 :root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dd[data-testing="basket-amount"],
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount-net"]),
+:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dt[data-fh-total-key="basket-amount-net"],
 :root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dd[data-testing="basket-amount-net"] {
   opacity: 0.6;
   font-weight: 400 !important;
 }
 
-:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount-net"]),
+:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt[data-fh-total-key="basket-amount-net"],
 :root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dd[data-testing="basket-amount-net"],
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount"]),
+:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dt[data-fh-total-key="basket-amount"],
 :root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dd[data-testing="basket-amount"] {
   opacity: 1;
   font-weight: 700 !important;
@@ -3168,6 +3168,22 @@ button[data-testing="quantity-btn-decrease"],
   transition: opacity 0.2s ease, font-weight 0.2s ease;
 }
 /* End Section: Basket preview totals visibility */
+
+/* Section: Basket preview item text styling */
+.basket-preview .item-total-price,
+.basket-preview-mobile .item-total-price,
+.cmp-basket-preview .item-total-price {
+  color: var(--fh-color-bright-blue, var(--color-primary, #1f7dc1));
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+}
+
+.basket-preview .item-name,
+.basket-preview-mobile .item-name,
+.cmp-basket-preview .item-name {
+  color: var(--fh-color-navy-blue, #1f2937);
+}
+/* End Section: Basket preview item text styling */
 
 /* Section: Icon Visibility Adjustments */
 .fa-heart {

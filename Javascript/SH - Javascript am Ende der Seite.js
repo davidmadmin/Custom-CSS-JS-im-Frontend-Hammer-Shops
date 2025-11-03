@@ -277,6 +277,111 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // End Section: Versand Icons ändern & einfügen
 
+// Section: Basket preview totals label synchronisation
+shOnReady(function () {
+  function ensureHtmlAttributeDefault() {
+    if (!document || !document.documentElement) return;
+
+    var html = document.documentElement;
+
+    if (html.hasAttribute('data-fh-show-net-prices')) return;
+
+    var initial = null;
+
+    if (typeof window !== 'undefined' && window.App && window.App.initialData) {
+      initial = window.App.initialData.showNetPrices;
+    }
+
+    var showNet = initial === true;
+
+    html.setAttribute('data-fh-show-net-prices', showNet ? 'net' : 'gross');
+  }
+
+  function assignTotalsLabels(root) {
+    var scope = root && typeof root.querySelectorAll === 'function' ? root : document;
+
+    if (!scope || typeof scope.querySelectorAll !== 'function') return;
+
+    var totals = scope.querySelectorAll('.cmp-totals dd[data-testing]');
+
+    for (var index = 0; index < totals.length; index += 1) {
+      var dd = totals[index];
+
+      if (!dd) continue;
+
+      var key = dd.getAttribute('data-testing');
+
+      if (!key) continue;
+
+      var sibling = dd.previousElementSibling;
+
+      while (sibling && sibling.tagName && sibling.tagName.toLowerCase() !== 'dt') {
+        sibling = sibling.previousElementSibling;
+      }
+
+      if (!sibling || !sibling.tagName || sibling.tagName.toLowerCase() !== 'dt') continue;
+
+      if (sibling.getAttribute('data-fh-total-key') !== key) {
+        sibling.setAttribute('data-fh-total-key', key);
+      }
+    }
+  }
+
+  function nodeContainsTotals(node) {
+    if (!node) return false;
+
+    if (node.nodeType === 1) {
+      if (typeof node.matches === 'function' && node.matches('.cmp-totals, .cmp-totals *')) return true;
+    }
+
+    if ((node.nodeType === 1 || node.nodeType === 11) && typeof node.querySelector === 'function') {
+      if (node.querySelector('.cmp-totals')) return true;
+    }
+
+    return false;
+  }
+
+  ensureHtmlAttributeDefault();
+  assignTotalsLabels(document);
+
+  if (!document.body || typeof MutationObserver !== 'function') return;
+
+  var observer = new MutationObserver(function (mutations) {
+    var requiresSync = false;
+
+    for (var i = 0; i < mutations.length && !requiresSync; i += 1) {
+      var mutation = mutations[i];
+
+      if (!mutation || mutation.type !== 'childList') continue;
+
+      if (nodeContainsTotals(mutation.target)) {
+        requiresSync = true;
+        break;
+      }
+
+      var added = mutation.addedNodes;
+
+      if (!added || !added.length) continue;
+
+      for (var j = 0; j < added.length; j += 1) {
+        if (nodeContainsTotals(added[j])) {
+          requiresSync = true;
+          break;
+        }
+      }
+    }
+
+    if (requiresSync) assignTotalsLabels(document);
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  window.addEventListener('beforeunload', function () {
+    observer.disconnect();
+  });
+});
+// End Section: Basket preview totals label synchronisation
+
 // Section: Gratisversand Fortschritt Balken
   document.addEventListener('DOMContentLoaded', function () {
     const THRESHOLD = 150;
