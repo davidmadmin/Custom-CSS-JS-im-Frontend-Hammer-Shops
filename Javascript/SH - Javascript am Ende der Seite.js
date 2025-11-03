@@ -896,44 +896,67 @@ shOnReady(function () {
   })();
   // End Section: Trusted Shops Badge toggle during search overlay
 
-  // Section: Close account and wishlist menus when basket preview opens
-  function installBasketPreviewMenuClosers() {
+  // Section: Restrict focus to the basket preview while it is open
+  function installBasketPreviewFocusLock() {
     var body = document.body;
 
     if (!body) return;
 
-    function closeMenus() {
-      if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
-        window.fhAccountMenu.close();
-      }
+    var focusableSelector = [
+      'a[href]',
+      'area[href]',
+      'button:not([disabled])',
+      'input:not([disabled]):not([type="hidden"])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]'
+    ].join(',');
 
-      if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
-        window.fhWishlistMenu.close();
-      }
-
-      if (window.shAccountMenu && typeof window.shAccountMenu.close === 'function') {
-        window.shAccountMenu.close();
-      }
-
-      if (window.shWishlistMenu && typeof window.shWishlistMenu.close === 'function') {
-        window.shWishlistMenu.close();
-      }
+    function isInsideBasket(element) {
+      return Boolean(element.closest('.fh-basket-preview') || element.closest('.sh-basket-preview') || element.closest('.basket-preview'));
     }
 
-    function handleBasketStateChange() {
-      if (body.classList.contains('basket-open')) closeMenus();
+    function restoreElement(element) {
+      if (!element || !element.hasAttribute('data-sh-basket-tab-restore')) return;
+
+      var previous = element.getAttribute('data-sh-basket-tab-restore');
+      element.removeAttribute('data-sh-basket-tab-restore');
+
+      if (previous) element.setAttribute('tabindex', previous); else element.removeAttribute('tabindex');
     }
 
-    document.addEventListener('click', function (event) {
-      if (event.target.closest('.toggle-basket-preview')) closeMenus();
-    });
+    var lastKnownState = null;
+
+    function updateFocusState() {
+      var basketOpen = body.classList.contains('basket-open');
+
+      if (basketOpen === lastKnownState) return;
+      lastKnownState = basketOpen;
+
+      var elements = document.querySelectorAll(focusableSelector);
+
+      for (var index = 0; index < elements.length; index += 1) {
+        var element = elements[index];
+
+        if (!element) continue;
+
+        if (basketOpen && !isInsideBasket(element)) {
+          if (!element.hasAttribute('data-sh-basket-tab-restore')) {
+            var existing = element.getAttribute('tabindex');
+            element.setAttribute('data-sh-basket-tab-restore', existing === null ? '' : existing);
+          }
+
+          element.setAttribute('tabindex', '-1');
+        } else if (!basketOpen && element.hasAttribute('data-sh-basket-tab-restore')) {
+          restoreElement(element);
+        }
+      }
+    }
 
     var observer = new MutationObserver(function (mutations) {
       for (var index = 0; index < mutations.length; index += 1) {
-        var mutation = mutations[index];
-
-        if (mutation.type === 'attributes') {
-          handleBasketStateChange();
+        if (mutations[index].type === 'attributes') {
+          updateFocusState();
           break;
         }
       }
@@ -941,19 +964,26 @@ shOnReady(function () {
 
     observer.observe(body, { attributes: true, attributeFilter: ['class'] });
 
-    handleBasketStateChange();
+    updateFocusState();
 
     window.addEventListener('beforeunload', function () {
       observer.disconnect();
+      lastKnownState = null;
+
+      var storedElements = document.querySelectorAll('[data-sh-basket-tab-restore]');
+
+      for (var index = 0; index < storedElements.length; index += 1) {
+        restoreElement(storedElements[index]);
+      }
     });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', installBasketPreviewMenuClosers);
+    document.addEventListener('DOMContentLoaded', installBasketPreviewFocusLock);
   } else {
-    installBasketPreviewMenuClosers();
+    installBasketPreviewFocusLock();
   }
-  // End Section: Close account and wishlist menus when basket preview opens
+  // End Section: Restrict focus to the basket preview while it is open
 
   // Section: SH wish list button enhancer
   shOnReady(function () {
