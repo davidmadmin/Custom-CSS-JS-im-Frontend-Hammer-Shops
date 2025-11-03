@@ -248,11 +248,11 @@
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
 document.addEventListener("DOMContentLoaded", function () {
   const shippingIcons = {
-    ShippingProfileID1331:
+    ShippingProfileID931:
       "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png",
-    ShippingProfileID1345:
+    ShippingProfileID945:
       "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png",
-    ShippingProfileID1310:
+    ShippingProfileID910:
       "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png",
   };
 

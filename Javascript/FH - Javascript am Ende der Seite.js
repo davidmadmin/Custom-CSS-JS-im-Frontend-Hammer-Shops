@@ -3451,9 +3451,9 @@ fhOnReady(function () {
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
 fhOnReady(function () {
   const shippingIcons = {
-    'ShippingProfileID1531': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
-    'ShippingProfileID1545': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
-    'ShippingProfileID1510': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
+    'ShippingProfileID931': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
+    'ShippingProfileID945': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
+    'ShippingProfileID910': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
   };
 
   Object.entries(shippingIcons).forEach(([profileId, iconUrl]) => {
