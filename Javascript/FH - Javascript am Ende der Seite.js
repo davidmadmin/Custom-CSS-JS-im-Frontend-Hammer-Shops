@@ -3015,36 +3015,67 @@ fhOnReady(function () {
 });
 // End Section: FH wish list button enhancer
 
-// Section: Close account and wishlist menus when basket preview opens
+// Section: Restrict focus to the basket preview while it is open
 fhOnReady(function () {
   const body = document.body;
 
   if (!body) return;
 
-  function closeMenus() {
-    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
-      window.fhAccountMenu.close();
-    }
+  const focusableSelector = [
+    'a[href]',
+    'area[href]',
+    'button:not([disabled])',
+    'input:not([disabled]):not([type="hidden"])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]'
+  ].join(',');
 
-    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
-      window.fhWishlistMenu.close();
-    }
+  function isInsideBasket(element) {
+    return !!(element.closest('.fh-basket-preview') || element.closest('.sh-basket-preview') || element.closest('.basket-preview'));
   }
 
-  function handleBasketStateChange() {
-    if (body.classList.contains('basket-open')) closeMenus();
+  function restoreElement(element) {
+    if (!element || !element.hasAttribute('data-fh-basket-tab-restore')) return;
+
+    const previous = element.getAttribute('data-fh-basket-tab-restore');
+    element.removeAttribute('data-fh-basket-tab-restore');
+
+    if (previous) element.setAttribute('tabindex', previous); else element.removeAttribute('tabindex');
   }
 
-  document.addEventListener('click', function (event) {
-    if (event.target.closest('.toggle-basket-preview')) closeMenus();
-  });
+  let lastKnownState = null;
+
+  function updateFocusState() {
+    const basketOpen = body.classList.contains('basket-open');
+
+    if (basketOpen === lastKnownState) return;
+    lastKnownState = basketOpen;
+
+    const elements = document.querySelectorAll(focusableSelector);
+
+    for (let index = 0; index < elements.length; index += 1) {
+      const element = elements[index];
+
+      if (!element) continue;
+
+      if (basketOpen && !isInsideBasket(element)) {
+        if (!element.hasAttribute('data-fh-basket-tab-restore')) {
+          const existing = element.getAttribute('tabindex');
+          element.setAttribute('data-fh-basket-tab-restore', existing === null ? '' : existing);
+        }
+
+        element.setAttribute('tabindex', '-1');
+      } else if (!basketOpen && element.hasAttribute('data-fh-basket-tab-restore')) {
+        restoreElement(element);
+      }
+    }
+  }
 
   const observer = new MutationObserver(function (mutations) {
     for (let index = 0; index < mutations.length; index += 1) {
-      const mutation = mutations[index];
-
-      if (mutation.type === 'attributes') {
-        handleBasketStateChange();
+      if (mutations[index].type === 'attributes') {
+        updateFocusState();
         break;
       }
     }
@@ -3052,13 +3083,20 @@ fhOnReady(function () {
 
   observer.observe(body, { attributes: true, attributeFilter: ['class'] });
 
-  handleBasketStateChange();
+  updateFocusState();
 
   window.addEventListener('beforeunload', function () {
     observer.disconnect();
+    lastKnownState = null;
+
+    const storedElements = document.querySelectorAll('[data-fh-basket-tab-restore]');
+
+    for (let index = 0; index < storedElements.length; index += 1) {
+      restoreElement(storedElements[index]);
+    }
   });
 });
-// End Section: Close account and wishlist menus when basket preview opens
+// End Section: Restrict focus to the basket preview while it is open
 
 // Section: Basket preview attribute cleanup
 fhOnReady(function () {
