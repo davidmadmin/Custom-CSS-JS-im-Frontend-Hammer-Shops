@@ -896,11 +896,78 @@ shOnReady(function () {
   })();
   // End Section: Trusted Shops Badge toggle during search overlay
 
-  // Section: Close account and wishlist menus when basket preview opens
+  // Section: Disable header tab stops while the basket preview is open
   function installBasketPreviewMenuClosers() {
     var body = document.body;
 
     if (!body) return;
+
+    var focusableSelector = [
+      'a[href]',
+      'area[href]',
+      'button:not([disabled])',
+      'input:not([disabled]):not([type="hidden"])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]'
+    ].join(',');
+
+    function isInsideBasket(element) {
+      return Boolean(element.closest('.fh-basket-preview') || element.closest('.sh-basket-preview') || element.closest('.basket-preview'));
+    }
+
+    function collectHeaderElements() {
+      var scopes = document.querySelectorAll('[data-sh-header-root], [data-fh-header-root], .sh-header, .fh-header');
+      var unique = [];
+      var result = [];
+
+      for (var index = 0; index < scopes.length; index += 1) {
+        var scope = scopes[index];
+
+        if (!scope) continue;
+
+        var nodes = scope.querySelectorAll(focusableSelector);
+
+        for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
+          var node = nodes[nodeIndex];
+
+          if (!node) continue;
+          if (isInsideBasket(node)) continue;
+          if (unique.indexOf(node) !== -1) continue;
+
+          unique.push(node);
+          result.push(node);
+        }
+      }
+
+      return result;
+    }
+
+    var lockableElements = collectHeaderElements();
+
+    if (!lockableElements.length) return;
+
+    function toggleTabStops(disabled) {
+      for (var index = 0; index < lockableElements.length; index += 1) {
+        var element = lockableElements[index];
+
+        if (!element) continue;
+
+        if (disabled) {
+          if (!element.hasAttribute('data-sh-basket-tab-restore')) {
+            var existing = element.getAttribute('tabindex');
+            element.setAttribute('data-sh-basket-tab-restore', existing === null ? '' : existing);
+          }
+
+          element.setAttribute('tabindex', '-1');
+        } else if (element.hasAttribute('data-sh-basket-tab-restore')) {
+          var previous = element.getAttribute('data-sh-basket-tab-restore');
+          element.removeAttribute('data-sh-basket-tab-restore');
+
+          if (previous) element.setAttribute('tabindex', previous); else element.removeAttribute('tabindex');
+        }
+      }
+    }
 
     function closeMenus() {
       if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
@@ -920,20 +987,18 @@ shOnReady(function () {
       }
     }
 
-    function handleBasketStateChange() {
-      if (body.classList.contains('basket-open')) closeMenus();
-    }
+    function updateState() {
+      var basketOpen = body.classList.contains('basket-open');
 
-    document.addEventListener('click', function (event) {
-      if (event.target.closest('.toggle-basket-preview')) closeMenus();
-    });
+      if (basketOpen) closeMenus();
+
+      toggleTabStops(basketOpen);
+    }
 
     var observer = new MutationObserver(function (mutations) {
       for (var index = 0; index < mutations.length; index += 1) {
-        var mutation = mutations[index];
-
-        if (mutation.type === 'attributes') {
-          handleBasketStateChange();
+        if (mutations[index].type === 'attributes') {
+          updateState();
           break;
         }
       }
@@ -941,10 +1006,15 @@ shOnReady(function () {
 
     observer.observe(body, { attributes: true, attributeFilter: ['class'] });
 
-    handleBasketStateChange();
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('.toggle-basket-preview')) closeMenus();
+    });
+
+    updateState();
 
     window.addEventListener('beforeunload', function () {
       observer.disconnect();
+      toggleTabStops(false);
     });
   }
 
@@ -953,7 +1023,7 @@ shOnReady(function () {
   } else {
     installBasketPreviewMenuClosers();
   }
-  // End Section: Close account and wishlist menus when basket preview opens
+  // End Section: Disable header tab stops while the basket preview is open
 
   // Section: SH wish list button enhancer
   shOnReady(function () {

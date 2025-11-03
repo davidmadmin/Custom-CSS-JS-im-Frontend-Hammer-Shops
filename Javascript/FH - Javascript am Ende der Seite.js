@@ -3015,11 +3015,75 @@ fhOnReady(function () {
 });
 // End Section: FH wish list button enhancer
 
-// Section: Close account and wishlist menus when basket preview opens
+// Section: Disable header tab stops while the basket preview is open
 fhOnReady(function () {
   const body = document.body;
 
   if (!body) return;
+
+  const focusableSelector = [
+    'a[href]',
+    'area[href]',
+    'button:not([disabled])',
+    'input:not([disabled]):not([type="hidden"])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]'
+  ].join(',');
+
+  function isInsideBasket(element) {
+    return !!(element.closest('.fh-basket-preview') || element.closest('.sh-basket-preview') || element.closest('.basket-preview'));
+  }
+
+  function collectHeaderElements() {
+    const scopes = document.querySelectorAll('[data-fh-header-root]');
+    const result = [];
+
+    for (let index = 0; index < scopes.length; index += 1) {
+      const scope = scopes[index];
+
+      if (!scope) continue;
+
+      const nodes = scope.querySelectorAll(focusableSelector);
+
+      for (let nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
+        const node = nodes[nodeIndex];
+
+        if (!node) continue;
+        if (isInsideBasket(node)) continue;
+
+        result.push(node);
+      }
+    }
+
+    return result;
+  }
+
+  const lockableElements = collectHeaderElements();
+
+  if (!lockableElements.length) return;
+
+  function toggleTabStops(disabled) {
+    for (let index = 0; index < lockableElements.length; index += 1) {
+      const element = lockableElements[index];
+
+      if (!element) continue;
+
+      if (disabled) {
+        if (!element.hasAttribute('data-fh-basket-tab-restore')) {
+          const existing = element.getAttribute('tabindex');
+          element.setAttribute('data-fh-basket-tab-restore', existing === null ? '' : existing);
+        }
+
+        element.setAttribute('tabindex', '-1');
+      } else if (element.hasAttribute('data-fh-basket-tab-restore')) {
+        const previous = element.getAttribute('data-fh-basket-tab-restore');
+        element.removeAttribute('data-fh-basket-tab-restore');
+
+        if (previous) element.setAttribute('tabindex', previous); else element.removeAttribute('tabindex');
+      }
+    }
+  }
 
   function closeMenus() {
     if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
@@ -3029,22 +3093,28 @@ fhOnReady(function () {
     if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
       window.fhWishlistMenu.close();
     }
+
+    if (window.shAccountMenu && typeof window.shAccountMenu.close === 'function') {
+      window.shAccountMenu.close();
+    }
+
+    if (window.shWishlistMenu && typeof window.shWishlistMenu.close === 'function') {
+      window.shWishlistMenu.close();
+    }
   }
 
-  function handleBasketStateChange() {
-    if (body.classList.contains('basket-open')) closeMenus();
-  }
+  function updateState() {
+    const basketOpen = body.classList.contains('basket-open');
 
-  document.addEventListener('click', function (event) {
-    if (event.target.closest('.toggle-basket-preview')) closeMenus();
-  });
+    if (basketOpen) closeMenus();
+
+    toggleTabStops(basketOpen);
+  }
 
   const observer = new MutationObserver(function (mutations) {
     for (let index = 0; index < mutations.length; index += 1) {
-      const mutation = mutations[index];
-
-      if (mutation.type === 'attributes') {
-        handleBasketStateChange();
+      if (mutations[index].type === 'attributes') {
+        updateState();
         break;
       }
     }
@@ -3052,13 +3122,18 @@ fhOnReady(function () {
 
   observer.observe(body, { attributes: true, attributeFilter: ['class'] });
 
-  handleBasketStateChange();
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.toggle-basket-preview')) closeMenus();
+  });
+
+  updateState();
 
   window.addEventListener('beforeunload', function () {
     observer.disconnect();
+    toggleTabStops(false);
   });
 });
-// End Section: Close account and wishlist menus when basket preview opens
+// End Section: Disable header tab stops while the basket preview is open
 
 // Section: Basket preview attribute cleanup
 fhOnReady(function () {
