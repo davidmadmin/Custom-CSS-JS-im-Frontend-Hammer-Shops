@@ -887,12 +887,6 @@ fhOnReady(function () {
 
   if (!links.length) return;
 
-  const priceToggleRoot = nav.querySelector('[data-fh-price-toggle-root]');
-
-  if (priceToggleRoot && window.fhAccountMenu && typeof window.fhAccountMenu.installPriceToggle === 'function') {
-    window.fhAccountMenu.installPriceToggle(priceToggleRoot);
-  }
-
   if (window.fhAccountMenu && typeof window.fhAccountMenu.applyGreeting === 'function') {
     window.fhAccountMenu.applyGreeting(nav);
 
