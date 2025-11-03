@@ -1087,6 +1087,310 @@ fhOnReady(function () {
 });
 // End Section: FH desktop header scroll behaviour
 
+// Section: FH desktop navigation interactions
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) return;
+
+  const nav = header.querySelector('[data-fh-desktop-nav]');
+
+  if (!nav) return;
+
+  const navList = nav.querySelector('.fh-header__nav-list');
+
+  if (!navList) return;
+
+  const navItems = Array.prototype.slice.call(navList.querySelectorAll('.fh-header__nav-item'));
+
+  if (navItems.length === 0) return;
+
+  const highlight = nav.querySelector('[data-fh-desktop-nav-highlight]');
+  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const requestFrame =
+    typeof window.requestAnimationFrame === 'function'
+      ? window.requestAnimationFrame.bind(window)
+      : function (callback) {
+          return window.setTimeout(callback, 16);
+        };
+  const cancelFrame =
+    typeof window.cancelAnimationFrame === 'function'
+      ? window.cancelAnimationFrame.bind(window)
+      : window.clearTimeout.bind(window);
+  let highlightFrame = null;
+  let selectedItem = null;
+  let globalListenersActive = false;
+
+  function isDesktop() {
+    return desktopMedia.matches;
+  }
+
+  function setExpanded(item, expanded) {
+    if (!(item instanceof HTMLElement)) return;
+
+    const link = item.querySelector('.fh-header__nav-link');
+
+    if (!link) return;
+
+    link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  }
+
+  function moveHighlight(item) {
+    if (!highlight || !item || !isDesktop()) return;
+
+    if (highlightFrame) cancelFrame(highlightFrame);
+
+    highlightFrame = requestFrame(function () {
+      const listRect = navList.getBoundingClientRect();
+      const itemRect = item.getBoundingClientRect();
+      const left = itemRect.left - listRect.left;
+      const width = itemRect.width;
+
+      highlight.style.setProperty('--fh-nav-highlight-x', left + 'px');
+      highlight.style.setProperty('--fh-nav-highlight-width', width + 'px');
+      highlight.style.setProperty('--fh-nav-highlight-opacity', '1');
+
+      highlightFrame = null;
+    });
+  }
+
+  function hideHighlight() {
+    if (!highlight) return;
+
+    if (highlightFrame) {
+      cancelFrame(highlightFrame);
+      highlightFrame = null;
+    }
+
+    highlight.style.setProperty('--fh-nav-highlight-opacity', '0');
+  }
+
+  function handleDocumentPointerDown(event) {
+    if (!isDesktop() || !selectedItem) {
+      removeGlobalListeners();
+      return;
+    }
+
+    if (nav.contains(event.target)) return;
+
+    clearSelection();
+  }
+
+  function handleWindowScroll() {
+    if (!isDesktop() || !selectedItem) {
+      removeGlobalListeners();
+      return;
+    }
+
+    clearSelection();
+  }
+
+  function handleDocumentKeydown(event) {
+    if (!isDesktop() || !selectedItem) return;
+
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      clearSelection();
+    }
+  }
+
+  function ensureGlobalListeners() {
+    if (globalListenersActive || !selectedItem) return;
+
+    document.addEventListener('pointerdown', handleDocumentPointerDown, true);
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    document.addEventListener('keydown', handleDocumentKeydown, true);
+    globalListenersActive = true;
+  }
+
+  function removeGlobalListeners() {
+    if (!globalListenersActive) return;
+
+    document.removeEventListener('pointerdown', handleDocumentPointerDown, true);
+    window.removeEventListener('scroll', handleWindowScroll);
+    document.removeEventListener('keydown', handleDocumentKeydown, true);
+    globalListenersActive = false;
+  }
+
+  function openItem(item, options) {
+    if (!(item instanceof HTMLElement) || !isDesktop()) return;
+
+    const shouldLock = options && options.lock === true;
+    const markHover = options && options.markHover === true;
+
+    navItems.forEach(function (navItem) {
+      if (navItem !== item) {
+        navItem.classList.remove('is-open');
+        navItem.classList.remove('is-hover');
+        setExpanded(navItem, false);
+      }
+    });
+
+    item.classList.add('is-open');
+
+    if (shouldLock) {
+      if (selectedItem && selectedItem !== item) selectedItem.classList.remove('is-selected');
+
+      selectedItem = item;
+      item.classList.add('is-selected');
+      item.classList.remove('is-hover');
+      nav.classList.add('fh-header__nav--locked');
+      ensureGlobalListeners();
+    } else {
+      item.classList.toggle('is-hover', markHover);
+
+      if (selectedItem && selectedItem !== item) selectedItem.classList.add('is-selected');
+
+      nav.classList.remove('fh-header__nav--locked');
+    }
+
+    setExpanded(item, true);
+    nav.classList.add('fh-header__nav--active');
+    moveHighlight(item);
+  }
+
+  function closeNav() {
+    navItems.forEach(function (item) {
+      item.classList.remove('is-open');
+      item.classList.remove('is-hover');
+      setExpanded(item, false);
+    });
+
+    nav.classList.remove('fh-header__nav--active');
+    nav.classList.remove('fh-header__nav--locked');
+    hideHighlight();
+  }
+
+  function clearSelection() {
+    if (selectedItem) {
+      selectedItem.classList.remove('is-selected');
+      selectedItem = null;
+    }
+
+    closeNav();
+    removeGlobalListeners();
+  }
+
+  function restoreSelected() {
+    if (selectedItem && isDesktop()) {
+      openItem(selectedItem, { lock: true });
+    } else {
+      closeNav();
+    }
+  }
+
+  function handleItemPointerEnter(event) {
+    if (!isDesktop()) return;
+
+    const item = event.currentTarget;
+
+    openItem(item, { markHover: true });
+  }
+
+  function handleItemFocus(event) {
+    if (!isDesktop()) return;
+
+    const item = event.currentTarget && event.currentTarget.closest('.fh-header__nav-item');
+
+    if (!item) return;
+
+    openItem(item, { markHover: true });
+  }
+
+  function handleNavPointerLeave(event) {
+    if (!isDesktop()) return;
+
+    const nextTarget = event.relatedTarget;
+
+    if (nextTarget && nav.contains(nextTarget)) return;
+
+    restoreSelected();
+  }
+
+  function handleNavFocusOut(event) {
+    if (!isDesktop()) return;
+
+    const nextTarget = event.relatedTarget;
+
+    if (nextTarget && nav.contains(nextTarget)) return;
+
+    restoreSelected();
+  }
+
+  function handleLinkClick(event) {
+    if (!isDesktop()) return;
+
+    if (event.defaultPrevented) return;
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    if (event.button !== 0) return;
+
+    const item = event.currentTarget.closest('.fh-header__nav-item');
+
+    if (!item) return;
+
+    event.preventDefault();
+
+    openItem(item, { lock: true });
+  }
+
+  function handleMediaChange() {
+    if (!isDesktop()) {
+      clearSelection();
+
+      navItems.forEach(function (item) {
+        item.classList.remove('is-selected');
+        setExpanded(item, false);
+      });
+
+      hideHighlight();
+      return;
+    }
+
+    const openItemElement = nav.querySelector('.fh-header__nav-item.is-open');
+
+    if (openItemElement) {
+      moveHighlight(openItemElement);
+      return;
+    }
+
+    if (selectedItem) {
+      openItem(selectedItem, { lock: true });
+    }
+  }
+
+  function handleResize() {
+    if (!isDesktop()) return;
+
+    const activeItem = nav.querySelector('.fh-header__nav-item.is-open') || selectedItem;
+
+    if (activeItem) moveHighlight(activeItem);
+  }
+
+  navItems.forEach(function (item) {
+    setExpanded(item, false);
+    item.addEventListener('pointerenter', handleItemPointerEnter);
+
+    const link = item.querySelector('.fh-header__nav-link');
+
+    if (link) {
+      link.addEventListener('focus', handleItemFocus);
+      link.addEventListener('click', handleLinkClick);
+    }
+  });
+
+  nav.addEventListener('pointerleave', handleNavPointerLeave);
+  nav.addEventListener('focusout', handleNavFocusOut);
+
+  if (typeof desktopMedia.addEventListener === 'function') desktopMedia.addEventListener('change', handleMediaChange);
+  else if (typeof desktopMedia.addListener === 'function') desktopMedia.addListener(handleMediaChange);
+
+  window.addEventListener('resize', handleResize);
+
+  handleMediaChange();
+});
+// End Section: FH desktop navigation interactions
+
 // Section: FH mobile navigation toggle
 fhOnReady(function () {
   const header = document.querySelector('[data-fh-header-root]');
