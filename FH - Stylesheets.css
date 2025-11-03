@@ -1687,6 +1687,16 @@ body,
   background-color: #ffffff;
 }
 
+.fh-header__nav-surface {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  padding: 4px 10px;
+  --fh-nav-highlight-x: 0px;
+  --fh-nav-highlight-width: 0px;
+  --fh-nav-highlight-opacity: 0;
+}
+
 .fh-header__nav-inner {
   position: relative;
   max-width: 1600px;
@@ -1717,11 +1727,33 @@ body,
   display: flex;
   justify-content: flex-start;
   gap: 0;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0;
   list-style: none;
   margin: 0;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.4px;
+}
+
+.fh-header__nav-highlight {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: var(--fh-nav-highlight-width, 0px);
+  transform: translateX(var(--fh-nav-highlight-x, 0px));
+  border-radius: 16px;
+  background: linear-gradient(90deg, rgba(49, 165, 240, 0.22) 0%, rgba(49, 165, 240, 0.08) 100%);
+  box-shadow: 0 20px 35px rgba(15, 23, 42, 0.16);
+  opacity: var(--fh-nav-highlight-opacity, 0);
+  transition:
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.22s ease;
+  pointer-events: none;
 }
 
 .fh-header__nav-item {
@@ -1741,6 +1773,10 @@ body,
   text-decoration: none;
   white-space: nowrap;
   text-transform: uppercase;
+  border-radius: 14px;
+  position: relative;
+  z-index: 1;
+  transition: color 0.2s ease;
 }
 
 .fh-header__nav-icon {
@@ -1778,6 +1814,11 @@ body,
 .fh-header__nav-link:focus {
   color: var(--fh-color-dark-blue);
   text-decoration: none;
+}
+
+.fh-header__nav-item.is-open .fh-header__nav-link,
+.fh-header__nav-item.is-selected .fh-header__nav-link {
+  color: var(--fh-color-dark-blue);
 }
 
 .fh-header__nav-link--highlight:hover,
@@ -2077,7 +2118,9 @@ body,
 }
 
 .fh-header .nav-item:hover > .fh-header__dropdown,
-.fh-header .nav-item:focus-within > .fh-header__dropdown {
+.fh-header .nav-item:focus-within > .fh-header__dropdown,
+.fh-header__nav-item.is-open > .fh-header__dropdown,
+.fh-header__nav-item.is-selected > .fh-header__dropdown {
   display: block;
   opacity: 1;
   visibility: visible;
@@ -2424,6 +2467,10 @@ body,
     overflow-y: visible;
   }
 
+  .fh-header__nav-surface {
+    padding: 0;
+  }
+
   .fh-header__mobile-close {
     display: inline-flex;
     margin: 0;
@@ -2439,6 +2486,10 @@ body,
     flex-direction: column;
     gap: 0;
     padding: 0;
+  }
+
+  .fh-header__nav-highlight {
+    display: none;
   }
 
   .fh-header__nav--submenu-open .fh-header__nav-list {
