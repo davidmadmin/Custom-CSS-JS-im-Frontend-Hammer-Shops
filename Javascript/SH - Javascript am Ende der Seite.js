@@ -37,6 +37,133 @@
     callback();
   }
 
+  const BASKET_PREVIEW_PRICE_ROWS = [
+    { selector: 'dd[data-testing="item-sum"]', type: 'gross', role: 'item' },
+    { selector: 'dd[data-testing="item-sum-net"]', type: 'net', role: 'item' },
+    { selector: 'dd[data-testing="shipping-amount"]', type: 'gross', role: 'shipping' },
+    { selector: 'dd[data-testing="shipping-amount-net"]', type: 'net', role: 'shipping' },
+    { selector: 'dd[data-testing="basket-amount"]', type: 'gross', role: 'total' },
+    { selector: 'dd[data-testing="basket-amount-net"]', type: 'net', role: 'total' },
+  ];
+
+  function getDefinitionLabel(node) {
+    if (!node || !node.previousElementSibling) return null;
+
+    const label = node.previousElementSibling;
+
+    if (!label || !label.tagName || label.tagName.toUpperCase() !== "DT") return null;
+
+    return label;
+  }
+
+  function applyPriceRowClasses(node, type, role) {
+    if (!node || !node.classList) return;
+
+    node.classList.add("fh-basket-price", "fh-basket-price--" + type);
+
+    if (role) node.classList.add("fh-basket-price--" + role);
+
+    const label = getDefinitionLabel(node);
+
+    if (label && label.classList) {
+      label.classList.add("fh-basket-price", "fh-basket-price--" + type);
+
+      if (role) label.classList.add("fh-basket-price--" + role);
+    }
+  }
+
+  function markBasketPreviewPriceRows(root) {
+    if (typeof document === "undefined") return;
+
+    const context = root && typeof root.querySelectorAll === "function" ? root : document;
+
+    for (let index = 0; index < BASKET_PREVIEW_PRICE_ROWS.length; index += 1) {
+      const entry = BASKET_PREVIEW_PRICE_ROWS[index];
+
+      if (!entry || !entry.selector) continue;
+
+      const matches = context.querySelectorAll(entry.selector);
+
+      for (let matchIndex = 0; matchIndex < matches.length; matchIndex += 1) {
+        applyPriceRowClasses(matches[matchIndex], entry.type, entry.role);
+      }
+    }
+  }
+
+  function ensureRootPriceAttributeDefault() {
+    if (typeof document === "undefined") return;
+
+    const root = document.documentElement;
+
+    if (!root) return;
+
+    const current = root.getAttribute("data-fh-show-net-prices");
+
+    if (current !== "net" && current !== "gross") root.setAttribute("data-fh-show-net-prices", "gross");
+  }
+
+  function syncRootPriceAttribute(showNet) {
+    if (typeof document === "undefined") return;
+
+    const root = document.documentElement;
+
+    if (!root) return;
+
+    root.setAttribute("data-fh-show-net-prices", showNet ? "net" : "gross");
+  }
+
+  let basketPreviewMutationObserver = null;
+  let basketPreviewPriceEnhancementsInstalled = false;
+
+  function handleBasketPreviewMutations(mutations) {
+    if (!mutations) return;
+
+    for (let index = 0; index < mutations.length; index += 1) {
+      const mutation = mutations[index];
+
+      if (!mutation || !mutation.addedNodes) continue;
+
+      const nodes = mutation.addedNodes;
+
+      for (let nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
+        const node = nodes[nodeIndex];
+
+        if (!node || node.nodeType !== 1) continue;
+
+        markBasketPreviewPriceRows(node);
+      }
+    }
+  }
+
+  function installBasketPreviewPriceEnhancements() {
+    if (basketPreviewPriceEnhancementsInstalled) return;
+
+    basketPreviewPriceEnhancementsInstalled = true;
+
+    ensureRootPriceAttributeDefault();
+    markBasketPreviewPriceRows(document);
+
+    if (typeof document !== "undefined") {
+      document.addEventListener("fh:price-toggle-change", function (event) {
+        if (!event || !event.detail) return;
+
+        syncRootPriceAttribute(!!event.detail.showNet);
+      });
+    }
+
+    if (typeof MutationObserver === "function" && typeof document !== "undefined") {
+      basketPreviewMutationObserver = new MutationObserver(handleBasketPreviewMutations);
+
+      if (document.body) {
+        basketPreviewMutationObserver.observe(document.body, { childList: true, subtree: true });
+      }
+    }
+  }
+
+  shOnReady(function () {
+    installBasketPreviewPriceEnhancements();
+  });
+
   var holidayCache = {};
 
   function formatDateKey(date) {

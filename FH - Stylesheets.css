@@ -3133,41 +3133,47 @@ button[data-testing="quantity-btn-decrease"],
   font-weight: 400 !important;
 }
 
-:root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="item-sum"],
-:root[data-fh-show-net-prices="net"] .cmp-totals dd[data-testing="shipping-amount"],
-:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="item-sum"]),
-:root[data-fh-show-net-prices="net"] .cmp-totals dt:has(+ dd[data-testing="shipping-amount"]) {
+:root:not([data-fh-show-net-prices="net"]) .cmp-totals .fh-basket-price--net:not(.fh-basket-price--total) {
   display: none !important;
 }
 
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals dd[data-testing="item-sum-net"],
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals dd[data-testing="shipping-amount-net"],
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals dt:has(+ dd[data-testing="item-sum-net"]),
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals dt:has(+ dd[data-testing="shipping-amount-net"]) {
+:root[data-fh-show-net-prices="net"] .cmp-totals .fh-basket-price--gross:not(.fh-basket-price--total) {
   display: none !important;
 }
 
-:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount"]),
-:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dd[data-testing="basket-amount"],
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount-net"]),
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dd[data-testing="basket-amount-net"] {
+:root:not([data-fh-show-net-prices="net"]) .cmp-totals .fh-basket-price--total.fh-basket-price--net,
+:root[data-fh-show-net-prices="net"] .cmp-totals .fh-basket-price--total.fh-basket-price--gross {
   opacity: 0.6;
   font-weight: 400 !important;
 }
 
-:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount-net"]),
-:root[data-fh-show-net-prices="net"] .cmp-totals .totalSum dd[data-testing="basket-amount-net"],
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dt:has(+ dd[data-testing="basket-amount"]),
-:root:not([data-fh-show-net-prices="net"]) .cmp-totals .totalSum dd[data-testing="basket-amount"] {
+:root:not([data-fh-show-net-prices="net"]) .cmp-totals .fh-basket-price--total.fh-basket-price--gross,
+:root[data-fh-show-net-prices="net"] .cmp-totals .fh-basket-price--total.fh-basket-price--net {
   opacity: 1;
   font-weight: 700 !important;
 }
 
-.cmp-totals .totalSum dt,
-.cmp-totals .totalSum dd {
+.cmp-totals .fh-basket-price--total {
   transition: opacity 0.2s ease, font-weight 0.2s ease;
 }
 /* End Section: Basket preview totals visibility */
+
+/* Section: Basket preview item typography */
+.basket-preview .item-total-price,
+.offcanvas .item-total-price,
+.mini-basket .item-total-price,
+.item-total-price {
+  color: var(--fh-color-bright-blue);
+  font-family: "industry", sans-serif;
+}
+
+.basket-preview .item-name,
+.offcanvas .item-name,
+.mini-basket .item-name,
+.item-name {
+  color: var(--fh-color-navy-blue);
+}
+/* End Section: Basket preview item typography */
 
 /* Section: Icon Visibility Adjustments */
 .fa-heart {

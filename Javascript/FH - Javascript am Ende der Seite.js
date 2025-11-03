@@ -531,7 +531,61 @@ fhOnReady(function () {
       });
     }
 
+    const BASKET_PREVIEW_PRICE_ROWS = [
+      { selector: 'dd[data-testing="item-sum"]', type: 'gross', role: 'item' },
+      { selector: 'dd[data-testing="item-sum-net"]', type: 'net', role: 'item' },
+      { selector: 'dd[data-testing="shipping-amount"]', type: 'gross', role: 'shipping' },
+      { selector: 'dd[data-testing="shipping-amount-net"]', type: 'net', role: 'shipping' },
+      { selector: 'dd[data-testing="basket-amount"]', type: 'gross', role: 'total' },
+      { selector: 'dd[data-testing="basket-amount-net"]', type: 'net', role: 'total' },
+    ];
+
+    function getDefinitionLabel(node) {
+      if (!node || !node.previousElementSibling) return null;
+
+      const label = node.previousElementSibling;
+
+      if (!label || !label.tagName || label.tagName.toUpperCase() !== 'DT') return null;
+
+      return label;
+    }
+
+    function applyPriceRowClasses(node, type, role) {
+      if (!node || !node.classList) return;
+
+      node.classList.add('fh-basket-price', 'fh-basket-price--' + type);
+
+      if (role) node.classList.add('fh-basket-price--' + role);
+
+      const label = getDefinitionLabel(node);
+
+      if (label && label.classList) {
+        label.classList.add('fh-basket-price', 'fh-basket-price--' + type);
+
+        if (role) label.classList.add('fh-basket-price--' + role);
+      }
+    }
+
+    function markBasketPreviewPriceRows(root) {
+      if (typeof document === 'undefined') return;
+
+      const context = root && typeof root.querySelectorAll === 'function' ? root : document;
+
+      for (let index = 0; index < BASKET_PREVIEW_PRICE_ROWS.length; index += 1) {
+        const entry = BASKET_PREVIEW_PRICE_ROWS[index];
+
+        if (!entry || !entry.selector) continue;
+
+        const matches = context.querySelectorAll(entry.selector);
+
+        for (let matchIndex = 0; matchIndex < matches.length; matchIndex += 1) {
+          applyPriceRowClasses(matches[matchIndex], entry.type, entry.role);
+        }
+      }
+    }
+
     function updatePageDisplays(showNet) {
+      markBasketPreviewPriceRows(document);
       updateSingleItemVatWidgets(showNet);
       updateCategoryItemData(showNet);
       if (typeof window !== 'undefined' && window.fhWishlistMenu && typeof window.fhWishlistMenu.updatePrices === 'function') {
