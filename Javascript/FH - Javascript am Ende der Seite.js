@@ -1861,6 +1861,9 @@ fhOnReady(function () {
   let hasSubscribedToStore = false;
   let wishListUpdateVersion = 0;
   const pendingWishListUpdateWaiters = [];
+  const wishlistDataCache = Object.create(null);
+  const wishlistDataCacheOrder = [];
+  const MAX_WISHLIST_CACHE_ENTRIES = 60;
   const relevantWishListMutations = (function () {
     const baseMutationNames = [
       'setWishListItems',
@@ -1869,10 +1872,99 @@ fhOnReady(function () {
       'setWishListIds'
     ];
 
-    return baseMutationNames.concat(baseMutationNames.map(function (name) {
+    const explicitNames = baseMutationNames.concat(baseMutationNames.map(function (name) {
       return 'wishList/' + name;
     }));
+
+    return new Set(explicitNames);
   })();
+
+  function isRelevantWishListMutation(type) {
+    if (!type) return false;
+
+    if (relevantWishListMutations.has(type)) return true;
+
+    return String(type).toLowerCase().indexOf('wishlist') !== -1;
+  }
+
+  function getStateWishListItems(store) {
+    if (!store || !store.state || !store.state.wishList) return [];
+
+    const items = store.state.wishList.wishListItems;
+    return Array.isArray(items) ? items : [];
+  }
+
+  function getDocumentItemKey(documentItem) {
+    if (!documentItem) return null;
+
+    if (documentItem.id !== null && typeof documentItem.id !== 'undefined') return String(documentItem.id);
+
+    if (documentItem.variationId !== null && typeof documentItem.variationId !== 'undefined') return String(documentItem.variationId);
+
+    return null;
+  }
+
+  function rememberWishlistData(key, data) {
+    if (!key || !data) return;
+
+    wishlistDataCache[key] = data;
+
+    const existingIndex = wishlistDataCacheOrder.indexOf(key);
+
+    if (existingIndex !== -1) wishlistDataCacheOrder.splice(existingIndex, 1);
+
+    wishlistDataCacheOrder.push(key);
+
+    while (wishlistDataCacheOrder.length > MAX_WISHLIST_CACHE_ENTRIES) {
+      const oldestKey = wishlistDataCacheOrder.shift();
+
+      if (oldestKey && wishlistDataCacheOrder.indexOf(oldestKey) === -1) delete wishlistDataCache[oldestKey];
+    }
+  }
+
+  function enrichWishListItems(items) {
+    if (!Array.isArray(items) || !items.length) return [];
+
+    return items.map(function (documentItem) {
+      if (!documentItem) return documentItem;
+
+      const key = getDocumentItemKey(documentItem);
+      const hasData = documentItem.data && typeof documentItem.data === 'object';
+
+      if (hasData && key) rememberWishlistData(key, documentItem.data);
+
+      if (hasData || !key) return documentItem;
+
+      const cached = wishlistDataCache[key];
+
+      if (!cached) return documentItem;
+
+      rememberWishlistData(key, cached);
+
+      const clone = {};
+
+      Object.keys(documentItem).forEach(function (property) {
+        clone[property] = documentItem[property];
+      });
+
+      clone.data = cached;
+      return clone;
+    });
+  }
+
+  function countItemsWithData(list) {
+    if (!Array.isArray(list) || !list.length) return 0;
+
+    return list.reduce(function (count, entry) {
+      if (entry && entry.data) return count + 1;
+
+      const key = getDocumentItemKey(entry);
+
+      if (key && wishlistDataCache[key]) return count + 1;
+
+      return count;
+    }, 0);
+  }
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
@@ -1932,7 +2024,7 @@ fhOnReady(function () {
   }
 
   function notifyWishListUpdated(items) {
-    const normalizedItems = Array.isArray(items) ? items : [];
+    const normalizedItems = Array.isArray(items) ? enrichWishListItems(items) : [];
     hasLoadedOnce = true;
     wishListUpdateVersion += 1;
     updateList(normalizedItems);
@@ -1984,8 +2076,28 @@ fhOnReady(function () {
     });
   }
 
+  function hasRenderedWishlistItems() {
+    if (!list || !list.children || !list.children.length) return false;
+
+    return Array.prototype.some.call(list.children, function (child) {
+      return child && child.nodeType === Node.ELEMENT_NODE;
+    });
+  }
+
   function showLoading(isLoading) {
-    if (loadingIndicator) loadingIndicator.style.display = isLoading ? 'block' : 'none';
+    if (!loadingIndicator) return;
+
+    if (isLoading && hasLoadedOnce) {
+      const hasContent = hasRenderedWishlistItems();
+      const emptyVisible = emptyState && emptyState.style && emptyState.style.display !== 'none';
+
+      if (hasContent || emptyVisible) {
+        loadingIndicator.style.display = 'none';
+        return;
+      }
+    }
+
+    loadingIndicator.style.display = isLoading ? 'block' : 'none';
   }
 
   function showEmptyState(isEmpty) {
@@ -2228,7 +2340,7 @@ fhOnReady(function () {
   function updateList(documents) {
     clearList();
 
-    const items = Array.isArray(documents) ? documents : [];
+    const items = Array.isArray(documents) ? enrichWishListItems(documents) : [];
     const showNet = resolveWishlistShowNetPreference();
 
     if (!items.length) { showEmptyState(true); return; }
@@ -2580,9 +2692,7 @@ fhOnReady(function () {
 
         if (!variationId) return;
 
-        const stateItems = store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)
-          ? store.state.wishList.wishListItems
-          : [];
+        const stateItems = getStateWishListItems(store);
         const itemIndex = stateItems.findIndex(function (stateItem) {
           return stateItem && stateItem.id === documentItem.id;
         });
@@ -2630,11 +2740,11 @@ fhOnReady(function () {
     if (!store || typeof store.subscribe !== 'function' || hasSubscribedToStore) return;
 
     store.subscribe(function (mutation, state) {
-      if (!mutation || !mutation.type) return;
+      if (!mutation || !isRelevantWishListMutation(mutation.type)) return;
 
-      if (relevantWishListMutations.indexOf(mutation.type) === -1) return;
-
-      const items = state && state.wishList && state.wishList.wishListItems ? state.wishList.wishListItems : [];
+      const items = state && state.wishList && Array.isArray(state.wishList.wishListItems)
+        ? state.wishList.wishListItems
+        : [];
       notifyWishListUpdated(items);
     });
 
@@ -2660,9 +2770,7 @@ fhOnReady(function () {
       showError('');
 
       if (!actionName) {
-        const items = store.state && store.state.wishList && store.state.wishList.wishListItems
-          ? store.state.wishList.wishListItems
-          : [];
+        const items = getStateWishListItems(store);
         notifyWishListUpdated(items);
         showLoading(false);
         resolve(items);
@@ -2675,13 +2783,18 @@ fhOnReady(function () {
 
           if (Array.isArray(result)) documents = result; else if (result && Array.isArray(result.documents)) {
             documents = result.documents;
-          } else if (store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListItems)) {
-            documents = store.state.wishList.wishListItems;
           }
 
-          notifyWishListUpdated(documents);
+          const stateItems = getStateWishListItems(store);
+          const documentsWithData = countItemsWithData(documents);
+          const stateWithData = countItemsWithData(stateItems);
+          const chosenItems = documentsWithData >= stateWithData
+            ? (documents.length ? documents : stateItems)
+            : (stateItems.length ? stateItems : documents);
+
+          notifyWishListUpdated(chosenItems);
           showLoading(false);
-          resolve(documents);
+          resolve(chosenItems);
         })
         .catch(function (error) {
           showError('Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.');
@@ -2777,6 +2890,18 @@ fhOnReady(function () {
     event.stopPropagation();
   });
 
+  function renderWishlistSnapshotFromStore() {
+    const store = getVueStore();
+
+    if (!store) return;
+
+    const stateItems = getStateWishListItems(store);
+
+    if (!hasLoadedOnce) hasLoadedOnce = true;
+
+    updateList(stateItems);
+  }
+
   document.addEventListener('click', function (event) {
     const wishlistButton = event.target.closest('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
 
@@ -2786,6 +2911,8 @@ fhOnReady(function () {
 
     if (store) subscribeToWishList(store);
 
+    renderWishlistSnapshotFromStore();
+
     if (!isOpen) {
       showLoading(true);
       openMenuWithOptions({ refresh: false });
@@ -2794,7 +2921,7 @@ fhOnReady(function () {
     }
 
     const waitPromise = store
-      ? waitForNextWishListUpdate(4000)
+      ? waitForNextWishListUpdate(1500)
       : Promise.reject(new Error('wish-list-store-unavailable'));
 
     waitPromise
