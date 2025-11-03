@@ -16,25 +16,6 @@
           <span v-else v-cloak>Hallo</span>
         </div>
         <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
-        <div class="fh-header__price-toggle" data-fh-price-toggle-root v-if="$store.getters.isLoggedIn">
-          <div class="fh-header__price-toggle-row">
-            <button
-              type="button"
-              class="fh-header__price-toggle-button is-active"
-              data-fh-price-toggle
-              role="switch"
-              aria-checked="true"
-              aria-label="Preise mit Mehrwertsteuer anzeigen"
-            >
-              <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="gross">inkl. MwSt.</span>
-              <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="net">exkl. MwSt.</span>
-              <span class="fh-header__price-toggle-handle" aria-hidden="true"></span>
-            </button>
-            <span class="fh-header__price-toggle-note fh-header__price-toggle-status" data-fh-price-toggle-note>
-              Preise mit MwSt
-            </span>
-          </div>
-        </div>
       </div>
       <div
         class="fh-header__customer-segment"
