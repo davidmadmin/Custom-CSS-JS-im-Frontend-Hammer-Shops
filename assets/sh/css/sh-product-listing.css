@@ -1,0 +1,30 @@
+/* SH Product Listing Styles */
+
+/* Section: Artikel Preview Card Preis Styling */
+.price {
+  color: #f20000 !important;
+  font-size: 1.4rem;
+  font-family: industry, helvetica, arial, sans-serif;
+}
+/* End Section: Artikel Preview Card Preis Styling */
+
+/* Section: Artikel Preview Card UVP ausblenden */
+.widget-item-grid .cmp-product-thumb .prices .crossprice {
+  display: none !important;
+}
+/* End Section: Artikel Preview Card UVP ausblenden */
+
+/* Section: Artikelpaket Badge ausblenden */
+.cmp-product-thumb .badge.badge-bundle {
+  display: none !important;
+}
+/* End Section: Artikelpaket Badge ausblenden */
+
+/* Section: Default plenty product card styling */
+.widget-item-grid .cmp-product-thumb {
+  margin-bottom: 0 !important;
+  border: solid;
+  border-radius: 6px;
+  border-color: #f6f6f6;
+}
+/* End Section: Default plenty product card styling */

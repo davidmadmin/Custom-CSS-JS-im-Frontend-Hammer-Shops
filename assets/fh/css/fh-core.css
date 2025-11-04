@@ -1,0 +1,79 @@
+/* FH Core Styles */
+
+/* Section: Custom Schriftarten + Preis Text Stylings */
+
+@import url("https://use.typekit.net/lwl7tyw.css");
+
+:root {
+  --fh-color-bright-blue: #31a5f0; /* Standard bright blue */
+  --fh-color-navy-blue: #1f2937; /* Dark blue tone from the header gradient */
+  --fh-color-dark-blue: #0f172a; /* Deep dark blue accent */
+  --fh-color-light-blue: #eef3fd; /* Light blue from footer icon backgrounds */
+  --fh-color-alert-red: #d32f2f; /* Alert red for destructive actions */
+  --fh-color-surface: #ffffff; /* Neutral surface base without any tint */
+  --fh-color-body-surface: #fbfbfb; /* Subtle light grey body background */
+  --fh-color-input-surface: #f3f4f6; /* Soft grey for input backgrounds */
+  --fh-shadow-elevation-soft: 0 24px 48px -32px rgba(15, 23, 42, 0.35); /* Modern diffused shadow */
+}
+
+/* Section: Border radius utility classes */
+.br-l {
+  border-radius: 14px !important;
+}
+
+.br-m {
+  border-radius: 6px !important;
+}
+
+.br-s {
+  border-radius: 3px !important;
+}
+
+/* End Section: Border radius utility classes */
+
+/* Section: Allgemeines Button-Styling für .btn-primary */
+.btn.btn-primary {
+  background-color: #000000 !important; /* Tiefschwarz – kräftig */
+  color: #ffffff !important; /* Weißer Text */
+  font-family: "industry", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6em 1.2em;
+  border: 2px solid var(--fh-color-bright-blue); /* Fensterhammer-Blau als Kontrast */
+  border-radius: 6px;
+  box-shadow: 0 4px 0 var(--fh-color-bright-blue); /* "Solider" Shadow-Effekt */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover-Effekt für besseren Button-Charakter */
+.btn.btn-primary:hover {
+  background-color: var(--fh-color-bright-blue) !important;
+  color: #000000 !important;
+  box-shadow: 0 4px 0 #000000;
+  transform: translateY(-1px);
+}
+
+/* End Section: Allgemeines Button-Styling für .btn-primary */
+
+/* Section: Form Control Border Radius */
+.custom-select {
+  border-radius: 6px;
+}
+
+.form-control {
+  border-radius: 6px;
+}
+
+.page-item:first-child .page-link {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.page-item:last-child .page-link {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+/* End Section: Form Control Border Radius */
