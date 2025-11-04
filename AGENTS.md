@@ -9,7 +9,7 @@ Ich möchte den Header und Footer für die Hammer-Shops (FH und SH) auf Basis vo
 * **Verknüpfung:** Alle Anpassungen in diesem Repo greifen in die bestehenden Ceres-Templates ein. Prüfe daher vor Änderungen, welche IDs, Klassen, Slots oder Komponenten Ceres bereits liefert, und stelle sicher, dass Custom CSS/JS sauber darauf aufsetzt.
 * **Priorität:** Header- und Footer-Rebuilds haben Vorrang gegenüber sonstigen Styling-Hacks. Ergänzende Funktionen (Countdown, Progressbars etc.) dürfen nur eingefügt werden, wenn sie mit dem neuen Aufbau kompatibel sind.
 
-## Technologiestack plentyShop LTS 5.0.76
+## Technologiestack plentyShop LTS 5.0.78
 
 Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentyShop-LTS-Plugins (Ceres & IO) in Release **5.0.76** zusammen und beschreibt, wofür sie genutzt werden.
 
