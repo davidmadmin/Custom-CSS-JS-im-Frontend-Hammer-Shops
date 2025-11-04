@@ -1874,6 +1874,11 @@ fhOnReady(function () {
   let outsideHandlersBound = false;
   let highlightFrame = null;
   let pendingHighlightItem = null;
+  let highlightHasShown = false;
+
+  const HOVER_INDICATOR_RATIO = 0.6;
+  const HOVER_INDICATOR_COLOR = '#4b5563';
+  const SELECTED_INDICATOR_COLOR = '#000000';
 
   function isDesktop() {
     return desktopMedia.matches;
@@ -1921,6 +1926,7 @@ fhOnReady(function () {
 
     surface.style.setProperty('--fh-nav-highlight-opacity', '0');
     surface.style.setProperty('--fh-nav-highlight-width', '0px');
+    surface.style.setProperty('--fh-nav-highlight-color', HOVER_INDICATOR_COLOR);
   }
 
   function applyHighlightForItem(item) {
@@ -1944,25 +1950,27 @@ fhOnReady(function () {
       return;
     }
 
-    const horizontalPadding = 24;
-    let width = linkRect.width + horizontalPadding;
-    let offset = linkRect.left - surfaceRect.left - horizontalPadding / 2;
+    const isSelected = selectedItem === item;
+    const ratio = isSelected ? 1 : HOVER_INDICATOR_RATIO;
+    let width = linkRect.width * ratio;
+    let offset = linkRect.left - surfaceRect.left + (linkRect.width - width) / 2;
     const maxWidth = surfaceRect.width;
 
-    if (offset < 0) {
-      width += offset;
-      offset = 0;
-    }
-
-    if (offset + width > maxWidth) {
-      width = maxWidth - offset;
-    }
-
-    width = Math.max(0, width);
+    width = Math.max(0, Math.min(width, maxWidth));
+    offset = Math.min(Math.max(offset, 0), Math.max(0, maxWidth - width));
 
     surface.style.setProperty('--fh-nav-highlight-width', width.toFixed(2) + 'px');
     surface.style.setProperty('--fh-nav-highlight-x', offset.toFixed(2) + 'px');
+    surface.style.setProperty('--fh-nav-highlight-color', isSelected ? SELECTED_INDICATOR_COLOR : HOVER_INDICATOR_COLOR);
     surface.style.setProperty('--fh-nav-highlight-opacity', '1');
+
+    if (!highlightHasShown) {
+      highlightHasShown = true;
+
+      raf(function () {
+        surface.classList.add('fh-header__nav-surface--highlight-visible');
+      });
+    }
   }
 
   function requestHighlight(item) {
@@ -2045,11 +2053,21 @@ fhOnReady(function () {
   function selectItem(item) {
     if (selectedItem === item) return;
 
-    if (selectedItem) selectedItem.classList.remove('is-selected');
+    if (selectedItem) {
+      selectedItem.classList.remove('is-selected');
+      setExpanded(selectedItem, false);
+    }
 
     selectedItem = item || null;
 
     if (selectedItem) {
+      navItems.forEach(function (navItem) {
+        if (navItem === selectedItem) return;
+
+        navItem.classList.remove('is-selected');
+        setExpanded(navItem, false);
+      });
+
       selectedItem.classList.add('is-selected');
       nav.classList.add('fh-header__nav--locked');
       openItem(selectedItem);
@@ -2058,6 +2076,9 @@ fhOnReady(function () {
       nav.classList.remove('fh-header__nav--locked');
       unbindOutsideHandlers();
       closeCurrentItem();
+      navItems.forEach(function (navItem) {
+        setExpanded(navItem, false);
+      });
       requestHighlight(null);
     }
   }
