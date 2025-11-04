@@ -2031,7 +2031,6 @@ body,
 
 .fh-header__dropdown-sublist {
   margin-top: 4px;
-  padding-left: 20px;
   display: flex;
   flex-direction: column;
   row-gap: 2px;
