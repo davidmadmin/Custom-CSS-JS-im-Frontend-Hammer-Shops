@@ -3117,6 +3117,21 @@ button[data-testing="quantity-btn-decrease"],
 [id^="basketListContainer"] > div > div > div > div.meta-container-wrapper > div > div.basket-item-container-right > div.qty-box-container > div > div > button:nth-child(2) {
   border-bottom-right-radius: 6px !important;
 }
+
+.page-checkout .widget-rounded-corners .basket-list-item 
+.basket-item .meta-container-wrapper .meta-container-wrapper-inner 
+.basket-item-container-right .qty-box-container .qty-btn-container 
+button[data-testing="quantity-btn-increase"] {
+    border-top-right-radius: 6px !important;
+}
+
+.page-checkout .widget-rounded-corners .basket-list-item 
+.basket-item .meta-container-wrapper .meta-container-wrapper-inner 
+.basket-item-container-right .qty-box-container .qty-btn-container 
+button[data-testing="quantity-btn-decrease"] {
+    border-bottom-right-radius: 6px !important;
+}
+
 /* End Section: Quantity Input Styling */
 #page-body
   > div
