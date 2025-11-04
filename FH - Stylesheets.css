@@ -1988,13 +1988,7 @@ body,
   color: var(--fh-color-bright-blue);
 }
 
-@media (max-width: 1200px) {
-  .fh-header__brand-logos {
-    gap: 24px 32px;
-  }
-}
-
-@media (max-width: 992px) {
+@media (max-width: 1600px) {
   .fh-header__dropdown-grid--brands {
     grid-template-columns: 1fr;
     column-gap: 0;
@@ -2413,7 +2407,7 @@ body,
   border-bottom: none;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1600px) {
   .fh-header {
     width: 100%;
     max-width: 100%;
