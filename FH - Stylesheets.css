@@ -305,8 +305,8 @@ body,
   margin: 0 auto;
   color: #1a1a1a;
   font-family: "Open Sans", Arial, sans-serif;
-  width: 1600px; /* Do not change this for Desktop viewport*/
-  max-width: 1600px; /* Do not change this for Desktop viewport*/
+  width: 100%;
+  max-width: 1600px; /* Cap desktop layout while letting the header stretch fluidly */
   --fh-top-bar-max-height: 72px;
   --fh-top-bar-padding-y: 14px;
 }
@@ -873,7 +873,7 @@ body,
 
 .fh-header__main {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   padding: 26px 32px 22px;
   border-bottom: 1px solid #e2e2e2;
@@ -1988,13 +1988,7 @@ body,
   color: var(--fh-color-bright-blue);
 }
 
-@media (max-width: 1200px) {
-  .fh-header__brand-logos {
-    gap: 24px 32px;
-  }
-}
-
-@media (max-width: 992px) {
+@media (max-width: 1600px) {
   .fh-header__dropdown-grid--brands {
     grid-template-columns: 1fr;
     column-gap: 0;
@@ -2413,7 +2407,7 @@ body,
   border-bottom: none;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1600px) {
   .fh-header {
     width: 100%;
     max-width: 100%;
@@ -2729,9 +2723,20 @@ body.fh-mobile-menu-open {
 }
 
 #page-header > div {
+  width: 100%;
   max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+#page-header > [class*="container"],
+#page-header > div > [class*="container"] {
+  width: 100%;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
 }
 /* End Section: Page Header Background */
 
