@@ -3218,7 +3218,7 @@ button[data-testing="quantity-btn-decrease"],
 }
 
 .form-control {
-  border-radius: 6px;
+  border-radius: 6px !important;
 }
 
 .page-item:first-child .page-link {
