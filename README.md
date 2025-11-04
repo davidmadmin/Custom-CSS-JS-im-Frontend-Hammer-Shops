@@ -11,17 +11,17 @@ Dieses Repository sammelt alle CSS- und JavaScript-Anpassungen, mit denen wir di
   3. Änderungen an diesem Repository müssen mit den jeweiligen Twig- und Vue-Komponenten aus Ceres abgeglichen werden, damit IDs, Klassen und Slots korrekt angesprochen werden.
 * **Priorität:** Wenn Entscheidungen zwischen Inline-Anpassungen hier und nativen Ceres-Funktionen zu treffen sind, gilt: Header- und Footer-Neubauten haben Vorrang, danach greifen zusätzliche Styles oder Skripte.
 
-## Technologie-Stack plentyShop LTS 5.0.76
+## Technologie-Stack plentyShop LTS 5.0.78
 
-Die Version **5.0.76** der offiziellen plentyShop-LTS-Plugins (Ceres & IO) bildet den Referenzstand für alle Arbeiten in diesem Repository. Die folgenden Tabellen listen sämtliche relevanten Komponenten, deren Version sowie Einsatz und Reichweite auf.
+Die Version **5.0.78** der offiziellen plentyShop-LTS-Plugins (Ceres & IO) bildet den Referenzstand für alle Arbeiten in diesem Repository. Die folgenden Tabellen listen sämtliche relevanten Komponenten, deren Version sowie Einsatz und Reichweite auf.
 
 ### Core & Laufzeit
 
 | Bereich | Komponente | Version | Nutzung & Umfang |
 | --- | --- | --- | --- |
 | Backend Runtime | PHP | `^7.3 \|\| ^8.0` | Mindestanforderung laut `plugin-io`; betreibt Controller, Services und Logikschichten. |
-| Plenty Plugin Platform | plentyShop LTS (Ceres) | `5.0.76` | Standard-Storefront inkl. Twig-/Vue-Templates, Assets und Übersetzungen. |
-| Plenty Plugin Platform | IO-Plugin | `5.0.76` | Liefert Routing, Controller, REST-Brücken und Basisfunktionen für Ceres. |
+| Plenty Plugin Platform | plentyShop LTS (Ceres) | `5.0.78` | Standard-Storefront inkl. Twig-/Vue-Templates, Assets und Übersetzungen. |
+| Plenty Plugin Platform | IO-Plugin | `5.0.78` | Liefert Routing, Controller, REST-Brücken und Basisfunktionen für Ceres. |
 | Node.js Engine | Node.js | `14` | Erforderlich laut `package.json` (Ceres) für Build-Skripte und Tooling. |
 | Paketmanager | npm | `6` (Node 14) | Installiert/verwaltet alle Frontend-Abhängigkeiten und Build-Tools. |
 
