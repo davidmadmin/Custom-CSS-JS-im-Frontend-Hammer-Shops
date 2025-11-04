@@ -989,7 +989,7 @@ fhOnReady(function () {
 
   if (!header) return;
 
-  const desktopMediaQuery = window.matchMedia('(min-width: 992px)');
+  const desktopMediaQuery = window.matchMedia('(min-width: 1601px)');
   const scrolledClassName = 'fh-header--scrolled';
   const hiddenClassName = 'fh-header--topbar-hidden';
   const topBar = header.querySelector('.fh-header__top-bar');
@@ -1100,7 +1100,7 @@ fhOnReady(function () {
 
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const desktopMedia = window.matchMedia('(min-width: 1601px)');
   const panelContainer = menu.querySelector('[data-fh-mobile-views]');
   const panelElements = panelContainer
     ? Array.prototype.slice.call(panelContainer.querySelectorAll('[data-fh-mobile-panel]'))
@@ -1740,7 +1740,7 @@ fhOnReady(function () {
 
   if (!header.querySelector('.fh-header__search-area')) return;
 
-  const mobileMedia = window.matchMedia('(max-width: 991.98px)');
+  const mobileMedia = window.matchMedia('(max-width: 1600px)');
   const SCROLL_THRESHOLD = 40;
   const raf =
     typeof window.requestAnimationFrame === 'function'
@@ -1857,7 +1857,7 @@ fhOnReady(function () {
 
   if (navItems.length === 0) return;
 
-  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const desktopMedia = window.matchMedia('(min-width: 1601px)');
   const raf =
     typeof window.requestAnimationFrame === 'function'
       ? window.requestAnimationFrame.bind(window)
