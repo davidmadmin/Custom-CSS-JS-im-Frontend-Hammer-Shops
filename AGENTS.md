@@ -11,15 +11,15 @@ Ich möchte den Header und Footer für die Hammer-Shops (FH und SH) auf Basis vo
 
 ## Technologiestack plentyShop LTS 5.0.78
 
-Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentyShop-LTS-Plugins (Ceres & IO) in Release **5.0.76** zusammen und beschreibt, wofür sie genutzt werden.
+Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentyShop-LTS-Plugins (Ceres & IO) in Release **5.0.78** zusammen und beschreibt, wofür sie genutzt werden.
 
 ### Core & Laufzeit
 
 | Bereich | Komponente | Version | Nutzung & Umfang |
 | --- | --- | --- | --- |
 | Backend Runtime | PHP | `^7.3 \|\| ^8.0` | Mindestanforderung laut `plugin-io` für sämtliche Backend-Logik, Controller und Helper. |
-| Plenty Plugin Platform | plentyShop LTS (Ceres) | `5.0.76` | Standard-Storefront mit Twig/Vue-Templates, Ressourcen und Übersetzungen. |
-| Plenty Plugin Platform | IO-Plugin | `5.0.76` | Liefert Routing, Controller, Services und REST-Brücken für Ceres. |
+| Plenty Plugin Platform | plentyShop LTS (Ceres) | `5.0.78` | Standard-Storefront mit Twig/Vue-Templates, Ressourcen und Übersetzungen. |
+| Plenty Plugin Platform | IO-Plugin | `5.0.78` | Liefert Routing, Controller, Services und REST-Brücken für Ceres. |
 | Node.js Engine | Node.js | `14` | Erforderlich laut `package.json` (Ceres) für Build- und Tooling-Aufgaben. |
 | Paketmanager | npm | `6` (mit Node 14 gebündelt) | Installiert Frontend- und Build-Abhängigkeiten. |
 
