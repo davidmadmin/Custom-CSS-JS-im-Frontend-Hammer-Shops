@@ -1792,6 +1792,11 @@ body,
   height: 20px;
 }
 
+.fh-header__nav-icon img {
+  width: 20px;
+  height: 20px;
+}
+
 .fh-header__nav-text {
   display: inline-block;
 }
@@ -2639,6 +2644,11 @@ body,
   }
 
   .fh-header__nav-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .fh-header__nav-icon img {
     width: 22px;
     height: 22px;
   }
