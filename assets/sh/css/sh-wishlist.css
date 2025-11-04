@@ -1,0 +1,53 @@
+/* SH Wishlist Styles */
+
+/* Section: Merkliste Button Styling */
+.widget.widget-add-to-wish-list .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.widget.widget-add-to-wish-list .btn .fa {
+  display: none;
+}
+
+.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: inherit;
+  transition: color 0.2s ease-in-out;
+}
+
+.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.widget.widget-add-to-wish-list .btn .fh-wishlist-button-icon svg path {
+  fill: none;
+  transition: fill 0.2s ease-in-out;
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button--active .fh-wishlist-button-icon {
+  color: #000000;
+}
+
+.widget.widget-add-to-wish-list .btn.fh-wishlist-button--active .fh-wishlist-button-icon svg path {
+  fill: currentColor;
+}
+
+.widget.widget-add-to-wish-list .btn .fh-wishlist-button-label {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+/* End Section: Merkliste Button Styling */
+
+/* Section: Icon Visibility Adjustments */
+.fa-heart {
+  display: none !important;
+}
