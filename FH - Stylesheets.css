@@ -3336,3 +3336,13 @@ button[data-testing="quantity-btn-decrease"] {
 .fa-heart {
   display: none !important;
 }
+/* End Section: Icon Visibility Adjustments */
+
+/* Section: Temporary hidden blocks until external functions added */
+.fh-header__price-toggle,
+.schlossfinder
+{
+  display: none !important;
+}
+/* End Section: Temporary hidden blocks until external functions added */
+
