@@ -61,6 +61,7 @@
       </div>
       <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
         <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
+          <span class="fh-header__status-indicator" :class="{ 'is-logged-in': $store.getters.isLoggedIn }" aria-hidden="true"></span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
             <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
             <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
@@ -135,7 +136,7 @@
                 <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Ulrich Vorländer</div>
                 <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
-                <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+                <a href="/kundenbetreuer-ulrich-vorlaender" class="fh-header__contact-button">Direkt kontaktieren</a>
               </div>
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--personal"
@@ -145,7 +146,7 @@
                 <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Andreas Fischermann</div>
                 <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
-                <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+                <a href="/kundenbetreuer-andreas-fischermann" class="fh-header__contact-button">Direkt kontaktieren</a>
               </div>
               <div
                 class="fh-header__customer-contact fh-header__customer-contact--personal"
@@ -155,7 +156,7 @@
                 <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Gabriele Sprenger</div>
                 <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
-                <a href="#" class="fh-header__contact-button">Direkt kontaktieren</a>
+                <a href="/kundenbetreuerin-gabriele-sprenger" class="fh-header__contact-button">Direkt kontaktieren</a>
               </div>
             </div>
             <div class="fh-header__panel-divider mb-3"></div>
