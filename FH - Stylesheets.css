@@ -1988,7 +1988,7 @@ body,
   color: var(--fh-color-bright-blue);
 }
 
-@media (max-width: 1600px) {
+@media (max-width: 991.98px) {
   .fh-header__dropdown-grid--brands {
     grid-template-columns: 1fr;
     column-gap: 0;
