@@ -1809,7 +1809,6 @@ body,
   text-decoration: none;
   white-space: nowrap;
   text-transform: uppercase;
-  border-radius: 14px;
   position: relative;
   z-index: 1;
   transition: color 0.2s ease;
