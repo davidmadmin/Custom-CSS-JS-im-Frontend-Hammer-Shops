@@ -3434,6 +3434,16 @@ fhOnReady(function () {
     if (basketOpen === lastKnownState) return;
     lastKnownState = basketOpen;
 
+    if (basketOpen) {
+      if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+        window.fhAccountMenu.close();
+      }
+
+      if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+        window.fhWishlistMenu.close();
+      }
+    }
+
     const elements = document.querySelectorAll(focusableSelector);
 
     for (let index = 0; index < elements.length; index += 1) {
