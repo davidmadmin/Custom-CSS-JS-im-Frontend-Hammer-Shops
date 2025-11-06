@@ -3378,3 +3378,18 @@ button[data-testing="quantity-btn-decrease"] {
     transform: none;
 }
 /* End Section: Style fix for cookie select options */
+
+/* Section: Account Page Edits */
+.order-return-history-list,
+.order-history-list {
+     border-radius: 12px;
+     border: 1px solid rgba(0, 0, 0, .125);
+     background-color: #fff;
+     padding: 12px
+}
+
+.widget-account-settings .card,
+.widget-bank-details .card {
+     border-radius: 12px !important;
+}
+/* End Section: Account Page Edits */
