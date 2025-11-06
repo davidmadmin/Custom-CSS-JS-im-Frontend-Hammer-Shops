@@ -4220,11 +4220,13 @@ fhOnReady(function () {
     const path = window.location.pathname;
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const inCartPreview = Boolean(bar.closest('.basket-preview'));
+    const shouldHideOnPage =
+      path.includes('/kundenkonto') || path.includes('/bestellbestaetigung');
     const hide =
       (pickup && pickup.checked) ||
       (isCheckoutPage() && !isGermanySelected()) ||
       (inCartPreview && !isGermanySelectedInCartPreview()) ||
-      (path.includes('/bestellbestaetigung') && total < THRESHOLD);
+      shouldHideOnPage;
     bar.style.display = hide ? 'none' : '';
   }
 
