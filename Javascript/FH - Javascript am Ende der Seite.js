@@ -1564,6 +1564,10 @@ fhOnReady(function () {
       link.removeAttribute('data-fh-mobile-pending');
       link.classList.remove('fh-header__nav-link--pending');
       link.classList.remove('fh-header__mobile-submenu-link--pending');
+
+      var spinner = link.querySelector('.fh-header__pending-spinner');
+
+      if (spinner && spinner.parentNode) spinner.parentNode.removeChild(spinner);
     });
   }
 
@@ -1578,6 +1582,19 @@ fhOnReady(function () {
       link.classList.add('fh-header__mobile-submenu-link--pending');
     } else {
       link.classList.add('fh-header__nav-link--pending');
+    }
+
+    if (!link.querySelector('.fh-header__pending-spinner')) {
+      var spinner = document.createElement('span');
+      spinner.className = 'fh-header__pending-spinner';
+      spinner.setAttribute('aria-hidden', 'true');
+
+      var icon = document.createElement('i');
+      icon.className = 'fa fa-circle-o-notch fa-spin';
+      icon.setAttribute('aria-hidden', 'true');
+
+      spinner.appendChild(icon);
+      link.appendChild(spinner);
     }
 
     menu.classList.add('fh-header__nav--pending');

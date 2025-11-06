@@ -1844,11 +1844,11 @@ body,
 
 .fh-header__nav-link--pending {
   position: relative;
-  color: var(--fh-color-dark-blue);
-  font-weight: 600;
-  background-color: color-mix(in srgb, var(--fh-color-bright-blue) 18%, transparent);
-  box-shadow: inset 4px 0 0 var(--fh-color-bright-blue);
-  border-radius: 8px;
+  color: inherit;
+  font-weight: 700;
+  background-color: transparent;
+  box-shadow: none;
+  padding-right: 36px;
 }
 
 .fh-header__nav-link:hover,
@@ -2418,10 +2418,33 @@ body,
 
 .fh-header__mobile-submenu-link--pending {
   position: relative;
-  color: var(--fh-color-dark-blue);
-  font-weight: 600;
-  background-color: color-mix(in srgb, var(--fh-color-bright-blue) 18%, transparent);
-  box-shadow: inset 4px 0 0 var(--fh-color-bright-blue);
+  display: block;
+  color: inherit;
+  font-weight: 700;
+  background-color: transparent;
+  box-shadow: none;
+  padding-right: 32px;
+}
+
+.fh-header__mobile-submenu-link--pending:focus {
+  background-color: transparent;
+}
+
+.fh-header__pending-spinner {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.95em;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.fh-header__pending-spinner .fa {
+  font-size: 1em;
 }
 
 .fh-header__mobile-submenu-list li:last-child .fh-header__mobile-submenu-link {
