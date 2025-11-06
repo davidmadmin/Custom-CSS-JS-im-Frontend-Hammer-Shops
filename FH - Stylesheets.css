@@ -3345,3 +3345,13 @@ button[data-testing="quantity-btn-decrease"] {
 }
 /* End Section: Temporary hidden blocks until external functions added */
 
+/* Section: Style fix for cookie select options */
+[data-testing="cookie-bar"] .btn.btn-primary.btn-appearance,
+[data-testing="cookie-bar"] .btn.btn-primary.btn-appearance:hover {
+    padding-bottom: 5;
+    margin-bottom: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    transform: none;
+}
+/* End Section: Style fix for cookie select options */
