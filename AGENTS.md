@@ -95,4 +95,5 @@ Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentySh
 * Arbeite mit sauber dokumentierten HTML-Strukturen. Inline-CSS ist erlaubt, darf aber keine Skripte einbetten.
 * JavaScript-Erweiterungen sollen bestehende Ceres-Hooks nutzen; vermeide doppelte Event-Listener, wenn Ceres bereits Funktionen liefert.
 * Beachte, dass beide Shops (FH & SH) synchron angepasst werden müssen. Änderungen in einem Shop dürfen den anderen nicht beschädigen.
+* Verwende für Shop-Verlinkungen immer relative Pfade (z. B. `/start` statt `https://www.fenster-hammer.de/start` oder `https://www.schraubenhammer.de/start`).
 * Halte README und begleitende Dokumentation aktuell, wenn du neue Features oder Abhängigkeiten ergänzt.
