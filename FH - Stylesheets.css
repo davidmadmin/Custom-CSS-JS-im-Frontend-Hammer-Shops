@@ -1845,9 +1845,10 @@ body,
 .fh-header__nav-link--pending {
   position: relative;
   color: inherit;
-  font-weight: inherit;
+  font-weight: 700;
   background-color: transparent;
   box-shadow: none;
+  padding-right: 36px;
 }
 
 .fh-header__nav-link:hover,
@@ -2416,21 +2417,30 @@ body,
 }
 
 .fh-header__mobile-submenu-link--pending {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  position: relative;
+  display: block;
   color: inherit;
-  font-weight: inherit;
+  font-weight: 700;
   background-color: transparent;
   box-shadow: none;
+  padding-right: 32px;
+}
+
+.fh-header__mobile-submenu-link--pending:focus {
+  background-color: transparent;
 }
 
 .fh-header__pending-spinner {
+  position: absolute;
+  top: 50%;
+  right: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   font-size: 0.95em;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .fh-header__pending-spinner .fa {
