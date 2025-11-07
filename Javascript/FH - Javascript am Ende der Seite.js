@@ -4566,14 +4566,14 @@ fhOnReady(function () {
 // Section: Signature console log by David M. Abdin
 (function fhSignatureLog() {
   var headingStyle = [
-    'color: #1f2937',
+    'color: #ffffff',
     'font-weight: 600',
-    'font-size: 13px',
+    'font-size: 14px',
     'font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif',
   ].join('; ');
 
   var detailStyle = [
-    'color: #4b5563',
+    'color: #bfbfbf',
     'font-weight: 400',
     'font-size: 12px',
     'font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif',
