@@ -4562,3 +4562,32 @@ fhOnReady(function () {
 // End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
 })();
+
+// Section: Signature console log by David M. Abdin
+(function fhSignatureLog() {
+  var titleStyle = [
+    'color: #0f172a',
+    'background: linear-gradient(135deg, #31a5f0, #7dd3fc)',
+    'font-weight: 700',
+    'font-size: 16px',
+    'padding: 8px 14px',
+    'border-radius: 8px 8px 0 0',
+    'display: block',
+  ].join('; ');
+
+  var bodyStyle = [
+    'color: #0f172a',
+    'background: #e0f2fe',
+    'font-size: 13px',
+    'padding: 12px 14px',
+    'border-radius: 0 0 8px 8px',
+    'line-height: 1.6',
+    'display: block',
+  ].join('; ');
+
+  console.log(
+    '%cSoftware Systems Integrations was done by David M. Abdin for INTRA-TEC GmbH\n%cMore of this page was designed and coded by David M. Abdin.\nContact me on LinkedIn for problems, questions or business inquires https://www.linkedin.com/in/david-m-abdin-5656aa367/',
+    titleStyle,
+    bodyStyle,
+  );
+})();
