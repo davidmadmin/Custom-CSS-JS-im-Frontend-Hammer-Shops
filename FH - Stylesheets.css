@@ -3399,4 +3399,8 @@ button[data-testing="quantity-btn-decrease"] {
 .widget-bank-details .card {
      border-radius: 12px !important;
 }
+
+.widget-bank-details .cmp-address-list .items>div:first-child {
+      min-height: 0;
+}
 /* End Section: Account Page Edits */
