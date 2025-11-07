@@ -49,6 +49,10 @@
   font-size: 1.4rem;
   font-family: industry, helvetica, arial, sans-serif;
 }
+
+.cmp-product-thumb .price {
+  font-size: 1.4rem !important;
+}
 /* End Section: Artikel Preview Card Preis Styling */
 
 /* Section: Artikel Preview Card UVP ausblenden */
