@@ -4568,14 +4568,14 @@ fhOnReady(function () {
   var headingStyle = [
     'color: #ffffff',
     'font-weight: 600',
-    'font-size: 14px',
+    'font-size: 10px',
     'font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif',
   ].join('; ');
 
   var detailStyle = [
     'color: #bfbfbf',
     'font-weight: 400',
-    'font-size: 12px',
+    'font-size: 8px',
     'font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif',
   ].join('; ');
 
