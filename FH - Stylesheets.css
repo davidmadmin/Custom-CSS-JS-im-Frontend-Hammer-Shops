@@ -2875,7 +2875,9 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
   background-color: var(--fh-color-light-blue) !important;
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 4px color-mix(in srgb, var(--fh-color-bright-blue) 15%, transparent);
-  display: inline-flex;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   align-items: center;
   gap: 0.55rem;
   line-height: 1.2;

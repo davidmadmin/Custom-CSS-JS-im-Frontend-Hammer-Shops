@@ -597,7 +597,9 @@ button[data-testing="quantity-btn-decrease"],
 
 /* Section: Merkliste Button Styling */
 .widget.widget-add-to-wish-list .btn {
-  display: inline-flex;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   align-items: center;
   gap: 0.55rem;
 }
