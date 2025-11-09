@@ -602,7 +602,7 @@ button[data-testing="quantity-btn-decrease"],
   gap: 0.55rem;
 }
 
-.widget.widget-add-to-wish-list .btn .fa {
+.widget.widget-add-to-wish-list .btn[data-sh-wishlist-enhanced="true"] .fa {
   display: none;
 }
 
@@ -643,6 +643,6 @@ button[data-testing="quantity-btn-decrease"],
 /* End Section: Merkliste Button Styling */
 
 /* Section: Icon Visibility Adjustments */
-.fa-heart {
+.widget.widget-add-to-wish-list .btn[data-sh-wishlist-enhanced="true"] .fa-heart {
   display: none !important;
 }

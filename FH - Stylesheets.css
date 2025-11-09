@@ -2881,7 +2881,7 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"] {
   line-height: 1.2;
 }
 
-.widget.widget-add-to-wish-list .btn .fa {
+.widget.widget-add-to-wish-list .btn[data-fh-wishlist-enhanced="true"] .fa {
   display: none;
 }
 
@@ -3366,7 +3366,7 @@ button[data-testing="quantity-btn-decrease"] {
 /* End Section: Basket preview totals visibility */
 
 /* Section: Icon Visibility Adjustments */
-.fa-heart {
+.widget.widget-add-to-wish-list .btn[data-fh-wishlist-enhanced="true"] .fa-heart {
   display: none !important;
 }
 /* End Section: Icon Visibility Adjustments */
