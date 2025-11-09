@@ -990,22 +990,52 @@ shOnReady(function () {
   // Section: SH wish list button enhancer
   shOnReady(function () {
     var wishlistHeartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
-    var addTooltipText = 'Zur Merkliste hinzufügen';
-    var removeTooltipText = 'Von der Merkliste entfernen';
     var attributeNames = ['title', 'data-original-title', 'aria-label', 'data-title-add', 'data-title-remove'];
     var stateAttributeNames = ['aria-pressed', 'class', 'data-mode', 'data-added', 'data-in-wish-list'];
     var observerAttributeNames = attributeNames.concat(stateAttributeNames);
 
     function normalizeTooltipValue(value) {
-      if (!value) return value;
+      if (typeof value !== 'string') return value;
 
-      var normalized = value.replace(/wunschliste/gi, 'Merkliste');
+      return value.trim();
+    }
 
-      if (/entfern/i.test(normalized)) return removeTooltipText;
+    function extractListLabel(source) {
+      if (!source) return '';
 
-      if (/hinzuf[üu]g/i.test(normalized)) return addTooltipText;
+      var trimmed = source.trim();
 
-      return normalized;
+      if (!trimmed) return '';
+
+      var sentenceMatch = trimmed.match(/^(?:Zur|Zum|Zu der|Zu dem|Zur\s+der|Zum\s+der|Zur\s+dem)\s+(.+?)\s+(?:hinzuf|entfern)/i);
+
+      if (sentenceMatch && sentenceMatch[1]) return sentenceMatch[1].trim();
+
+      var keywordMatch = trimmed.match(/merkliste|wunschliste/i);
+
+      if (keywordMatch && keywordMatch[0]) return keywordMatch[0].trim();
+
+      return trimmed;
+    }
+
+    function resolveWishlistLabel(button, currentLabel) {
+      if (currentLabel && currentLabel.trim()) return currentLabel.trim();
+
+      var labelSources = [
+        button ? button.getAttribute('data-sh-wishlist-label') : '',
+        button ? button.getAttribute('data-title-add') : '',
+        button ? button.getAttribute('title') : '',
+        button ? button.getAttribute('aria-label') : '',
+        button ? button.textContent : ''
+      ];
+
+      for (var index = 0; index < labelSources.length; index += 1) {
+        var label = extractListLabel(labelSources[index]);
+
+        if (label) return label;
+      }
+
+      return 'Merkliste';
     }
 
     function ensureWishlistMarkup(button) {
@@ -1030,6 +1060,7 @@ shOnReady(function () {
       if (iconWrapper.innerHTML !== wishlistHeartSvg) iconWrapper.innerHTML = wishlistHeartSvg;
 
       var labelWrapper = button.querySelector('.fh-wishlist-button-label');
+      var existingLabelText = labelWrapper ? labelWrapper.textContent : '';
 
       if (!labelWrapper) {
         labelWrapper = document.createElement('span');
@@ -1037,7 +1068,9 @@ shOnReady(function () {
         button.appendChild(labelWrapper);
       }
 
-      labelWrapper.textContent = 'Merkliste';
+      var nextLabel = resolveWishlistLabel(button, existingLabelText);
+
+      if (labelWrapper.textContent !== nextLabel) labelWrapper.textContent = nextLabel;
 
       if (iconWrapper.nextSibling !== labelWrapper) button.insertBefore(labelWrapper, iconWrapper.nextSibling);
 
@@ -1070,10 +1103,6 @@ shOnReady(function () {
           if (normalized !== value) button.setAttribute(name, normalized);
         }
       });
-
-      if (button.getAttribute('data-title-add') !== addTooltipText) button.setAttribute('data-title-add', addTooltipText);
-
-      if (button.getAttribute('data-title-remove') !== removeTooltipText) button.setAttribute('data-title-remove', removeTooltipText);
     }
 
     function updateWishlistButtonState(button) {
@@ -1083,7 +1112,7 @@ shOnReady(function () {
       var hasRemoveText = stateAttributes.some(function (name) {
         var value = button.getAttribute(name);
 
-        return typeof value === 'string' && value.trim() === removeTooltipText;
+        return typeof value === 'string' && /entfern/i.test(value);
       });
 
       var dataMode = (button.getAttribute('data-mode') || '').toLowerCase();

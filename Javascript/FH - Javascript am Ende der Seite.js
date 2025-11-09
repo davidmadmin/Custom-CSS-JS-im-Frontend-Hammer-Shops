@@ -3231,22 +3231,52 @@ fhOnReady(function () {
 // Section: FH wish list button enhancer
 fhOnReady(function () {
   const wishlistHeartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
-  const addTooltipText = 'Zur Merkliste hinzufügen';
-  const removeTooltipText = 'Von der Merkliste entfernen';
   const attributeNames = ['title', 'data-original-title', 'aria-label', 'data-title-add', 'data-title-remove'];
   const stateAttributeNames = ['aria-pressed', 'class', 'data-mode', 'data-added', 'data-in-wish-list'];
   const observerAttributeNames = attributeNames.concat(stateAttributeNames);
 
   function normalizeTooltipValue(value) {
-    if (!value) return value;
+    if (typeof value !== 'string') return value;
 
-    let normalized = value.replace(/wunschliste/gi, 'Merkliste');
+    return value.trim();
+  }
 
-    if (/entfern/i.test(normalized)) return removeTooltipText;
+  function extractListLabel(source) {
+    if (!source) return '';
 
-    if (/hinzuf[üu]g/i.test(normalized)) return addTooltipText;
+    const trimmed = source.trim();
 
-    return normalized;
+    if (!trimmed) return '';
+
+    const sentenceMatch = trimmed.match(/^(?:Zur|Zum|Zu der|Zu dem|Zur\s+der|Zum\s+der|Zur\s+dem)\s+(.+?)\s+(?:hinzuf|entfern)/i);
+
+    if (sentenceMatch && sentenceMatch[1]) return sentenceMatch[1].trim();
+
+    const keywordMatch = trimmed.match(/merkliste|wunschliste/i);
+
+    if (keywordMatch && keywordMatch[0]) return keywordMatch[0].trim();
+
+    return trimmed;
+  }
+
+  function resolveWishlistLabel(button, currentLabel) {
+    if (currentLabel && currentLabel.trim()) return currentLabel.trim();
+
+    const labelSources = [
+      button ? button.getAttribute('data-fh-wishlist-label') : '',
+      button ? button.getAttribute('data-title-add') : '',
+      button ? button.getAttribute('title') : '',
+      button ? button.getAttribute('aria-label') : '',
+      button ? button.textContent : ''
+    ];
+
+    for (let index = 0; index < labelSources.length; index += 1) {
+      const label = extractListLabel(labelSources[index]);
+
+      if (label) return label;
+    }
+
+    return 'Merkliste';
   }
 
   function ensureWishlistMarkup(button) {
@@ -3271,6 +3301,7 @@ fhOnReady(function () {
     if (iconWrapper.innerHTML !== wishlistHeartSvg) iconWrapper.innerHTML = wishlistHeartSvg;
 
     let labelWrapper = button.querySelector('.fh-wishlist-button-label');
+    const existingLabelText = labelWrapper ? labelWrapper.textContent : '';
 
     if (!labelWrapper) {
       labelWrapper = document.createElement('span');
@@ -3278,7 +3309,9 @@ fhOnReady(function () {
       button.appendChild(labelWrapper);
     }
 
-    labelWrapper.textContent = 'Merkliste';
+    const nextLabel = resolveWishlistLabel(button, existingLabelText);
+
+    if (labelWrapper.textContent !== nextLabel) labelWrapper.textContent = nextLabel;
 
     if (iconWrapper.nextSibling !== labelWrapper) button.insertBefore(labelWrapper, iconWrapper.nextSibling);
 
@@ -3311,10 +3344,6 @@ fhOnReady(function () {
         if (normalized !== value) button.setAttribute(name, normalized);
       }
     });
-
-    if (button.getAttribute('data-title-add') !== addTooltipText) button.setAttribute('data-title-add', addTooltipText);
-
-    if (button.getAttribute('data-title-remove') !== removeTooltipText) button.setAttribute('data-title-remove', removeTooltipText);
   }
 
   function updateWishlistButtonState(button) {
@@ -3324,7 +3353,7 @@ fhOnReady(function () {
     const hasRemoveText = stateAttributes.some(function (name) {
       const value = button.getAttribute(name);
 
-      return typeof value === 'string' && value.trim() === removeTooltipText;
+      return typeof value === 'string' && /entfern/i.test(value);
     });
 
     const dataMode = (button.getAttribute('data-mode') || '').toLowerCase();
