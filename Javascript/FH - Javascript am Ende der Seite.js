@@ -3177,7 +3177,7 @@ fhOnReady(function () {
   });
 
   document.addEventListener('click', function (event) {
-    const wishlistButton = event.target.closest('.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn');
+    const wishlistButton = event.target.closest(wishlistButtonSelector);
 
     if (!wishlistButton) return;
 
@@ -3231,6 +3231,7 @@ fhOnReady(function () {
 // Section: FH wish list button enhancer
 fhOnReady(function () {
   const wishlistHeartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
+  const wishlistButtonSelector = '.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn';
   const addTooltipText = 'Zur Merkliste hinzufügen';
   const removeTooltipText = 'Von der Merkliste entfernen';
   const attributeNames = ['title', 'data-original-title', 'aria-label', 'data-title-add', 'data-title-remove'];
@@ -3377,9 +3378,34 @@ fhOnReady(function () {
   }
 
   function initWishlistButtons(root) {
-    const buttons = (root || document).querySelectorAll('.widget.widget-add-to-wish-list .btn');
+    const scope = root || document;
+    const seen = new Set();
+    const candidates = [];
 
-    buttons.forEach(function (button) {
+    function addCandidate(button) {
+      if (!button || seen.has(button)) return;
+
+      seen.add(button);
+      candidates.push(button);
+    }
+
+    if (scope && scope.nodeType === 1 && typeof scope.matches === 'function') {
+      if (scope.matches(wishlistButtonSelector)) {
+        addCandidate(scope);
+      } else if (scope.matches('.widget.widget-add-to-wish-list')) {
+        const directButton = scope.querySelector(wishlistButtonSelector);
+
+        if (directButton) addCandidate(directButton);
+      }
+    }
+
+    if (scope && typeof scope.querySelectorAll === 'function') {
+      scope.querySelectorAll(wishlistButtonSelector).forEach(function (button) {
+        addCandidate(button);
+      });
+    }
+
+    candidates.forEach(function (button) {
       enhanceWishlistButton(button);
       observeWishlistButton(button);
     });
@@ -3395,9 +3421,18 @@ fhOnReady(function () {
         mutation.addedNodes.forEach(function (node) {
           if (!node || (node.nodeType !== 1 && node.nodeType !== 11)) return;
 
-          if (node.nodeType === 1 && node.matches && node.matches('.widget.widget-add-to-wish-list .btn')) {
-            enhanceWishlistButton(node);
-            observeWishlistButton(node);
+          if (node.nodeType === 1 && node.matches) {
+            if (node.matches(wishlistButtonSelector)) {
+              enhanceWishlistButton(node);
+              observeWishlistButton(node);
+            } else if (node.matches('.widget.widget-add-to-wish-list')) {
+              const innerButton = node.querySelector(wishlistButtonSelector);
+
+              if (innerButton) {
+                enhanceWishlistButton(innerButton);
+                observeWishlistButton(innerButton);
+              }
+            }
           }
 
           if (node.querySelectorAll) initWishlistButtons(node);

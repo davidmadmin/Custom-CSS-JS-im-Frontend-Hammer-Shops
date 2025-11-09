@@ -990,6 +990,7 @@ shOnReady(function () {
   // Section: SH wish list button enhancer
   shOnReady(function () {
     var wishlistHeartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path></svg>';
+    var wishlistButtonSelector = '.widget.widget-add-to-wish-list button, .widget.widget-add-to-wish-list .btn';
     var addTooltipText = 'Zur Merkliste hinzufügen';
     var removeTooltipText = 'Von der Merkliste entfernen';
     var attributeNames = ['title', 'data-original-title', 'aria-label', 'data-title-add', 'data-title-remove'];
@@ -1136,9 +1137,35 @@ shOnReady(function () {
     }
 
     function initWishlistButtons(root) {
-      var buttons = (root || document).querySelectorAll('.widget.widget-add-to-wish-list .btn');
+      var scope = root || document;
+      var seen = [];
+      var candidates = [];
 
-      Array.prototype.forEach.call(buttons, function (button) {
+      function addCandidate(button) {
+        if (!button) return;
+        if (seen.indexOf(button) !== -1) return;
+
+        seen.push(button);
+        candidates.push(button);
+      }
+
+      if (scope && scope.nodeType === 1 && scope.matches) {
+        if (scope.matches(wishlistButtonSelector)) {
+          addCandidate(scope);
+        } else if (scope.matches('.widget.widget-add-to-wish-list')) {
+          var directButton = scope.querySelector(wishlistButtonSelector);
+
+          if (directButton) addCandidate(directButton);
+        }
+      }
+
+      if (scope && scope.querySelectorAll) {
+        Array.prototype.forEach.call(scope.querySelectorAll(wishlistButtonSelector), function (button) {
+          addCandidate(button);
+        });
+      }
+
+      candidates.forEach(function (button) {
         enhanceWishlistButton(button);
         observeWishlistButton(button);
       });
@@ -1154,9 +1181,18 @@ shOnReady(function () {
           Array.prototype.forEach.call(mutation.addedNodes, function (node) {
             if (!node || (node.nodeType !== 1 && node.nodeType !== 11)) return;
 
-            if (node.nodeType === 1 && node.matches && node.matches('.widget.widget-add-to-wish-list .btn')) {
-              enhanceWishlistButton(node);
-              observeWishlistButton(node);
+            if (node.nodeType === 1 && node.matches) {
+              if (node.matches(wishlistButtonSelector)) {
+                enhanceWishlistButton(node);
+                observeWishlistButton(node);
+              } else if (node.matches('.widget.widget-add-to-wish-list')) {
+                var innerButton = node.querySelector(wishlistButtonSelector);
+
+                if (innerButton) {
+                  enhanceWishlistButton(innerButton);
+                  observeWishlistButton(innerButton);
+                }
+              }
             }
 
             if (node.querySelectorAll) initWishlistButtons(node);
