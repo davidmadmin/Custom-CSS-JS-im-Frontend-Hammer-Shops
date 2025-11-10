@@ -59,9 +59,9 @@
           <div class="fh-header__panel-header">
             <div class="fh-header__panel-title">Merkliste</div>
           </div>
-          <div class="fh-header__wishlist-widget widget widget-wish-list widget-primary">
+          <div class="widget widget-wish-list widget-primary fh-header__wishlist-widget">
             <div class="widget-inner">
-              <wish-list :item-details-data="['basket.item.availability']"></wish-list>
+              <wish-list class="fh-header__wishlist-component" :item-details-data="['wishListItem.variation.availability']"></wish-list>
             </div>
           </div>
         </div>

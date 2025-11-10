@@ -1640,6 +1640,10 @@ body,
   overflow-y: auto;
 }
 
+.fh-header__wishlist-component {
+  display: block;
+}
+
 .fh-header__basket {
   position: relative;
   justify-self: end;
