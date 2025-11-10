@@ -1,5 +1,308 @@
 // Section: Global scripts for all pages
 
+// Section: Wish list button bootstrap
+(function () {
+  if (typeof window === 'undefined') return;
+
+  if (!window.__hammerWishlistComponentInitializer) {
+    window.__hammerWishlistComponentInitializer = function () {
+      if (window.__hammerWishlistComponentRegistered) return;
+      if (typeof window.Vue === 'undefined' || !window.Vue) return;
+
+      const Vue = window.Vue;
+
+      if (Vue.options && Vue.options.components && Vue.options.components['add-to-wish-list']) {
+        window.__hammerWishlistComponentRegistered = true;
+        return;
+      }
+
+      const heartIconMarkup = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>';
+
+      function getStore() {
+        if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+        if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+        if (Vue.prototype && Vue.prototype.$store) return Vue.prototype.$store;
+        return null;
+      }
+
+      function parseVariationId(value) {
+        if (value === null || typeof value === 'undefined') return null;
+
+        const number = parseInt(value, 10);
+
+        if (Number.isNaN(number)) return null;
+
+        return number;
+      }
+
+      function getVariationIdFromStore(store, itemId) {
+        if (!store) return null;
+
+        let variation = null;
+
+        if (itemId && store.getters) {
+          const getterName = itemId + '/currentItemVariation';
+
+          if (store.getters[getterName]) variation = store.getters[getterName];
+        }
+
+        if (!variation && store.state) {
+          if (itemId && store.state[itemId] && store.state[itemId].currentItemVariation) {
+            variation = store.state[itemId].currentItemVariation;
+          } else if (store.state.item && store.state.item.currentItemVariation) {
+            variation = store.state.item.currentItemVariation;
+          } else if (store.state.item && store.state.item.variation) {
+            variation = store.state.item.variation;
+          }
+        }
+
+        if (variation && variation.variation && variation.variation.id) {
+          return parseVariationId(variation.variation.id);
+        }
+
+        if (variation && variation.id) return parseVariationId(variation.id);
+
+        return null;
+      }
+
+      function getVariationIdFromDom(instance) {
+        if (!instance || !instance.$el || typeof instance.$el.closest !== 'function') return null;
+
+        const root = instance.$el.closest('[data-variation-id], [data-item-variation-id], [data-variationid]');
+
+        if (!root || !root.dataset) return null;
+
+        if (root.dataset.variationId) {
+          const directId = parseVariationId(root.dataset.variationId);
+          if (directId !== null) return directId;
+        }
+
+        if (root.dataset.itemVariationId) {
+          const itemId = parseVariationId(root.dataset.itemVariationId);
+          if (itemId !== null) return itemId;
+        }
+
+        if (root.dataset.variationid) {
+          const legacyId = parseVariationId(root.dataset.variationid);
+          if (legacyId !== null) return legacyId;
+        }
+
+        return null;
+      }
+
+      function translate(instance, key, fallback) {
+        if (instance && typeof instance.$translate === 'function') {
+          try {
+            const text = instance.$translate(key);
+
+            if (typeof text === 'string' && text.trim()) return text;
+          } catch (error) {
+            /* Ignore translation lookup errors. */
+          }
+        }
+
+        return fallback;
+      }
+
+      Vue.component('add-to-wish-list', {
+        name: 'add-to-wish-list',
+        inject: {
+          itemId: {
+            default: null,
+          },
+        },
+        props: {
+          variationId: {
+            type: [Number, String],
+            default: null,
+          },
+        },
+        data: function () {
+          return {
+            isLoading: false,
+          };
+        },
+        computed: {
+          store: function () {
+            return getStore();
+          },
+          resolvedVariationId: function () {
+            const explicit = parseVariationId(this.variationId);
+
+            if (explicit !== null) return explicit;
+
+            const storeId = getVariationIdFromStore(this.store, this.itemId);
+
+            if (storeId !== null) return storeId;
+
+            return getVariationIdFromDom(this);
+          },
+          wishListIds: function () {
+            const store = this.store;
+
+            if (!store || !store.state || !store.state.wishList) return [];
+
+            const ids = store.state.wishList.wishListIds;
+
+            return Array.isArray(ids) ? ids : [];
+          },
+          normalizedWishListIds: function () {
+            return this.wishListIds.map(function (entry) {
+              const parsed = parseVariationId(entry);
+
+              return parsed === null ? entry : parsed;
+            });
+          },
+          isVariationInWishList: function () {
+            const current = this.resolvedVariationId;
+
+            if (current === null) return false;
+
+            const normalized = this.normalizedWishListIds;
+
+            if (normalized.indexOf(current) !== -1) return true;
+
+            return normalized.indexOf(String(current)) !== -1;
+          },
+          isDisabled: function () {
+            return this.resolvedVariationId === null || !this.store;
+          },
+          buttonText: function () {
+            if (this.isVariationInWishList) {
+              return translate(this, 'Ceres::Template.singleItemWishListRemove', 'Von der Merkliste entfernen');
+            }
+
+            return translate(this, 'Ceres::Template.singleItemWishList', 'Zur Merkliste hinzufügen');
+          },
+          iconMarkup: function () {
+            return heartIconMarkup;
+          },
+          buttonClasses: function () {
+            return {
+              'fh-wishlist-button--active': this.isVariationInWishList,
+              'is-loading': this.isLoading,
+            };
+          },
+        },
+        methods: {
+          handleClick: function () {
+            if (this.isDisabled || this.isLoading) return;
+
+            this.switchState();
+          },
+          switchState: function () {
+            if (this.isVariationInWishList) this.removeFromWishList(); else this.addToWishList();
+          },
+          addToWishList: function () {
+            const id = this.resolvedVariationId;
+
+            if (id === null || !this.store || typeof this.store.dispatch !== 'function') return;
+
+            this.isLoading = true;
+
+            const result = this.store.dispatch('addToWishList', id);
+
+            this.handlePromise(result, 'Ceres::Template.singleItemWishListAdded', 'Zur Merkliste hinzugefügt');
+          },
+          removeFromWishList: function () {
+            const id = this.resolvedVariationId;
+
+            if (id === null || !this.store || typeof this.store.dispatch !== 'function') return;
+
+            this.isLoading = true;
+
+            const result = this.store.dispatch('removeWishListItem', { id: id });
+
+            this.handlePromise(result, 'Ceres::Template.singleItemWishListRemoved', 'Von der Merkliste entfernt');
+          },
+          handlePromise: function (promise, translationKey, fallbackText) {
+            const vm = this;
+
+            function finalize() {
+              vm.isLoading = false;
+            }
+
+            function notify() {
+              vm.notify(translationKey, fallbackText);
+            }
+
+            if (promise && typeof promise.then === 'function') {
+              promise.then(function () {
+                finalize();
+                notify();
+              }, function () {
+                finalize();
+              });
+
+              return;
+            }
+
+            finalize();
+            notify();
+          },
+          notify: function (translationKey, fallbackText) {
+            const message = translate(this, translationKey, fallbackText);
+            const store = this.store;
+
+            if (store && typeof store.dispatch === 'function') {
+              try {
+                store.dispatch('addNotification', {
+                  type: 'success',
+                  message: message,
+                  duration: 3000,
+                });
+
+                return;
+              } catch (error) {
+                /* Ignore notification dispatch errors. */
+              }
+            }
+
+            if (typeof window !== 'undefined' && window.NotificationService && typeof window.NotificationService.success === 'function') {
+              try {
+                const notification = window.NotificationService.success(message);
+
+                if (notification && typeof notification.closeAfter === 'function') notification.closeAfter(3000);
+              } catch (error) {
+                /* Ignore NotificationService errors. */
+              }
+            }
+          },
+        },
+        template: '<button type="button" class="btn" :class="buttonClasses" :disabled="isDisabled || isLoading" :aria-pressed="isVariationInWishList ? \"true\" : \"false\"" :aria-busy="isLoading ? \"true\" : \"false\"" @click.prevent="handleClick"><span class="fh-wishlist-button-icon" aria-hidden="true" v-html="iconMarkup"></span><span class="fh-wishlist-button-label">{{ buttonText }}</span></button>',
+      });
+
+      window.__hammerWishlistComponentRegistered = true;
+    };
+  }
+
+  function startWishlistBootstrap() {
+    const initializer = window.__hammerWishlistComponentInitializer;
+
+    if (typeof initializer !== 'function') return;
+
+    let attempts = 0;
+    const maxAttempts = 200;
+    const delay = 50;
+
+    function step() {
+      attempts += 1;
+
+      initializer();
+
+      if (window.__hammerWishlistComponentRegistered || attempts >= maxAttempts) return;
+
+      window.setTimeout(step, delay);
+    }
+
+    step();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startWishlistBootstrap);
+  else startWishlistBootstrap();
+})();
+// End Section: Wish list button bootstrap
+
 // Section: Bestell-Versand Countdown Code
 (function () {
   function getBerlinTime() {
