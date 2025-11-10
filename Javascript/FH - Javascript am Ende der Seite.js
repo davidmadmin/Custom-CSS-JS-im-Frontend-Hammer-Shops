@@ -534,13 +534,6 @@ fhOnReady(function () {
     function updatePageDisplays(showNet) {
       updateSingleItemVatWidgets(showNet);
       updateCategoryItemData(showNet);
-      if (typeof window !== 'undefined' && window.fhWishlistMenu && typeof window.fhWishlistMenu.updatePrices === 'function') {
-        try {
-          window.fhWishlistMenu.updatePrices(showNet);
-        } catch (error) {
-          /* Suppress wishlist price update errors to avoid blocking the toggle. */
-        }
-      }
     }
 
     let pageDisplayUpdateHandle = null;
@@ -876,6 +869,70 @@ fhOnReady(function () {
   };
 });
 // End Section: FH account menu toggle behaviour
+
+// Section: FH wish list menu toggle behaviour
+fhOnReady(function () {
+  const container = document.querySelector('[data-fh-wishlist-menu-container]');
+
+  if (!container) return;
+
+  const toggleButton = container.querySelector('[data-fh-wishlist-menu-toggle]');
+  const menu = container.querySelector('[data-fh-wishlist-menu]');
+
+  if (!toggleButton || !menu) return;
+
+  let isOpen = false;
+
+  function handleDocumentClick(event) {
+    if (!container.contains(event.target)) closeMenu();
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+      toggleButton.focus();
+    }
+  }
+
+  function openMenu() {
+    if (isOpen) return;
+
+    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+      window.fhAccountMenu.close();
+    }
+
+    menu.style.display = 'block';
+    menu.setAttribute('aria-hidden', 'false');
+    toggleButton.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeydown);
+    isOpen = true;
+  }
+
+  function closeMenu() {
+    if (!isOpen) return;
+
+    menu.style.display = 'none';
+    menu.setAttribute('aria-hidden', 'true');
+    toggleButton.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleKeydown);
+    isOpen = false;
+  }
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isOpen) closeMenu();
+    else openMenu();
+  });
+
+  window.fhWishlistMenu = window.fhWishlistMenu || {};
+  window.fhWishlistMenu.open = openMenu;
+  window.fhWishlistMenu.close = closeMenu;
+});
+// End Section: FH wish list menu toggle behaviour
 
 // Section: FH account page navigation
 fhOnReady(function () {

@@ -59,10 +59,11 @@
           <div class="fh-header__panel-header">
             <div class="fh-header__panel-title">Merkliste</div>
           </div>
-          <div data-fh-wishlist-menu-loading class="fh-header__panel-text py-3">Wird geladen …</div>
-          <div data-fh-wishlist-menu-error class="fh-header__panel-text text-danger py-3">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
-          <div data-fh-wishlist-menu-empty class="fh-header__panel-text py-3">Ihre Merkliste ist leer.</div>
-          <ul data-fh-wishlist-menu-list class="list-unstyled mb-0 fh-header__wishlist-list"></ul>
+          <div class="fh-header__wishlist-widget widget widget-wish-list widget-primary">
+            <div class="widget-inner">
+              <wish-list :item-details-data="['basket.item.availability']"></wish-list>
+            </div>
+          </div>
         </div>
       </div>
       <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
