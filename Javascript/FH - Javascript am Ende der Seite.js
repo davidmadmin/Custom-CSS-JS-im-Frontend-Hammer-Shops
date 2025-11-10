@@ -2419,6 +2419,12 @@ fhOnReady(function () {
         '<span class="fh-wishlist-button-label">{{ buttonText }}</span>' +
         '</button>'
     });
+
+    if (window.vueApp && typeof window.vueApp.$forceUpdate === 'function') {
+      try {
+        window.vueApp.$forceUpdate();
+      } catch (error) {}
+    }
   }
 
   register();
