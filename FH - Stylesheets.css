@@ -1626,22 +1626,16 @@ body,
   margin-right: 8px;
 }
 
-.fh-header__wishlist-widget {
-  width: 100%;
-  margin: 0;
-  border: 0;
-  background: none;
-  box-shadow: none;
-}
-
-.fh-header__wishlist-widget .widget-inner {
-  padding: 0;
+.fh-header__wishlist-list {
   max-height: 340px;
-  overflow-y: auto;
+  overflow: auto;
 }
 
-.fh-header__wishlist-component {
-  display: block;
+.fh-header__panel [data-fh-wishlist-menu-loading],
+.fh-header__panel [data-fh-wishlist-menu-error],
+.fh-header__panel [data-fh-wishlist-menu-empty] {
+  display: none;
+  font-size: 14px;
 }
 
 .fh-header__basket {
