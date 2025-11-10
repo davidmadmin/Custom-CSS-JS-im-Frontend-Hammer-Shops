@@ -1076,4 +1076,185 @@ shOnReady(function () {
 
   // End Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion
 
+  // Section: Restore add-to-wish-list widget registration
+  (function shRegisterWishListWidget() {
+    var tries = 0;
+    var maxTries = 10;
+
+    function normalizeId(value) {
+      if (value === null || value === undefined) return null;
+      var number = Number(value);
+      if (Number.isFinite(number) && number > 0) return Math.round(number);
+      number = parseInt(value, 10);
+      return Number.isFinite(number) && number > 0 ? number : null;
+    }
+
+    function translate(instance, key, fallback) {
+      if (instance && typeof instance.$translate === 'function') {
+        try {
+          var result = instance.$translate(key);
+          if (result) return result;
+        } catch (error) {}
+      }
+      return fallback;
+    }
+
+    function notify(instance, key, fallback) {
+      var message = translate(instance, key, fallback);
+      if (!message) return;
+
+      if (instance && instance.$notify && typeof instance.$notify.success === 'function') {
+        instance.$notify.success(message);
+        return;
+      }
+
+      if (window.NotificationService && typeof window.NotificationService.success === 'function') {
+        try {
+          var notification = window.NotificationService.success(message);
+          if (notification && typeof notification.closeAfter === 'function') notification.closeAfter(3000);
+        } catch (error) {}
+      }
+    }
+
+    function register() {
+      tries += 1;
+
+      if (typeof Vue === 'undefined' || !Vue || typeof Vue.component !== 'function') {
+        if (tries < maxTries) window.setTimeout(register, 200);
+        return;
+      }
+
+      if (Vue.options && Vue.options.components && Vue.options.components['add-to-wish-list']) return;
+
+      var store = (window.vueApp && window.vueApp.$store) || window.ceresStore;
+
+      if (!store) {
+        if (tries < maxTries) window.setTimeout(register, 200);
+        return;
+      }
+
+      Vue.component('add-to-wish-list', {
+        name: 'add-to-wish-list',
+        props: { variationId: { type: [Number, String], default: null } },
+        inject: { itemId: { default: null } },
+        data: function () {
+          return { isLoading: false };
+        },
+        computed: {
+          currentVariationId: function () {
+            var direct = normalizeId(this.variationId);
+            if (direct) return direct;
+            if (!this.itemId || !this.$store || !this.$store.getters) return null;
+
+            var current = this.$store.getters[this.itemId + '/currentItemVariation'];
+            if (!current) return null;
+
+            if (current.variation && current.variation.id) return normalizeId(current.variation.id);
+            if (current.variationId) return normalizeId(current.variationId);
+            return null;
+          },
+          wishListIds: function () {
+            var state = this.$store && this.$store.state && this.$store.state.wishList;
+            var ids = state && Array.isArray(state.wishListIds) ? state.wishListIds : [];
+            var result = [];
+
+            for (var index = 0; index < ids.length; index += 1) {
+              var normalized = normalizeId(ids[index]);
+              if (normalized) result.push(normalized);
+            }
+
+            return result;
+          },
+          isVariationInWishList: function () {
+            var variationId = this.currentVariationId;
+            if (!variationId) return false;
+
+            var ids = this.wishListIds;
+            for (var index = 0; index < ids.length; index += 1) {
+              if (ids[index] === variationId) return true;
+            }
+
+            return false;
+          },
+          isDisabled: function () {
+            return !this.currentVariationId || this.isLoading;
+          },
+          buttonClasses: function () {
+            return { 'fh-wishlist-button--active': this.isVariationInWishList };
+          },
+          buttonText: function () {
+            return translate(
+              this,
+              this.isVariationInWishList
+                ? 'Ceres::Template.singleItemWishListRemove'
+                : 'Ceres::Template.singleItemWishList',
+              this.isVariationInWishList
+                ? 'Von der Merkliste entfernen'
+                : 'Zur Merkliste hinzufügen'
+            );
+          }
+        },
+        methods: {
+          dispatchToggle: function (names, payload) {
+            if (!this.$store || typeof this.$store.dispatch !== 'function') return null;
+
+            for (var index = 0; index < names.length; index += 1) {
+              try {
+                var result = this.$store.dispatch(names[index], payload);
+                if (result && typeof result.then === 'function') return result;
+              } catch (error) {}
+            }
+
+            return null;
+          },
+          handleClick: function () {
+            var variationId = this.currentVariationId;
+            if (!variationId || this.isLoading) return;
+
+            var removing = this.isVariationInWishList;
+            var actions = removing
+              ? ['removeWishListItem', 'wishList/removeWishListItem']
+              : ['addToWishList', 'wishList/addWishListItem', 'addWishListItem'];
+            var payload = removing ? { id: variationId } : variationId;
+
+            this.isLoading = true;
+
+            var promise = this.dispatchToggle(actions, payload);
+            var vm = this;
+
+            if (!promise || typeof promise.then !== 'function') {
+              vm.isLoading = false;
+              return;
+            }
+
+            promise
+              .then(function () {
+                notify(
+                  vm,
+                  removing
+                    ? 'Ceres::Template.singleItemWishListRemoved'
+                    : 'Ceres::Template.singleItemWishListAdded',
+                  removing ? 'Von der Merkliste entfernt' : 'Zur Merkliste hinzugefügt'
+                );
+              })
+              .catch(function () {})
+              .then(function () {
+                vm.isLoading = false;
+              });
+          }
+        },
+        template:
+          '<button type="button" class="btn btn-link btn-sm text-muted" :class="buttonClasses" :aria-pressed="isVariationInWishList ? \\'true\\' : \\'false\\'" :aria-busy="isLoading ? \\'true\\' : \\'false\\'" :disabled="isDisabled" @click.prevent="handleClick">' +
+          '<span class="fh-wishlist-button-icon" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24" focusable="false" role="presentation"><path d="M12 21s-6.3-4.35-9.18-7.23A5.5 5.5 0 016.5 4.5c1.74 0 3.41 1.02 4.08 2.67h.84C12.09 5.52 13.76 4.5 15.5 4.5a5.5 5.5 0 013.68 9.27C18.3 16.65 12 21 12 21z" fill="currentColor"></path></svg>' +
+          '</span>' +
+          '<span class="fh-wishlist-button-label">{{ buttonText }}</span>' +
+          '</button>'
+      });
+    }
+
+    register();
+  })();
+  // End Section: Restore add-to-wish-list widget registration
+
 })();
