@@ -64,8 +64,6 @@ fhOnReady(function () {
   function openMenu() {
     if (isOpen) return;
 
-    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') window.fhWishlistMenu.close();
-
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
@@ -534,13 +532,6 @@ fhOnReady(function () {
     function updatePageDisplays(showNet) {
       updateSingleItemVatWidgets(showNet);
       updateCategoryItemData(showNet);
-      if (typeof window !== 'undefined' && window.fhWishlistMenu && typeof window.fhWishlistMenu.updatePrices === 'function') {
-        try {
-          window.fhWishlistMenu.updatePrices(showNet);
-        } catch (error) {
-          /* Suppress wishlist price update errors to avoid blocking the toggle. */
-        }
-      }
     }
 
     let pageDisplayUpdateHandle = null;
@@ -2240,10 +2231,6 @@ fhOnReady(function () {
 });
 // End Section: FH desktop navigation highlight & selection behaviour
 
-// Section: FH wish list flyout preview (deactivated)
-// Merkliste-spezifische JavaScript-Logik wurde entfernt, damit die Buttons ohne Funktion bleiben.
-// End Section: FH wish list flyout preview (deactivated)
-
 // Section: Restrict focus to the basket preview while it is open
 fhOnReady(function () {
   const body = document.body;
@@ -2284,10 +2271,6 @@ fhOnReady(function () {
     if (basketOpen) {
       if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
         window.fhAccountMenu.close();
-      }
-
-      if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
-        window.fhWishlistMenu.close();
       }
     }
 

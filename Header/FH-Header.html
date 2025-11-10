@@ -47,24 +47,6 @@
       </form>
     </div>
     <div class="fh-header__actions">
-      <div class="fh-wishlist-menu-container position-relative" data-fh-wishlist-menu-container>
-        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-wishlist-menu" aria-label="Merkliste" data-fh-wishlist-menu-toggle class="fh-header__icon-button">
-          <span class="fh-header__badge" v-cloak v-text="$store.getters.wishListCount || 0"></span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon fh-header__icon--wishlist">
-            <path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-3.5L4 21V5a2 2 0 0 1 2-2z"></path>
-          </svg>
-        </button>
-        <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" class="fh-header__panel">
-          <div class="fh-header__panel-arrow"></div>
-          <div class="fh-header__panel-header">
-            <div class="fh-header__panel-title">Merkliste</div>
-          </div>
-          <div data-fh-wishlist-menu-loading class="fh-header__panel-text py-3">Wird geladen …</div>
-          <div data-fh-wishlist-menu-error class="fh-header__panel-text text-danger py-3">Merkliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.</div>
-          <div data-fh-wishlist-menu-empty class="fh-header__panel-text py-3">Ihre Merkliste ist leer.</div>
-          <ul data-fh-wishlist-menu-list class="list-unstyled mb-0 fh-header__wishlist-list"></ul>
-        </div>
-      </div>
       <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
         <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
           <span class="fh-header__status-indicator" :class="{ 'is-logged-in': $store.getters.isLoggedIn }" aria-hidden="true"></span>
@@ -89,7 +71,6 @@
                 <li>Gemerkte Adressdaten</li>
                 <li>Einfacher Service</li>
                 <li>Bestellungen verfolgen</li>
-                <li>Bestehende Merkliste</li>
                 <li>Persönlicher Ansprechpartner*</li>
               </ul>
             </div>
