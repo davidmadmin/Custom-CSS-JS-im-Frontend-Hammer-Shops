@@ -10,7 +10,7 @@
 
 :root {
   --sh-color-primary-red: #f20000;      /* Main brand red (header bar, accents) */
-  --sh-color-secondary-red: #641313;    /* Deep red surface tone for buttons & bars */
+  --sh-color-secondary-red: #0b0000;    /* Deep red surface tone for buttons & bars */
   --sh-color-dark: #212529;             /* Dark grey used for text and UI elements */
   --sh-color-light: #f8f9fa;            /* Light grey layout background */
   --sh-color-alert-red: #d32f2f; /* Alert red for destructive actions */
