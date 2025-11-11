@@ -1,0 +1,929 @@
+<!--
+  This headers design and code was created by David M. Abdin for INTRA-TEC GmbH
+
+  More of this page was designed and coded by David M. Abdin.
+  Contact me on LinkedIn for business inquires https://www.linkedin.com/in/david-m-abdin-5656aa367/
+-->
+<div class="fh-header" data-fh-header-root>
+  <div class="fh-header__top-bar text-uppercase">
+    <a href="https://www.trustedshops.de/bewertung/info_XDCA531410FCCAB88C0D491294FA17294.html" target="_blank" rel="noopener" class="fh-header__top-link">
+      <span class="fh-header__bullet"></span>
+      4,86 „Sehr gut“ auf Trusted Shops
+    </a>
+    <span class="fh-header__top-item">
+      <span class="fh-header__bullet"></span>
+      Schneller Versand
+    </span>
+    <span class="fh-header__top-item">
+      <span class="fh-header__bullet"></span>
+      7-tägiger Kundenservice
+    </span>
+    <span class="fh-header__top-item">
+      <span class="fh-header__bullet"></span>
+      Kostenlose Großkundenbetreuung
+    </span>
+  </div>
+  <div class="fh-header__main">
+    <a href="/" class="fh-header__logo">
+      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Logo_neu/FH_Icon_big_Profile_Image_transparent_385x200px.png" alt="FENSTER-HAMMER">
+    </a>
+    <div class="fh-header__search-area">
+      <button type="button" class="fh-header__burger" data-fh-mobile-menu-toggle aria-controls="fh-mobile-menu" aria-expanded="false" aria-label="Menü">
+        <span class="fh-header__sr-only">Navigation öffnen</span>
+        <svg aria-hidden="true" class="fh-header__burger-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <form action="#" method="get" class="fh-header__search-form">
+        <input type="search" name="q" class="search-input fh-header__search-input" placeholder="Häufig gesucht: &quot;Edelstahl Bits&quot;" aria-label="Suche">
+        <button type="button" data-search-clear aria-label="Eingabe löschen" class="fh-header__search-clear">
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__search-clear-icon">
+            <line x1="5" y1="5" x2="15" y2="15"></line>
+            <line x1="15" y1="5" x2="5" y2="15"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
+    <div class="fh-header__actions">
+      <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
+          <span class="fh-header__status-indicator" :class="{ 'is-logged-in': $store.getters.isLoggedIn }" aria-hidden="true"></span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
+            <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
+            <path d="M4.2 21.4c.5-3.6 3.8-6.4 7.8-6.4s7.3 2.8 7.8 6.4"></path>
+          </svg>
+        </button>
+        <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
+          <div class="fh-header__panel-arrow"></div>
+          <div v-if="!$store.getters.isLoggedIn">
+            <div class="fh-header__panel-title mb-3">Ihr Konto</div>
+            <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
+            <div class="fh-header__panel-inline my-3 fh-header__panel-text">
+              <span>oder</span>
+              <a href="#registration" data-toggle="modal" data-target="#registration" data-fh-registration-trigger class="fh-header__account-register">Registrieren</a>
+            </div>
+            <div class="fh-header__panel-divider my-3"></div>
+            <div class="fh-header__panel-stack mb-3 text-body">
+              <div class="fh-header__panel-subtitle">Vorteile:</div>
+              <ul class="fh-header__panel-list">
+                <li>Gemerkte Adressdaten</li>
+                <li>Einfacher Service</li>
+                <li>Bestellungen verfolgen</li>
+                <li>Persönlicher Ansprechpartner*</li>
+              </ul>
+            </div>
+          </div>
+          <div v-else>
+            <div class="fh-header__panel-stack mb-3 text-body">
+              <div class="fh-header__panel-title">
+                <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
+                <span v-else v-cloak>Hallo</span>
+              </div>
+              <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+              <div class="fh-header__price-toggle" data-fh-price-toggle-root v-if="$store.getters.isLoggedIn">
+                <div class="fh-header__price-toggle-row">
+                  <button
+                    type="button"
+                    class="fh-header__price-toggle-button is-active"
+                    data-fh-price-toggle
+                    role="switch"
+                    aria-checked="true"
+                    aria-label="Preise mit Mehrwertsteuer anzeigen"
+                  >
+                    <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="gross">inkl. MwSt.</span>
+                    <span class="fh-header__price-toggle-option" data-fh-price-toggle-option="net">exkl. MwSt.</span>
+                    <span class="fh-header__price-toggle-handle" aria-hidden="true"></span>
+                  </button>
+                  <span class="fh-header__price-toggle-note fh-header__price-toggle-status" data-fh-price-toggle-note>
+                    Preise mit MwSt
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="fh-header__customer-segment"
+              v-if="$store.state.user && $store.state.user.userData && [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
+            >
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--standard"
+                v-if="Number($store.state.user.userData.classId) === 1"
+                v-cloak
+              >
+                <span class="fh-header__customer-contact-label">Ansprechpartner:</span>
+                <span class="fh-header__customer-contact-name">Standard</span>
+              </div>
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--personal"
+                v-else-if="Number($store.state.user.userData.classId) === 12"
+                v-cloak
+              >
+                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-name">Ulrich Vorländer</div>
+                <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
+                <a href="/kundenbetreuer-ulrich-vorlaender" class="fh-header__contact-button">Direkt kontaktieren</a>
+              </div>
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--personal"
+                v-else-if="Number($store.state.user.userData.classId) === 16"
+                v-cloak
+              >
+                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-name">Andreas Fischermann</div>
+                <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
+                <a href="/kundenbetreuer-andreas-fischermann" class="fh-header__contact-button">Direkt kontaktieren</a>
+              </div>
+              <div
+                class="fh-header__customer-contact fh-header__customer-contact--personal"
+                v-else-if="Number($store.state.user.userData.classId) === 21"
+                v-cloak
+              >
+                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-name">Gabriele Sprenger</div>
+                <div class="fh-header__customer-contact-role">Produktexpertin &amp; Kundenbetreuerin</div>
+                <a href="/kundenbetreuerin-gabriele-sprenger" class="fh-header__contact-button">Direkt kontaktieren</a>
+              </div>
+            </div>
+            <div class="fh-header__panel-divider mb-3"></div>
+            <div
+              class="fh-header__panel-contact"
+              v-if="!($store.state.user && $store.state.user.userData && [12, 16, 21].includes(Number($store.state.user.userData.classId)))"
+            >
+              <div class="fh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
+              <div class="fh-header__panel-contact-line">
+                <a href="tel:02204910980" class="fh-header__panel-contact-chip">
+                  <span class="fh-header__panel-contact-icon" aria-hidden="true">
+                    <img
+                      src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/phone.svg"
+                      alt=""
+                      class="fh-header__panel-contact-icon-image"
+                    >
+                  </span>
+                  <span class="fh-header__panel-contact-text">02204 910 980</span>
+                </a>
+                <span class="fh-header__panel-contact-separator">oder</span>
+              </div>
+              <div class="fh-header__panel-contact-line">
+                <a href="mailto:service@fenster-hammer.de" class="fh-header__panel-contact-chip">
+                  <span class="fh-header__panel-contact-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                      <path d="M3 6.75A2.75 2.75 0 0 1 5.75 4h12.5A2.75 2.75 0 0 1 21 6.75v10.5A2.75 2.75 0 0 1 18.25 20H5.75A2.75 2.75 0 0 1 3 17.25Zm2.75-.25a.75.75 0 0 0-.75.75v.26l7 4.38 7-4.38V7.25a.75.75 0 0 0-.75-.75Z" fill="currentColor"/>
+                    </svg>
+                  </span>
+                  <span class="fh-header__panel-contact-text">service@fenster-hammer.de</span>
+                </a>
+              </div>
+            </div>
+            <nav class="fh-header__panel-links mb-3">
+              <a href="/my-account" class="fh-header__panel-link">Kontoübersicht</a>
+              <a href="/my-account#bestellungen" class="fh-header__panel-link">Meine Bestellungen</a>
+              <a href="/my-account#kontoeinstellungen" class="fh-header__panel-link">Kontoeinstellungen</a>
+            </nav>
+            <div
+              class="fh-header__panel-text fh-header__account-type"
+              v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.classId != null"
+              v-cloak
+            >
+              <span
+                v-if="![1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
+                v-cloak
+              >
+                Konto: Standardkonto
+              </span>
+              <span v-else>Konto: Firmenkunde</span>
+            </div>
+            <div
+              class="fh-header__panel-text fh-header__customer-id"
+              v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.id"
+              v-cloak
+            >
+              Kunden-ID: <span v-text="$store.state.user.userData.id"></span>
+            </div>
+            <a href="#" v-logout data-fh-account-close class="fh-header__logout">
+              <span class="fh-header__logout-icon" aria-hidden="true"></span>
+              <span class="fh-header__logout-label">Abmelden</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="fh-basket-preview fh-header__basket">
+        <a v-toggle-basket-preview href="#" class="toggle-basket-preview fh-header__basket-link" aria-label="Warenkorb">
+          <span class="fh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="fh-header__basket-icon">
+            <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
+            <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
+            <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
+          </svg>
+          <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+          <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+        </a>
+        <basket-preview
+          v-if="$store.state.lazyComponent.components['basket-preview']"
+          :show-net-prices="$store.state.basket.showNetPrices"
+          :visible-fields="[
+            $store.state.basket.showNetPrices ? 'basketValueNet' : 'basketValueGross',
+            $store.state.basket.showNetPrices ? 'shippingCostsNet' : 'shippingCostsGross',
+            'totalSumNet',
+            'totalSumGross'
+          ]"
+        ></basket-preview>
+      </div>
+    </div>
+  </div>
+  <nav class="fh-header__nav" id="fh-mobile-menu" data-fh-mobile-menu data-fh-mobile-root-label="Start" aria-hidden="false">
+    <div class="fh-header__nav-inner">
+      <div class="fh-header__mobile-views" data-fh-mobile-views>
+        <div class="fh-header__mobile-view fh-header__mobile-view--root is-active" data-fh-mobile-panel="root" aria-hidden="false">
+          <div class="fh-header__mobile-submenu-header fh-header__mobile-root-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="fh-header__nav-surface" data-fh-desktop-nav-surface>
+            <span class="fh-header__nav-highlight" aria-hidden="true"></span>
+            <ul class="nav fh-header__nav-list">
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link" href="/schloesser" data-fh-mobile-submenu-target="schloesser" aria-controls="fh-mobile-submenu-schloesser" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Schloesser_icon_2.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Schlösser</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--four">
+                  <div class="fh-header__dropdown-column">
+                    <a href="/schloesser/einsteckschloesser-fuer-metalltore" class="fh-header__dropdown-link">Einsteckschlösser</a>
+                    <a href="/schloesser/elektrische-tueroeffner" class="fh-header__dropdown-link">Elektrische Türöffner</a>
+                    <a href="/schloesser/fh-schloesser" class="fh-header__dropdown-link">FH-Schlösser</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <div class="fh-header__dropdown-group">
+                      <a href="/schloesser/garagentorschloesser" class="fh-header__dropdown-link fh-header__dropdown-link--parent">Garagentorschlösser</a>
+                      <div class="fh-header__dropdown-sublist">
+                        <a href="/schloesser/garagentorschloesser/garagentorschloesser-unten-schliessend" class="fh-header__dropdown-sublink">mit Riegel nach unten</a>
+                        <a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-schliessend" class="fh-header__dropdown-sublink">mit Riegel nach oben</a>
+                        <a href="/schloesser/garagentorschloesser/garagentorschloesser-seitlich-schliessend" class="fh-header__dropdown-sublink">mit seitlich ausfahrenden Riegeln</a>
+                        <a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-und-unten-schliessend" class="fh-header__dropdown-sublink">oben und unten schließend</a>
+                        <a href="/schloesser/garagentorschloesser/griffe-und-schilder/" class="fh-header__dropdown-sublink">Zubehör für Gargentorschlösser</a>
+                      </div>
+                    </div>
+                    <a href="/schloesser/haustuerschloesser" class="fh-header__dropdown-link">Haustürschlösser</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <a href="/schloesser/kastenschloesser" class="fh-header__dropdown-link">Kastenschlösser</a>
+                    <a href="/schloesser/kaesten" class="fh-header__dropdown-link">Kästen</a>
+                    <a href="/schloesser/korridortuerschloesser" class="fh-header__dropdown-link">Korridortürschlösser</a>
+                    <a href="/profilzylinder" class="fh-header__dropdown-link">Profilzylinder</a>
+                    <a href="/schloesser/riegelschloesser/" class="fh-header__dropdown-link">Riegelschlösser</a>
+                    <a href="/schloesser/rohrrahmenschloesser" class="fh-header__dropdown-link">Rohrrahmenschlösser</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <a href="/schloesser/schliessbleche" class="fh-header__dropdown-link">Schließbleche</a>
+                    <a href="/schloesser/schiebetuerschloesser" class="fh-header__dropdown-link">Schiebtürschlösser</a>
+                    <a href="/schloesser/vorhaengeschloesser/" class="fh-header__dropdown-link">Vorhängeschlösser</a>
+                    <a href="/schloesser/wc-tuer-schloesser" class="fh-header__dropdown-link">WC-Tür-Schlösser</a>
+                    <a href="/schloesser/wohnungstuerschloesser" class="fh-header__dropdown-link">Wohnungstürschlösser</a>
+                    <a href="/schloesser/zimmertuerschloesser" class="fh-header__dropdown-link">Zimmertürschlösser</a>
+                    <a href="/schloesser/zubehoer-fuer-schloss-und-tor" class="fh-header__dropdown-link">Zubehör für Schloss und Tor</a>
+                  </div>
+                  <div class="fh-header__dropdown-footer">
+                    <hr class="fh-header__dropdown-divider">
+                    <div class="fh-header__dropdown-footer-actions">
+                      <a href="/schloesser" class="fh-header__dropdown-footer-link">Alle Schlösser sehen</a>
+                      <a href="/schlossfinder" class="schlossfinder">Schlossfinder</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link" href="/beschlaege" data-fh-mobile-submenu-target="beschlaege" aria-controls="fh-mobile-submenu-beschlaege" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Beschlaege_icon_2.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Beschläge</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--four">
+                  <div class="fh-header__dropdown-column">
+                    <a href="/klemmen/glasklemmen" class="fh-header__dropdown-link">Glasklemmen</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <div class="fh-header__dropdown-group">
+                      <a href="/griffe-und-tuerdruecker" class="fh-header__dropdown-link fh-header__dropdown-link--parent">Griffe &amp; Türdrücker</a>
+                      <div class="fh-header__dropdown-sublist">
+                        <a href="/griffe-und-tuerdruecker/tuerdruecker/" class="fh-header__dropdown-sublink">Türdrücker</a>
+                        <a href="/griffe-und-tuerdruecker/tuergarnituren/" class="fh-header__dropdown-sublink">Türgarnituren</a>
+                        <a href="/griffe-und-tuerdruecker/tuerknaeufe/" class="fh-header__dropdown-sublink">Türknäufe</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <a href="/rosetten" class="fh-header__dropdown-link">Rosetten</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <a href="/schilder" class="fh-header__dropdown-link">Schilder</a>
+                  </div>
+                  <div class="fh-header__dropdown-footer">
+                    <hr class="fh-header__dropdown-divider">
+                    <a href="/griffe-und-tuerdruecker" class="fh-header__dropdown-footer-link">Alle Beschläge sehen</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link" href="/fenster-sicherheit/" data-fh-mobile-submenu-target="fenster-sicherheit" aria-controls="fh-mobile-submenu-fenster-sicherheit" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Fenster_Sicherheit_icon_2.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Fenster &amp; Sicherheit</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--two">
+                  <div>
+                    <a href="/fenster-sicherheit/fensterbankschrauben/" class="fh-header__dropdown-link">Fensterbankschrauben</a>
+                    <a href="/fenster-sicherheit/fenstergriffe/" class="fh-header__dropdown-link">Fenstergriffe</a>
+                    <a href="/fensterleisten/" class="fh-header__dropdown-link">Fensterleisten</a>
+                    <a href="/fenster-sicherheit/fenstermontageschrauben/" class="fh-header__dropdown-link">Fenstermontageschrauben</a>
+                  </div>
+                  <div>
+                    <a href="/fenster-sicherheit/fenstersicherungen/" class="fh-header__dropdown-link">Fenstersicherungen</a>
+                    <a href="/fenster-sicherheit/keile/" class="fh-header__dropdown-link">Keile</a>
+                    <a href="/fenster-sicherheit/kompriband-fugendichtband/" class="fh-header__dropdown-link">Kompriband / Fugendichtband</a>
+                    <a href="/schloesser/vorhaengeschloesser/" class="fh-header__dropdown-link">Vorhängeschlösser</a>
+                  </div>
+                  <div class="fh-header__dropdown-footer">
+                    <hr class="fh-header__dropdown-divider">
+                    <a href="/fenster-sicherheit/" class="fh-header__dropdown-footer-link">Alle Fenster &amp; Sicherheit sehen</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link" href="/terrasse" data-fh-mobile-submenu-target="gartenbau" aria-controls="fh-mobile-submenu-gartenbau" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Gartnebau_icon.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Gartenbau</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--two">
+                  <div>
+                    <a href="/terrasse/holzschutzband" class="fh-header__dropdown-link">Holzschutzband</a>
+                    <div class="fh-header__dropdown-group">
+                      <a href="/sichtschutz" class="fh-header__dropdown-link fh-header__dropdown-link--parent">Sichtschutz</a>
+                      <div class="fh-header__dropdown-sublist">
+                        <a href="/sichtschutz?facets=230" class="fh-header__dropdown-sublink">Fleece</a>
+                        <a href="/sichtschutz?facets=228" class="fh-header__dropdown-sublink">PP (Polypropylen)</a>
+                        <a href="/sichtschutz?facets=229" class="fh-header__dropdown-sublink">PVC (Polyvinylchlorid)</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="fh-header__dropdown-group">
+                      <a href="/terrasse/" class="fh-header__dropdown-link fh-header__dropdown-link--parent">Terrassenschrauben</a>
+                      <div class="fh-header__dropdown-sublist">
+                        <a href="/terrasse/a2-edelstahlschrauben" class="fh-header__dropdown-sublink">A2 Edelstahlschrauben</a>
+                        <a href="/terrasse/a4-edelstahlschrauben" class="fh-header__dropdown-sublink">A4 Edelstahlschrauben</a>
+                        <a href="/terrasse/c1-edelstahlschrauben" class="fh-header__dropdown-sublink">C1 Edelstahlschrauben</a>
+                      </div>
+                    </div>
+                    <a href="/terrasse/terrassen-unterkonstruktion" class="fh-header__dropdown-link">Terrassen-Unterkonstruktion</a>
+                  </div>
+                  <div class="fh-header__dropdown-footer">
+                    <hr class="fh-header__dropdown-divider">
+                    <a href="/terrasse" class="fh-header__dropdown-footer-link">Alle Gartenbau sehen</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link" href="/chemische-befestigung" data-fh-mobile-submenu-target="bauchemie" aria-controls="fh-mobile-submenu-bauchemie" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Bauchemie_icon.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Bauchemie</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--one">
+                  <div>
+                    <a href="/chemische-befestigung/kleben-dichten" class="fh-header__dropdown-link">Kleben &amp; Dichten</a>
+                    <a href="/chemische-befestigung/schaum" class="fh-header__dropdown-link">Schaum</a>
+                    <a href="/chemische-befestigung/zubehoer-chemische-befestigung" class="fh-header__dropdown-link">Zubehör Chemische Befestigung</a>
+                  </div>
+                  <div class="fh-header__dropdown-footer">
+                    <hr class="fh-header__dropdown-divider">
+                    <a href="/chemische-befestigung" class="fh-header__dropdown-footer-link">Alle Bauchemie sehen</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link" href="/zubehoer" data-fh-mobile-submenu-target="zubehoer" aria-controls="fh-mobile-submenu-zubehoer" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Zubehoer_icon_2.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Zubehör</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--four">
+                  <div class="fh-header__dropdown-column">
+                    <a href="/zubehoer/arbeitshandschuhe/" class="fh-header__dropdown-link">Arbeitshandschuhe</a>
+                    <a href="/zubehoer/betriebsmittel/" class="fh-header__dropdown-link">Betriebsmittel</a>
+                    <a href="/zubehoer/bit" class="fh-header__dropdown-link">Bits</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <div class="fh-header__dropdown-group">
+                      <a href="/zubehoer/bohrer/" class="fh-header__dropdown-link fh-header__dropdown-link--parent">Bohrer</a>
+                      <div class="fh-header__dropdown-sublist">
+                        <a href="https://www.fenster-hammer.de/zubehoer/bohrer/holzbohrer/" class="fh-header__dropdown-sublink">Holzbohrer</a>
+                        <a href="https://www.fenster-hammer.de/zubehoer/bohrer/metallbohrer/" class="fh-header__dropdown-sublink">Metallbohrer</a>
+                        <a href="https://www.fenster-hammer.de/zubehoer/bohrer/sds-plus-hammerbohrer/" class="fh-header__dropdown-sublink">SDS-Plus Hammerbohrer</a>
+                      </div>
+                    </div>
+                    <a href="/zubehoer/dampfbremsen" class="fh-header__dropdown-link">Dampfbremsen</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <a href="/zubehoer/klebebaender" class="fh-header__dropdown-link">Klebebänder</a>
+                    <a href="/zubehoer/malerzubehoer/" class="fh-header__dropdown-link">Malerzubehör</a>
+                  </div>
+                  <div class="fh-header__dropdown-column">
+                    <a href="/zubehoer/schleifen-trennen/" class="fh-header__dropdown-link">Schleifen-Trennen</a>
+                    <a href="/zubehoer/werkzeug" class="fh-header__dropdown-link">Werkzeug</a>
+                  </div>
+                  <div class="fh-header__dropdown-footer">
+                    <hr class="fh-header__dropdown-divider">
+                    <a href="/zubehoer" class="fh-header__dropdown-footer-link">Alle Zubehör sehen</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link" href="/top-marken" data-fh-mobile-submenu-target="marken" aria-controls="fh-mobile-submenu-marken" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Marken_icon.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Marken</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--brands">
+                  <div class="fh-header__brand-logos">
+                    <a href="/top-marken/abus" class="fh-header__brand-logo-link">
+                      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Header_Menu_Images-and-Icons/ABUS_Logo_FH_Submenu.png" alt="ABUS" class="fh-header__brand-logo">
+                    </a>
+                    <a href="/top-marken/bever" class="fh-header__brand-logo-link">
+                      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Header_Menu_Images-and-Icons/BEVER_Logo_FH_Submenu.png" alt="BEVER" class="fh-header__brand-logo">
+                    </a>
+                    <a href="/top-marken/index" class="fh-header__brand-logo-link">
+                      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Header_Menu_Images-and-Icons/INDEX_Logo_FH_Submenu.png" alt="INDEX" class="fh-header__brand-logo">
+                    </a>
+                    <a href="/top-marken/pica" class="fh-header__brand-logo-link">
+                      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Header_Menu_Images-and-Icons/PICA_Logo_FH_Submenu.png" alt="Pica" class="fh-header__brand-logo">
+                    </a>
+                    <a href="/top-marken/screwrebel" class="fh-header__brand-logo-link">
+                      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Header_Menu_Images-and-Icons/SCREWREBEL_Logo_FH_Submenu.png" alt="SCREWREBEL" class="fh-header__brand-logo">
+                    </a>
+                    <a href="/top-marken/wera" class="fh-header__brand-logo-link">
+                      <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Header_Menu_Images-and-Icons/WERA_Logo_FH_Submenu.png" alt="WERA" class="fh-header__brand-logo">
+                    </a>
+                  </div>
+                  <div class="fh-header__brand-divider" aria-hidden="true"></div>
+                  <div class="fh-header__brand-highlights">
+                    <div class="fh-header__brand-highlights-title">Marken Highlights</div>
+                    <ul class="fh-header__brand-highlights-list">
+                      <li><a href="#" class="fh-header__brand-highlights-link">ABUS Vorhängeschlösser</a></li>
+                      <li><a href="#" class="fh-header__brand-highlights-link">BEVER Einsteckschlösser</a></li>
+                      <li><a href="#" class="fh-header__brand-highlights-link">SCREWREBEL Schrauben</a></li>
+                      <li><a href="#" class="fh-header__brand-highlights-link">Wera Werkzeug</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="fh-header__dropdown-footer">
+                  <hr class="fh-header__dropdown-divider">
+                  <a href="/top-marken" class="fh-header__dropdown-footer-link">Alle Marken sehen</a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown fh-header__nav-item">
+              <a class="nav-link fh-header__nav-link fh-header__nav-link--highlight" href="/aktion" data-fh-mobile-submenu-target="aktionen" aria-controls="fh-mobile-submenu-aktionen" aria-expanded="false">
+                <span class="fh-header__nav-icon" aria-hidden="true">
+                  <img src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/Aktionen_icon_2.svg" alt="">
+                </span>
+                <span class="fh-header__nav-text">Aktionen</span>
+              </a>
+              <div class="dropdown-menu fh-header__dropdown">
+                <div class="fh-header__dropdown-grid fh-header__dropdown-grid--one">
+                  <div>
+                    <a href="/aktion" class="fh-header__dropdown-link">Aktuelle Aktionen</a>
+                  </div>
+                  <div class="fh-header__dropdown-footer">
+                    <hr class="fh-header__dropdown-divider">
+                    <a href="/aktion" class="fh-header__dropdown-footer-link">Alle Aktionen sehen</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            </ul>
+          </div>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-schloesser" data-fh-mobile-panel="schloesser" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Schlösser</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+            <p class="fh-header__mobile-submenu-description">Passende Lösungen für Haustüren, Wohnungstüren, Zimmer und Tore: Entdecken Sie robuste Schlösser, elektrische Türöffner sowie Profilzylinder inklusive Zubehör für maximale Sicherheit.</p>
+            <div class="fh-header__mobile-submenu-cta">
+              <a href="/schlossfinder" class="schlossfinder schlossfinder--mobile">Schlossfinder</a>
+            </div>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/schloesser" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Schlösser</a></li>
+            <li><a href="/schloesser/einsteckschloesser-fuer-metalltore" class="fh-header__mobile-submenu-link">Einsteckschlösser</a></li>
+            <li><a href="/schloesser/elektrische-tueroeffner" class="fh-header__mobile-submenu-link">Elektrische Türöffner</a></li>
+            <li><a href="/schloesser/fh-schloesser" class="fh-header__mobile-submenu-link">FH-Schlösser</a></li>
+            <li><button type="button" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--has-children" data-fh-mobile-submenu-target="garagentorschloesser" aria-controls="fh-mobile-submenu-garagentorschloesser" aria-expanded="false">Garagentorschlösser</button></li>
+            <li><a href="/schloesser/kastenschloesser" class="fh-header__mobile-submenu-link">Kastenschlösser</a></li>
+            <li><a href="/kaesten" class="fh-header__mobile-submenu-link">Kästen</a></li>
+            <li><a href="/schloesser/korridortuerschloesser" class="fh-header__mobile-submenu-link">Korridortürschlösser</a></li>
+            <li><a href="/profilzylinder" class="fh-header__mobile-submenu-link">Profilzylinder</a></li>
+            <li><a href="/schloesser/riegelschloesser/" class="fh-header__mobile-submenu-link">Riegelschlösser</a></li>
+            <li><a href="/schloesser/rohrrahmenschloesser" class="fh-header__mobile-submenu-link">Rohrrahmenschlösser</a></li>
+            <li><a href="/schloesser/schliessbleche" class="fh-header__mobile-submenu-link">Schließbleche</a></li>
+            <li><a href="/schloesser/schiebetuerschloesser" class="fh-header__mobile-submenu-link">Schiebtürschlösser</a></li>
+            <li><a href="/schloesser/vorhaengeschloesser" class="fh-header__mobile-submenu-link">Vorhängeschlösser</a></li>
+            <li><a href="/schloesser/wc-tuer-schloesser" class="fh-header__mobile-submenu-link">WC-Tür-Schlösser</a></li>
+            <li><a href="/schloesser/wohnungstuerschloesser" class="fh-header__mobile-submenu-link">Wohnungstürschlösser</a></li>
+            <li><a href="/schloesser/zimmertuerschloesser" class="fh-header__mobile-submenu-link">Zimmertürschlösser</a></li>
+            <li><a href="/schloesser/zubehoer-fuer-schloss-und-tor" class="fh-header__mobile-submenu-link">Zubehör für Schloss und Tor</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-fenster-sicherheit" data-fh-mobile-panel="fenster-sicherheit" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Fenster &amp; Sicherheit</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/fenster-sicherheit/" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Fenster &amp; Sicherheit</a></li>
+            <li><a href="/fenster-sicherheit/fensterbankschrauben/" class="fh-header__mobile-submenu-link">Fensterbankschrauben</a></li>
+            <li><a href="/fenster-sicherheit/fenstergriffe/" class="fh-header__mobile-submenu-link">Fenstergriffe</a></li>
+            <li><a href="/fensterleisten/" class="fh-header__mobile-submenu-link">Fensterleisten</a></li>
+            <li><a href="/fenster-sicherheit/fenstermontageschrauben/" class="fh-header__mobile-submenu-link">Fenstermontageschrauben</a></li>
+            <li><a href="/fenster-sicherheit/fenstersicherungen/" class="fh-header__mobile-submenu-link">Fenstersicherungen</a></li>
+            <li><a href="/fenster-sicherheit/keile/" class="fh-header__mobile-submenu-link">Keile</a></li>
+            <li><a href="/fenster-sicherheit/kompriband-fugendichtband/" class="fh-header__mobile-submenu-link">Kompriband / Fugendichtband</a></li>
+            <li><a href="/schloesser/vorhaengeschloesser/" class="fh-header__mobile-submenu-link">Vorhängeschlösser</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-beschlaege" data-fh-mobile-panel="beschlaege" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Beschläge</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/griffe-und-tuerdruecker" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Beschläge</a></li>
+            <li><a href="/klemmen/glasklemmen" class="fh-header__mobile-submenu-link">Glasklemmen</a></li>
+            <li><button type="button" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--has-children" data-fh-mobile-submenu-target="griffe-und-tuerdruecker" aria-controls="fh-mobile-submenu-griffe-und-tuerdruecker" aria-expanded="false">Griffe &amp; Türdrücker</button></li>
+            <li><a href="/rosetten" class="fh-header__mobile-submenu-link">Rosetten</a></li>
+            <li><a href="/schilder" class="fh-header__mobile-submenu-link">Schilder</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-gartenbau" data-fh-mobile-panel="gartenbau" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Gartenbau</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/terrasse" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Gartenbau-Produkte</a></li>
+            <li><a href="/terrasse/holzschutzband" class="fh-header__mobile-submenu-link">Holzschutzband</a></li>
+            <li><button type="button" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--has-children" data-fh-mobile-submenu-target="sichtschutz" aria-controls="fh-mobile-submenu-sichtschutz" aria-expanded="false">Sichtschutz</button></li>
+            <li><button type="button" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--has-children" data-fh-mobile-submenu-target="terrassenschrauben" aria-controls="fh-mobile-submenu-terrassenschrauben" aria-expanded="false">Terrassenschrauben</button></li>
+            <li><a href="/terrasse/terrassen-unterkonstruktion" class="fh-header__mobile-submenu-link">Terrassen-Unterkonstruktion</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-bauchemie" data-fh-mobile-panel="bauchemie" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Bauchemie</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/chemische-befestigung" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Bauchemie</a></li>
+            <li><a href="/chemische-befestigung/kleben-dichten" class="fh-header__mobile-submenu-link">Kleben &amp; Dichten</a></li>
+            <li><a href="/chemische-befestigung/schaum" class="fh-header__mobile-submenu-link">Schaum</a></li>
+            <li><a href="/chemische-befestigung/zubehoer-chemische-befestigung" class="fh-header__mobile-submenu-link">Zubehör Chemische Befestigung</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-zubehoer" data-fh-mobile-panel="zubehoer" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Zubehör</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/zubehoer" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Zubehör-Produkte</a></li>
+            <li><a href="/zubehoer/arbeitshandschuhe/" class="fh-header__mobile-submenu-link">Arbeitshandschuhe</a></li>
+            <li><a href="/zubehoer/betriebsmittel/" class="fh-header__mobile-submenu-link">Betriebsmittel</a></li>
+            <li><a href="/zubehoer/bit" class="fh-header__mobile-submenu-link">Bits</a></li>
+            <li><button type="button" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--has-children" data-fh-mobile-submenu-target="bohrer" aria-controls="fh-mobile-submenu-bohrer" aria-expanded="false">Bohrer</button></li>
+            <li><a href="/zubehoer/dampfbremsen" class="fh-header__mobile-submenu-link">Dampfbremsen</a></li>
+            <li><a href="/zubehoer/klebebaender" class="fh-header__mobile-submenu-link">Klebebänder</a></li>
+            <li><a href="/zubehoer/malerzubehoer/" class="fh-header__mobile-submenu-link">Malerzubehör</a></li>
+            <li><a href="/zubehoer/schleifen-trennen/" class="fh-header__mobile-submenu-link">Schleifen-Trennen</a></li>
+            <li><a href="/zubehoer/werkzeug" class="fh-header__mobile-submenu-link">Werkzeug</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-bohrer" data-fh-mobile-panel="bohrer" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zur Kategorie Bohrer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Bohrer</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/zubehoer/bohrer/" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Bohrer</a></li>
+            <li><a href="https://www.fenster-hammer.de/zubehoer/bohrer/holzbohrer/" class="fh-header__mobile-submenu-link">Holzbohrer</a></li>
+            <li><a href="https://www.fenster-hammer.de/zubehoer/bohrer/metallbohrer/" class="fh-header__mobile-submenu-link">Metallbohrer</a></li>
+            <li><a href="https://www.fenster-hammer.de/zubehoer/bohrer/sds-plus-hammerbohrer/" class="fh-header__mobile-submenu-link">SDS-Plus Hammerbohrer</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-marken" data-fh-mobile-panel="marken" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Marken</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/top-marken" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Marken</a></li>
+            <li><a href="/top-marken/abus" class="fh-header__mobile-submenu-link">ABUS</a></li>
+            <li><a href="/top-marken/bever" class="fh-header__mobile-submenu-link">BEVER</a></li>
+            <li><a href="/top-marken/eff-eff" class="fh-header__mobile-submenu-link">EFF EFF</a></li>
+            <li><a href="/top-marken/index" class="fh-header__mobile-submenu-link">INDEX</a></li>
+            <li><a href="/top-marken/intra-tec" class="fh-header__mobile-submenu-link">INTRA-TEC</a></li>
+            <li><a href="/top-marken/pica" class="fh-header__mobile-submenu-link">Pica</a></li>
+            <li><a href="/top-marken/screwrebel" class="fh-header__mobile-submenu-link">SCREWREBEL</a></li>
+            <li><a href="/top-marken/wera" class="fh-header__mobile-submenu-link">WERA</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-aktionen" data-fh-mobile-panel="aktionen" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zum Hauptmenü">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Aktionen</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/aktion" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Aktionen</a></li>
+            <li><a href="/aktion" class="fh-header__mobile-submenu-link">Aktuelle Aktionen</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-griffe-und-tuerdruecker" data-fh-mobile-panel="griffe-und-tuerdruecker" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zur Kategorie Griffe &amp; Türdrücker">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Griffe &amp; Türdrücker</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/griffe-und-tuerdruecker" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Griffe &amp; Türdrücker</a></li>
+            <li><a href="/griffe-und-tuerdruecker/tuerdruecker/" class="fh-header__mobile-submenu-link">Türdrücker</a></li>
+            <li><a href="/griffe-und-tuerdruecker/tuergarnituren/" class="fh-header__mobile-submenu-link">Türgarnituren</a></li>
+            <li><a href="/griffe-und-tuerdruecker/tuerknaeufe/" class="fh-header__mobile-submenu-link">Türknäufe</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-sichtschutz" data-fh-mobile-panel="sichtschutz" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zur Kategorie Sichtschutz">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Sichtschutz</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/sichtschutz" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Sichtschutz-Produkte</a></li>
+            <li><a href="/sichtschutz?facets=230" class="fh-header__mobile-submenu-link">Fleece</a></li>
+            <li><a href="/sichtschutz?facets=228" class="fh-header__mobile-submenu-link">PP (Polypropylen)</a></li>
+            <li><a href="/sichtschutz?facets=229" class="fh-header__mobile-submenu-link">PVC (Polyvinylchlorid)</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-terrassenschrauben" data-fh-mobile-panel="terrassenschrauben" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zur Kategorie Terrassenschrauben">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Terrassenschrauben</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/terrasse" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Terrassenschrauben</a></li>
+            <li><a href="/terrasse/a2-edelstahlschrauben" class="fh-header__mobile-submenu-link">A2 Edelstahlschrauben</a></li>
+            <li><a href="/terrasse/a4-edelstahlschrauben" class="fh-header__mobile-submenu-link">A4 Edelstahlschrauben</a></li>
+            <li><a href="/terrasse/c1-edelstahlschrauben" class="fh-header__mobile-submenu-link">C1 Edelstahlschrauben</a></li>
+          </ul>
+        </div>
+        <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-garagentorschloesser" data-fh-mobile-panel="garagentorschloesser" aria-hidden="true">
+          <div class="fh-header__mobile-submenu-header">
+            <div class="fh-header__mobile-submenu-bar">
+              <button type="button" class="fh-header__mobile-submenu-back" data-fh-mobile-submenu-back aria-label="Zurück zur Kategorie Garagentorschlösser">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fh-header__mobile-submenu-back-icon">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Zurück</span>
+              </button>
+              <button type="button" class="fh-header__mobile-close" data-fh-mobile-menu-close aria-label="Menü schließen">
+                <span class="fh-header__sr-only">Navigation schließen</span>
+                <svg aria-hidden="true" class="fh-header__mobile-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="fh-header__mobile-submenu-title">Garagentorschlösser</div>
+            <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
+          </div>
+          <ul class="fh-header__mobile-submenu-list">
+            <li><a href="/schloesser/garagentorschloesser" class="fh-header__mobile-submenu-link fh-header__mobile-submenu-link--all">Alle Garagentorschlösser</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-unten-schliessend" class="fh-header__mobile-submenu-link">mit Riegel nach unten</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-schliessend" class="fh-header__mobile-submenu-link">mit Riegel nach oben</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-seitlich-schliessend" class="fh-header__mobile-submenu-link">mit seitlich ausfahrenden Riegeln</a></li>
+            <li><a href="/schloesser/garagentorschloesser/garagentorschloesser-oben-und-unten-schliessend" class="fh-header__mobile-submenu-link">oben und unten schließend</a></li>
+            <li><a href="/schloesser/garagentorschloesser/griffe-und-schilder/" class="fh-header__mobile-submenu-link">Zubehör für Gargentorschlösser</a></li>
+            <li><a href="/schloesser/haustuerschloesser" class="fh-header__mobile-submenu-link">Haustürschlösser</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
