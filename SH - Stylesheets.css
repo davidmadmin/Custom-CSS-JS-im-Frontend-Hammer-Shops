@@ -10,7 +10,7 @@
 
 :root {
   --sh-color-primary-red: #f20000;      /* Main brand red (header bar, accents) */
-  --sh-color-secondary-red: #d00000;    /* Darker red (defined as secondary in CSS) */
+  --sh-color-secondary-red: #0b0000;    /* Deep red surface tone for buttons & bars */
   --sh-color-dark: #212529;             /* Dark grey used for text and UI elements */
   --sh-color-light: #f8f9fa;            /* Light grey layout background */
   --sh-color-alert-red: #d32f2f; /* Alert red for destructive actions */
@@ -354,7 +354,11 @@ body,
   width: 100vw;
   height: 100%;
   transform: translateX(-50%);
-  background: linear-gradient(90deg, var(--sh-color-secondary-red), var(--sh-color-dark));
+  background: linear-gradient(
+    90deg,
+    var(--sh-color-secondary-red),
+    color-mix(in srgb, var(--sh-color-secondary-red) 85%, black 15%)
+  );
   z-index: -1;
   pointer-events: none;
   transition: opacity 0.35s ease;
@@ -1195,11 +1199,7 @@ body,
 }
 
 .sh-header__price-toggle-button.is-active {
-  background: linear-gradient(
-    135deg,
-    var(--sh-color-primary-red) 0%,
-    color-mix(in srgb, var(--sh-color-primary-red) 70%, var(--sh-color-dark) 30%) 100%
-  );
+  background: color-mix(in srgb, var(--sh-color-secondary-red) 70%, var(--sh-color-primary-red) 30%);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sh-color-primary-red) 90%, transparent), 0 6px 12px color-mix(in srgb, var(--sh-color-primary-red) 20%, transparent);
 }
 
@@ -1222,7 +1222,11 @@ body,
   left: 4px;
   width: 18px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ffffff 0%, var(--sh-color-light-blue) 100%);
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    color-mix(in srgb, var(--sh-color-primary-red) 12%, #ffffff 88%) 100%
+  );
   box-shadow: 0 4px 12px color-mix(in srgb, var(--sh-color-dark) 18%, transparent);
   transition: transform 0.25s ease;
 }
@@ -1293,7 +1297,11 @@ body,
   gap: 8px;
   padding: 16px 18px;
   border-radius: 14px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--sh-color-light-blue) 45%, transparent) 0%, color-mix(in srgb, var(--sh-color-light-blue) 25%, transparent) 100%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--sh-color-primary-red) 14%, #ffffff 86%) 0%,
+    color-mix(in srgb, var(--sh-color-primary-red) 8%, #ffffff 92%) 100%
+  );
   border: 1px solid color-mix(in srgb, var(--sh-color-primary-red) 35%, transparent);
   box-shadow: 0 8px 20px color-mix(in srgb, var(--sh-color-dark) 8%, transparent);
   align-self: stretch;
@@ -1325,7 +1333,7 @@ body,
 
 .sh-header__customer-contact-role {
   font-size: 11px;
-  color: color-mix(in srgb, var(--sh-color-secondary-red) 85%, #ffffff 15%);
+  color: color-mix(in srgb, var(--sh-color-secondary-red) 75%, #ffffff 25%);
   letter-spacing: 0.2px;
 }
 
@@ -1440,7 +1448,11 @@ body,
   padding: 13px 22px;
   border-radius: 14px;
   border: 1px solid transparent;
-  background: linear-gradient(120deg, var(--sh-color-secondary-red), var(--sh-color-dark));
+  background: linear-gradient(
+    120deg,
+    var(--sh-color-secondary-red),
+    color-mix(in srgb, var(--sh-color-secondary-red) 85%, black 15%)
+  );
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
@@ -1456,7 +1468,7 @@ body,
   background: linear-gradient(
     120deg,
     color-mix(in srgb, var(--sh-color-secondary-red) 80%, var(--sh-color-primary-red) 20%),
-    color-mix(in srgb, var(--sh-color-dark) 90%, black 10%)
+    color-mix(in srgb, var(--sh-color-secondary-red) 92%, black 8%)
   );
   box-shadow: 0 12px 24px color-mix(in srgb, var(--sh-color-dark) 16%, transparent);
   transform: translateY(-1px);
@@ -1583,7 +1595,7 @@ body,
   justify-content: center;
   width: 100%;
   padding: 11px 16px;
-  background-color: var(--sh-color-light-blue);
+  background-color: color-mix(in srgb, var(--sh-color-primary-red) 10%, #ffffff 90%);
   color: var(--sh-color-secondary-red);
   text-decoration: none;
   border-radius: 10px;
