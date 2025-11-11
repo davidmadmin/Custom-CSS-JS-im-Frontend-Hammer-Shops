@@ -2883,11 +2883,12 @@ shOnReady(function () {
   function getPrimaryColor() {
     const styles = getComputedStyle(document.documentElement);
     return (
-      styles.getPropertyValue('--sh-color-bright-blue') ||
+      styles.getPropertyValue('--sh-color-primary-red') ||
+      styles.getPropertyValue('--sh-color-secondary-red') ||
       styles.getPropertyValue('--primary') ||
       styles.getPropertyValue('--color-primary') ||
       styles.getPropertyValue('--bs-primary') ||
-      'var(--sh-color-bright-blue)'
+      'var(--sh-color-primary-red)'
     ).trim();
   }
 
