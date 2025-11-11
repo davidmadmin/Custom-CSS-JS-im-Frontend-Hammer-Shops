@@ -2711,9 +2711,9 @@ fhOnReady(function () {
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
 fhOnReady(function () {
   const shippingIcons = {
-    'ShippingProfileID731': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
-    'ShippingProfileID745': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
-    'ShippingProfileID710': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
+    'ShippingProfileID1331': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
+    'ShippingProfileID1345': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
+    'ShippingProfileID1310': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
   };
 
   function applyShippingIcons(root = document) {
@@ -3141,21 +3141,21 @@ fhOnReady(function () {
   let prefix = getPrefix();
 
   const allWords = [
-    "\"Profilzylinder\"",
-    "\"Sichtschutzstreifen PVC\"",
     "\"Terrassenschrauben\"",
-    "\"Klebebänder\"",
-    "\"Fenstersicherungen\"",
-    "\"FH Schlösser\"",
-    "\"Dichtungsprofile\"",
-    "\"Garagentorschlösser\"",
+    "\"Sichtschutzstreifen PVC\"",
+    "\"Terrassenzubehör\"",
+    "\"Klebeband\"",
+    "\"Tellerkopfschrauben 320mm\"",
+    "\"Tieflochmarker\"",
+    "\"Silikon\"",
+    "\"Schrauben Edelstahl\"",
     "\"Edelstahl Bits\"",
-    "\"Fensterleisten\"",
-    "\"Fenstergriffe\"",
-    "\"Aluminium Türdrücker\"",
-    "\"Fenstergriffe\"",
-    "\"Zahlenschlösser\"",
-    "\"Wera Werkzeug\""
+    "\"Holzschutzband\"",
+    "\"Bolzenanker INDEX\"",
+    "\"Solar Befestigung\"",
+    "\"Bohrerset\"",
+    "\"Justierschraube\"",
+    "\"Dübel\""
   ];
 
   let currentSet = [];
