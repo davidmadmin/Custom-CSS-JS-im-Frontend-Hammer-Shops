@@ -3017,8 +3017,13 @@ shOnReady(function () {
   function update(bar, text, shine, state) {
     const total = parseEuro(document.querySelector('dd[data-testing="item-sum"]'));
     const ratio = THRESHOLD === 0 ? 1 : total / THRESHOLD;
+    const safeRatio = Number.isFinite(ratio) ? ratio : 0;
     const reached = total >= THRESHOLD;
-    const widthRatio = reached ? 1 : Math.max(Math.min(ratio, 1), 0.02);
+    let widthRatio;
+
+    if (reached) widthRatio = 1;
+    else if (safeRatio <= 0) widthRatio = 0;
+    else widthRatio = Math.max(Math.min(safeRatio, 1), 0.02);
 
     bar.style.width = (widthRatio * 100).toFixed(2) + '%';
 
@@ -3103,10 +3108,13 @@ shOnReady(function () {
 // Section: Animierte Suchplatzhalter Vorschläge
 
 shOnReady(function () {
-  const searchInput = document.querySelector('input.search-input');
+  const header = document.querySelector('[data-sh-header-root]');
+  if (!header) return;
+
+  const searchInput = header.querySelector('input.search-input');
   if (!searchInput) return;
 
-  const clearButton = document.querySelector('[data-search-clear]');
+  const clearButton = header.querySelector('[data-search-clear]');
   const toggleClearButton = () => {
     if (!clearButton) return;
     clearButton.style.display = searchInput.value ? 'flex' : 'none';
@@ -3129,6 +3137,8 @@ shOnReady(function () {
   }
 
   let inputFocused = false;
+  const DEFAULT_PLACEHOLDER = 'Wonach suchst du?';
+  const OVERLAY_BODY_CLASS = 'sh-search-overlay-open';
 
   // CSS-based device detection
   function getDeviceType() {
@@ -3140,6 +3150,10 @@ shOnReady(function () {
   }
 
   let prefix = getPrefix();
+
+  function isOverlayOpen() {
+    return document.body.classList.contains(OVERLAY_BODY_CLASS);
+  }
 
   const allWords = [
     "\"Terrassenschrauben\"",
@@ -3181,7 +3195,7 @@ shOnReady(function () {
   }
 
   function type() {
-    if (!animationActive || !isInViewport(searchInput) || inputFocused) return;
+    if (!animationActive || !isInViewport(searchInput) || inputFocused || isOverlayOpen()) return;
 
     const fullWord = currentSet[currentWord];
     const currentText = fullWord.substring(0, currentChar);
@@ -3209,7 +3223,7 @@ shOnReady(function () {
   }
 
   function startTyping() {
-    if (!animationActive && !inputFocused) {
+    if (!animationActive && !inputFocused && !isOverlayOpen()) {
       prefix = getPrefix();
       currentSet = getRandomWords(5);
       currentWord = 0;
@@ -3227,7 +3241,7 @@ shOnReady(function () {
   function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-      if (!inputFocused) startTyping();
+      if (!inputFocused && !isOverlayOpen()) startTyping();
     }, 10000);
   }
 
@@ -3235,13 +3249,13 @@ shOnReady(function () {
   searchInput.addEventListener("focus", function () {
     inputFocused = true;
     stopTyping();
-    if (!searchInput.value) searchInput.placeholder = "Wonach suchst du?";
+    if (!searchInput.value) searchInput.placeholder = DEFAULT_PLACEHOLDER;
     // Keine Animation starten während Fokus!
   });
 
   searchInput.addEventListener("input", function () {
     stopTyping();
-    if (!searchInput.value) searchInput.placeholder = "Wonach suchst du?";
+    if (!searchInput.value) searchInput.placeholder = DEFAULT_PLACEHOLDER;
     // Keine Animation starten während Fokus!
   });
 
@@ -3251,13 +3265,44 @@ shOnReady(function () {
   });
 
   window.addEventListener("scroll", function () {
+    if (isOverlayOpen()) {
+      stopTyping();
+      return;
+    }
+
     if (!isInViewport(searchInput)) stopTyping(); else if (!animationActive && !inputFocused) {
       startTyping();
     }
   });
 
-  // Beim Start direkt Animation starten
-  startTyping();
+  const body = document.body;
+  let overlayObserver = null;
+
+  if (body && typeof MutationObserver === 'function') {
+    overlayObserver = new MutationObserver(() => {
+      if (isOverlayOpen()) {
+        stopTyping();
+        if (!searchInput.value) searchInput.placeholder = DEFAULT_PLACEHOLDER;
+      } else if (!inputFocused) {
+        resetInactivityTimer();
+      }
+    });
+
+    overlayObserver.observe(body, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  if (typeof window.addEventListener === 'function') {
+    window.addEventListener('beforeunload', function () {
+      if (overlayObserver) overlayObserver.disconnect();
+    });
+  }
+
+  // Beim Start direkt Animation starten (falls kein Overlay aktiv)
+  if (isOverlayOpen()) {
+    if (!searchInput.value) searchInput.placeholder = DEFAULT_PLACEHOLDER;
+  } else {
+    startTyping();
+  }
 });
 
 // End Section: Animierte Suchplatzhalter Vorschläge
