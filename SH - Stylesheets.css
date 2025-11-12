@@ -708,7 +708,8 @@ body,
   text-align: right;
 }
 
-.sh-footer__brand-logo {
+.sh-footer__brand-logo,
+.fh-footer__brand-logo {
   max-height: 72px;
   width: auto;
   padding: 0;
