@@ -2855,10 +2855,36 @@ fhOnReady(function () {
     return Array.from(root.querySelectorAll(`select[id*="${fragment}"]`));
   }
 
+  function isGermanyValue(value) {
+    if (value == null) return false;
+    const normalized = String(value).trim().toLowerCase();
+    return normalized === '1' || normalized === 'de' || normalized === 'deutschland' || normalized === 'germany';
+  }
+
+  function doesSelectMatchGermany(select) {
+    if (!select) return false;
+
+    if (isGermanyValue(select.value)) return true;
+
+    const option = select.selectedOptions && select.selectedOptions[0];
+    if (option) {
+      const label = (option.textContent || option.label || '').trim().toLowerCase();
+      if (label && (label === 'deutschland' || label === 'germany')) return true;
+    }
+
+    return false;
+  }
+
+  function getAllCountrySelects(root = document) {
+    return COUNTRY_SELECT_ID_FRAGMENTS.reduce((acc, fragment) => {
+      return acc.concat(findCountrySelects(fragment, root));
+    }, []);
+  }
+
   function isGermanySelected() {
-    return COUNTRY_SELECT_ID_FRAGMENTS.some((fragment) =>
-      findCountrySelects(fragment).some((select) => select.value === '1')
-    );
+    const selects = getAllCountrySelects();
+    if (!selects.length) return true;
+    return selects.some(doesSelectMatchGermany);
   }
 
   function isGermanySelectedInCartPreview() {
@@ -2866,9 +2892,9 @@ fhOnReady(function () {
     if (!bar) return true;
     const previewRoot = bar.closest('.basket-preview');
     if (!previewRoot) return true;
-    const selects = findCountrySelects('shipping-country-select', previewRoot);
+    const selects = getAllCountrySelects(previewRoot);
     if (!selects.length) return true;
-    return selects.some((select) => select.value === '1');
+    return selects.some(doesSelectMatchGermany);
   }
 
   function isCheckoutPage() {
@@ -3041,6 +3067,8 @@ fhOnReady(function () {
 
     state.message = message;
     state.reached = reached;
+
+    toggleFreeShippingBar();
   }
 
   function toggleFreeShippingBar() {
@@ -3073,10 +3101,11 @@ fhOnReady(function () {
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
-    const countrySelectors = COUNTRY_SELECT_ID_FRAGMENTS.map(
-      (frag) => `select[id*="${frag}"]`
-    ).join(', ');
+  const countrySelectors = COUNTRY_SELECT_ID_FRAGMENTS.map(
+    (frag) => `select[id*="${frag}"]`
+  ).join(', ');
 
+  if (document.body) {
     document.body.addEventListener('change', function (e) {
       if (
         e.target.matches('input[type="radio"][id^="ShippingProfileID"]') ||
@@ -3085,7 +3114,10 @@ fhOnReady(function () {
         toggleFreeShippingBar();
       }
     });
-  });
+  }
+
+  toggleFreeShippingBar();
+});
 // End Section: Gratisversand Fortschritt Balken
 
 // ===============================
@@ -3165,6 +3197,7 @@ fhOnReady(function () {
   let typingTimer;
   let animationActive = false;
   let inactivityTimer;
+  let lastPlaceholder = searchInput.placeholder || '';
 
   function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
@@ -3179,12 +3212,19 @@ fhOnReady(function () {
     return rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
   }
 
+  function updatePlaceholder(value) {
+    if (lastPlaceholder !== value) {
+      searchInput.placeholder = value;
+      lastPlaceholder = value;
+    }
+  }
+
   function type() {
     if (!animationActive || !isInViewport(searchInput) || inputFocused) return;
 
     const fullWord = currentSet[currentWord];
     const currentText = fullWord.substring(0, currentChar);
-    searchInput.placeholder = prefix + currentText;
+    updatePlaceholder(prefix + currentText);
 
     if (!isDeleting && currentChar < fullWord.length) {
       currentChar++;
@@ -3213,6 +3253,7 @@ fhOnReady(function () {
       currentSet = getRandomWords(5);
       currentWord = 0;
       currentChar = 0;
+      isDeleting = false;
       animationActive = true;
       type();
     }
@@ -3234,13 +3275,13 @@ fhOnReady(function () {
   searchInput.addEventListener("focus", function () {
     inputFocused = true;
     stopTyping();
-    if (!searchInput.value) searchInput.placeholder = "Wonach suchst du?";
+    if (!searchInput.value) updatePlaceholder("Wonach suchst du?");
     // Keine Animation starten während Fokus!
   });
 
   searchInput.addEventListener("input", function () {
     stopTyping();
-    if (!searchInput.value) searchInput.placeholder = "Wonach suchst du?";
+    if (!searchInput.value) updatePlaceholder("Wonach suchst du?");
     // Keine Animation starten während Fokus!
   });
 
