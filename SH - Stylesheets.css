@@ -154,12 +154,21 @@ body,
 /* End Section: Produktseite Variantenauswahl Box */
 
 /* Section: Verfügbarkeitshinweis Produktseite */
-#kjvItemAvailabilityText {
+#kjvItemAvailabilityText,
+.availability .availability-text,
+.availability.is-sold-out .availability-text {
   background-color: rgb(220, 252, 231);
   padding: 6px;
   border-radius: 6px;
   font-size: smaller;
   color: rgb(22, 101, 52);
+}
+
+#kjvItemAvailabilityText.is-sold-out,
+.availability.is-sold-out .availability-text.is-sold-out,
+.availability.is-sold-out .availability-text {
+  background-color: rgb(254, 226, 226);
+  color: rgb(153, 27, 27);
 }
 
 #kjvItemAvailabilityIcon {

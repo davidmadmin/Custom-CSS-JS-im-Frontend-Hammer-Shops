@@ -2502,6 +2502,87 @@ shOnReady(function () {
 });
 // End Section: Ensure auth modals load their Vue components before opening
 
+// Section: Availability state handling for product page
+shOnReady(function () {
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function resolveIsSalable(state) {
+    const variation = state && state.item ? state.item.variation : null;
+
+    if (!variation) return null;
+
+    const availability = variation.availability || {};
+    const stock = variation.stock || {};
+    const filter = variation.filter || {};
+
+    if (typeof filter.isSalable !== 'undefined') return !!filter.isSalable;
+
+    if (typeof availability.isSalable !== 'undefined') {
+      return availability.isSalable !== false && availability.isSalable !== 0;
+    }
+
+    if (typeof availability.id === 'number' && availability.id >= 7) return false;
+
+    if (typeof stock.isSalable !== 'undefined') return !!stock.isSalable;
+
+    if (typeof stock.stockLevel !== 'undefined') return stock.stockLevel > 0;
+
+    return null;
+  }
+
+  function applyAvailabilityUi(isSalable) {
+    const availabilityText = document.querySelector('#kjvItemAvailabilityText, .availability .availability-text, [data-testing="availability-text"]');
+    const availabilityIcon = document.querySelector('#kjvItemAvailabilityIcon, .availability .availability-icon, [data-testing="availability-icon"]');
+    const availabilityContainer = document.querySelector('.availability, [data-testing="availability"]');
+
+    if (availabilityText) {
+      if (!availabilityText.id) availabilityText.id = 'kjvItemAvailabilityText';
+
+      availabilityText.classList.toggle('is-sold-out', !isSalable);
+    }
+
+    if (availabilityIcon) {
+      if (!availabilityIcon.id) availabilityIcon.id = 'kjvItemAvailabilityIcon';
+
+      availabilityIcon.classList.toggle('is-sold-out', !isSalable);
+    }
+
+    if (availabilityContainer) availabilityContainer.classList.toggle('is-sold-out', !isSalable);
+
+    window.shAvailabilityHideCountdown = !isSalable;
+
+    const countdown = document.getElementById('cutoff-countdown');
+
+    if (countdown) countdown.style.display = isSalable ? '' : 'none';
+  }
+
+  function bootstrapAvailabilityWatcher() {
+    const store = getVueStore();
+
+    if (!store || typeof store.watch !== 'function') {
+      setTimeout(bootstrapAvailabilityWatcher, 400);
+      return;
+    }
+
+    store.watch(function (state) { return state; }, function (state) {
+      const isSalable = resolveIsSalable(state);
+
+      if (isSalable === null) return;
+
+      applyAvailabilityUi(isSalable);
+    }, { immediate: true });
+  }
+
+  bootstrapAvailabilityWatcher();
+});
+// End Section: Availability state handling for product page
+
 // Section: Bestell-Versand Countdown Code
 (function(){
   function getBerlinTime() {
@@ -2635,6 +2716,12 @@ shOnReady(function () {
   function waitForCountdownDiv(){
     var elem = document.getElementById('cutoff-countdown');
     if (!elem) return setTimeout(waitForCountdownDiv, 300);
+
+    if (window.shAvailabilityHideCountdown) {
+      elem.style.display = "none";
+      return setTimeout(waitForCountdownDiv, 1000);
+    }
+
     elem.style.display = "flex";
     elem.style.alignItems = "flex-start";
     elem.style.gap = "0.85em";
