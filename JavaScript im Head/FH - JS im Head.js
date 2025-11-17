@@ -2502,6 +2502,64 @@ fhOnReady(function () {
 });
 // End Section: Ensure auth modals load their Vue components before opening
 
+// Section: Availability state handling for product page
+fhOnReady(function () {
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function resolveAvailability(state) {
+    if (!state || !state.item || !state.item.variation) return null;
+
+    return state.item.variation.availability || null;
+  }
+
+  function applyAvailabilityUi(isSalable) {
+    const availabilityText = document.querySelector('#kjvItemAvailabilityText, .availability .availability-text');
+    const availabilityIcon = document.querySelector('#kjvItemAvailabilityIcon, .availability .availability-icon');
+
+    if (availabilityText) {
+      if (!availabilityText.id) availabilityText.id = 'kjvItemAvailabilityText';
+
+      availabilityText.classList.toggle('is-sold-out', !isSalable);
+    }
+
+    if (availabilityIcon) {
+      if (!availabilityIcon.id) availabilityIcon.id = 'kjvItemAvailabilityIcon';
+
+      availabilityIcon.classList.toggle('is-sold-out', !isSalable);
+    }
+
+    window.shAvailabilityHideCountdown = !isSalable;
+
+    const countdown = document.getElementById('cutoff-countdown');
+
+    if (countdown) countdown.style.display = isSalable ? '' : 'none';
+  }
+
+  function bootstrapAvailabilityWatcher() {
+    const store = getVueStore();
+
+    if (!store || typeof store.watch !== 'function') {
+      setTimeout(bootstrapAvailabilityWatcher, 400);
+      return;
+    }
+
+    store.watch(resolveAvailability, function (availability) {
+      const isSalable = availability ? availability.isSalable !== false && availability.isSalable !== 0 : true;
+
+      applyAvailabilityUi(isSalable);
+    }, { immediate: true });
+  }
+
+  bootstrapAvailabilityWatcher();
+});
+// End Section: Availability state handling for product page
+
 // Section: Bestell-Versand Countdown Code
 (function(){
   function getBerlinTime() {
@@ -2635,6 +2693,12 @@ fhOnReady(function () {
   function waitForCountdownDiv(){
     var elem = document.getElementById('cutoff-countdown');
     if (!elem) return setTimeout(waitForCountdownDiv, 300);
+
+    if (window.shAvailabilityHideCountdown) {
+      elem.style.display = "none";
+      return setTimeout(waitForCountdownDiv, 1000);
+    }
+
     elem.style.display = "flex";
     elem.style.alignItems = "flex-start";
     elem.style.gap = "0.85em";

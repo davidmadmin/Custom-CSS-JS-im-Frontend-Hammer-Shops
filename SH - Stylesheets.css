@@ -162,6 +162,11 @@ body,
   color: rgb(22, 101, 52);
 }
 
+#kjvItemAvailabilityText.is-sold-out {
+  background-color: rgb(254, 226, 226);
+  color: rgb(153, 27, 27);
+}
+
 #kjvItemAvailabilityIcon {
   display: none !important;
 }
