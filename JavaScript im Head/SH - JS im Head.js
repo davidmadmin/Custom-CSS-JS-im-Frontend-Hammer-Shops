@@ -2545,9 +2545,21 @@ shOnReady(function () {
 
     if (!text) return null;
 
-    if (text === 'artikel nicht lieferbar') return false;
+    const unavailablePatterns = [
+      /artikel nicht lieferbar/,
+      /\bnicht\s+(mehr\s+)?lieferbar\b/,
+      /\bnicht\s+auf\s+lager\b/,
+      /\bnicht\s+lagernd\b/,
+      /\bnicht\s+verfügbar\b/,
+      /\bnicht\s+vorrätig\b/,
+      /\baktuell\s+nicht\s+lieferbar\b/,
+      /\b(momentan|derzeit|zurzeit)\s+nicht\s+lieferbar\b/,
+      /\bausverkauft\b/,
+    ];
 
-    if (/auf lager|lagernd|lieferbar|verfügbar/.test(text)) return true;
+    if (unavailablePatterns.some((pattern) => pattern.test(text))) return false;
+
+    if (/\bauf\s+lager\b|\blagernd\b|\blieferbar\b|\bverfügbar\b/.test(text)) return true;
 
     return null;
   }
