@@ -157,10 +157,17 @@ body,
 #kjvItemAvailabilityText,
 .availability .availability-text,
 .availability.is-sold-out .availability-text {
-  background-color: rgb(220, 252, 231);
+  background-color: #f8fafc;
   padding: 6px;
   border-radius: 6px;
   font-size: smaller;
+  color: #475569;
+}
+
+#kjvItemAvailabilityText.is-available,
+.availability .availability-text.is-available,
+.availability.is-available .availability-text {
+  background-color: rgb(220, 252, 231);
   color: rgb(22, 101, 52);
 }
 

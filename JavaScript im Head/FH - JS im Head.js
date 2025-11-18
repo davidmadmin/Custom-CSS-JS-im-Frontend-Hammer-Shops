@@ -2545,7 +2545,21 @@ fhOnReady(function () {
 
     if (!text) return null;
 
-    if (text === 'artikel nicht lieferbar') return false;
+    const unavailablePatterns = [
+      /artikel nicht lieferbar/,
+      /\bnicht\s+(mehr\s+)?lieferbar\b/,
+      /\bnicht\s+auf\s+lager\b/,
+      /\bnicht\s+lagernd\b/,
+      /\bnicht\s+verfügbar\b/,
+      /\bnicht\s+vorrätig\b/,
+      /\baktuell\s+nicht\s+lieferbar\b/,
+      /\b(momentan|derzeit|zurzeit)\s+nicht\s+lieferbar\b/,
+      /\bausverkauft\b/,
+    ];
+
+    if (unavailablePatterns.some((pattern) => pattern.test(text))) return false;
+
+    if (/\bauf\s+lager\b|\blagernd\b|\blieferbar\b|\bverfügbar\b/.test(text)) return true;
 
     return null;
   }
@@ -2559,15 +2573,20 @@ fhOnReady(function () {
       if (!availabilityText.id) availabilityText.id = 'kjvItemAvailabilityText';
 
       availabilityText.classList.toggle('is-sold-out', !isSalable);
+      availabilityText.classList.toggle('is-available', !!isSalable);
     }
 
     if (availabilityIcon) {
       if (!availabilityIcon.id) availabilityIcon.id = 'kjvItemAvailabilityIcon';
 
       availabilityIcon.classList.toggle('is-sold-out', !isSalable);
+      availabilityIcon.classList.toggle('is-available', !!isSalable);
     }
 
-    if (availabilityContainer) availabilityContainer.classList.toggle('is-sold-out', !isSalable);
+    if (availabilityContainer) {
+      availabilityContainer.classList.toggle('is-sold-out', !isSalable);
+      availabilityContainer.classList.toggle('is-available', !!isSalable);
+    }
 
     window.shAvailabilityHideCountdown = !isSalable;
 
