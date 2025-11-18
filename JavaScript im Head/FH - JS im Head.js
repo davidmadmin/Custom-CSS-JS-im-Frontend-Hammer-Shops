@@ -2547,6 +2547,8 @@ fhOnReady(function () {
 
     if (text === 'artikel nicht lieferbar') return false;
 
+    if (/auf lager|lagernd|lieferbar|verfügbar/.test(text)) return true;
+
     return null;
   }
 
@@ -2559,15 +2561,20 @@ fhOnReady(function () {
       if (!availabilityText.id) availabilityText.id = 'kjvItemAvailabilityText';
 
       availabilityText.classList.toggle('is-sold-out', !isSalable);
+      availabilityText.classList.toggle('is-available', !!isSalable);
     }
 
     if (availabilityIcon) {
       if (!availabilityIcon.id) availabilityIcon.id = 'kjvItemAvailabilityIcon';
 
       availabilityIcon.classList.toggle('is-sold-out', !isSalable);
+      availabilityIcon.classList.toggle('is-available', !!isSalable);
     }
 
-    if (availabilityContainer) availabilityContainer.classList.toggle('is-sold-out', !isSalable);
+    if (availabilityContainer) {
+      availabilityContainer.classList.toggle('is-sold-out', !isSalable);
+      availabilityContainer.classList.toggle('is-available', !!isSalable);
+    }
 
     window.shAvailabilityHideCountdown = !isSalable;
 
