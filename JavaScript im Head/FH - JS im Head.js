@@ -2576,24 +2576,24 @@ fhOnReady(function () {
     if (countdown) countdown.style.display = isSalable ? '' : 'none';
   }
 
-  function bootstrapAvailabilityWatcher() {
-    const store = getVueStore();
+    function bootstrapAvailabilityWatcher() {
+      const store = getVueStore();
 
-    if (!store || typeof store.watch !== 'function') {
-      setTimeout(bootstrapAvailabilityWatcher, 400);
-      return;
+      if (!store || typeof store.watch !== 'function') {
+        setTimeout(bootstrapAvailabilityWatcher, 400);
+        return;
+      }
+
+      store.watch(function (state) { return state.item; }, function () {
+        const isSalable = resolveIsSalable(store.state);
+        const domSalable = resolveIsSalableFromText();
+        const resolved = typeof isSalable === 'boolean' ? isSalable : domSalable;
+
+        if (resolved === null) return;
+
+        applyAvailabilityUi(resolved);
+      }, { immediate: true, deep: true });
     }
-
-    store.watch(function (state) { return state; }, function (state) {
-      const isSalable = resolveIsSalable(state);
-      const domSalable = resolveIsSalableFromText();
-      const resolved = typeof isSalable === 'boolean' ? isSalable : domSalable;
-
-      if (resolved === null) return;
-
-      applyAvailabilityUi(resolved);
-    }, { immediate: true });
-  }
 
   bootstrapAvailabilityWatcher();
 
