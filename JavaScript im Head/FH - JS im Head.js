@@ -1884,9 +1884,9 @@ fhOnReady(function () {
   let pendingHighlightItem = null;
   let highlightHasShown = false;
 
-  const HOVER_INDICATOR_RATIO = 0.6;
-  const HOVER_INDICATOR_COLOR = '#4b5563';
-  const SELECTED_INDICATOR_COLOR = '#000000';
+  const HOVER_INDICATOR_RATIO = 1;
+  const HOVER_INDICATOR_COLOR = 'rgba(49, 165, 240, 0.14)';
+  const SELECTED_INDICATOR_COLOR = 'rgba(49, 165, 240, 0.22)';
 
   function isDesktop() {
     return desktopMedia.matches;
