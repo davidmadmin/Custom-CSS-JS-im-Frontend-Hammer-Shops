@@ -1,0 +1,148 @@
+<nav class="sh-account-nav" data-sh-account-nav data-sh-account-nav-root="/my-account" aria-label="Mein Konto Navigation">
+  <div class="sh-account-nav__panel">
+    <header class="sh-account-nav__header">
+      <div class="sh-header__panel-stack text-body">
+        <div class="sh-header__panel-title">
+          <span
+            v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)"
+            v-cloak
+          >
+            <span class="sh-account-greeting" data-default-greeting="Hallo,">Hallo,</span>
+            <span
+              v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)"
+              v-cloak
+            ></span>
+          </span>
+          <span v-else v-cloak>Hallo</span>
+        </div>
+        <div class="sh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+      </div>
+      <div
+        class="sh-header__customer-segment"
+        v-if="$store.state.user && $store.state.user.userData && [1, 12, 16, 21].includes(Number($store.state.user.userData.classId))"
+      >
+        <div
+          class="sh-header__customer-contact sh-header__customer-contact--standard"
+          v-if="Number($store.state.user.userData.classId) === 1"
+          v-cloak
+        >
+          <span class="sh-header__customer-contact-label">Ansprechpartner:</span>
+          <span class="sh-header__customer-contact-name">Standard</span>
+        </div>
+        <div
+          class="sh-header__customer-contact sh-header__customer-contact--personal"
+          v-else-if="Number($store.state.user.userData.classId) === 12"
+          v-cloak
+        >
+          <div class="sh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+          <div class="sh-header__customer-contact-name">Ulrich Vorländer</div>
+          <div class="sh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
+          <a href="/kundenbetreuer-ulrich-vorlaender" class="sh-header__contact-button">Direkt kontaktieren</a>
+        </div>
+        <div
+          class="sh-header__customer-contact sh-header__customer-contact--personal"
+          v-else-if="Number($store.state.user.userData.classId) === 16"
+          v-cloak
+        >
+          <div class="sh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+          <div class="sh-header__customer-contact-name">Andreas Fischermann</div>
+          <div class="sh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
+          <a href="/kundenbetreuer-andreas-fischermann" class="sh-header__contact-button">Direkt kontaktieren</a>
+        </div>
+        <div
+          class="sh-header__customer-contact sh-header__customer-contact--personal"
+          v-else-if="Number($store.state.user.userData.classId) === 21"
+          v-cloak
+        >
+          <div class="sh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+          <div class="sh-header__customer-contact-name">Gabriele Sprenger</div>
+          <div class="sh-header__customer-contact-role">Produktexpertin &amp; Kundenbetreuerin</div>
+          <a href="/kundenbetreuerin-gabriele-sprenger" class="sh-header__contact-button">Direkt kontaktieren</a>
+        </div>
+      </div>
+    </header>
+    <div class="sh-account-nav__divider" aria-hidden="true"></div>
+    <div
+      class="sh-header__panel-contact sh-account-nav__contact"
+      v-if="!($store.state.user && $store.state.user.userData && [12, 16, 21].includes(Number($store.state.user.userData.classId)))"
+    >
+      <div class="sh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
+      <div class="sh-header__panel-contact-line">
+        <a href="tel:02204910980" class="sh-header__panel-contact-chip">
+          <span class="sh-header__panel-contact-icon" aria-hidden="true">
+            <img
+              src="https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/UI_Icons/phone.svg"
+              alt=""
+              class="sh-header__panel-contact-icon-image"
+            >
+          </span>
+          <span class="sh-header__panel-contact-text">02204 910 980</span>
+        </a>
+        <span class="sh-header__panel-contact-separator">oder</span>
+      </div>
+      <div class="sh-header__panel-contact-line">
+        <a href="mailto:service@schrauben-hammer.de" class="sh-header__panel-contact-chip">
+          <span class="sh-header__panel-contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <path
+                d="M3 6.75A2.75 2.75 0 0 1 5.75 4h12.5A2.75 2.75 0 0 1 21 6.75v10.5A2.75 2.75 0 0 1 18.25 20H5.75A2.75 2.75 0 0 1 3 17.25Zm2.75-.25a.75.75 0 0 0-.75.75v.26l7 4.38 7-4.38V7.25a.75.75 0 0 0-.75-.75Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span class="sh-header__panel-contact-text">service@schrauben-hammer.de</span>
+        </a>
+      </div>
+    </div>
+    <div class="sh-header__panel-links sh-account-nav__links">
+      <a
+        href="/my-account"
+        class="sh-header__panel-link"
+        data-sh-account-nav-link
+        data-sh-account-nav-target="overview"
+        aria-current="page"
+      >
+        Kontoübersicht
+      </a>
+      <a
+        href="#bestellungen"
+        class="sh-header__panel-link"
+        data-sh-account-nav-link
+        data-sh-account-nav-target="bestellungen"
+      >
+        Meine Bestellungen
+      </a>
+      <a
+        href="#kontoeinstellungen"
+        class="sh-header__panel-link"
+        data-sh-account-nav-link
+        data-sh-account-nav-target="kontoeinstellungen"
+      >
+        Kontoeinstellungen
+      </a>
+    </div>
+    <div class="sh-account-nav__details">
+      <div
+        class="sh-header__panel-text sh-header__account-type"
+        v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.classId != null"
+        v-cloak
+      >
+        <span v-if="![1, 12, 16, 21].includes(Number($store.state.user.userData.classId))" v-cloak>
+          Konto: Standardkonto
+        </span>
+        <span v-else>Konto: Firmenkunde</span>
+      </div>
+      <div
+        class="sh-header__panel-text sh-header__customer-id"
+        v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.id"
+        v-cloak
+      >
+        Kunden-ID: <span v-text="$store.state.user.userData.id"></span>
+      </div>
+    </div>
+    <a href="#" v-logout class="sh-header__logout sh-account-nav__logout" data-sh-account-nav-logout>
+      <span class="sh-header__logout-icon" aria-hidden="true"></span>
+      <span class="sh-header__logout-label">Abmelden</span>
+    </a>
+  </div>
+</nav>
