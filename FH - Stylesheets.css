@@ -2997,7 +2997,11 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   padding-top: 10px !important;
 }
 [id^="basketListContainer"] > div > div:nth-child(1) > div > div.meta-container-wrapper > div > div.meta-container {
-  padding-right: 5px !important;
+  padding-right: 10px !important;
+}
+
+.basket-list-item .meta-container {
+  padding-right: 10px !important;
 }
 /* Section: Quantity Input Styling */
 .qty-input {
