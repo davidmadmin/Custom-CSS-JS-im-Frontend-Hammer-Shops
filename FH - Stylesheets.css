@@ -1832,6 +1832,79 @@ body,
 }
 
 @media (min-width: 992px) {
+  .fh-header__nav {
+    padding: 0 24px 32px;
+    background: radial-gradient(circle at top, #f4f8ff, #ffffff 65%);
+    border-top: none;
+  }
+
+  .fh-header__nav-inner {
+    padding: 0 12px;
+  }
+
+  .fh-header__nav-surface {
+    padding: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 32px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(243, 246, 255, 0.98));
+    box-shadow: 0 28px 60px -35px rgba(15, 23, 42, 0.45);
+  }
+
+  .fh-header__nav-list {
+    gap: 8px;
+  }
+
+  .fh-header__nav-link {
+    border-radius: 999px;
+    padding: 14px 20px;
+    transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .fh-header__nav-link:hover,
+  .fh-header__nav-link:focus {
+    background-color: rgba(49, 165, 240, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(49, 165, 240, 0.12);
+  }
+
+  .fh-header__nav-item.is-open .fh-header__nav-link {
+    background-color: rgba(49, 165, 240, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(49, 165, 240, 0.2);
+  }
+
+  .fh-header__nav-item.is-selected .fh-header__nav-link {
+    background-color: rgba(49, 165, 240, 0.18);
+    color: var(--fh-color-dark-blue);
+    box-shadow: inset 0 0 0 1px rgba(49, 165, 240, 0.3);
+  }
+
+  .fh-header__nav-highlight {
+    top: 10px;
+    bottom: auto;
+    height: calc(100% - 20px);
+    border-radius: 999px;
+    background-color: var(--fh-nav-highlight-color, rgba(49, 165, 240, 0.18));
+    box-shadow: 0 20px 35px rgba(49, 165, 240, 0.25);
+  }
+
+  .fh-header__nav-highlight::after {
+    display: none;
+  }
+
+  .fh-header__nav .fh-header__dropdown {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 0 0 28px 28px;
+    box-shadow: 0 40px 90px -40px rgba(15, 23, 42, 0.35);
+    margin-top: 0;
+    padding: 40px 52px;
+  }
+
+  .fh-header__nav .fh-header__dropdown-divider {
+    border-top-color: rgba(148, 163, 184, 0.4);
+  }
+}
+
+@media (min-width: 992px) {
   .fh-header__nav--locked .fh-header__nav-item:not(.is-selected) .fh-header__nav-link:hover,
   .fh-header__nav--locked .fh-header__nav-item:not(.is-selected) .fh-header__nav-link:focus {
     color: #1a1a1a;
