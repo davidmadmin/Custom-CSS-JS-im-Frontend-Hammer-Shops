@@ -2697,7 +2697,7 @@ body.fh-mobile-menu-open {
   }
 
   .fh-header__panel-arrow {
-    left: 54%;
+    left: 56%;
     right: auto;
     transform: translateX(calc(-50% + 8px)) rotate(45deg);
   }
