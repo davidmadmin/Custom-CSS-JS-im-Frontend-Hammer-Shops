@@ -1884,6 +1884,10 @@ shOnReady(function () {
   let pendingHighlightItem = null;
   let highlightHasShown = false;
 
+  const HIGHLIGHT_VISIBLE_CLASS = 'sh-header__nav-surface--highlight-visible';
+  const HIGHLIGHT_INTRO_CLASS = 'sh-header__nav-surface--highlight-intro';
+  const HIGHLIGHT_INTRO_EXIT_DELAY = 460;
+
   const HOVER_INDICATOR_RATIO = 0.6;
   const HOVER_INDICATOR_COLOR = '#4b5563';
   const SELECTED_INDICATOR_COLOR = '#000000';
@@ -1935,6 +1939,12 @@ shOnReady(function () {
     surface.style.setProperty('--sh-nav-highlight-opacity', '0');
     surface.style.setProperty('--sh-nav-highlight-width', '0px');
     surface.style.setProperty('--sh-nav-highlight-color', HOVER_INDICATOR_COLOR);
+    surface.style.setProperty('--sh-nav-highlight-scale', '1');
+
+    surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
+    surface.classList.remove(HIGHLIGHT_INTRO_CLASS);
+
+    highlightHasShown = false;
   }
 
   function applyHighlightForItem(item) {
@@ -1960,6 +1970,7 @@ shOnReady(function () {
 
     const isSelected = selectedItem === item;
     const ratio = isSelected ? 1 : HOVER_INDICATOR_RATIO;
+    const isIntro = !highlightHasShown;
     let width = linkRect.width * ratio;
     let offset = linkRect.left - surfaceRect.left + (linkRect.width - width) / 2;
     const maxWidth = surfaceRect.width;
@@ -1967,17 +1978,37 @@ shOnReady(function () {
     width = Math.max(0, Math.min(width, maxWidth));
     offset = Math.min(Math.max(offset, 0), Math.max(0, maxWidth - width));
 
+    if (isIntro) surface.classList.add(HIGHLIGHT_INTRO_CLASS);
+
     surface.style.setProperty('--sh-nav-highlight-width', width.toFixed(2) + 'px');
     surface.style.setProperty('--sh-nav-highlight-x', offset.toFixed(2) + 'px');
     surface.style.setProperty('--sh-nav-highlight-color', isSelected ? SELECTED_INDICATOR_COLOR : HOVER_INDICATOR_COLOR);
     surface.style.setProperty('--sh-nav-highlight-opacity', '1');
 
-    if (!highlightHasShown) {
+    if (isIntro) {
+      const itemIndex = navItems.indexOf(item);
+      const isFirstItem = itemIndex === 0;
+      const isLastItem = itemIndex === navItems.length - 1;
+
+      surface.style.setProperty('--sh-nav-highlight-origin', isFirstItem ? 'left' : isLastItem ? 'right' : 'center');
+      surface.style.setProperty('--sh-nav-highlight-scale', '0');
+
       highlightHasShown = true;
 
       raf(function () {
-        surface.classList.add('sh-header__nav-surface--highlight-visible');
+        surface.classList.add(HIGHLIGHT_VISIBLE_CLASS);
+
+        raf(function () {
+          surface.style.setProperty('--sh-nav-highlight-scale', '1');
+
+          window.setTimeout(function () {
+            surface.classList.remove(HIGHLIGHT_INTRO_CLASS);
+          }, HIGHLIGHT_INTRO_EXIT_DELAY);
+        });
       });
+    } else {
+      surface.classList.add(HIGHLIGHT_VISIBLE_CLASS);
+      surface.style.setProperty('--sh-nav-highlight-scale', '1');
     }
   }
 
