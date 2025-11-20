@@ -1935,6 +1935,7 @@ shOnReady(function () {
     surface.style.setProperty('--sh-nav-highlight-opacity', '0');
     surface.style.setProperty('--sh-nav-highlight-width', '0px');
     surface.style.setProperty('--sh-nav-highlight-color', HOVER_INDICATOR_COLOR);
+    surface.style.setProperty('--sh-nav-highlight-scale', '1');
   }
 
   function applyHighlightForItem(item) {
@@ -1973,11 +1974,24 @@ shOnReady(function () {
     surface.style.setProperty('--sh-nav-highlight-opacity', '1');
 
     if (!highlightHasShown) {
+      const itemIndex = navItems.indexOf(item);
+      const isFirstItem = itemIndex === 0;
+      const isLastItem = itemIndex === navItems.length - 1;
+
+      surface.style.setProperty('--sh-nav-highlight-origin', isFirstItem ? 'left' : isLastItem ? 'right' : 'center');
+      surface.style.setProperty('--sh-nav-highlight-scale', '0');
+
       highlightHasShown = true;
 
       raf(function () {
         surface.classList.add('sh-header__nav-surface--highlight-visible');
+
+        raf(function () {
+          surface.style.setProperty('--sh-nav-highlight-scale', '1');
+        });
       });
+    } else {
+      surface.style.setProperty('--sh-nav-highlight-scale', '1');
     }
   }
 

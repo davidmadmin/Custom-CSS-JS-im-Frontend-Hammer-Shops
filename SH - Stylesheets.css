@@ -1690,6 +1690,8 @@ body,
   --sh-nav-highlight-width: 0px;
   --sh-nav-highlight-opacity: 0;
   --sh-nav-highlight-color: #4b5563;
+  --sh-nav-highlight-scale: 1;
+  --sh-nav-highlight-origin: left;
 }
 
 .sh-header__nav-inner {
@@ -1739,7 +1741,8 @@ body,
   bottom: 10px;
   width: var(--sh-nav-highlight-width, 0px);
   height: 4px;
-  transform: translateX(var(--sh-nav-highlight-x, 0px));
+  transform: translateX(var(--sh-nav-highlight-x, 0px)) scaleX(var(--sh-nav-highlight-scale, 1));
+  transform-origin: var(--sh-nav-highlight-origin, left);
   border-radius: 999px;
   background-color: var(--sh-nav-highlight-color, #4b5563);
   opacity: var(--sh-nav-highlight-opacity, 0);
