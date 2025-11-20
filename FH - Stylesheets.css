@@ -2683,7 +2683,6 @@ body.fh-mobile-menu-open {
 
 @media (max-width: 767.98px) {
   .fh-header__panel {
-    left: 20%;
     right: auto;
     transform: translateX(calc(-50% - 8px));
     width: calc(100vw - 40px);
@@ -2697,7 +2696,7 @@ body.fh-mobile-menu-open {
   }
 
   .fh-header__panel-arrow {
-    left: 56%;
+    left: 59%;
     right: auto;
     transform: translateX(calc(-50% + 8px)) rotate(45deg);
   }
