@@ -1855,7 +1855,7 @@ body,
   border-top: none;
   border-radius: 0 0 18px 18px;
   background-color: #ffffff;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 26px 32px rgba(0, 0, 0, 0.12);
   z-index: 2000;
 }
 
