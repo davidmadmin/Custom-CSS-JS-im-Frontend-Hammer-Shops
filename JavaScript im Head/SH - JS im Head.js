@@ -2952,7 +2952,7 @@ shOnReady(function () {
       } else if (diffDays === 2) {
         dateLabel = '<span style="font-weight:700;color:#000;">Übermorgen</span>, <span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
       } else if (diffDays > 2 && dayName === "Montag") {
-        dateLabel = '<span style="font-weight:700;color:#000;">Nächsten Montag</span>, <span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
+        dateLabel = '<span style="font-weight:700;color:#000;">nächsten Montag</span>, <span style="font-weight:700;color:#000;">den ' + datum + '</span>';
       } else {
         dateLabel = '<span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
       }
