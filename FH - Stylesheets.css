@@ -99,6 +99,12 @@ body,
 }
 /* End Section: Artikelpaket Badge ausblenden */
 
+/* Section: PlentyLTS native badges ausblenden */
+.cmp-product-thumb .special-tags .badge {
+  display: none !important;
+}
+/* End Section: PlentyLTS native badges ausblenden */
+
 /* Section: Default plenty product card styling */
 
 .widget-item-grid .cmp-product-thumb {
