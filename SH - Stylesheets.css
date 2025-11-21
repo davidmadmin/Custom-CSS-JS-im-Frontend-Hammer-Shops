@@ -166,7 +166,10 @@ body,
 
 #kjvItemAvailabilityText.is-available,
 .availability .availability-text.is-available,
-.availability.is-available .availability-text {
+.availability.is-available .availability-text,
+/* Fallback for plenty markup without is-available on SH */
+#kjvItemAvailabilityText:not(.is-sold-out),
+.availability .availability-text:not(.is-sold-out) {
   background-color: rgb(220, 252, 231);
   color: rgb(22, 101, 52);
 }
