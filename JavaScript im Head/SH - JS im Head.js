@@ -2857,6 +2857,7 @@ shOnReady(function () {
     var cutoff = new Date(now);
     cutoff.setHours(13, 0, 0, 0);
     var ms, h, m, s, color, dateLabel, showSeconds, zeitHtml;
+    var weekdays = [ "Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag" ];
     function getColor(hours){
       if (hours < 1) return "#dc2626";
       if (hours < 3) return "#eab308";
@@ -2870,9 +2871,12 @@ shOnReady(function () {
       showSeconds = (h === 0);
       color = getColor(h);
       zeitHtml = formatTime(h, m, s, showSeconds, color);
-      dateLabel = "heute";
+      var todayName = weekdays[now.getDay()];
+      var todayNum = pad2(now.getDate());
+      var todayMonth = pad2(now.getMonth() + 1);
+      var todayDate = todayNum + '.' + todayMonth;
+      dateLabel = '<strong>Heute</strong>, <strong>' + todayName + ' den ' + todayDate + '</strong>';
     } else {
-      var weekdays = [ "Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag" ];
       var nextWorkday = getNextWorkday(now);
       var nextCutoff = new Date(nextWorkday);
       nextCutoff.setHours(13, 0, 0, 0);
@@ -2896,13 +2900,13 @@ shOnReady(function () {
       var monthNum = pad2(nextWorkday.getMonth()+1);
       var datum = dayNum + '.' + monthNum;
       if (isTomorrow) {
-        dateLabel = "Morgen, " + dayName + " den " + datum;
+        dateLabel = '<strong>Morgen</strong>, <strong>' + dayName + ' den ' + datum + '</strong>';
       } else if (diffDays === 2) {
-        dateLabel = "Übermorgen, " + dayName + " den " + datum;
+        dateLabel = '<strong>Übermorgen</strong>, <strong>' + dayName + ' den ' + datum + '</strong>';
       } else if (diffDays > 2 && dayName === "Montag") {
-        dateLabel = "nächsten Montag, den " + datum;
+        dateLabel = '<strong>Nächsten Montag</strong>, <strong>' + dayName + ' den ' + datum + '</strong>';
       } else {
-        dateLabel = dayName + " den " + datum;
+        dateLabel = '<strong>' + dayName + ' den ' + datum + '</strong>';
       }
     }
     var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;">' +
