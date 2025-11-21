@@ -2849,8 +2849,8 @@ shOnReady(function () {
     elem.style.display = "flex";
     elem.style.alignItems = "flex-start";
     elem.style.gap = "0.85em";
-    elem.style.color = "rgb(108, 117, 125)";
-    elem.style.setProperty('color', 'rgb(108, 117, 125)', 'important');
+    elem.style.color = "#000";
+    elem.style.setProperty('color', '#000', 'important');
     var now = getBerlinTime();
     var day = now.getDay();
     var hour = now.getHours();
@@ -2909,8 +2909,8 @@ shOnReady(function () {
         dateLabel = '<strong>' + dayName + ' den ' + datum + '</strong>';
       }
     }
-    var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;">' +
-     '<span style="font-weight:600;">Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
+    var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;max-width:640px;">' +
+     '<span style="font-weight:700;">Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
   '</div>';
     elem.innerHTML = 
       '<div style="display:flex;align-items:center;">' +
