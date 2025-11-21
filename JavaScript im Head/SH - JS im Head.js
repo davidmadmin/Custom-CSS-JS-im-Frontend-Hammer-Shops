@@ -2568,6 +2568,12 @@ shOnReady(function () {
 
 // Section: Availability state handling for product page
 shOnReady(function () {
+  window.shAvailabilityHideCountdown = true;
+
+  const initialCountdown = document.getElementById('cutoff-countdown');
+
+  if (initialCountdown) initialCountdown.style.display = 'none';
+
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
 
@@ -2709,6 +2715,10 @@ shOnReady(function () {
 
 // Section: Bestell-Versand Countdown Code
 (function(){
+  if (typeof window.shAvailabilityHideCountdown === 'undefined') {
+    window.shAvailabilityHideCountdown = true;
+  }
+
   function getBerlinTime() {
     const now = new Date();
     const berlinParts = new Intl.DateTimeFormat('de-DE', {
