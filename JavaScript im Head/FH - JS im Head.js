@@ -2849,8 +2849,8 @@ fhOnReady(function () {
     elem.style.display = "flex";
     elem.style.alignItems = "flex-start";
     elem.style.gap = "0.85em";
-    elem.style.color = "#000";
-    elem.style.setProperty('color', '#000', 'important');
+    elem.style.color = '';
+    elem.style.setProperty('color', '', 'important');
     var now = getBerlinTime();
     var day = now.getDay();
     var hour = now.getHours();
@@ -2875,7 +2875,7 @@ fhOnReady(function () {
       var todayNum = pad2(now.getDate());
       var todayMonth = pad2(now.getMonth() + 1);
       var todayDate = todayNum + '.' + todayMonth;
-      dateLabel = '<strong>Heute</strong>, <strong>' + todayName + ' den ' + todayDate + '</strong>';
+      dateLabel = '<span style="font-weight:700;color:#000;">Heute</span>, <span style="font-weight:700;color:#000;">' + todayName + ' den ' + todayDate + '</span>';
     } else {
       var nextWorkday = getNextWorkday(now);
       var nextCutoff = new Date(nextWorkday);
@@ -2900,17 +2900,17 @@ fhOnReady(function () {
       var monthNum = pad2(nextWorkday.getMonth()+1);
       var datum = dayNum + '.' + monthNum;
       if (isTomorrow) {
-        dateLabel = '<strong>Morgen</strong>, <strong>' + dayName + ' den ' + datum + '</strong>';
+        dateLabel = '<span style="font-weight:700;color:#000;">Morgen</span>, <span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
       } else if (diffDays === 2) {
-        dateLabel = '<strong>Übermorgen</strong>, <strong>' + dayName + ' den ' + datum + '</strong>';
+        dateLabel = '<span style="font-weight:700;color:#000;">Übermorgen</span>, <span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
       } else if (diffDays > 2 && dayName === "Montag") {
-        dateLabel = '<strong>Nächsten Montag</strong>, <strong>' + dayName + ' den ' + datum + '</strong>';
+        dateLabel = '<span style="font-weight:700;color:#000;">Nächsten Montag</span>, <span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
       } else {
-        dateLabel = '<strong>' + dayName + ' den ' + datum + '</strong>';
+        dateLabel = '<span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
       }
     }
     var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;max-width:640px;">' +
-     '<span style="font-weight:700;">Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
+     '<span>Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
   '</div>';
     elem.innerHTML = 
       '<div style="display:flex;align-items:center;">' +
