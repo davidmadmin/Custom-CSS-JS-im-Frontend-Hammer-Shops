@@ -8,6 +8,154 @@ function fhOnReady(callback) {
   callback();
 }
 
+// Section: Persist basket preview values between navigations
+fhOnReady(function () {
+  const STORAGE_KEY = 'fh:basket-preview-state';
+  const COUNT_SELECTOR = '.fh-header__basket-count';
+  const TOTAL_SELECTOR = '.fh-header__basket-total';
+  const SR_TOTAL_SELECTOR = '.fh-header__sr-only';
+  const FALLBACK_LOCALE = 'de-DE';
+  const RETRY_DELAY = 300;
+
+  function readStoredState() {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function persistState(state) {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      /* Swallow storage errors (e.g., private mode). */
+    }
+  }
+
+  function toNumber(value) {
+    if (typeof value === 'number' && isFinite(value)) return value;
+    if (typeof value === 'string') {
+      const normalized = value.replace(/[^0-9,.-]/g, '').replace(',', '.');
+      const parsed = parseFloat(normalized);
+      if (!isNaN(parsed) && isFinite(parsed)) return parsed;
+    }
+    return 0;
+  }
+
+  function formatCurrency(amount, currency) {
+    if (typeof amount !== 'number' || !isFinite(amount)) return '';
+
+    const code = currency || (typeof window !== 'undefined' && window.App && App.activeCurrency) || 'EUR';
+
+    try {
+      return new Intl.NumberFormat(FALLBACK_LOCALE, { style: 'currency', currency: code }).format(amount);
+    } catch (error) {
+      return amount.toFixed(2);
+    }
+  }
+
+  function applyStateToDom(state) {
+    if (!state) return;
+
+    const count = document.querySelector(COUNT_SELECTOR);
+    if (count && typeof state.quantity === 'number') count.textContent = state.quantity;
+
+    const totals = document.querySelectorAll(TOTAL_SELECTOR + ', ' + SR_TOTAL_SELECTOR);
+    totals.forEach(function (node) {
+      if (!node) return;
+
+      const binding = node.getAttribute('v-basket-item-sum') || '';
+      const usesNet = binding.toLowerCase().indexOf('netsum') !== -1 || binding.toLowerCase().indexOf('itemsumnet') !== -1;
+      const text = usesNet ? (state.netFormatted || state.grossFormatted) : (state.grossFormatted || state.netFormatted);
+
+      if (text) node.textContent = text;
+    });
+  }
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+    return null;
+  }
+
+  function normalizeBasketSnapshot(raw) {
+    if (!raw || !raw.data) return null;
+
+    const quantity = toNumber(raw.data.itemQuantity);
+    const grossValue = toNumber(raw.data.itemSum);
+    const netValue = toNumber(raw.data.itemSumNet);
+    const currency = raw.data.currency || (typeof window !== 'undefined' && window.App && App.activeCurrency) || 'EUR';
+    const showNetPrices = !!raw.showNetPrices;
+
+    return {
+      quantity,
+      grossValue,
+      netValue,
+      grossFormatted: formatCurrency(grossValue, currency),
+      netFormatted: formatCurrency(netValue || grossValue, currency),
+      showNetPrices,
+      currency,
+    };
+  }
+
+  function hasChanged(current, previous) {
+    if (!current) return false;
+    if (!previous) return true;
+
+    return (
+      current.quantity !== previous.quantity ||
+      current.grossValue !== previous.grossValue ||
+      current.netValue !== previous.netValue ||
+      current.showNetPrices !== previous.showNetPrices
+    );
+  }
+
+  let stopWatching = null;
+
+  function installStoreWatcher() {
+    const store = getVueStore();
+
+    if (!store || typeof store.watch !== 'function') {
+      window.setTimeout(installStoreWatcher, RETRY_DELAY);
+      return;
+    }
+
+    let lastSnapshot = null;
+
+    stopWatching = store.watch(
+      function (state) {
+        return state && state.basket
+          ? { data: state.basket.data, showNetPrices: state.basket.showNetPrices }
+          : null;
+      },
+      function (next) {
+        const snapshot = normalizeBasketSnapshot(next);
+
+        if (!snapshot || !hasChanged(snapshot, lastSnapshot)) return;
+
+        lastSnapshot = snapshot;
+        persistState(snapshot);
+        applyStateToDom(snapshot);
+      },
+      { immediate: true }
+    );
+  }
+
+  const storedState = readStoredState();
+  if (storedState) applyStateToDom(storedState);
+
+  installStoreWatcher();
+
+  window.addEventListener('beforeunload', function () {
+    if (typeof stopWatching === 'function') {
+      try { stopWatching(); } catch (error) { /* ignore teardown errors */ }
+      stopWatching = null;
+    }
+  });
+});
+
 // Section: FH account menu toggle behaviour
 fhOnReady(function () {
   function resolveGreeting(defaultGreeting) {
