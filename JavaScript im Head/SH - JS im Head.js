@@ -24,6 +24,14 @@ shOnReady(function () {
     }
   }
 
+  function clearState() {
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+      /* Swallow storage errors (e.g., private mode). */
+    }
+  }
+
   function persistState(state) {
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -73,7 +81,8 @@ shOnReady(function () {
 
   function captureStateFromDom() {
     const countNode = document.querySelector(COUNT_SELECTOR);
-    const quantity = toNumber(trimText(countNode));
+    const countText = trimText(countNode);
+    const quantity = toNumber(countText);
 
     const totals = document.querySelectorAll(TOTAL_SELECTOR + ', ' + SR_TOTAL_SELECTOR);
     let grossText = '';
@@ -91,7 +100,7 @@ shOnReady(function () {
       }
     });
 
-    if (!quantity && !grossText && !netText) return null;
+    if (countText === '' && !grossText && !netText) return null;
 
     return { quantity, grossText, netText };
   }
@@ -103,6 +112,8 @@ shOnReady(function () {
     const snapshot = captureStateFromDom();
     if (snapshot && snapshot.quantity > 0) {
       persistState(snapshot);
+    } else if (snapshot) {
+      clearState();
     }
   });
 
