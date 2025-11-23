@@ -209,15 +209,15 @@
       </div>
       <div class="fh-basket-preview fh-header__basket">
         <a v-toggle-basket-preview href="#" class="toggle-basket-preview fh-header__basket-link" aria-label="Warenkorb">
-          <span class="fh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+          <span class="fh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity" v-cloak>0</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="fh-header__basket-icon">
             <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
             <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
             <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
           </svg>
-          <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum" v-cloak>0,00 €</span>
           <span class="fh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-          <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
+          <span class="fh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum" v-cloak>0,00 €</span>
           <span class="fh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
         </a>
         <basket-preview

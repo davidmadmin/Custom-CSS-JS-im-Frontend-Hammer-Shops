@@ -1644,6 +1644,10 @@ body,
   background-color: var(--sh-color-primary-red);
 }
 
+.sh-header__basket [v-cloak] {
+  visibility: hidden;
+}
+
 .sh-header__basket-count {
   position: absolute;
   top: -8px;

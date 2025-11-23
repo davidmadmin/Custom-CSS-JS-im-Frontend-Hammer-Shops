@@ -1628,6 +1628,10 @@ body,
   background-color: var(--fh-color-bright-blue);
 }
 
+.fh-header__basket [v-cloak] {
+  visibility: hidden;
+}
+
 .fh-header__basket-count {
   position: absolute;
   top: -8px;
