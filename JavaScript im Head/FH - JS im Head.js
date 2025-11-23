@@ -8,6 +8,119 @@ function fhOnReady(callback) {
   callback();
 }
 
+// Section: Persist basket preview values between navigations
+fhOnReady(function () {
+  const STORAGE_KEY = 'fh:basket-preview-state';
+  const COUNT_SELECTOR = '.fh-header__basket-count';
+  const TOTAL_SELECTOR = '.fh-header__basket-total';
+  const SR_TOTAL_SELECTOR = '.fh-header__sr-only';
+
+  function readStoredState() {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function persistState(state) {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      /* Swallow storage errors (e.g., private mode). */
+    }
+  }
+
+  function toNumber(value) {
+    if (typeof value === 'number' && isFinite(value)) return value;
+    if (typeof value === 'string') {
+      const normalized = value.replace(/[^0-9,.-]/g, '').replace(',', '.');
+      const parsed = parseFloat(normalized);
+      if (!isNaN(parsed) && isFinite(parsed)) return parsed;
+    }
+    return 0;
+  }
+
+  function isNetBinding(node) {
+    const binding = node && node.getAttribute('v-basket-item-sum');
+    if (!binding) return false;
+    const normalized = binding.toLowerCase();
+    return normalized.indexOf('netsum') !== -1 || normalized.indexOf('itemsumnet') !== -1;
+  }
+
+  function trimText(node) {
+    return (node && node.textContent ? node.textContent : '').trim();
+  }
+
+  function applyStateToDom(state) {
+    if (!state || state.quantity <= 0) return;
+
+    const count = document.querySelector(COUNT_SELECTOR);
+    if (count && typeof state.quantity === 'number') count.textContent = state.quantity;
+
+    const totals = document.querySelectorAll(TOTAL_SELECTOR + ', ' + SR_TOTAL_SELECTOR);
+    totals.forEach(function (node) {
+      if (!node) return;
+
+      if (isNetBinding(node)) {
+        if (state.netText) node.textContent = state.netText;
+      } else if (state.grossText) {
+        node.textContent = state.grossText;
+      }
+    });
+  }
+
+  function captureStateFromDom() {
+    const countNode = document.querySelector(COUNT_SELECTOR);
+    const quantity = toNumber(trimText(countNode));
+
+    const totals = document.querySelectorAll(TOTAL_SELECTOR + ', ' + SR_TOTAL_SELECTOR);
+    let grossText = '';
+    let netText = '';
+
+    totals.forEach(function (node) {
+      if (!node) return;
+      const text = trimText(node);
+      if (!text) return;
+
+      if (isNetBinding(node)) {
+        netText = text;
+      } else {
+        grossText = text;
+      }
+    });
+
+    if (!quantity && !grossText && !netText) return null;
+
+    return { quantity, grossText, netText };
+  }
+
+  const storedState = readStoredState();
+  if (storedState) applyStateToDom(storedState);
+
+  const observer = new MutationObserver(function () {
+    const snapshot = captureStateFromDom();
+    if (snapshot && snapshot.quantity > 0) {
+      persistState(snapshot);
+    }
+  });
+
+  const observedNodes = [
+    document.querySelector(COUNT_SELECTOR),
+    ...document.querySelectorAll(TOTAL_SELECTOR + ', ' + SR_TOTAL_SELECTOR),
+  ];
+
+  observedNodes.forEach(function (node) {
+    if (!node) return;
+    observer.observe(node, { childList: true, characterData: true, subtree: true });
+  });
+
+  window.addEventListener('beforeunload', function () {
+    try { observer.disconnect(); } catch (error) { /* ignore teardown errors */ }
+  });
+});
+
 // Section: FH account menu toggle behaviour
 fhOnReady(function () {
   function resolveGreeting(defaultGreeting) {
