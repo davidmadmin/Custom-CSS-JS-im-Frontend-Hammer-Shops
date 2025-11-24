@@ -2988,7 +2988,9 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
 
 @media (max-width: 575.98px) {
   .add-item {
-    padding: 10px;
+    padding: 14px;
+  }
+  .add-item button {
     height: 42px !important;
     width: auto !important;
   }
