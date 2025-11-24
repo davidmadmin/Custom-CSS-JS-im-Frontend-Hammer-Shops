@@ -2459,6 +2459,8 @@ body,
   .sh-header {
     width: min(1600px, 100vw);
     max-width: none;
+    padding: 0 12px;
+    box-sizing: border-box;
   }
 
   .sh-header__top-bar {

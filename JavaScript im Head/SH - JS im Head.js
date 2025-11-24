@@ -980,7 +980,7 @@ shOnReady(function () {
 
   if (!header) return;
 
-  const desktopMediaQuery = window.matchMedia('(min-width: 992px)');
+  const desktopMediaQuery = window.matchMedia('(min-width: 1600px)');
   const scrolledClassName = 'sh-header--scrolled';
   const hiddenClassName = 'sh-header--topbar-hidden';
   const topBar = header.querySelector('.sh-header__top-bar');
@@ -1091,7 +1091,7 @@ shOnReady(function () {
 
   const closeButtons = header.querySelectorAll('[data-sh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const desktopMedia = window.matchMedia('(min-width: 1600px)');
   const panelContainer = menu.querySelector('[data-sh-mobile-views]');
   const panelElements = panelContainer
     ? Array.prototype.slice.call(panelContainer.querySelectorAll('[data-sh-mobile-panel]'))
@@ -1865,7 +1865,7 @@ shOnReady(function () {
 
   if (navItems.length === 0) return;
 
-  const desktopMedia = window.matchMedia('(min-width: 992px)');
+  const desktopMedia = window.matchMedia('(min-width: 1600px)');
   const raf =
     typeof window.requestAnimationFrame === 'function'
       ? window.requestAnimationFrame.bind(window)
