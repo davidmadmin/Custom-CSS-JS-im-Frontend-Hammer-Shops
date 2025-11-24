@@ -294,8 +294,8 @@ body,
   margin: 0 auto;
   color: #1a1a1a;
   font-family: "Open Sans", Arial, sans-serif;
-  width: 1600px; /* Do not change this for Desktop viewport*/
-  max-width: 1600px; /* Do not change this for Desktop viewport*/
+  width: 100%;
+  max-width: 1600px;
   --fh-top-bar-max-height: 72px;
   --fh-top-bar-padding-y: 14px;
 }
@@ -2439,14 +2439,12 @@ body,
   border-bottom: none;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1600px) {
   .fh-header {
     width: 100%;
     max-width: 100%;
   }
-}
 
-@media (max-width: 991.98px) {
   .fh-header__top-bar {
     display: none;
   }
@@ -2657,22 +2655,21 @@ body,
     border-bottom: 1px solid #e5e7eb;
     white-space: normal;
     justify-content: flex-start;
-  gap: 12px;
-}
+  }
 
-.fh-header__mobile-submenu-cta {
-  margin-top: 12px;
-  display: flex;
-  justify-content: flex-start;
-}
+  .fh-header__mobile-submenu-cta {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-start;
+  }
 
-.fh-header__mobile-submenu-cta .schlossfinder {
-  justify-content: center;
-}
+  .fh-header__mobile-submenu-cta .schlossfinder {
+    justify-content: center;
+  }
 
-.schlossfinder--mobile {
-  width: auto;
-}
+  .schlossfinder--mobile {
+    width: auto;
+  }
 
   .fh-header__nav-icon {
     width: 24px;
@@ -2697,13 +2694,7 @@ body,
   .fh-header__dropdown {
     display: none !important;
   }
-}
 
-body.fh-mobile-menu-open {
-  overflow: hidden;
-}
-
-@media (max-width: 767.98px) {
   .fh-header__panel {
     right: auto;
     transform: translateX(calc(-50% - 8px));
@@ -2722,6 +2713,10 @@ body.fh-mobile-menu-open {
     right: auto;
     transform: translateX(calc(-50% + 8px)) rotate(45deg);
   }
+}
+
+body.fh-mobile-menu-open {
+  overflow: hidden;
 }
 /* End Section: FH Header Base Layout */
 
@@ -2755,6 +2750,7 @@ body.fh-mobile-menu-open {
 
 #page-header > div {
   max-width: 1600px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
