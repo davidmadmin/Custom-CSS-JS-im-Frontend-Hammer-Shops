@@ -2439,14 +2439,12 @@ body,
   border-bottom: none;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1599.98px) {
   .fh-header {
     width: 100%;
     max-width: 100%;
   }
-}
 
-@media (max-width: 991.98px) {
   .fh-header__top-bar {
     display: none;
   }
