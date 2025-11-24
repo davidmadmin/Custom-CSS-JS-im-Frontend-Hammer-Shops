@@ -2985,6 +2985,14 @@ div.widget.widget-grid.widget-two-col.row.mt-5 {
   padding-top: 0.6rem !important;
   padding-bottom: 0.6rem !important;
 }
+
+@media (max-width: 575.98px) {
+  .add-item {
+    padding: 10px;
+    height: 42px !important;
+    width: auto !important;
+  }
+}
 [id^="basketListContainer"] {
   padding-top: 10px !important;
 }
