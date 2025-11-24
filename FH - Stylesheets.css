@@ -2233,7 +2233,7 @@ body,
   border-bottom: 1px solid #e5e7eb;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1600px) {
   .fh-header__mobile-submenu-header {
     display: none;
   }
