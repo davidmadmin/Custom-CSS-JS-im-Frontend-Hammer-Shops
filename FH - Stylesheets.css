@@ -1853,7 +1853,7 @@ body,
   color: var(--fh-color-bright-blue);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1600px) {
   .fh-header__nav--locked .fh-header__nav-item:not(.is-selected) .fh-header__nav-link:hover,
   .fh-header__nav--locked .fh-header__nav-item:not(.is-selected) .fh-header__nav-link:focus {
     color: #1a1a1a;
@@ -2105,7 +2105,7 @@ body,
   color: var(--fh-color-dark-blue);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1600px) {
   .fh-header__dropdown-sublink:not(.fh-header__dropdown-sublink--text) {
     position: relative;
     display: inline-flex;
@@ -2441,8 +2441,8 @@ body,
 
 @media (max-width: 1599.98px) {
   .fh-header {
-    width: 100%;
-    max-width: 100%;
+    width: min(1600px, 100vw);
+    max-width: none;
   }
 
   .fh-header__top-bar {
