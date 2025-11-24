@@ -331,10 +331,10 @@ body,
   content: "";
   position: absolute;
   top: 0;
-  left: 50%;
+  left: calc(50% - 50vw);
   width: 100vw;
   height: 100%;
-  transform: translateX(-50%);
+  transform: none;
   background: linear-gradient(
     90deg,
     var(--sh-color-secondary-red),
