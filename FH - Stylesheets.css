@@ -294,8 +294,8 @@ body,
   margin: 0 auto;
   color: #1a1a1a;
   font-family: "Open Sans", Arial, sans-serif;
-  width: 1600px; /* Do not change this for Desktop viewport*/
-  max-width: 1600px; /* Do not change this for Desktop viewport*/
+  width: 100%;
+  max-width: 100%;
   --fh-top-bar-max-height: 72px;
   --fh-top-bar-padding-y: 14px;
 }
@@ -2439,14 +2439,7 @@ body,
   border-bottom: none;
 }
 
-@media (max-width: 1199.98px) {
-  .fh-header {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 991.98px) {
+@media (max-width: 1599.98px) {
   .fh-header__top-bar {
     display: none;
   }
