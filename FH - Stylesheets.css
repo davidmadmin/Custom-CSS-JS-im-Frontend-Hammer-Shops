@@ -294,7 +294,7 @@ body,
   margin: 0 auto;
   color: #1a1a1a;
   font-family: "Open Sans", Arial, sans-serif;
-  width: 1600px; /* Do not change this for Desktop viewport*/
+  width: min(100%, 1600px); /* Keep desktop layout capped without exceeding viewport width */
   max-width: 1600px; /* Do not change this for Desktop viewport*/
   --fh-top-bar-max-height: 72px;
   --fh-top-bar-padding-y: 14px;
