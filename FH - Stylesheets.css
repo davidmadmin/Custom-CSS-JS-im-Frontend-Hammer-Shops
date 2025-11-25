@@ -1681,7 +1681,7 @@ body,
   --fh-nav-highlight-x: 0px;
   --fh-nav-highlight-width: 0px;
   --fh-nav-highlight-opacity: 0;
-  --fh-nav-highlight-color: rgba(244, 246, 248, 0.96);
+  --fh-nav-highlight-color: #fff;
   --fh-nav-highlight-border-color: rgba(203, 213, 225, 0.7);
   --fh-nav-highlight-scale: 1;
   --fh-nav-highlight-origin: left;

@@ -1697,7 +1697,7 @@ body,
   --sh-nav-highlight-x: 0px;
   --sh-nav-highlight-width: 0px;
   --sh-nav-highlight-opacity: 0;
-  --sh-nav-highlight-color: rgba(244, 246, 248, 0.96);
+  --sh-nav-highlight-color: #fff;
   --sh-nav-highlight-border-color: rgba(203, 213, 225, 0.7);
   --sh-nav-highlight-scale: 1;
   --sh-nav-highlight-origin: left;
