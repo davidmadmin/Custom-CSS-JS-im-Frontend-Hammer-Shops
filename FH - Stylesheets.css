@@ -1740,7 +1740,7 @@ body,
   left: 0;
   top: 6px;
   width: var(--fh-nav-highlight-width, 0px);
-  height: calc(100% - 12px);
+  height: 100%;
   transform: translateX(var(--fh-nav-highlight-x, 0px)) scaleX(var(--fh-nav-highlight-scale, 1));
   transform-origin: var(--fh-nav-highlight-origin, left);
   border-radius: 12px 12px 0 0;
