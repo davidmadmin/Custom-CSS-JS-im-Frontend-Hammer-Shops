@@ -1681,7 +1681,8 @@ body,
   --fh-nav-highlight-x: 0px;
   --fh-nav-highlight-width: 0px;
   --fh-nav-highlight-opacity: 0;
-  --fh-nav-highlight-color: #4b5563;
+  --fh-nav-highlight-color: rgba(244, 246, 248, 0.96);
+  --fh-nav-highlight-border-color: rgba(203, 213, 225, 0.7);
   --fh-nav-highlight-scale: 1;
   --fh-nav-highlight-origin: left;
   background-color: #ffffff;
@@ -1724,7 +1725,7 @@ body,
 
 .fh-header__nav-list {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 0;
   position: relative;
   z-index: 1;
@@ -1740,13 +1741,15 @@ body,
 .fh-header__nav-highlight {
   position: absolute;
   left: 0;
-  bottom: 10px;
+  top: 6px;
   width: var(--fh-nav-highlight-width, 0px);
-  height: 4px;
+  height: calc(100% - 12px);
   transform: translateX(var(--fh-nav-highlight-x, 0px)) scaleX(var(--fh-nav-highlight-scale, 1));
   transform-origin: var(--fh-nav-highlight-origin, left);
-  border-radius: 999px;
-  background-color: var(--fh-nav-highlight-color, #4b5563);
+  border-radius: 12px;
+  background-color: var(--fh-nav-highlight-color, rgba(229, 231, 235, 0.92));
+  border: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
   opacity: var(--fh-nav-highlight-opacity, 0);
   transition:
     width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1777,21 +1780,12 @@ body,
 }
 
 .fh-header__nav-highlight::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -6px;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid var(--fh-nav-highlight-color, #4b5563);
+  content: none;
 }
 
 .fh-header__nav-item {
   position: static;
-  flex: 1;
+  flex: 1 1 0;
   text-align: center;
 }
 
@@ -1801,7 +1795,7 @@ body,
   justify-content: center;
   gap: 10px;
   width: 100%;
-  padding: 18px 12px;
+  padding: 16px 14px;
   color: #1a1a1a;
   text-decoration: none;
   white-space: nowrap;
@@ -1852,6 +1846,13 @@ body,
 .fh-header__nav-link:focus {
   color: var(--fh-color-dark-blue);
   text-decoration: none;
+}
+
+.fh-header__nav-link:hover .fh-header__nav-text,
+.fh-header__nav-link:focus .fh-header__nav-text,
+.fh-header__nav-item.is-open .fh-header__nav-text,
+.fh-header__nav-item.is-selected .fh-header__nav-text {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
 .fh-header__nav-item.is-open .fh-header__nav-link {
