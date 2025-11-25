@@ -1874,7 +1874,7 @@ body,
 
 .fh-header__dropdown {
   position: absolute;
-  top: calc(100% - 2px);
+  top: 100%;
   left: 0;
   right: 0;
   width: 100%;
