@@ -1697,7 +1697,8 @@ body,
   --sh-nav-highlight-x: 0px;
   --sh-nav-highlight-width: 0px;
   --sh-nav-highlight-opacity: 0;
-  --sh-nav-highlight-color: #4b5563;
+  --sh-nav-highlight-color: rgba(229, 231, 235, 0.92);
+  --sh-nav-highlight-border-color: rgba(148, 163, 184, 0.5);
   --sh-nav-highlight-scale: 1;
   --sh-nav-highlight-origin: left;
   background-color: #ffffff;
@@ -1761,9 +1762,10 @@ body,
   height: calc(100% - 12px);
   transform: translateX(var(--sh-nav-highlight-x, 0px)) scaleX(var(--sh-nav-highlight-scale, 1));
   transform-origin: var(--sh-nav-highlight-origin, left);
-  border-radius: 6px;
-  background-color: rgba(107, 114, 128, 0.12);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background-color: var(--sh-nav-highlight-color, rgba(229, 231, 235, 0.92));
+  border: 1px solid var(--sh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
   opacity: var(--sh-nav-highlight-opacity, 0);
   transition:
     width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1799,7 +1801,7 @@ body,
 
 .sh-header__nav-item {
   position: static;
-  flex: 1;
+  flex: 0 0 auto;
   text-align: center;
 }
 
@@ -1808,8 +1810,8 @@ body,
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 100%;
-  padding: 18px 12px;
+  width: auto;
+  padding: 16px 14px;
   color: #1a1a1a;
   text-decoration: none;
   white-space: nowrap;

@@ -1891,8 +1891,10 @@ fhOnReady(function () {
   const HIGHLIGHT_EXIT_DURATION = 420;
 
   const HOVER_INDICATOR_RATIO = 1;
-  const HOVER_INDICATOR_COLOR = '#4b5563';
-  const SELECTED_INDICATOR_COLOR = '#000000';
+  const HOVER_INDICATOR_COLOR = 'rgba(229, 231, 235, 0.92)';
+  const SELECTED_INDICATOR_COLOR = 'rgba(209, 213, 219, 0.98)';
+  const HOVER_INDICATOR_BORDER = 'rgba(148, 163, 184, 0.5)';
+  const SELECTED_INDICATOR_BORDER = 'rgba(107, 114, 128, 0.55)';
 
   function isDesktop() {
     return desktopMedia.matches;
@@ -1955,6 +1957,7 @@ fhOnReady(function () {
 
         surface.style.setProperty('--fh-nav-highlight-width', '0px');
         surface.style.setProperty('--fh-nav-highlight-color', HOVER_INDICATOR_COLOR);
+        surface.style.setProperty('--fh-nav-highlight-border-color', HOVER_INDICATOR_BORDER);
         surface.style.setProperty('--fh-nav-highlight-scale', '1');
 
         surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
@@ -1966,6 +1969,7 @@ fhOnReady(function () {
       surface.style.setProperty('--fh-nav-highlight-opacity', '0');
       surface.style.setProperty('--fh-nav-highlight-width', '0px');
       surface.style.setProperty('--fh-nav-highlight-color', HOVER_INDICATOR_COLOR);
+      surface.style.setProperty('--fh-nav-highlight-border-color', HOVER_INDICATOR_BORDER);
       surface.style.setProperty('--fh-nav-highlight-scale', '1');
 
       surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
@@ -2011,6 +2015,7 @@ fhOnReady(function () {
     surface.style.setProperty('--fh-nav-highlight-width', width.toFixed(2) + 'px');
     surface.style.setProperty('--fh-nav-highlight-x', offset.toFixed(2) + 'px');
     surface.style.setProperty('--fh-nav-highlight-color', isSelected ? SELECTED_INDICATOR_COLOR : HOVER_INDICATOR_COLOR);
+    surface.style.setProperty('--fh-nav-highlight-border-color', isSelected ? SELECTED_INDICATOR_BORDER : HOVER_INDICATOR_BORDER);
     surface.style.setProperty('--fh-nav-highlight-opacity', '1');
 
     if (isIntro) {

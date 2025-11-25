@@ -1681,7 +1681,8 @@ body,
   --fh-nav-highlight-x: 0px;
   --fh-nav-highlight-width: 0px;
   --fh-nav-highlight-opacity: 0;
-  --fh-nav-highlight-color: #4b5563;
+  --fh-nav-highlight-color: rgba(229, 231, 235, 0.92);
+  --fh-nav-highlight-border-color: rgba(148, 163, 184, 0.5);
   --fh-nav-highlight-scale: 1;
   --fh-nav-highlight-origin: left;
   background-color: #ffffff;
@@ -1745,9 +1746,10 @@ body,
   height: calc(100% - 12px);
   transform: translateX(var(--fh-nav-highlight-x, 0px)) scaleX(var(--fh-nav-highlight-scale, 1));
   transform-origin: var(--fh-nav-highlight-origin, left);
-  border-radius: 6px;
-  background-color: rgba(107, 114, 128, 0.12);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background-color: var(--fh-nav-highlight-color, rgba(229, 231, 235, 0.92));
+  border: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
   opacity: var(--fh-nav-highlight-opacity, 0);
   transition:
     width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1783,7 +1785,7 @@ body,
 
 .fh-header__nav-item {
   position: static;
-  flex: 1;
+  flex: 0 0 auto;
   text-align: center;
 }
 
@@ -1792,8 +1794,8 @@ body,
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 100%;
-  padding: 18px 12px;
+  width: auto;
+  padding: 16px 14px;
   color: #1a1a1a;
   text-decoration: none;
   white-space: nowrap;
