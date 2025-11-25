@@ -1743,7 +1743,7 @@ body,
   transform: translateX(var(--fh-nav-highlight-x, 0px)) scaleX(var(--fh-nav-highlight-scale, 1));
   transform-origin: var(--fh-nav-highlight-origin, left);
   border-radius: 12px 12px 0 0;
-  background-color: var(--fh-nav-highlight-color, rgba(229, 231, 235, 0.92));
+  background-color: var(--fh-nav-highlight-color, #fff);
   border: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
   border-bottom-color: transparent;
   box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
