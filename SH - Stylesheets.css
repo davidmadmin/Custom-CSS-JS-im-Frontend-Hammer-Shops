@@ -1754,9 +1754,8 @@ body,
 .sh-header__nav-highlight {
   position: absolute;
   left: 0;
-  top: 6px;
   width: var(--sh-nav-highlight-width, 0px);
-  height: calc(100% - 12px);
+  height: 100%;
   transform: translateX(var(--sh-nav-highlight-x, 0px)) scaleX(var(--sh-nav-highlight-scale, 1));
   transform-origin: var(--sh-nav-highlight-origin, left);
   border-radius: 12px 12px 0 0;
@@ -1770,6 +1769,17 @@ body,
     opacity 0.22s ease,
     background-color 0.22s ease;
   pointer-events: none;
+}
+
+.sh-header__nav-surface:not(:hover) .sh-header__nav-highlight {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.sh-header__nav-surface:has(.sh-header__dropdown:hover) .sh-header__nav-highlight,
+.sh-header__nav-surface:has(.sh-header__nav-item.is-open) .sh-header__nav-highlight {
+  opacity: 0;
+  transition: opacity 0.12s ease;
 }
 
 .sh-header__nav-surface--highlight-visible .sh-header__nav-highlight {
@@ -1891,8 +1901,7 @@ body,
 
 .sh-header__dropdown {
   position: absolute;
-  top: calc(100% - 2px);
-  left: 0;
+  left: 1px;
   right: 0;
   width: 100%;
   margin: 0 auto;

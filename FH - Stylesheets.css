@@ -1763,6 +1763,12 @@ body,
     background-color 0.22s ease;
 }
 
+.fh-header__nav-surface:has(.fh-header__dropdown:hover) .fh-header__nav-highlight,
+.fh-header__nav-surface:has(.fh-header__nav-item.is-open) .fh-header__nav-highlight {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
 .fh-header__nav-surface--highlight-intro .fh-header__nav-highlight {
   transition:
     opacity 0.22s ease,
@@ -1874,7 +1880,6 @@ body,
 
 .fh-header__dropdown {
   position: absolute;
-  top: 100%;
   left: 1px;
   right: 0;
   width: 100%;
