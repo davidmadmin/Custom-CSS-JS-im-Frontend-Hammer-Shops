@@ -1750,9 +1750,14 @@ body,
   opacity: var(--fh-nav-highlight-opacity, 0);
   transition:
     width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.22s ease,
+    opacity 0.12s ease-out,
     background-color 0.22s ease;
   pointer-events: none;
+}
+
+.fh-header__nav-surface:has(.fh-header__dropdown:hover) .fh-header__nav-highlight {
+  opacity: 0;
+  transition-duration: 0.12s;
 }
 
 .fh-header__nav-surface--highlight-visible .fh-header__nav-highlight {
@@ -1847,13 +1852,8 @@ body,
 
 .fh-header__nav-link:hover .fh-header__nav-text,
 .fh-header__nav-link:focus .fh-header__nav-text,
-.fh-header__nav-item.is-open .fh-header__nav-text,
 .fh-header__nav-item.is-selected .fh-header__nav-text {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
-}
-
-.fh-header__nav-item.is-open .fh-header__nav-link {
-  color: var(--fh-color-dark-blue);
 }
 
 .fh-header__nav-item.is-selected .fh-header__nav-link {
@@ -1874,7 +1874,6 @@ body,
 
 .fh-header__dropdown {
   position: absolute;
-  top: 100%;
   left: 1px;
   right: 0;
   width: 100%;
