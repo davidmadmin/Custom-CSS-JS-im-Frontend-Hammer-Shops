@@ -1891,8 +1891,8 @@ fhOnReady(function () {
   const HIGHLIGHT_EXIT_DURATION = 420;
 
   const INDICATOR_RATIO = 1;
-  const HOVER_INDICATOR_COLOR = 'rgba(244, 246, 248, 0.96)';
-  const SELECTED_INDICATOR_COLOR = 'rgba(233, 236, 239, 0.98)';
+  const HOVER_INDICATOR_COLOR = '#ffffff';
+  const SELECTED_INDICATOR_COLOR = '#ffffff';
   const HOVER_INDICATOR_BORDER = 'rgba(203, 213, 225, 0.7)';
   const SELECTED_INDICATOR_BORDER = 'rgba(148, 163, 184, 0.6)';
 
