@@ -1685,11 +1685,11 @@ body,
   --fh-nav-highlight-border-color: rgba(203, 213, 225, 0.7);
   --fh-nav-highlight-scale: 1;
   --fh-nav-highlight-origin: left;
-  background-color: #ffffff;
-  border: 1px solid transparent;
+  background-color: #f6f7fb;
+  border: 1px solid rgba(148, 163, 184, 0.32);
   border-bottom: none;
-  border-radius: 18px 18px 0 0;
-  box-shadow: none;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 18px 36px -28px rgba(15, 23, 42, 0.35);
 }
 
 
@@ -1742,11 +1742,13 @@ body,
   height: 100%;
   transform: translateX(var(--fh-nav-highlight-x, 0px)) scaleX(var(--fh-nav-highlight-scale, 1));
   transform-origin: var(--fh-nav-highlight-origin, left);
-  border-radius: 12px 12px 0 0;
+  border-radius: 16px 16px 0 0;
   background-color: var(--fh-nav-highlight-color, #fff);
   border: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
   border-bottom-color: transparent;
-  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
+  box-shadow:
+    0 18px 42px -28px rgba(15, 23, 42, 0.35),
+    0 0 0 1px rgba(226, 232, 240, 0.9);
   opacity: var(--fh-nav-highlight-opacity, 0);
   transition:
     width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1807,6 +1809,22 @@ body,
   transition: color 0.2s ease;
 }
 
+.fh-header__nav-item:not(.is-selected) .fh-header__nav-link {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), #f1f4f8);
+  box-shadow:
+    inset 0 0 0 1px rgba(148, 163, 184, 0.32),
+    0 1px 0 rgba(255, 255, 255, 0.8);
+  border-radius: 14px 14px 0 0;
+}
+
+.fh-header__nav-item:not(.is-selected) .fh-header__nav-link:hover,
+.fh-header__nav-item:not(.is-selected) .fh-header__nav-link:focus {
+  background: #ffffff;
+  box-shadow:
+    0 14px 36px -24px rgba(15, 23, 42, 0.32),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.4);
+}
+
 .fh-header__nav-icon {
   display: inline-flex;
   align-items: center;
@@ -1858,6 +1876,11 @@ body,
 
 .fh-header__nav-item.is-selected .fh-header__nav-link {
   color: var(--fh-color-bright-blue);
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
+  box-shadow:
+    0 20px 48px -30px rgba(15, 23, 42, 0.42),
+    0 0 0 1px rgba(203, 213, 225, 0.8);
 }
 
 @media (min-width: 1600px) {
