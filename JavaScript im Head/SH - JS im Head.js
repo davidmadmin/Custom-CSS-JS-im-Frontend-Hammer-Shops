@@ -1890,9 +1890,11 @@ shOnReady(function () {
   const HIGHLIGHT_INTRO_EXIT_DELAY = 460;
   const HIGHLIGHT_EXIT_DURATION = 420;
 
-  const HOVER_INDICATOR_RATIO = 0.6;
-  const HOVER_INDICATOR_COLOR = '#4b5563';
-  const SELECTED_INDICATOR_COLOR = '#000000';
+  const INDICATOR_RATIO = 1;
+  const HOVER_INDICATOR_COLOR = 'rgba(244, 246, 248, 0.96)';
+  const SELECTED_INDICATOR_COLOR = 'rgba(233, 236, 239, 0.98)';
+  const HOVER_INDICATOR_BORDER = 'rgba(203, 213, 225, 0.7)';
+  const SELECTED_INDICATOR_BORDER = 'rgba(148, 163, 184, 0.6)';
 
   function isDesktop() {
     return desktopMedia.matches;
@@ -1955,6 +1957,7 @@ shOnReady(function () {
 
         surface.style.setProperty('--sh-nav-highlight-width', '0px');
         surface.style.setProperty('--sh-nav-highlight-color', HOVER_INDICATOR_COLOR);
+        surface.style.setProperty('--sh-nav-highlight-border-color', HOVER_INDICATOR_BORDER);
         surface.style.setProperty('--sh-nav-highlight-scale', '1');
 
         surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
@@ -1966,6 +1969,7 @@ shOnReady(function () {
       surface.style.setProperty('--sh-nav-highlight-opacity', '0');
       surface.style.setProperty('--sh-nav-highlight-width', '0px');
       surface.style.setProperty('--sh-nav-highlight-color', HOVER_INDICATOR_COLOR);
+      surface.style.setProperty('--sh-nav-highlight-border-color', HOVER_INDICATOR_BORDER);
       surface.style.setProperty('--sh-nav-highlight-scale', '1');
 
       surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
@@ -1997,9 +2001,8 @@ shOnReady(function () {
     }
 
     const isSelected = selectedItem === item;
-    const ratio = isSelected ? 1 : HOVER_INDICATOR_RATIO;
     const isIntro = !highlightHasShown;
-    let width = linkRect.width * ratio;
+    let width = linkRect.width * INDICATOR_RATIO;
     let offset = linkRect.left - surfaceRect.left + (linkRect.width - width) / 2;
     const maxWidth = surfaceRect.width;
 
@@ -2011,6 +2014,7 @@ shOnReady(function () {
     surface.style.setProperty('--sh-nav-highlight-width', width.toFixed(2) + 'px');
     surface.style.setProperty('--sh-nav-highlight-x', offset.toFixed(2) + 'px');
     surface.style.setProperty('--sh-nav-highlight-color', isSelected ? SELECTED_INDICATOR_COLOR : HOVER_INDICATOR_COLOR);
+    surface.style.setProperty('--sh-nav-highlight-border-color', isSelected ? SELECTED_INDICATOR_BORDER : HOVER_INDICATOR_BORDER);
     surface.style.setProperty('--sh-nav-highlight-opacity', '1');
 
     if (isIntro) {
