@@ -1756,7 +1756,7 @@ body,
 }
 
 .fh-header__nav-surface:has(.fh-header__dropdown:hover) .fh-header__nav-highlight {
-  opacity: 0;
+  background-color: #fff;
   transition-duration: 0.12s;
 }
 
