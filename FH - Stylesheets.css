@@ -1671,7 +1671,7 @@ body,
 }
 
 .fh-header__nav {
-  background-color: #f3f5f8;
+  background-color: transparent;
 }
 
 .fh-header__nav-surface {
@@ -1688,7 +1688,7 @@ body,
   background: transparent;
   border: 1px solid transparent;
   border-bottom: none;
-  border-radius: 18px 18px 0 0;
+  border-radius: 12px 12px 0 0;
   box-shadow: none;
   overflow: visible;
   isolation: isolate;
