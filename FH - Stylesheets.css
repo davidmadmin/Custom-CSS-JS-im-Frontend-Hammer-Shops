@@ -1913,29 +1913,11 @@ body,
 }
 
 .fh-header__dropdown::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 1px;
-  border-top: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
-  opacity: 0;
-  transition: opacity 0.18s ease;
-  pointer-events: none;
+  content: none;
 }
 
 .fh-header__dropdown::after {
-  content: '';
-  position: absolute;
-  left: calc(var(--fh-nav-highlight-x, 0px));
-  top: 0;
-  width: calc(var(--fh-nav-highlight-width, 0px));
-  height: 1px;
-  background-color: #ffffff;
-  opacity: 0;
-  transition: opacity 0.18s ease;
-  pointer-events: none;
+  content: none;
 }
 
 .fh-header__nav-item.is-open > .fh-header__dropdown::before,
