@@ -1685,13 +1685,14 @@ body,
   --fh-nav-highlight-border-color: rgba(148, 163, 184, 0.6);
   --fh-nav-highlight-scale: 1;
   --fh-nav-highlight-origin: left;
-  background: linear-gradient(180deg, #f7f9fc 0%, #eef2f6 100%);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: transparent;
+  border: 1px solid transparent;
   border-bottom: none;
   border-radius: 18px 18px 0 0;
-  box-shadow: 0 18px 40px -30px rgba(15, 23, 42, 0.3);
+  box-shadow: none;
   overflow: visible;
   isolation: isolate;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .fh-header__nav-surface::before {
@@ -1707,6 +1708,19 @@ body,
     0 18px 40px -30px rgba(15, 23, 42, 0.18);
   z-index: 0;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.fh-header__nav-surface:hover,
+.fh-header__nav-surface:focus-within {
+  border-color: rgba(148, 163, 184, 0.35);
+  box-shadow: 0 18px 40px -30px rgba(15, 23, 42, 0.3);
+}
+
+.fh-header__nav-surface:hover::before,
+.fh-header__nav-surface:focus-within::before {
+  opacity: 1;
 }
 
 
