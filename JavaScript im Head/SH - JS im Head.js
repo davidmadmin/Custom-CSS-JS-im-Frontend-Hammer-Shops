@@ -1944,125 +1944,21 @@ shOnReady(function () {
     }
 
     pendingHighlightItem = null;
+    highlightHasShown = false;
 
-    if (surface.classList.contains(HIGHLIGHT_VISIBLE_CLASS)) {
-      surface.classList.remove(HIGHLIGHT_INTRO_CLASS);
-      surface.classList.add(HIGHLIGHT_VISIBLE_CLASS);
-
-      surface.style.setProperty('--sh-nav-highlight-opacity', '0');
-      surface.style.setProperty('--sh-nav-highlight-scale', '0');
-
-      highlightHideTimeout = window.setTimeout(function () {
-        highlightHideTimeout = null;
-
-        surface.style.setProperty('--sh-nav-highlight-width', '0px');
-        surface.style.setProperty('--sh-nav-highlight-color', HOVER_INDICATOR_COLOR);
-        surface.style.setProperty('--sh-nav-highlight-border-color', HOVER_INDICATOR_BORDER);
-        surface.style.setProperty('--sh-nav-highlight-scale', '1');
-
-        surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
-        surface.classList.remove(HIGHLIGHT_INTRO_CLASS);
-
-        highlightHasShown = false;
-      }, HIGHLIGHT_EXIT_DURATION);
-    } else {
-      surface.style.setProperty('--sh-nav-highlight-opacity', '0');
-      surface.style.setProperty('--sh-nav-highlight-width', '0px');
-      surface.style.setProperty('--sh-nav-highlight-color', HOVER_INDICATOR_COLOR);
-      surface.style.setProperty('--sh-nav-highlight-border-color', HOVER_INDICATOR_BORDER);
-      surface.style.setProperty('--sh-nav-highlight-scale', '1');
-
-      surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
-      surface.classList.remove(HIGHLIGHT_INTRO_CLASS);
-
-      highlightHasShown = false;
-    }
+    surface.classList.remove(HIGHLIGHT_VISIBLE_CLASS);
+    surface.classList.remove(HIGHLIGHT_INTRO_CLASS);
+    surface.style.setProperty('--sh-nav-highlight-opacity', '0');
+    surface.style.setProperty('--sh-nav-highlight-width', '0px');
+    surface.style.setProperty('--sh-nav-highlight-scale', '0');
   }
 
-  function applyHighlightForItem(item) {
-    if (!isDesktop() || !item) {
-      clearHighlight();
-      return;
-    }
-
-    const link = getLink(item);
-
-    if (!link) {
-      clearHighlight();
-      return;
-    }
-
-    const surfaceRect = surface.getBoundingClientRect();
-    const linkRect = link.getBoundingClientRect();
-
-    if (surfaceRect.width <= 0 || linkRect.width <= 0) {
-      clearHighlight();
-      return;
-    }
-
-    const isSelected = selectedItem === item;
-    const isIntro = !highlightHasShown;
-    let width = linkRect.width * INDICATOR_RATIO;
-    let offset = linkRect.left - surfaceRect.left + (linkRect.width - width) / 2;
-    const maxWidth = surfaceRect.width;
-
-    width = Math.max(0, Math.min(width, maxWidth));
-    offset = Math.min(Math.max(offset, 0), Math.max(0, maxWidth - width));
-
-    if (isIntro) surface.classList.add(HIGHLIGHT_INTRO_CLASS);
-
-    surface.style.setProperty('--sh-nav-highlight-width', width.toFixed(2) + 'px');
-    surface.style.setProperty('--sh-nav-highlight-x', offset.toFixed(2) + 'px');
-    surface.style.setProperty('--sh-nav-highlight-color', isSelected ? SELECTED_INDICATOR_COLOR : HOVER_INDICATOR_COLOR);
-    surface.style.setProperty('--sh-nav-highlight-border-color', isSelected ? SELECTED_INDICATOR_BORDER : HOVER_INDICATOR_BORDER);
-    surface.style.setProperty('--sh-nav-highlight-opacity', '1');
-
-    if (isIntro) {
-      const itemIndex = navItems.indexOf(item);
-      const isFirstItem = itemIndex === 0;
-      const isLastItem = itemIndex === navItems.length - 1;
-
-      surface.style.setProperty('--sh-nav-highlight-origin', isFirstItem ? 'left' : isLastItem ? 'right' : 'center');
-      surface.style.setProperty('--sh-nav-highlight-scale', '0');
-
-      highlightHasShown = true;
-
-      raf(function () {
-        surface.classList.add(HIGHLIGHT_VISIBLE_CLASS);
-
-        raf(function () {
-          surface.style.setProperty('--sh-nav-highlight-scale', '1');
-
-          window.setTimeout(function () {
-            surface.classList.remove(HIGHLIGHT_INTRO_CLASS);
-          }, HIGHLIGHT_INTRO_EXIT_DELAY);
-        });
-      });
-    } else {
-      surface.classList.add(HIGHLIGHT_VISIBLE_CLASS);
-      surface.style.setProperty('--sh-nav-highlight-scale', '1');
-    }
+  function applyHighlightForItem() {
+    clearHighlight();
   }
 
-  function requestHighlight(item) {
-    if (highlightHideTimeout != null) {
-      window.clearTimeout(highlightHideTimeout);
-      highlightHideTimeout = null;
-    }
-
-    pendingHighlightItem = item;
-
-    if (!isDesktop()) {
-      clearHighlight();
-      return;
-    }
-
-    if (highlightFrame != null) return;
-
-    highlightFrame = raf(function () {
-      highlightFrame = null;
-      applyHighlightForItem(pendingHighlightItem);
-    });
+  function requestHighlight() {
+    clearHighlight();
   }
 
   function openItem(item) {
