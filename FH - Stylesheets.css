@@ -395,6 +395,7 @@ body,
   padding-left: 0;
   padding-right: 0;
   background: transparent !important;
+  background-color: transparent !important;
   box-shadow: none !important;
 }
 
@@ -407,6 +408,7 @@ body,
   isolation: isolate;
   color: var(--fh-color-dark-blue);
   font-family: "Open Sans", Arial, sans-serif;
+  background: transparent;
 }
 
 .fh-footer::before {
@@ -417,7 +419,7 @@ body,
   width: 100vw;
   height: 100%;
   transform: translateX(-50%);
-  background: var(--fh-color-surface);
+  background: transparent;
   border-top: 6px solid var(--fh-color-dark-blue);
   box-sizing: border-box;
   z-index: -1;
