@@ -1695,12 +1695,14 @@ body,
 .fh-header__nav-surface::before {
   content: '';
   position: absolute;
-  left: 0;
+  left: 1px;
   right: 0;
-  top: 6px;
-  height: calc(100% - 10px);
-  background-color: #f7f7f8;
+  top: -6px;
+  height: calc(100% + 2px);
+  background-color: #fafbfc;
   border-radius: 12px 12px 0 0;
+  border: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
+  border-bottom: none;
   opacity: 0;
   transition: opacity 0.1s ease;
   z-index: 0;
