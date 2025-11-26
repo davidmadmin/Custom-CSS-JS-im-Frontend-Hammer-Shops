@@ -923,9 +923,11 @@ body,
 
 .sh-header__search-input {
   width: 100%;
-  padding: 14px 52px 14px 24px;
+  box-sizing: border-box;
+  height: 46px;
+  padding: 12px 52px 12px 24px;
   border: 1px solid #d5d5d5;
-  border-radius: 18px;
+  border-radius: 14px;
   font-size: 15px;
   line-height: 1.4;
   color: var(--sh-color-secondary-red);
@@ -1708,6 +1710,22 @@ body,
   box-shadow: none;
 }
 
+.sh-header__nav-surface::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  right: 0;
+  top: 6px;
+  height: calc(100% - 6px);
+  background-color: #fafbfc;
+  border-radius: 12px 12px 0 0;
+  border: 1px solid var(--sh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
+  border-bottom: none;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  z-index: 0;
+}
+
 
 
 .sh-header__nav-inner {
@@ -1769,11 +1787,17 @@ body,
     opacity 0.12s ease-out,
     background-color 0.22s ease;
   pointer-events: none;
+  z-index: 1;
 }
 
 .sh-header__nav-surface:has(.sh-header__dropdown:hover) .sh-header__nav-highlight {
   background-color: #fff;
   transition-duration: 0.12s;
+}
+
+.sh-header__nav-surface:hover::before,
+.sh-header__nav-surface:has(.sh-header__nav-item.is-open)::before {
+  opacity: 1;
 }
 
 .sh-header__nav-surface--highlight-visible .sh-header__nav-highlight {
