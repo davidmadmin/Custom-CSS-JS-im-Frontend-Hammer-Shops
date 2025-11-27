@@ -1877,9 +1877,7 @@ shOnReady(function () {
       ? window.cancelAnimationFrame.bind(window)
       : window.clearTimeout;
 
-  let selectedItem = null;
   let currentOpenItem = null;
-  let outsideHandlersBound = false;
   let highlightFrame = null;
   let pendingHighlightItem = null;
   let highlightHasShown = false;
@@ -2000,7 +1998,7 @@ shOnReady(function () {
       return;
     }
 
-    const isSelected = selectedItem === item;
+    const isSelected = currentOpenItem === item;
     const isIntro = !highlightHasShown;
     let width = linkRect.width * INDICATOR_RATIO;
     let offset = linkRect.left - surfaceRect.left + (linkRect.width - width) / 2;
@@ -2067,7 +2065,7 @@ shOnReady(function () {
 
   function openItem(item) {
     if (currentOpenItem === item) {
-      requestHighlight(currentOpenItem || selectedItem || null);
+      requestHighlight(currentOpenItem || null);
       return;
     }
 
@@ -2077,7 +2075,7 @@ shOnReady(function () {
 
     if (currentOpenItem) setExpanded(currentOpenItem, true);
 
-    requestHighlight(currentOpenItem || selectedItem || null);
+    requestHighlight(currentOpenItem || null);
   }
 
   function closeCurrentItem() {
@@ -2087,114 +2085,9 @@ shOnReady(function () {
     currentOpenItem = null;
   }
 
-  function collapseNav() {
-    if (selectedItem) {
-      const previousSelected = selectedItem;
-
-      selectItem(null);
-
-      return previousSelected;
-    }
-
-    if (currentOpenItem) {
-      const previousOpen = currentOpenItem;
-
-      closeCurrentItem();
-      requestHighlight(null);
-
-      return previousOpen;
-    }
-
-    return null;
-  }
-
-  function bindOutsideHandlers() {
-    if (outsideHandlersBound) return;
-
-    document.addEventListener('click', handleDocumentClick, true);
-    window.addEventListener('scroll', handleWindowScroll, { passive: true });
-    document.addEventListener('keydown', handleKeydown);
-    outsideHandlersBound = true;
-  }
-
-  function unbindOutsideHandlers() {
-    if (!outsideHandlersBound) return;
-
-    document.removeEventListener('click', handleDocumentClick, true);
-    window.removeEventListener('scroll', handleWindowScroll);
-    document.removeEventListener('keydown', handleKeydown);
-    outsideHandlersBound = false;
-  }
-
-  function selectItem(item) {
-    if (selectedItem === item) return;
-
-    if (selectedItem) {
-      selectedItem.classList.remove('is-selected');
-      setExpanded(selectedItem, false);
-    }
-
-    selectedItem = item || null;
-
-    if (selectedItem) {
-      navItems.forEach(function (navItem) {
-        if (navItem === selectedItem) return;
-
-        navItem.classList.remove('is-selected');
-        setExpanded(navItem, false);
-      });
-
-      selectedItem.classList.add('is-selected');
-      nav.classList.add('sh-header__nav--locked');
-      openItem(selectedItem);
-      bindOutsideHandlers();
-    } else {
-      nav.classList.remove('sh-header__nav--locked');
-      unbindOutsideHandlers();
-      closeCurrentItem();
-      navItems.forEach(function (navItem) {
-        setExpanded(navItem, false);
-      });
-      requestHighlight(null);
-    }
-  }
-
-  function handleDocumentClick(event) {
-    if (!isDesktop()) return;
-
-    if (nav.contains(event.target)) return;
-
-    collapseNav();
-  }
-
-  function handleWindowScroll() {
-    if (!isDesktop()) return;
-
-    collapseNav();
-  }
-
-  function handleKeydown(event) {
-    if (!isDesktop()) return;
-
-    if (event.key === 'Escape' || event.key === 'Esc') {
-      const focusSource = collapseNav();
-
-      if (focusSource) {
-        const link = getLink(focusSource);
-
-        if (link && typeof link.focus === 'function') link.focus();
-      }
-    }
-  }
-
   function handleMediaChange(event) {
     if (!event.matches) {
-      if (selectedItem) selectedItem.classList.remove('is-selected');
-
-      selectedItem = null;
-      nav.classList.remove('sh-header__nav--locked');
       closeCurrentItem();
-      unbindOutsideHandlers();
       clearHighlight();
 
       navItems.forEach(function (item) {
@@ -2210,18 +2103,17 @@ shOnReady(function () {
       if (dropdown) dropdown.setAttribute('aria-hidden', item === currentOpenItem ? 'false' : 'true');
     });
 
-    requestHighlight(selectedItem || currentOpenItem || null);
+    requestHighlight(currentOpenItem || null);
   }
 
   function handleResize() {
     if (!isDesktop()) return;
 
-    if (currentOpenItem || selectedItem) requestHighlight(currentOpenItem || selectedItem);
+    if (currentOpenItem) requestHighlight(currentOpenItem);
   }
 
   navItems.forEach(function (item) {
     item.classList.remove('is-open');
-    item.classList.remove('is-selected');
 
     const link = getLink(item);
     const dropdown = getDropdown(item);
@@ -2232,16 +2124,12 @@ shOnReady(function () {
     item.addEventListener('mouseenter', function () {
       if (!isDesktop()) return;
 
-      if (selectedItem && selectedItem !== item) return;
-
       openItem(item);
     });
 
     if (link) {
       link.addEventListener('focus', function () {
         if (!isDesktop()) return;
-
-        if (selectedItem && selectedItem !== item) return;
 
         openItem(item);
       });
@@ -2252,11 +2140,6 @@ shOnReady(function () {
         if (event.button && event.button !== 0) return;
 
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-        if (selectedItem !== item) {
-          event.preventDefault();
-          selectItem(item);
-        }
       });
     }
   });
@@ -2265,11 +2148,6 @@ shOnReady(function () {
     if (!isDesktop()) return;
 
     if (event && event.relatedTarget && nav.contains(event.relatedTarget)) return;
-
-    if (selectedItem) {
-      openItem(selectedItem);
-      return;
-    }
 
     closeCurrentItem();
     requestHighlight(null);
@@ -2281,12 +2159,8 @@ shOnReady(function () {
     window.setTimeout(function () {
       if (nav.contains(document.activeElement)) return;
 
-      if (selectedItem) {
-        openItem(selectedItem);
-      } else {
-        closeCurrentItem();
-        requestHighlight(null);
-      }
+      closeCurrentItem();
+      requestHighlight(null);
     }, 0);
   });
 
