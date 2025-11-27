@@ -1717,7 +1717,6 @@ body,
   background-color: #fafbfc;
   border-radius: 12px 12px 0 0;
   border: 1px solid var(--sh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
-  border-bottom: none;
   opacity: 0;
   transition: opacity 0.1s ease;
   z-index: 0;
