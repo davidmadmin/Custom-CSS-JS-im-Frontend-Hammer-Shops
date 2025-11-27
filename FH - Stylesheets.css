@@ -1684,7 +1684,6 @@ body,
   --fh-nav-highlight-width: 0px;
   --fh-nav-highlight-opacity: 0;
   --fh-nav-highlight-color: #fff;
-  --fh-nav-highlight-border-color: rgba(203, 213, 225, 0.7);
   --fh-nav-highlight-scale: 1;
   --fh-nav-highlight-origin: left;
   background-color: #ffffff;
@@ -1702,7 +1701,7 @@ body,
   height: 100%;
   background-color: #fafbfc;
   border-radius: 12px 12px 0 0;
-  border: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
+  border: 1px solid rgba(148, 163, 184, 0.5);
   opacity: 0;
   transition: opacity 0.1s ease;
   z-index: 0;
@@ -1760,8 +1759,6 @@ body,
   transform-origin: var(--fh-nav-highlight-origin, left);
   border-radius: 12px 12px 0 0;
   background-color: var(--fh-nav-highlight-color, #fff);
-  border: 1px solid var(--fh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
-  border-bottom-color: transparent;
   box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
   opacity: var(--fh-nav-highlight-opacity, 0);
   transition:
@@ -1901,7 +1898,7 @@ body,
   width: 100%;
   margin: 0 auto;
   padding: 32px 48px;
-  border: 1px solid var(--fh-nav-highlight-border-color, #e4e4e4);
+  border: 1px solid #e4e4e4;
   border-top: none;
   border-radius: 0 0 18px 18px;
   background-color: #ffffff;
