@@ -2809,6 +2809,16 @@ body.fh-mobile-menu-open {
   margin-left: auto;
   margin-right: auto;
 }
+
+@media (max-width: 991.98px) {
+  #page-header {
+    background-color: var(--fh-color-surface) !important;
+  }
+
+  #page-header::before {
+    display: none;
+  }
+}
 /* End Section: Page Header Background */
 
 /* Section: FH search input native control overrides */
