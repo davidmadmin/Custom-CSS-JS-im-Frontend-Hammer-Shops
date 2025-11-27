@@ -2234,8 +2234,7 @@ body,
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.sh-header__nav-item.is-open > .sh-header__dropdown,
-.sh-header__nav-item.is-selected > .sh-header__dropdown {
+.sh-header__nav-item.is-open > .sh-header__dropdown {
   display: block;
   opacity: 1;
   visibility: visible;
