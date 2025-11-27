@@ -2633,6 +2633,12 @@ body,
     box-shadow: none;
   }
 
+  .sh-header__nav-surface::before,
+  .sh-header__nav-surface:hover::before,
+  .sh-header__nav-surface:has(.sh-header__nav-item.is-open)::before {
+    opacity: 0;
+  }
+
   .sh-header__mobile-close {
     display: inline-flex;
     margin: 0;
