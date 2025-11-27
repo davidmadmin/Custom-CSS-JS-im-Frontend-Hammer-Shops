@@ -1692,6 +1692,7 @@ body,
   border-bottom: none;
   border-radius: 18px 18px 0 0;
   box-shadow: none;
+  transition: box-shadow 0.24s ease;
 }
 
 .fh-header__nav-surface::before {
@@ -1708,6 +1709,10 @@ body,
   opacity: 0;
   transition: opacity 0.1s ease;
   z-index: 0;
+}
+
+.fh-header__nav:hover .fh-header__nav-surface {
+  box-shadow: 0 12px 24px -12px rgba(30, 41, 59, 0.28);
 }
 
 
@@ -2624,6 +2629,10 @@ body,
 
   .fh-header__nav-surface:hover {
     border: none;
+    box-shadow: none;
+  }
+
+  .fh-header__nav:hover .fh-header__nav-surface {
     box-shadow: none;
   }
 
