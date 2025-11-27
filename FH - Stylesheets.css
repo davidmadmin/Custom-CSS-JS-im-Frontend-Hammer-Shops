@@ -2810,7 +2810,7 @@ body.fh-mobile-menu-open {
   margin-right: auto;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1599.98px) {
   #page-header {
     background-color: var(--fh-color-surface) !important;
   }
