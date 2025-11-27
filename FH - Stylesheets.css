@@ -2623,6 +2623,12 @@ body,
     box-shadow: none;
   }
 
+  .fh-header__nav-surface::before,
+  .fh-header__nav-surface:hover::before,
+  .fh-header__nav-surface:has(.fh-header__nav-item.is-open)::before {
+    opacity: 0;
+  }
+
   .fh-header__mobile-close {
     display: inline-flex;
     margin: 0;
@@ -2808,6 +2814,16 @@ body.fh-mobile-menu-open {
   max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (max-width: 1599.98px) {
+  #page-header {
+    background-color: var(--fh-color-surface) !important;
+  }
+
+  #page-header::before {
+    display: none;
+  }
 }
 /* End Section: Page Header Background */
 
