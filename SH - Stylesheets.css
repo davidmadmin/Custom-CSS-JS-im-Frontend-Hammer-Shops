@@ -1700,6 +1700,7 @@ body,
   --sh-nav-highlight-width: 0px;
   --sh-nav-highlight-opacity: 0;
   --sh-nav-highlight-color: #fff;
+  --sh-nav-highlight-border-color: rgba(203, 213, 225, 0.7);
   --sh-nav-highlight-scale: 1;
   --sh-nav-highlight-origin: left;
   background-color: #ffffff;
@@ -1718,7 +1719,7 @@ body,
   height: calc(100% - 6px);
   background-color: #fafbfc;
   border-radius: 12px 12px 0 0;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  border: 1px solid var(--sh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
   border-bottom: none;
   opacity: 0;
   transition: opacity 0.1s ease;
@@ -1777,6 +1778,8 @@ body,
   transform-origin: var(--sh-nav-highlight-origin, left);
   border-radius: 12px 12px 0 0;
   background-color: var(--sh-nav-highlight-color, #fff);
+  border: 1px solid var(--sh-nav-highlight-border-color, rgba(148, 163, 184, 0.5));
+  border-bottom-color: transparent;
   box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
   opacity: var(--sh-nav-highlight-opacity, 0);
   transition:
@@ -1916,7 +1919,7 @@ body,
   width: 100%;
   margin: 0 auto;
   padding: 32px 48px;
-  border: 1px solid #e4e4e4;
+  border: 1px solid var(--sh-nav-highlight-border-color, #e4e4e4);
   border-top: none;
   border-radius: 0 0 18px 18px;
   background-color: #ffffff;
