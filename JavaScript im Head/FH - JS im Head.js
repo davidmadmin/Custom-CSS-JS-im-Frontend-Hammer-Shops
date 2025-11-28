@@ -2193,9 +2193,20 @@ fhOnReady(function () {
       link.addEventListener('click', function (event) {
         if (!isDesktop()) return;
 
+        const dropdown = getDropdown(item);
+        const alreadyOpen = currentOpenItem === item;
+        const touchHover = isTouchHoverEnabled(event) || hasTouchCapability();
+
         if (suppressedTouchClickItem === item) {
           suppressedTouchClickItem = null;
           event.preventDefault();
+          return;
+        }
+
+        if (touchHover && dropdown && !alreadyOpen) {
+          event.preventDefault();
+          suppressedTouchClickItem = item;
+          openItem(item);
           return;
         }
 
