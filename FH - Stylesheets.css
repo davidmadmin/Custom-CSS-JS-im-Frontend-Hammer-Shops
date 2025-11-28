@@ -2832,7 +2832,7 @@ body,
   }
 
   .fh-header__burger {
-    display: none;
+    display: inline-flex;
   }
 
   .fh-header__basket-link {
@@ -2857,6 +2857,7 @@ body,
     max-width: none;
     margin: 0 auto;
     display: block;
+    z-index: 1;
   }
 
   .fh-header__nav-inner {
@@ -2959,6 +2960,10 @@ body,
     flex: 0 0 auto;
   }
 
+  .basket-open .fh-header__nav {
+    z-index: 0;
+  }
+
   .fh-header__nav-scroll-button:hover,
   .fh-header__nav-scroll-button:focus-visible {
     color: var(--fh-color-bright-blue);
@@ -2985,7 +2990,7 @@ body,
     position: static;
     height: auto;
     transform: none;
-    z-index: auto;
+    z-index: 1;
     margin: 0 auto;
   }
 
