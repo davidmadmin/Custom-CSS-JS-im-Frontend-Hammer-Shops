@@ -2987,16 +2987,32 @@ body,
   }
 
   body.fh-mobile-menu-open .fh-header__nav {
-    position: static;
-    height: auto;
-    transform: none;
-    z-index: 1;
-    margin: 0 auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    transform: translateX(0);
+    z-index: 5000;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 0;
   }
 
   body.fh-mobile-menu-open .fh-header__nav-inner {
-    margin: 0 auto;
-    padding: 0 20px 14px;
+    margin: 0;
+    padding: 24px 24px 48px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  body.fh-mobile-menu-open .fh-header__nav-surface {
+    border: none;
+    box-shadow: none;
+    padding: 0;
   }
 }
 

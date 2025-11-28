@@ -1689,7 +1689,7 @@ fhOnReady(function () {
 
     menu.classList.add('fh-header__nav--open');
     menu.setAttribute('aria-hidden', 'false');
-    if (!inlineNavMedia.matches) {
+    if (!desktopMedia.matches) {
       document.body.classList.add('fh-mobile-menu-open');
     }
     setExpandedState(true);
@@ -1704,7 +1704,7 @@ fhOnReady(function () {
 
     menu.classList.remove('fh-header__nav--open');
     menu.setAttribute('aria-hidden', desktopMedia.matches || inlineNavMedia.matches ? 'false' : 'true');
-    if (!inlineNavMedia.matches) {
+    if (!desktopMedia.matches) {
       document.body.classList.remove('fh-mobile-menu-open');
     }
     clearPendingSelection();
@@ -1795,7 +1795,7 @@ fhOnReady(function () {
       trigger.setAttribute('aria-expanded', trigger.getAttribute('aria-expanded') || 'false');
 
       trigger.addEventListener('click', function (event) {
-        if (desktopMedia.matches) return;
+        if (desktopMedia.matches || (inlineNavMedia.matches && !isOpen)) return;
 
         const target = trigger.getAttribute('data-fh-mobile-submenu-target');
 
