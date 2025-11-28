@@ -2757,12 +2757,23 @@ body,
     box-sizing: border-box;
   }
 
+  .fh-header .container,
+  .fh-header__nav .container,
+  .fh-header__nav-inner {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+  }
+
   .fh-header__main {
     grid-template-columns: auto 1fr auto;
     grid-template-areas: "logo search actions";
     column-gap: 16px;
     row-gap: 0;
     padding: 18px 0 16px;
+    width: 100%;
+    margin: 0 auto;
+    align-items: center;
   }
 
   .fh-header__search-area {
@@ -2770,10 +2781,12 @@ body,
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
   }
 
   .fh-header__search-form {
     flex: 1 1 auto;
+    min-width: 0;
   }
 
   .fh-header__actions {
@@ -2799,18 +2812,19 @@ body,
     transform: none;
     overflow: visible;
     padding-top: 0;
+    width: 100%;
   }
 
   .fh-header__nav-inner {
-    max-width: none;
     margin: 0;
-    padding: 0 0 14px;
+    padding: 0 16px 14px;
   }
 
   .fh-header__nav-surface {
     padding: 10px 12px;
     gap: 12px;
     align-items: center;
+    justify-content: space-between;
     border: 1px solid #e5e7eb;
     border-radius: 14px;
     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
@@ -2827,11 +2841,13 @@ body,
   .fh-header__nav-scroll {
     display: flex;
     align-items: center;
+    flex: 1 1 auto;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-right: 60px;
+    padding-right: 72px;
     scroll-behavior: smooth;
     scrollbar-width: none;
+    scroll-snap-type: x proximity;
   }
 
   .fh-header__nav-scroll::-webkit-scrollbar {
@@ -2843,7 +2859,7 @@ body,
     position: absolute;
     top: 0;
     right: 0;
-    width: 46px;
+    width: 50px;
     height: 100%;
     background: linear-gradient(90deg, rgba(49, 165, 240, 0) 0%, rgba(49, 165, 240, 0.85) 100%);
     pointer-events: none;
@@ -2861,6 +2877,7 @@ body,
   .fh-header__nav-item {
     flex: none;
     text-align: center;
+    scroll-snap-align: start;
   }
 
   .fh-header__nav-link {
@@ -2882,6 +2899,7 @@ body,
     color: #0f172a;
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
     flex-shrink: 0;
+    flex: 0 0 auto;
   }
 
   .fh-header__nav-scroll-button:hover,
