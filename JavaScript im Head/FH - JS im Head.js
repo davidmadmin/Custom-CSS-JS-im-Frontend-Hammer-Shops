@@ -2173,6 +2173,97 @@ fhOnReady(function () {
 });
 // End Section: FH desktop navigation highlight & selection behaviour
 
+// Section: FH mid-breakpoint navigation horizontal scroll helper
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) return;
+
+  const surface = header.querySelector('[data-fh-desktop-nav-surface]');
+  const viewport = surface ? surface.querySelector('[data-fh-nav-viewport]') : null;
+  const navList = viewport ? viewport.querySelector('.fh-header__nav-list') : null;
+  const scrollButton = surface ? surface.querySelector('[data-fh-nav-scroll-next]') : null;
+
+  if (!surface || !viewport || !navList || !scrollButton) return;
+
+  const scrollMedia = window.matchMedia('(max-width: 1599.98px) and (min-width: 768px)');
+  const raf =
+    typeof window.requestAnimationFrame === 'function'
+      ? window.requestAnimationFrame.bind(window)
+      : function (callback) {
+          return window.setTimeout(callback, 16);
+        };
+
+  let rafId = null;
+
+  function updateScrollState() {
+    rafId = null;
+
+    const inRange = scrollMedia.matches;
+    const hasOverflow = inRange && viewport.scrollWidth - viewport.clientWidth > 4;
+    const atStart = inRange && viewport.scrollLeft <= 4;
+    const atEnd =
+      inRange && viewport.scrollLeft >= viewport.scrollWidth - viewport.clientWidth - 4;
+
+    surface.classList.toggle('fh-header__nav-surface--scrollable', hasOverflow);
+    surface.classList.toggle('fh-header__nav-surface--at-start', atStart);
+    surface.classList.toggle('fh-header__nav-surface--at-end', atEnd && hasOverflow);
+
+    scrollButton.disabled = !hasOverflow;
+    scrollButton.hidden = !hasOverflow;
+  }
+
+  function requestScrollStateUpdate() {
+    if (rafId != null) return;
+
+    rafId = raf(updateScrollState);
+  }
+
+  function scrollToNextItem() {
+    if (!scrollMedia.matches) return;
+
+    const items = Array.prototype.slice.call(navList.querySelectorAll('.fh-header__nav-item'));
+
+    if (!items.length) return;
+
+    const currentLeft = viewport.scrollLeft;
+    const viewportRight = currentLeft + viewport.clientWidth;
+    let targetLeft = viewport.scrollWidth - viewport.clientWidth;
+
+    for (let index = 0; index < items.length; index += 1) {
+      const item = items[index];
+
+      if (!item) continue;
+
+      const itemRight = item.offsetLeft + item.offsetWidth;
+
+      if (itemRight > viewportRight + 1) {
+        targetLeft = item.offsetLeft;
+        break;
+      }
+    }
+
+    viewport.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  }
+
+  function handleMediaChange() {
+    requestScrollStateUpdate();
+  }
+
+  scrollButton.addEventListener('click', scrollToNextItem);
+  viewport.addEventListener('scroll', requestScrollStateUpdate, { passive: true });
+  window.addEventListener('resize', requestScrollStateUpdate);
+
+  if (typeof scrollMedia.addEventListener === 'function') scrollMedia.addEventListener('change', handleMediaChange);
+  else if (typeof scrollMedia.addListener === 'function') scrollMedia.addListener(handleMediaChange);
+
+  const observer = new MutationObserver(requestScrollStateUpdate);
+  observer.observe(navList, { childList: true });
+
+  requestScrollStateUpdate();
+});
+// End Section: FH mid-breakpoint navigation horizontal scroll helper
+
 // Section: Restrict focus to the basket preview while it is open
 fhOnReady(function () {
   const body = document.body;

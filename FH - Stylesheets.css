@@ -1714,6 +1714,19 @@ body,
   margin: 0 auto;
 }
 
+.fh-header__nav-viewport {
+  position: relative;
+}
+
+.fh-header__nav-scroll-button {
+  display: none;
+}
+
+.fh-header__nav-scroll-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
 .fh-header__mobile-close {
   display: none;
   align-items: center;
@@ -2762,6 +2775,199 @@ body.fh-mobile-menu-open {
     left: 59%;
     right: auto;
     transform: translateX(calc(-50% + 8px)) rotate(45deg);
+  }
+}
+
+@media (max-width: 1599.98px) and (min-width: 768px) {
+  .fh-header {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  .fh-header__main {
+    grid-template-columns: auto minmax(320px, 1fr) auto;
+    grid-template-areas: "logo search actions";
+    row-gap: 0;
+    column-gap: 16px;
+    padding: 18px 24px 16px;
+  }
+
+  .fh-header__search-area {
+    grid-area: search;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-height: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .fh-header__actions {
+    column-gap: 16px;
+  }
+
+  .fh-header__burger {
+    display: inline-flex;
+  }
+
+  .fh-header__search-input {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+
+  .fh-header__icon-button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .fh-header__basket {
+    justify-self: end;
+  }
+
+  .fh-header__basket-link {
+    min-width: 190px;
+    width: auto;
+    height: 48px;
+    padding: 12px 16px;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .fh-header__basket-total {
+    display: inline-flex;
+  }
+
+  .fh-header__nav {
+    position: relative;
+    top: auto;
+    left: auto;
+    height: auto;
+    transform: none;
+    padding: 0 24px 10px;
+    background-color: transparent;
+    overflow: visible;
+  }
+
+  .fh-header__nav-inner {
+    display: block;
+    flex: none;
+    overflow: visible;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .fh-header__nav-surface {
+    padding: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px 14px 0 0;
+    box-shadow: var(--fh-shadow-elevation-soft);
+    overflow: visible;
+  }
+
+  .fh-header__nav-surface::before {
+    display: none;
+  }
+
+  .fh-header__nav-surface::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 48px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(49, 165, 240, 0.5));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .fh-header__nav-surface--scrollable::after {
+    opacity: 0.9;
+  }
+
+  .fh-header__nav-surface--at-end::after {
+    opacity: 0;
+  }
+
+  .fh-header__nav-viewport {
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 0 56px 0 6px;
+    margin-right: -8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .fh-header__nav-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fh-header__nav-list {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 0 8px;
+    width: max-content;
+    min-width: 100%;
+    scroll-snap-type: x mandatory;
+  }
+
+  .fh-header__nav-item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .fh-header__nav-link {
+    padding: 14px 16px;
+    border-bottom: none;
+    justify-content: center;
+  }
+
+  .fh-header__dropdown {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(12px);
+  }
+
+  .fh-header__nav-item.is-open > .fh-header__dropdown {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .fh-header__nav-scroll-button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    border: 1px solid #d5d5d5;
+    background: linear-gradient(180deg, #ffffff 0%, #eef3fd 100%);
+    color: var(--fh-color-bright-blue);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16);
+    z-index: 2;
+    cursor: pointer;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .fh-header__nav-scroll-button:disabled {
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .fh-header__nav-surface--at-end .fh-header__nav-scroll-button {
+    opacity: 0.6;
   }
 }
 /* End Section: FH Header Base Layout */
