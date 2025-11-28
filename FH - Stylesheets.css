@@ -3013,6 +3013,44 @@ body,
     border: none;
     box-shadow: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  body.fh-mobile-menu-open .fh-header__nav-scroll {
+    padding: 0;
+    flex: 1 1 auto;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: none;
+  }
+
+  body.fh-mobile-menu-open .fh-header__nav-list {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+  }
+
+  body.fh-mobile-menu-open .fh-header__nav-link {
+    width: 100%;
+    justify-content: flex-start;
+    white-space: normal;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 18px 0;
+  }
+
+  body.fh-mobile-menu-open .fh-header__nav-item:last-child .fh-header__nav-link {
+    border-bottom: none;
+  }
+
+  body.fh-mobile-menu-open .fh-header__nav-burger,
+  body.fh-mobile-menu-open .fh-header__nav-scroll-button {
+    display: none;
   }
 }
 
