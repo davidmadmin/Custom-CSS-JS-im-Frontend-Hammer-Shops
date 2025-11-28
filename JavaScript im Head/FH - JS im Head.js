@@ -1092,6 +1092,7 @@ fhOnReady(function () {
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   const desktopMedia = window.matchMedia('(min-width: 1600px)');
+  const coarsePointerMedia = window.matchMedia('(pointer: coarse)');
   const panelContainer = menu.querySelector('[data-fh-mobile-views]');
   const panelElements = panelContainer
     ? Array.prototype.slice.call(panelContainer.querySelectorAll('[data-fh-mobile-panel]'))
@@ -1898,6 +1899,14 @@ fhOnReady(function () {
     return desktopMedia.matches;
   }
 
+  function isTouchPointer(event) {
+    if (!event) return false;
+
+    if (typeof event.pointerType === 'string') return event.pointerType === 'touch';
+
+    return coarsePointerMedia.matches;
+  }
+
   function getLink(item) {
     if (!item) return null;
 
@@ -2128,6 +2137,19 @@ fhOnReady(function () {
     });
 
     if (link) {
+      link.addEventListener('pointerdown', function (event) {
+        if (!isDesktop()) return;
+
+        if (!isTouchPointer(event)) return;
+
+        const alreadyOpen = currentOpenItem === item;
+
+        if (dropdown && !alreadyOpen) {
+          event.preventDefault();
+          openItem(item);
+        }
+      });
+
       link.addEventListener('focus', function () {
         if (!isDesktop()) return;
 
