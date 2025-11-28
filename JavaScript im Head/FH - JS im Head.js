@@ -1078,6 +1078,92 @@ fhOnReady(function () {
 });
 // End Section: FH desktop header scroll behaviour
 
+// Section: FH desktop navigation scroll helper (768px–1599.98px)
+fhOnReady(function () {
+  const navScroll = document.querySelector('[data-fh-nav-scroll]');
+  const navScrollButton = document.querySelector('[data-fh-nav-scroll-next]');
+
+  if (!navScroll || !navScrollButton) return;
+
+  const mediaQuery = window.matchMedia('(max-width: 1599.98px) and (min-width: 768px)');
+
+  function setScrollableState() {
+    const hasOverflow = mediaQuery.matches && (navScroll.scrollWidth - navScroll.clientWidth > 2);
+
+    navScroll.classList.toggle('is-scrollable', hasOverflow);
+
+    if (hasOverflow) {
+      navScrollButton.removeAttribute('disabled');
+    } else {
+      navScrollButton.setAttribute('disabled', 'disabled');
+    }
+
+    if (!mediaQuery.matches) {
+      navScroll.scrollLeft = 0;
+    }
+  }
+
+  function getNavItems() {
+    return Array.prototype.slice.call(navScroll.querySelectorAll('.fh-header__nav-item'));
+  }
+
+  function scrollToNextItem() {
+    if (!mediaQuery.matches) return;
+
+    const items = getNavItems();
+
+    if (items.length === 0) return;
+
+    const viewportRight = navScroll.scrollLeft + navScroll.clientWidth;
+    let nextItem = null;
+
+    for (let index = 0; index < items.length; index += 1) {
+      const item = items[index];
+      const itemRight = item.offsetLeft + item.offsetWidth;
+
+      if (itemRight > viewportRight + 2) {
+        nextItem = item;
+        break;
+      }
+    }
+
+    const targetLeft = nextItem ? nextItem.offsetLeft : 0;
+
+    if (typeof navScroll.scrollTo === 'function') {
+      navScroll.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    } else {
+      navScroll.scrollLeft = targetLeft;
+    }
+  }
+
+  function handleMediaChange() {
+    setScrollableState();
+  }
+
+  navScrollButton.addEventListener('click', scrollToNextItem);
+
+  navScroll.addEventListener('scroll', function () {
+    if (!mediaQuery.matches) return;
+
+    window.requestAnimationFrame(setScrollableState);
+  });
+
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', handleMediaChange);
+  } else if (typeof mediaQuery.addListener === 'function') {
+    mediaQuery.addListener(handleMediaChange);
+  }
+
+  window.addEventListener('resize', setScrollableState);
+
+  if (typeof ResizeObserver === 'function') {
+    const scrollObserver = new ResizeObserver(setScrollableState);
+    scrollObserver.observe(navScroll);
+  }
+
+  setScrollableState();
+});
+
 // Section: FH mobile navigation toggle
 fhOnReady(function () {
   const header = document.querySelector('[data-fh-header-root]');
@@ -1092,6 +1178,7 @@ fhOnReady(function () {
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   const desktopMedia = window.matchMedia('(min-width: 1600px)');
+  const inlineNavMedia = window.matchMedia('(max-width: 1599.98px) and (min-width: 768px)');
   const panelContainer = menu.querySelector('[data-fh-mobile-views]');
   const panelElements = panelContainer
     ? Array.prototype.slice.call(panelContainer.querySelectorAll('[data-fh-mobile-panel]'))
@@ -1602,7 +1689,9 @@ fhOnReady(function () {
 
     menu.classList.add('fh-header__nav--open');
     menu.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('fh-mobile-menu-open');
+    if (!desktopMedia.matches) {
+      document.body.classList.add('fh-mobile-menu-open');
+    }
     setExpandedState(true);
     document.addEventListener('keydown', handleDocumentKeydown);
     document.addEventListener('keydown', handleTrapFocus);
@@ -1614,8 +1703,10 @@ fhOnReady(function () {
     const skipFocus = !!(options && options.skipFocus === true);
 
     menu.classList.remove('fh-header__nav--open');
-    menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
-    document.body.classList.remove('fh-mobile-menu-open');
+    menu.setAttribute('aria-hidden', desktopMedia.matches || inlineNavMedia.matches ? 'false' : 'true');
+    if (!desktopMedia.matches) {
+      document.body.classList.remove('fh-mobile-menu-open');
+    }
     clearPendingSelection();
     setExpandedState(false);
     const wasSuppressed = suppressPersistence;
@@ -1653,6 +1744,24 @@ fhOnReady(function () {
     });
   });
 
+  function syncInlineNavVisibility() {
+    if (inlineNavMedia.matches && !isOpen) {
+      menu.setAttribute('aria-hidden', 'false');
+      menu.classList.remove('fh-header__nav--open');
+      document.body.classList.remove('fh-mobile-menu-open');
+      setExpandedState(false);
+      clearPendingSelection();
+    }
+  }
+
+  if (typeof inlineNavMedia.addEventListener === 'function') {
+    inlineNavMedia.addEventListener('change', syncInlineNavVisibility);
+  } else if (typeof inlineNavMedia.addListener === 'function') {
+    inlineNavMedia.addListener(syncInlineNavVisibility);
+  }
+
+  syncInlineNavVisibility();
+
   closeButtons.forEach(function (button) {
     button.addEventListener('click', function (event) {
       event.preventDefault();
@@ -1686,7 +1795,7 @@ fhOnReady(function () {
       trigger.setAttribute('aria-expanded', trigger.getAttribute('aria-expanded') || 'false');
 
       trigger.addEventListener('click', function (event) {
-        if (desktopMedia.matches) return;
+        if (desktopMedia.matches || (inlineNavMedia.matches && !isOpen)) return;
 
         const target = trigger.getAttribute('data-fh-mobile-submenu-target');
 

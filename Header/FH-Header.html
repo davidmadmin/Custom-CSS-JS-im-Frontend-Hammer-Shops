@@ -250,7 +250,23 @@
           </div>
           <div class="fh-header__nav-surface" data-fh-desktop-nav-surface>
             <span class="fh-header__nav-highlight" aria-hidden="true"></span>
-            <ul class="nav fh-header__nav-list">
+            <button
+              type="button"
+              class="fh-header__nav-burger"
+              data-fh-mobile-menu-toggle
+              aria-controls="fh-mobile-menu"
+              aria-expanded="false"
+              aria-label="Menü"
+            >
+              <span class="fh-header__sr-only">Navigation öffnen</span>
+              <svg aria-hidden="true" class="fh-header__burger-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+            <div class="fh-header__nav-scroll" data-fh-nav-scroll>
+              <ul class="nav fh-header__nav-list">
             <li class="nav-item dropdown fh-header__nav-item">
               <a class="nav-link fh-header__nav-link" href="/schloesser" data-fh-mobile-submenu-target="schloesser" aria-controls="fh-mobile-submenu-schloesser" aria-expanded="false">
                 <span class="fh-header__nav-icon" aria-hidden="true">
@@ -544,7 +560,11 @@
                 </div>
               </div>
             </li>
-            </ul>
+              </ul>
+            </div>
+            <button type="button" class="fh-header__nav-scroll-button" data-fh-nav-scroll-next aria-label="Weitere Kategorien anzeigen">
+              <span aria-hidden="true" class="fh-header__nav-scroll-icon">➜</span>
+            </button>
           </div>
         </div>
         <div class="fh-header__mobile-view fh-header__mobile-submenu-panel" id="fh-mobile-submenu-schloesser" data-fh-mobile-panel="schloesser" aria-hidden="true">
