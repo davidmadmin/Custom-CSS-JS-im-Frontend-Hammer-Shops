@@ -1901,12 +1901,24 @@ shOnReady(function () {
     return desktopMedia.matches;
   }
 
+  function hasTouchCapability() {
+    return coarsePointerMedia.matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
   function isTouchPointer(event) {
     if (!event) return false;
 
     if (typeof event.pointerType === 'string') return event.pointerType === 'touch';
 
-    return coarsePointerMedia.matches;
+    return false;
+  }
+
+  function isTouchHoverEnabled(event) {
+    if (!isDesktop()) return false;
+
+    if (event && event.type === 'touchstart') return hasTouchCapability();
+
+    return isTouchPointer(event);
   }
 
   function getLink(item) {
@@ -2098,6 +2110,7 @@ shOnReady(function () {
 
   function handleMediaChange(event) {
     if (!event.matches) {
+      suppressedTouchClickItem = null;
       closeCurrentItem();
       clearHighlight();
 
@@ -2140,9 +2153,7 @@ shOnReady(function () {
 
     if (link) {
       link.addEventListener('pointerdown', function (event) {
-        if (!isDesktop()) return;
-
-        if (!isTouchPointer(event)) return;
+        if (!isTouchHoverEnabled(event)) return;
 
         const alreadyOpen = currentOpenItem === item;
 
@@ -2154,6 +2165,24 @@ shOnReady(function () {
           suppressedTouchClickItem = null;
         }
       });
+
+      link.addEventListener(
+        'touchstart',
+        function (event) {
+          if (!isTouchHoverEnabled(event)) return;
+
+          const alreadyOpen = currentOpenItem === item;
+
+          if (dropdown && !alreadyOpen) {
+            event.preventDefault();
+            suppressedTouchClickItem = item;
+            openItem(item);
+          } else {
+            suppressedTouchClickItem = null;
+          }
+        },
+        { passive: false }
+      );
 
       link.addEventListener('focus', function () {
         if (!isDesktop()) return;
