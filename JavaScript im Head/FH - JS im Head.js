@@ -1689,7 +1689,9 @@ fhOnReady(function () {
 
     menu.classList.add('fh-header__nav--open');
     menu.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('fh-mobile-menu-open');
+    if (!inlineNavMedia.matches) {
+      document.body.classList.add('fh-mobile-menu-open');
+    }
     setExpandedState(true);
     document.addEventListener('keydown', handleDocumentKeydown);
     document.addEventListener('keydown', handleTrapFocus);
@@ -1702,7 +1704,9 @@ fhOnReady(function () {
 
     menu.classList.remove('fh-header__nav--open');
     menu.setAttribute('aria-hidden', desktopMedia.matches || inlineNavMedia.matches ? 'false' : 'true');
-    document.body.classList.remove('fh-mobile-menu-open');
+    if (!inlineNavMedia.matches) {
+      document.body.classList.remove('fh-mobile-menu-open');
+    }
     clearPendingSelection();
     setExpandedState(false);
     const wasSuppressed = suppressPersistence;
