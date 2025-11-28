@@ -1091,6 +1091,7 @@ fhOnReady(function () {
 
   const closeButtons = header.querySelectorAll('[data-fh-mobile-menu-close]');
   const focusableSelectors = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const inlineNavMedia = window.matchMedia('(min-width: 768px)');
   const desktopMedia = window.matchMedia('(min-width: 1600px)');
   const panelContainer = menu.querySelector('[data-fh-mobile-views]');
   const panelElements = panelContainer
@@ -1614,7 +1615,7 @@ fhOnReady(function () {
     const skipFocus = !!(options && options.skipFocus === true);
 
     menu.classList.remove('fh-header__nav--open');
-    menu.setAttribute('aria-hidden', desktopMedia.matches ? 'false' : 'true');
+    menu.setAttribute('aria-hidden', inlineNavMedia.matches ? 'false' : 'true');
     document.body.classList.remove('fh-mobile-menu-open');
     clearPendingSelection();
     setExpandedState(false);
@@ -1734,6 +1735,10 @@ fhOnReady(function () {
 
   if (typeof desktopMedia.addEventListener === 'function') desktopMedia.addEventListener('change', handleBreakpointChange); else if (typeof desktopMedia.addListener === 'function') {
     desktopMedia.addListener(handleBreakpointChange);
+  }
+
+  if (typeof inlineNavMedia.addEventListener === 'function') inlineNavMedia.addEventListener('change', handleBreakpointChange); else if (typeof inlineNavMedia.addListener === 'function') {
+    inlineNavMedia.addListener(handleBreakpointChange);
   }
 
   closeMenu({ skipFocus: true });
