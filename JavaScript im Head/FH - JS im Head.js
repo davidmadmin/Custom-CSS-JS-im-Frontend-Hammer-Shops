@@ -1867,6 +1867,7 @@ fhOnReady(function () {
   if (navItems.length === 0) return;
 
   const desktopMedia = window.matchMedia('(min-width: 1600px)');
+  const coarsePointerMedia = window.matchMedia('(pointer: coarse)');
   const raf =
     typeof window.requestAnimationFrame === 'function'
       ? window.requestAnimationFrame.bind(window)
@@ -1883,6 +1884,7 @@ fhOnReady(function () {
   let pendingHighlightItem = null;
   let highlightHasShown = false;
   let highlightHideTimeout = null;
+  let suppressedTouchClickItem = null;
 
   const HIGHLIGHT_VISIBLE_CLASS = 'fh-header__nav-surface--highlight-visible';
   const HIGHLIGHT_INTRO_CLASS = 'fh-header__nav-surface--highlight-intro';
@@ -2146,7 +2148,10 @@ fhOnReady(function () {
 
         if (dropdown && !alreadyOpen) {
           event.preventDefault();
+          suppressedTouchClickItem = item;
           openItem(item);
+        } else {
+          suppressedTouchClickItem = null;
         }
       });
 
@@ -2158,6 +2163,12 @@ fhOnReady(function () {
 
       link.addEventListener('click', function (event) {
         if (!isDesktop()) return;
+
+        if (suppressedTouchClickItem === item) {
+          suppressedTouchClickItem = null;
+          event.preventDefault();
+          return;
+        }
 
         if (event.button && event.button !== 0) return;
 
