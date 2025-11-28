@@ -2986,6 +2986,10 @@ body,
     display: none;
   }
 
+  body.fh-mobile-menu-open .fh-header__mobile-close {
+    display: inline-flex;
+  }
+
   body.fh-mobile-menu-open .fh-header__nav {
     position: fixed;
     top: 0;
