@@ -2173,6 +2173,80 @@ fhOnReady(function () {
 });
 // End Section: FH desktop navigation highlight & selection behaviour
 
+// Section: FH navigation scroll assist for medium viewports
+fhOnReady(function () {
+  const header = document.querySelector('[data-fh-header-root]');
+
+  if (!header) return;
+
+  const navSurface = header.querySelector('[data-fh-desktop-nav-surface]');
+  const navList = navSurface ? navSurface.querySelector('.fh-header__nav-list') : null;
+  const scrollIndicator = header.querySelector('[data-fh-nav-scroll-indicator]');
+  const scrollNext = header.querySelector('[data-fh-nav-scroll-next]');
+  const media = window.matchMedia('(min-width: 768px) and (max-width: 1599.98px)');
+
+  if (!navSurface || !navList || !scrollIndicator || !scrollNext) return;
+
+  let isScrollable = false;
+
+  function getNavItems() {
+    return Array.prototype.slice.call(navList.querySelectorAll('.fh-header__nav-item'));
+  }
+
+  function isAtScrollEnd() {
+    return navList.scrollLeft + navList.clientWidth >= navList.scrollWidth - 1;
+  }
+
+  function updateIndicator() {
+    const visible = isScrollable && !isAtScrollEnd();
+
+    scrollIndicator.classList.toggle('is-visible', visible);
+    scrollNext.classList.toggle('is-visible', isScrollable);
+  }
+
+  function updateScrollableState() {
+    isScrollable = media.matches && navList.scrollWidth > navList.clientWidth + 4;
+
+    navSurface.classList.toggle('fh-header__nav-surface--scrollable', isScrollable);
+    updateIndicator();
+  }
+
+  function scrollToNextItem() {
+    if (!isScrollable) return;
+
+    const items = getNavItems();
+
+    if (items.length === 0) return;
+
+    const currentLeft = navList.scrollLeft;
+    let nextIndex = items.findIndex(function (item) {
+      return item.offsetLeft + item.offsetWidth > currentLeft + 2;
+    });
+    nextIndex = nextIndex === -1 ? items.length - 1 : nextIndex;
+
+    const targetItem = items[Math.min(nextIndex + 1, items.length - 1)];
+
+    if (!targetItem) return;
+
+    navList.scrollTo({ left: targetItem.offsetLeft, behavior: 'smooth' });
+  }
+
+  function handleMediaChange() {
+    updateScrollableState();
+    updateIndicator();
+  }
+
+  navList.addEventListener('scroll', updateIndicator, { passive: true });
+  scrollNext.addEventListener('click', scrollToNextItem);
+
+  if (typeof media.addEventListener === 'function') media.addEventListener('change', handleMediaChange); else if (typeof media.addListener === 'function') media.addListener(handleMediaChange);
+
+  window.addEventListener('resize', handleMediaChange);
+
+  updateScrollableState();
+});
+// End Section: FH navigation scroll assist for medium viewports
+
 // Section: Restrict focus to the basket preview while it is open
 fhOnReady(function () {
   const body = document.body;
