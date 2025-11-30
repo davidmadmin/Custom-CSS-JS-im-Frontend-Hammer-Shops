@@ -1081,21 +1081,32 @@ fhOnReady(function () {
 // Section: FH desktop navigation scroll helper (768px–1599.98px)
 fhOnReady(function () {
   const navScroll = document.querySelector('[data-fh-nav-scroll]');
-  const navScrollButton = document.querySelector('[data-fh-nav-scroll-next]');
+  const navScrollNextButton = document.querySelector('[data-fh-nav-scroll-next]');
+  const navScrollPrevButton = document.querySelector('[data-fh-nav-scroll-prev]');
 
-  if (!navScroll || !navScrollButton) return;
+  if (!navScroll || !navScrollNextButton || !navScrollPrevButton) return;
 
   const mediaQuery = window.matchMedia('(max-width: 1599.98px) and (min-width: 768px)');
 
   function setScrollableState() {
     const hasOverflow = mediaQuery.matches && (navScroll.scrollWidth - navScroll.clientWidth > 2);
+    const atStart = navScroll.scrollLeft <= 1;
+    const atEnd = navScroll.scrollLeft >= (navScroll.scrollWidth - navScroll.clientWidth - 1);
 
     navScroll.classList.toggle('is-scrollable', hasOverflow);
+    navScroll.classList.toggle('is-scrollable-left', hasOverflow && !atStart);
+    navScroll.classList.toggle('is-scrollable-right', hasOverflow && !atEnd);
 
-    if (hasOverflow) {
-      navScrollButton.removeAttribute('disabled');
+    if (hasOverflow && !atEnd) {
+      navScrollNextButton.removeAttribute('disabled');
     } else {
-      navScrollButton.setAttribute('disabled', 'disabled');
+      navScrollNextButton.setAttribute('disabled', 'disabled');
+    }
+
+    if (hasOverflow && !atStart) {
+      navScrollPrevButton.removeAttribute('disabled');
+    } else {
+      navScrollPrevButton.setAttribute('disabled', 'disabled');
     }
 
     if (!mediaQuery.matches) {
@@ -1136,11 +1147,40 @@ fhOnReady(function () {
     }
   }
 
+  function scrollToPreviousItem() {
+    if (!mediaQuery.matches) return;
+
+    const items = getNavItems();
+
+    if (items.length === 0) return;
+
+    const viewportLeft = navScroll.scrollLeft;
+    let previousItem = null;
+
+    for (let index = items.length - 1; index >= 0; index -= 1) {
+      const item = items[index];
+
+      if (item.offsetLeft < viewportLeft - 2) {
+        previousItem = item;
+        break;
+      }
+    }
+
+    const targetLeft = previousItem ? previousItem.offsetLeft : 0;
+
+    if (typeof navScroll.scrollTo === 'function') {
+      navScroll.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    } else {
+      navScroll.scrollLeft = targetLeft;
+    }
+  }
+
   function handleMediaChange() {
     setScrollableState();
   }
 
-  navScrollButton.addEventListener('click', scrollToNextItem);
+  navScrollNextButton.addEventListener('click', scrollToNextItem);
+  navScrollPrevButton.addEventListener('click', scrollToPreviousItem);
 
   navScroll.addEventListener('scroll', function () {
     if (!mediaQuery.matches) return;
