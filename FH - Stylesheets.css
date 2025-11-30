@@ -2827,7 +2827,7 @@ body,
   }
 
   .fh-header__burger {
-    display: inline-flex;
+    display: none;
   }
 
   .fh-header__basket-link {
