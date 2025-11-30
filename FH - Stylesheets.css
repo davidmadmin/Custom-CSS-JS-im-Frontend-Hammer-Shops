@@ -2859,7 +2859,7 @@ body,
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    padding: 0 20px 14px;
+    padding: 0 20px;
     max-width: none;
   }
 
