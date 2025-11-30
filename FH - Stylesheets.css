@@ -2940,7 +2940,7 @@ body,
   }
 
   .fh-header__nav-burger {
-    display: inline-flex;
+    display: none;
   }
 
   .fh-header__nav-scroll-button {
@@ -3061,6 +3061,10 @@ body.fh-mobile-menu-open {
 }
 
 @media (max-width: 767.98px) {
+  .fh-header__nav-burger {
+    display: inline-flex;
+  }
+
   .fh-header__panel {
     right: auto;
     transform: translateX(calc(-50% - 8px));
