@@ -2865,7 +2865,7 @@ body,
 
   .fh-header__nav-surface {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     padding: 10px 12px;
     gap: 12px;
     align-items: center;
@@ -2901,19 +2901,32 @@ body,
     display: none;
   }
 
+  .fh-header__nav-scroll::before,
   .fh-header__nav-scroll::after {
     content: '';
     position: absolute;
     top: 0;
-    right: 0;
     width: 50px;
     height: 100%;
-    background: linear-gradient(90deg, rgba(49, 165, 240, 0) 0%, rgba(49, 165, 240, 0.85) 100%);
     pointer-events: none;
     display: none;
   }
 
-  .fh-header__nav-scroll.is-scrollable::after {
+  .fh-header__nav-scroll::before {
+    left: 0;
+    background: linear-gradient(90deg, rgba(49, 165, 240, 0.85) 0%, rgba(49, 165, 240, 0) 100%);
+  }
+
+  .fh-header__nav-scroll::after {
+    right: 0;
+    background: linear-gradient(90deg, rgba(49, 165, 240, 0) 0%, rgba(49, 165, 240, 0.85) 100%);
+  }
+
+  .fh-header__nav-scroll.is-scrollable-left::before {
+    display: block;
+  }
+
+  .fh-header__nav-scroll.is-scrollable-right::after {
     display: block;
   }
 
@@ -2977,7 +2990,15 @@ body,
   .fh-header__nav-scroll-icon {
     font-size: 18px;
     line-height: 1;
+    transform: none;
+  }
+
+  .fh-header__nav-scroll-button--next .fh-header__nav-scroll-icon {
     transform: translateX(1px);
+  }
+
+  .fh-header__nav-scroll-button--prev .fh-header__nav-scroll-icon {
+    transform: rotate(180deg) translateX(1px);
   }
 
   .fh-header__mobile-close {
