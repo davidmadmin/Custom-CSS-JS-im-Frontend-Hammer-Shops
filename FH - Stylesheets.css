@@ -3119,7 +3119,8 @@ body.fh-mobile-menu-open {
   }
 
   #page-header::before {
-    display: none;
+    display: block;
+    box-shadow: var(--fh-shadow-elevation-soft);
   }
 }
 /* End Section: Page Header Background */
