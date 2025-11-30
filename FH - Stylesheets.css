@@ -2903,31 +2903,7 @@ body,
 
   .fh-header__nav-scroll::before,
   .fh-header__nav-scroll::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 50px;
-    height: 100%;
-    pointer-events: none;
-    display: none;
-  }
-
-  .fh-header__nav-scroll::before {
-    left: 0;
-    background: linear-gradient(90deg, rgba(49, 165, 240, 0.85) 0%, rgba(49, 165, 240, 0) 100%);
-  }
-
-  .fh-header__nav-scroll::after {
-    right: 0;
-    background: linear-gradient(90deg, rgba(49, 165, 240, 0) 0%, rgba(49, 165, 240, 0.85) 100%);
-  }
-
-  .fh-header__nav-scroll.is-scrollable-left::before {
-    display: block;
-  }
-
-  .fh-header__nav-scroll.is-scrollable-right::after {
-    display: block;
+    content: none;
   }
 
   .fh-header__nav-list {
