@@ -1125,20 +1125,19 @@ fhOnReady(function () {
 
     if (items.length === 0) return;
 
-    const viewportRight = navScroll.scrollLeft + navScroll.clientWidth;
+    const viewportLeft = navScroll.scrollLeft;
     let nextItem = null;
 
     for (let index = 0; index < items.length; index += 1) {
       const item = items[index];
-      const itemRight = item.offsetLeft + item.offsetWidth;
 
-      if (itemRight > viewportRight + 2) {
+      if (item.offsetLeft > viewportLeft + 2) {
         nextItem = item;
         break;
       }
     }
 
-    const targetLeft = nextItem ? nextItem.offsetLeft : 0;
+    const targetLeft = nextItem ? nextItem.offsetLeft : (navScroll.scrollWidth - navScroll.clientWidth);
 
     if (typeof navScroll.scrollTo === 'function') {
       navScroll.scrollTo({ left: targetLeft, behavior: 'smooth' });
