@@ -2304,7 +2304,6 @@ body,
   align-items: stretch;
   gap: 12px;
   margin-bottom: 0;
-  padding: 16px 0;
   background: linear-gradient(180deg, #ffffff 85%, rgba(255, 255, 255, 0.92));
   border-bottom: 1px solid #e5e7eb;
 }
