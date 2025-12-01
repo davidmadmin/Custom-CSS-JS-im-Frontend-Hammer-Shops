@@ -250,7 +250,23 @@
           </div>
           <div class="sh-header__nav-surface" data-sh-desktop-nav-surface>
             <span class="sh-header__nav-highlight" aria-hidden="true"></span>
-            <ul class="nav sh-header__nav-list">
+            <button
+              type="button"
+              class="sh-header__nav-burger"
+              data-sh-mobile-menu-toggle
+              aria-controls="sh-mobile-menu"
+              aria-expanded="false"
+              aria-label="Menü"
+            >
+              <span class="sh-header__sr-only">Navigation öffnen</span>
+              <svg aria-hidden="true" class="sh-header__burger-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+            <div class="sh-header__nav-scroll" data-sh-nav-scroll>
+              <ul class="nav sh-header__nav-list">
             <li class="nav-item dropdown sh-header__nav-item">
               <a class="nav-link sh-header__nav-link" href="/anwendungsgebiet/" data-sh-mobile-submenu-target="anwendungsgebiet" aria-controls="sh-mobile-submenu-anwendungsgebiet" aria-expanded="false">
                 <span class="sh-header__nav-icon" aria-hidden="true">
@@ -589,7 +605,14 @@
                 </div>
               </div>
             </li>
-            </ul>
+              </ul>
+            </div>
+            <button type="button" class="sh-header__nav-scroll-button sh-header__nav-scroll-button--prev" data-sh-nav-scroll-prev aria-label="Vorherige Kategorien anzeigen">
+              <span aria-hidden="true" class="sh-header__nav-scroll-icon">➜</span>
+            </button>
+            <button type="button" class="sh-header__nav-scroll-button sh-header__nav-scroll-button--next" data-sh-nav-scroll-next aria-label="Weitere Kategorien anzeigen">
+              <span aria-hidden="true" class="sh-header__nav-scroll-icon">➜</span>
+            </button>
           </div>
           </div>
           <div class="sh-header__mobile-view sh-header__mobile-submenu-panel" id="sh-mobile-submenu-anwendungsgebiet" data-sh-mobile-panel="anwendungsgebiet" aria-hidden="true">
@@ -1124,9 +1147,9 @@
           <ul class="sh-header__mobile-submenu-list">
             <li><a href="/aktion/" class="sh-header__mobile-submenu-link sh-header__mobile-submenu-link--all">Alle Aktionen</a></li>
             <li><a href="/aktion/" class="sh-header__mobile-submenu-link">Aktuelle Aktionen</a></li>
-          </ul>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
   </nav>
 </div>
