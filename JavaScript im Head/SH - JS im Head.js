@@ -1078,6 +1078,131 @@ shOnReady(function () {
 });
 // End Section: sh desktop header scroll behaviour
 
+// Section: sh desktop navigation scroll helper (768px–1599.98px)
+shOnReady(function () {
+  const navScroll = document.querySelector('[data-sh-nav-scroll]');
+  const navScrollNextButton = document.querySelector('[data-sh-nav-scroll-next]');
+  const navScrollPrevButton = document.querySelector('[data-sh-nav-scroll-prev]');
+
+  if (!navScroll || !navScrollNextButton || !navScrollPrevButton) return;
+
+  const mediaQuery = window.matchMedia('(max-width: 1599.98px) and (min-width: 768px)');
+
+  function setScrollableState() {
+    const hasOverflow = mediaQuery.matches && navScroll.scrollWidth - navScroll.clientWidth > 2;
+    const atStart = navScroll.scrollLeft <= 1;
+    const atEnd = navScroll.scrollLeft >= navScroll.scrollWidth - navScroll.clientWidth - 1;
+
+    navScroll.classList.toggle('is-scrollable', hasOverflow);
+    navScroll.classList.toggle('is-scrollable-left', hasOverflow && !atStart);
+    navScroll.classList.toggle('is-scrollable-right', hasOverflow && !atEnd);
+
+    if (hasOverflow && !atEnd) {
+      navScrollNextButton.removeAttribute('disabled');
+    } else {
+      navScrollNextButton.setAttribute('disabled', 'disabled');
+    }
+
+    if (hasOverflow && !atStart) {
+      navScrollPrevButton.removeAttribute('disabled');
+    } else {
+      navScrollPrevButton.setAttribute('disabled', 'disabled');
+    }
+
+    if (!mediaQuery.matches) {
+      navScroll.scrollLeft = 0;
+    }
+  }
+
+  function getNavItems() {
+    return Array.prototype.slice.call(navScroll.querySelectorAll('.sh-header__nav-item'));
+  }
+
+  function scrollToNextItem() {
+    if (!mediaQuery.matches) return;
+
+    const items = getNavItems();
+
+    if (items.length === 0) return;
+
+    const viewportLeft = navScroll.scrollLeft;
+    let nextItem = null;
+
+    for (let index = 0; index < items.length; index += 1) {
+      const item = items[index];
+
+      if (item.offsetLeft > viewportLeft + 2) {
+        nextItem = item;
+        break;
+      }
+    }
+
+    const targetLeft = nextItem ? nextItem.offsetLeft : navScroll.scrollWidth - navScroll.clientWidth;
+
+    if (typeof navScroll.scrollTo === 'function') {
+      navScroll.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    } else {
+      navScroll.scrollLeft = targetLeft;
+    }
+  }
+
+  function scrollToPreviousItem() {
+    if (!mediaQuery.matches) return;
+
+    const items = getNavItems();
+
+    if (items.length === 0) return;
+
+    const viewportLeft = navScroll.scrollLeft;
+    let previousItem = null;
+
+    for (let index = items.length - 1; index >= 0; index -= 1) {
+      const item = items[index];
+
+      if (item.offsetLeft < viewportLeft - 2) {
+        previousItem = item;
+        break;
+      }
+    }
+
+    const targetLeft = previousItem ? previousItem.offsetLeft : 0;
+
+    if (typeof navScroll.scrollTo === 'function') {
+      navScroll.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    } else {
+      navScroll.scrollLeft = targetLeft;
+    }
+  }
+
+  function handleMediaChange() {
+    setScrollableState();
+  }
+
+  navScrollNextButton.addEventListener('click', scrollToNextItem);
+  navScrollPrevButton.addEventListener('click', scrollToPreviousItem);
+
+  navScroll.addEventListener('scroll', function () {
+    if (!mediaQuery.matches) return;
+
+    window.requestAnimationFrame(setScrollableState);
+  });
+
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', handleMediaChange);
+  } else if (typeof mediaQuery.addListener === 'function') {
+    mediaQuery.addListener(handleMediaChange);
+  }
+
+  window.addEventListener('resize', setScrollableState);
+
+  if (typeof ResizeObserver === 'function') {
+    const scrollObserver = new ResizeObserver(setScrollableState);
+    scrollObserver.observe(navScroll);
+  }
+
+  setScrollableState();
+});
+
 // Section: sh mobile navigation toggle
 shOnReady(function () {
   const header = document.querySelector('[data-sh-header-root]');
