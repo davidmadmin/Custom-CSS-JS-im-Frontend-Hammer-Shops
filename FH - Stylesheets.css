@@ -2784,7 +2784,7 @@ body,
     position: relative;
     width: 100vw;
     max-width: 100vw;
-    padding: 0 20px;
+    padding: 0 30px;
     box-sizing: border-box;
   }
 
@@ -2863,7 +2863,7 @@ body,
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    padding: 0 20px;
+    padding: 0 30px;
     max-width: none;
   }
 
@@ -3084,7 +3084,7 @@ body.fh-mobile-menu-open {
 
 /* Section: Page Header Background */
 #page-header-parent {
-  padding: 0;
+  padding: 0 7px;
 }
 
 #page-header {
