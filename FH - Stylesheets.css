@@ -2893,7 +2893,7 @@ body,
     flex: 1 1 auto;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-right: 72px;
+    padding-right: 0;
     scroll-behavior: smooth;
     scrollbar-width: none;
     scroll-snap-type: x proximity;
