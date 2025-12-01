@@ -2507,9 +2507,8 @@ body,
 
 @media (max-width: 1599.98px) {
   .fh-header {
-    width: min(1600px, 100vw);
+    width: min(1600px, 100%);
     max-width: none;
-    padding-right: 12px;
     box-sizing: border-box;
   }
 
