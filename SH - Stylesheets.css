@@ -1818,6 +1818,15 @@ body,
     background-color 0.22s ease;
 }
 
+.sh-header__nav-scroll {
+  position: relative;
+  width: 100%;
+}
+
+.sh-header__nav-scroll-button {
+  display: none;
+}
+
 .sh-header__nav-highlight::after {
   content: none;
 }
