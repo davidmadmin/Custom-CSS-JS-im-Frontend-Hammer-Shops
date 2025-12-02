@@ -3599,3 +3599,37 @@ button[data-testing="quantity-btn-decrease"] {
       min-height: 0;
 }
 /* End Section: Account Page Edits */
+
+/* Section: Shipping countdown icon hover animation */
+#cutoff-countdown .cutoff-countdown__icon-wrapper {
+  position: relative;
+  width: 2.6em;
+  height: 2.6em;
+  overflow: hidden;
+}
+
+#cutoff-countdown .cutoff-countdown__icon {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+#cutoff-countdown:hover .cutoff-countdown__icon {
+  animation: cutoff-countdown-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes cutoff-countdown-slide {
+  0% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(-120%);
+  }
+  55% {
+    transform: translateX(120%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+/* End Section: Shipping countdown icon hover animation */

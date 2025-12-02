@@ -2910,7 +2910,7 @@ fhOnReady(function () {
     return t + '</span>';
   }
   var iconUrl = "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/shipping_9288277.svg";
-  var iconHtml = '<img src="' + iconUrl + '" alt="" style="height:2.6em;width:auto;vertical-align:middle;display:block;">';
+  var iconHtml = '<img class="cutoff-countdown__icon" src="' + iconUrl + '" alt="" style="height:2.6em;width:auto;vertical-align:middle;display:block;">';
   function waitForCountdownDiv(){
     var elem = document.getElementById('cutoff-countdown');
     if (!elem) return setTimeout(waitForCountdownDiv, 300);
@@ -2986,8 +2986,8 @@ fhOnReady(function () {
     var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;max-width:640px;">' +
      '<span>Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
   '</div>';
-    elem.innerHTML = 
-      '<div style="display:flex;align-items:center;">' +
+    elem.innerHTML =
+      '<div class="cutoff-countdown__icon-wrapper" style="display:flex;align-items:center;overflow:hidden;">' +
         iconHtml +
       '</div>' +
       textHtml;
