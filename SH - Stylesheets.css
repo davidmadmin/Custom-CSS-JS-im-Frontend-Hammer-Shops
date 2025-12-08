@@ -3606,7 +3606,7 @@ button[data-testing="quantity-btn-decrease"] {
 }
 
 .pqt-wrapper .pqt-select .pqt-form-select {
-    padding: 0 10px;
+    padding: 0 10px !important;
     border-radius: 6px;
     margin-right: -10px;
 }
