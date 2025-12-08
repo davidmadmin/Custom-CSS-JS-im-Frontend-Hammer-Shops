@@ -3590,3 +3590,23 @@ button[data-testing="quantity-btn-decrease"] {
       min-height: 0;
 }
 /* End Section: Account Page Edits */
+
+/* Section: Paqato Track & Trace Styling */
+.pqt-parcial-service.pqt-block > :first-child {
+  display: none;
+}
+
+.pqt-wrapper .pqt-select .pqt-form-select {
+    padding: 0 10px !important;
+    border-radius: 6px;
+    margin-right: -10px;
+}
+
+.pqt-sidebar-footer-widget {
+  width: auto !important;
+}
+
+#pqt-tracking {
+    margin-top: 30px
+}
+/* End Section: Paqato Track & Trace Styling */
