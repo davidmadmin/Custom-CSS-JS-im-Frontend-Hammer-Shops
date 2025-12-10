@@ -3602,6 +3602,10 @@ button[data-testing="quantity-btn-decrease"] {
     margin-right: -10px;
 }
 
+.pqt-wrapper .pqt-select .pqt-btn {
+    border-radius: 6px;
+}
+
 .pqt-sidebar-footer-widget {
   width: auto !important;
 }
