@@ -8,6 +8,23 @@ function fhOnReady(callback) {
   callback();
 }
 
+// Section: FH cookie settings link
+fhOnReady(function () {
+  function handleCookieSettingsClick(event) {
+    const trigger = event.target.closest('[data-fh-cookie-settings]');
+
+    if (!trigger) return;
+
+    event.preventDefault();
+
+    if (window.__ucCmp && typeof window.__ucCmp.showSecondLayer === 'function') {
+      window.__ucCmp.showSecondLayer();
+    }
+  }
+
+  document.addEventListener('click', handleCookieSettingsClick);
+});
+
 // Section: FH account menu toggle behaviour
 fhOnReady(function () {
   function resolveGreeting(defaultGreeting) {
