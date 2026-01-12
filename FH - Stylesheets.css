@@ -2146,6 +2146,13 @@ body,
   color: #1a1a1a;
 }
 
+@media (min-width: 992px) {
+  .fh-header__dropdown-link--parent {
+    font-weight: 400;
+    color: #555555;
+  }
+}
+
 .fh-header__dropdown-sublist {
   margin-top: 4px;
   display: flex;
