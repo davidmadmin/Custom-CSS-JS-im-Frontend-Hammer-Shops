@@ -2113,7 +2113,8 @@ body,
 .sh-header__dropdown-link {
   display: block;
   padding: 6px 0;
-  color: #555555;
+  color: #1a1a1a;
+  font-weight: 600;
   text-decoration: none;
   text-transform: none;
 }
@@ -2123,15 +2124,8 @@ body,
 }
 
 .sh-header__dropdown-link--parent {
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-@media (min-width: 992px) {
-  .sh-header__dropdown-link--parent {
-    font-weight: 400;
-    color: #555555;
-  }
+  font-weight: inherit;
+  color: inherit;
 }
 
 .sh-header__dropdown-sublist {
