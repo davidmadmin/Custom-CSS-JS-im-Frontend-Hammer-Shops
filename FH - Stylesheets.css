@@ -1983,6 +1983,8 @@ body,
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 6px;
+  transform-origin: center;
   transition: transform 0.25s ease;
 }
 
