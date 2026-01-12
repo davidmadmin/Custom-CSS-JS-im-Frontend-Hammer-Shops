@@ -1985,12 +1985,14 @@ body,
   height: auto;
   border-radius: 6px;
   transform-origin: center;
-  transition: transform 0.25s ease;
+  filter: brightness(0.96);
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .fh-header__dropdown-preview-link:hover .fh-header__dropdown-preview-image,
 .fh-header__dropdown-preview-link:focus .fh-header__dropdown-preview-image {
   transform: scale(1.05);
+  filter: brightness(1.05);
 }
 
 .fh-header__dropdown-column > .fh-header__dropdown-group:first-child {
