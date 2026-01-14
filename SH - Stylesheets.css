@@ -3167,12 +3167,14 @@ body.sh-mobile-menu-open {
 .basket-open .widget-cookie-bar,
 .basket-open div[id^="trustbadge-container-"],
 .basket-open #web-chat-loader-root,
+.basket-open .brevo-conversations__iframe-wrapper,
   #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget_container_overlay,
   #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #trustami-mobile-view,
   #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .back-to-top,
   #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .widget-cookie-bar,
   #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active div[id^="trustbadge-container-"],
-  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #web-chat-loader-root {
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active #web-chat-loader-root,
+  #kyjMegaMenuNavContainer.kyj-mega-menu-dropdown-is-active .brevo-conversations__iframe-wrapper {
     display: none !important;
 }
 
@@ -3181,11 +3183,13 @@ body.sh-mobile-menu-open #trustami-mobile-view,
 body.sh-mobile-menu-open .back-to-top,
 body.sh-mobile-menu-open .widget-cookie-bar,
 body.sh-mobile-menu-open div[id^="trustbadge-container-"],
-body.sh-mobile-menu-open #web-chat-loader-root {
+body.sh-mobile-menu-open #web-chat-loader-root,
+body.sh-mobile-menu-open .brevo-conversations__iframe-wrapper {
   display: none !important;
 }
 
-body.sh-search-overlay-open div[id^="trustbadge-container-"] {
+body.sh-search-overlay-open div[id^="trustbadge-container-"],
+body.sh-search-overlay-open .brevo-conversations__iframe-wrapper {
   display: none !important;
 }
 /* End Section: Trustbadge ausblenden */
