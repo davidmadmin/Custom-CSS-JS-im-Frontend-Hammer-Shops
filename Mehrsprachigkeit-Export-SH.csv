@@ -1,24 +1,24 @@
 Key,Value,"Plugin name","File name"
 CookiePositionTitle,"Cookie Einstellungen",CookiePosition,CookiePosition.properties
 confirmationHeader,"Sehr geehrter Kunde,",cytItemAvailabilityNotification,Mail.properties
-confirmationText,"gerne informieren wir Sie, sobald der Artikel "":itemName"" wieder verfügbar ist. Bitte bestätigen Sie dazu ihre E-Mail-Adresse über folgenden Link:",cytItemAvailabilityNotification,Mail.properties
+confirmationText,"Gerne informieren wir Dich, sobald der Artikel "":itemName"" wieder verfügbar ist. Bitte bestätige dazu Deine E-Mail-Adresse über folgenden Link:",cytItemAvailabilityNotification,Mail.properties
 confirmationLinkText,:confirmationUrl,cytItemAvailabilityNotification,Mail.properties
 confirmationFooter,"Vielen Dank",cytItemAvailabilityNotification,Mail.properties
 notificationHeader,"Sehr geehrter Kunde,",cytItemAvailabilityNotification,Mail.properties
-notificationText,"wir freuen uns, Ihnen mitteilen zu können, dass der Artikel "":itemName"" ab sofort wieder in unserem Online-Shop verfügbar ist.",cytItemAvailabilityNotification,Mail.properties
+notificationText,"wir freuen uns, Dir mitteilen zu können, dass der Artikel "":itemName"" ab sofort wieder in unserem Online-Shop verfügbar ist.",cytItemAvailabilityNotification,Mail.properties
 notificationLinkText,":itemName"" im Shop anzeigen",cytItemAvailabilityNotification,Mail.properties
 notificationFooter,"Vielen Dank",cytItemAvailabilityNotification,Mail.properties
-formHintText,"Gerne informieren wir Sie, sobald der Artikel wieder verfügbar ist.",cytItemAvailabilityNotification,Template.properties
+formHintText,"Gerne informieren wir Dich, sobald der Artikel wieder verfügbar ist.",cytItemAvailabilityNotification,Template.properties
 mailInputLabel,E-Mail-Adresse,cytItemAvailabilityNotification,Template.properties
-subscriptionSucceed,"Wir haben Ihnen eine E-Mail zur Bestätigung ihrer Registrierung gesendet. Bitte prüfen Sie ihr Postfach.",cytItemAvailabilityNotification,Template.properties
+subscriptionSucceed,"Wir haben Dir eine E-Mail zur Bestätigung Deiner Registrierung gesendet. Bitte prüfe Dein Postfach.",cytItemAvailabilityNotification,Template.properties
 subscriptionFailed,"Bei der Registrierung kam es zu einem Fehler!",cytItemAvailabilityNotification,Template.properties
-subscriptionReCaptchaFailed,"Um das Formular abzuschicken, müssen Sie den Google reCAPTCHA-Cookie akzeptieren. Öffnen Sie die Datenschutzeinstellungen links unten auf der Seite und klicken Sie auf ""Weitere Einstellungen"". Aktivieren Sie den reCAPTCHA-Cookie im Bereich ""Externe Medien"" und speichern Sie die Einstellungen.",cytItemAvailabilityNotification,Template.properties
-confirmationSucceed,"Vielen Dank. Wir benachrichtigen Sie, sobald der gewünschte Artikel wieder verfügbar ist.",cytItemAvailabilityNotification,Template.properties
-confirmationFailed,"Bei der Bestätigung Ihrer Registrierung kam es zu einem Fehler!",cytItemAvailabilityNotification,Template.properties
+subscriptionReCaptchaFailed,"Um das Formular abzuschicken, musst Du den Google reCAPTCHA-Cookie akzeptieren. Öffne die Datenschutzeinstellungen links unten auf der Seite und klicke auf ""Weitere Einstellungen"". Aktiviere den reCAPTCHA-Cookie im Bereich ""Externe Medien"" und speichere die Einstellungen.",cytItemAvailabilityNotification,Template.properties
+confirmationSucceed,"Vielen Dank. Wir benachrichtigen Dich, sobald der gewünschte Artikel wieder verfügbar ist.",cytItemAvailabilityNotification,Template.properties
+confirmationFailed,"Bei der Bestätigung Deiner Registrierung kam es zu einem Fehler!",cytItemAvailabilityNotification,Template.properties
 invalidMail,"Die E-Mail-Adresse ist ungültig",cytItemAvailabilityNotification,Template.properties
 submitLabel,Senden,cytItemAvailabilityNotification,Template.properties
-notificationMailSubject,"Ihr gewünschter Artikel ist wieder verfügbar!",cytItemAvailabilityNotification,Template.properties
-confirmationMailSubject,"Bitte bestätigen Sie Ihre Registrierung",cytItemAvailabilityNotification,Template.properties
+notificationMailSubject,"Dein gewünschter Artikel ist wieder verfügbar!",cytItemAvailabilityNotification,Template.properties
+confirmationMailSubject,"Bitte bestätige Deine Registrierung",cytItemAvailabilityNotification,Template.properties
 privacyHintText,"Mit der Anmeldung bestätige ich, dass ich die :policy gelesen habe.",cytItemAvailabilityNotification,Template.properties
 requiredPrivacyHintText,"Hiermit bestätige ich, dass ich die :policy gelesen habe.",cytItemAvailabilityNotification,Template.properties
 bankAccountOwner,Inhaber:,PrePayment,PaymentMethod.properties
@@ -28,7 +28,7 @@ bankName,Bank:,PrePayment,PaymentMethod.properties
 bankSwift,BIC/SWIFT:,PrePayment,PaymentMethod.properties
 reinitPaymentButton,"Bankdetails anzeigen",PrePayment,PaymentMethod.properties
 designatedUse,Verwendungszweck,PrePayment,PaymentMethod.properties
-designatedUseText,"Die Versandabwicklung der Bestellung erfolgt erst nach Zahlungseingang. Bitte geben Sie folgenden Verwendungszweck an:",PrePayment,PaymentMethod.properties
+designatedUseText,"Die Versandabwicklung der Bestellung erfolgt erst nach Zahlungseingang. Bitte gib folgenden Verwendungszweck an:",PrePayment,PaymentMethod.properties
 paymentMethodDescription,,PrePayment,PaymentMethod.properties
 paymentMethodName,Vorkasse,PrePayment,PaymentMethod.properties
 tag1TextStatusAvailable,"Verfügbar TAG 1.",ItemAvailabilityInfo,Tags.properties
@@ -226,7 +226,7 @@ consentClartiyProvider,"Microsoft Corporation",GoogleTagManagerUltimate,Consent.
 customerReviewsDesc,"Kundenrezensionen ⬇",Feedback,Feedback.properties
 customerReviewsAsc,"Kundenrezensionen ⬆",Feedback,Feedback.properties
 customerReviews,Kundenrezensionen,Feedback,Feedback.properties
-logInCustomerReviews,"Melden Sie sich an, um eine Kundenrezension zu verfassen.",Feedback,Feedback.properties
+logInCustomerReviews,"Melde Dich an, um eine Kundenrezension zu verfassen.",Feedback,Feedback.properties
 login,Anmelden,Feedback,Feedback.properties
 title,Titel,Feedback,Feedback.properties
 shopManagerLabel,Shop-Betreiber,Feedback,Feedback.properties
@@ -234,18 +234,18 @@ reviewMessage,Rezensionstext,Feedback,Feedback.properties
 submitReview,"Rezension senden",Feedback,Feedback.properties
 editReview,"Rezension bearbeiten",Feedback,Feedback.properties
 deleteReview,"Rezension löschen",Feedback,Feedback.properties
-errorDoesntOwnProduct,"Rezension nicht gesendet. Sie müssen den Artikel kaufen, bevor Sie ihn bewerten können.",Feedback,Feedback.properties
+errorDoesntOwnProduct,"Rezension nicht gesendet. Du musst den Artikel kaufen, bevor Du ihn bewerten kannst.",Feedback,Feedback.properties
 cancel,Abbrechen,Feedback,Feedback.properties
 noReviews,"Für diesen Artikel wurden noch keine Kundenrezensionen verfasst.",Feedback,Feedback.properties
-deleteReviewConfirmation,"Möchten Sie diese Rezension wirklich löschen?",Feedback,Feedback.properties
+deleteReviewConfirmation,"Möchtest Du diese Rezension wirklich löschen?",Feedback,Feedback.properties
 moderationMessage,"Diese Rezension wird gerade vom Shop-Betreiber geprüft.",Feedback,Feedback.properties
-maximumNumberOfFeedbacksReached,"Sie haben bereits eine oder mehrere Rezensionen für diesen Artikel verfasst.",Feedback,Feedback.properties
+maximumNumberOfFeedbacksReached,"Du hast bereits eine oder mehrere Rezensionen für diesen Artikel verfasst.",Feedback,Feedback.properties
 createdOn,"Erstellt am",Feedback,Feedback.properties
 addComment,"Antwort hinzufügen",Feedback,Feedback.properties
 viewComments,"Antworten anzeigen",Feedback,Feedback.properties
 hideComments,"Antworten verstecken",Feedback,Feedback.properties
 deleteReply,"Antwort löschen",Feedback,Feedback.properties
-deleteReplyConfirmation,"Möchten Sie diese Antwort wirklich löschen?",Feedback,Feedback.properties
+deleteReplyConfirmation,"Möchtest Du diese Antwort wirklich löschen?",Feedback,Feedback.properties
 editReply,"Antwort bearbeiten",Feedback,Feedback.properties
 commentMessage,Antworttext,Feedback,Feedback.properties
 submitComment,"Antwort senden",Feedback,Feedback.properties
@@ -255,16 +255,16 @@ deleteConfirm,"Wirklich löschen?",Feedback,Feedback.properties
 yesDeleteIt,Löschen,Feedback,Feedback.properties
 verifiedPurchase,"Verifizierter Kauf",Feedback,Feedback.properties
 anonymous,,Feedback,Feedback.properties
-authorName,"Ihr Anzeigename (optional)",Feedback,Feedback.properties
+authorName,"Dein Anzeigename (optional)",Feedback,Feedback.properties
 guestName,Unbekannt,Feedback,Feedback.properties
 loadingFeedbacks,"Rezensionen werden geladen...",Feedback,Feedback.properties
 loadingItems,"Artikel werden geladen...",Feedback,Feedback.properties
 loadMore,"Weitere Rezensionen anzeigen",Feedback,Feedback.properties
-ratingRequired,"Bitte geben Sie eine Bewertung ab.",Feedback,Feedback.properties
-titleRequired,"Bitte geben Sie einen Titel ein.",Feedback,Feedback.properties
+ratingRequired,"Bitte gib eine Bewertung ab.",Feedback,Feedback.properties
+titleRequired,"Bitte gib einen Titel ein.",Feedback,Feedback.properties
 feedbackLabel,,Feedback,Feedback.properties
-orderItemTitle,"Bewerten Sie Ihre gekauften Artikel.",Feedback,Feedback.properties
-thankYou,"Vielen Dank für Ihre Bewertung!",Feedback,Feedback.properties
+orderItemTitle,"Bewerte Deine gekauften Artikel.",Feedback,Feedback.properties
+thankYou,"Vielen Dank für Deine Bewertung!",Feedback,Feedback.properties
 facetName,Artikelbewertung,Feedback,Feedback.properties
 honeypotLabel,Platzhalter,Feedback,Feedback.properties
 feedbackTextLegend,Bewertungssterne,Feedback,Feedback.properties
@@ -283,7 +283,7 @@ addressBirthdatePlaceholder,tt.mm.jjjj,Ceres,Template.properties
 addressCancel,Abbrechen,Ceres,Template.properties
 addressChange,"Adresse ändern",Ceres,Template.properties
 addressChangeTooltip,"Klicken, um eine andere Adresse zu wählen.",Ceres,Template.properties
-addressChangedWarning,"Ihre Adresse wurde gewechselt, da das ausgewählte Versandprofil diese Art von Lieferziel nicht unterstützt.",Ceres,Template.properties
+addressChangedWarning,"Deine Adresse wurde gewechselt, da das ausgewählte Versandprofil diese Art von Lieferziel nicht unterstützt.",Ceres,Template.properties
 addressCompany,Firma,Ceres,Template.properties
 addressContactPerson,Ansprechpartner,Ceres,Template.properties
 addressDelete,Löschen,Ceres,Template.properties
@@ -298,7 +298,7 @@ addressGBNameAffix,Namenszusatz,Ceres,Template.properties
 addressInvoiceAddressCreate,"Rechnungsadresse anlegen",Ceres,Template.properties
 addressInvoiceAddressDelete,"Rechnungsadresse löschen",Ceres,Template.properties
 addressInvoiceAddressEdit,"Rechnungsadresse bearbeiten",Ceres,Template.properties
-addressInvoiceAddressInitial,"Bitte geben Sie Ihre Adresse ein",Ceres,Template.properties
+addressInvoiceAddressInitial,"Bitte gib Deine Adresse ein",Ceres,Template.properties
 addressLastName,Nachname,Ceres,Template.properties
 addressMail,Kontakt-E-Mail,Ceres,Template.properties
 addressNoAddress,"Noch keine Adresse vorhanden",Ceres,Template.properties
@@ -327,7 +327,7 @@ addressSetPrimaryTooltip,"Klicken, um diese Adresse als Standardadresse festzule
 addressShippingAddressCreate,"Lieferadresse anlegen",Ceres,Template.properties
 addressShippingAddressDelete,"Lieferadresse löschen",Ceres,Template.properties
 addressShippingAddressEdit,"Lieferadresse bearbeiten",Ceres,Template.properties
-addressShippingChangedWarning,"Ihr Versandprofil wurde gewechselt, da die ausgewählte Adresse diese Art von Versandprofil nicht unterstützt.",Ceres,Template.properties
+addressShippingChangedWarning,"Dein Versandprofil wurde gewechselt, da die ausgewählte Adresse diese Art von Versandprofil nicht unterstützt.",Ceres,Template.properties
 addressStreet,Straße,Ceres,Template.properties
 addressTelephone,Telefon,Ceres,Template.properties
 addressTitle,Titel,Ceres,Template.properties
@@ -339,7 +339,7 @@ itemAvailabilityAverageDays_asc,"Verfügbarkeit ⬆",Ceres,Template.properties
 itemAvailabilityAverageDays_desc,"Verfügbarkeit ⬇",Ceres,Template.properties
 itemBundle,Artikelpaket,Ceres,Template.properties
 itemBundleContent,"Artikelpaket Inhalt:",Ceres,Template.properties
-itemBundleName,:itemName,Ceres,Template.properties
+itemBundleName,":itemName",Ceres,Template.properties
 itemCategories,Kategorien,Ceres,Template.properties
 itemClose,Schließen,Ceres,Template.properties
 itemEuResponsibleNoInformation,"Die Informationen der EU-Verantwortlichen sind derzeit nicht verfügbar.",Ceres,Template.properties
@@ -362,9 +362,9 @@ itemInclVAT,"inkl. ges. MwSt.",Ceres,Template.properties
 itemInput,Maßeingabe,Ceres,Template.properties
 itemInputLength,L,Ceres,Template.properties
 itemInputWidth,B,Ceres,Template.properties
-itemList1ListName,"Zuletzt angesehen",Ceres,Template.properties
-itemList2ListName,"Dazu passend",Ceres,Template.properties
-itemList3ListName,"Auch Interessant",Ceres,Template.properties
+itemList1ListName,Zuletzt angesehen,Ceres,Template.properties
+itemList2ListName,Dazu passend,Ceres,Template.properties
+itemList3ListName,Auch Interessant,Ceres,Template.properties
 itemListLastSeen,"Zuletzt angesehen",Ceres,Template.properties
 itemListXAccessory,Zubehör,Ceres,Template.properties
 itemListXCollection,Artikelpaket,Ceres,Template.properties
@@ -405,7 +405,7 @@ itemVariationTopseller_desc,"Meistverkaufte Artikel ⬇",Ceres,Template.properti
 itemsPerPageLabel,"Artikel pro Seite",Ceres,Template.properties
 singleItemAddToBasket,"In den Warenkorb",Ceres,Template.properties
 singleItemAdded,"Der Artikel wurde in den Warenkorb gelegt",Ceres,Template.properties
-singleItemAdditionalOptions,"Ihre Zusatzoptionen (Preis pro Artikel)",Ceres,Template.properties
+singleItemAdditionalOptions,"Deine Zusatzoptionen (Preis pro Artikel)",Ceres,Template.properties
 singleItemAge,Altersfreigabe,Ceres,Template.properties
 singleItemAgeRestriction,"Ab :age freigegeben",Ceres,Template.properties
 singleItemAgeRestrictionNone,"Ohne Altersbeschränkung",Ceres,Template.properties
@@ -439,7 +439,7 @@ singleItemLowestPrice,"Niedrigster Preis der letzten 30 Tage: <span>:price</span
 singleItemManufacturer,Hersteller,Ceres,Template.properties
 singleItemManufacturingCountry,Herstellungsland,Ceres,Template.properties
 singleItemMinimumQuantity,"Ab Menge:",Ceres,Template.properties
-singleItemMissingOrderPropertiesError,"Folgende Bestellmerkmale sind Pflichtfelder:<hr><properties><hr>Bitte füllen Sie alle diese Felder aus.",Ceres,Template.properties
+singleItemMissingOrderPropertiesError,"Folgende Bestellmerkmale sind Pflichtfelder:<hr><properties><hr>Bitte fülle alle diese Felder aus.",Ceres,Template.properties
 singleItemModel,Modell,Ceres,Template.properties
 singleItemMoreDetails,"Weitere Details",Ceres,Template.properties
 singleItemNetWeight,Netto-Gewicht,Ceres,Template.properties
@@ -449,14 +449,14 @@ singleItemNotAvailableInSelection,":name in der Auswahl nicht verfügbar.",Ceres
 singleItemNotSalable,Ausverkauft,Ceres,Template.properties
 singleItemNotSalableAttribute,:name,Ceres,Template.properties
 singleItemNumber,Artikelnummer,Ceres,Template.properties
-singleItemOrderPropertyFileHasReset,"Die ausgewählte Datei für das Feld <b>:propertyName</b> wurde beim Variantenwechsel zurückgesetzt. Bitte wählen Sie die Datei erneut aus.",Ceres,Template.properties
+singleItemOrderPropertyFileHasReset,"Die ausgewählte Datei für das Feld <b>:propertyName</b> wurde beim Variantenwechsel zurückgesetzt. Bitte wähle die Datei erneut aus.",Ceres,Template.properties
 singleItemPleaseSelect,"Bitte wählen",Ceres,Template.properties
 singleItemPleaseSelectNotAvailable,"Der Artikel ist nicht verfügbar.",Ceres,Template.properties
-singleItemPleaseSelectValidVariation,"Bitte wählen Sie eine gültige Variante.",Ceres,Template.properties
+singleItemPleaseSelectValidVariation,"Bitte wähle eine gültige Variante.",Ceres,Template.properties
 singleItemPropertiesWithoutGroup,"Ohne Gruppe",Ceres,Template.properties
 singleItemQuantityMax,"Maximale Bestellmenge: :max",Ceres,Template.properties
 singleItemQuantityMin,"Minimale Bestellmenge: :min",Ceres,Template.properties
-singleItemSetInfo,"Dieses Artikelset kann zur Zeit nicht über den Webshop bestellt werden. Bitte wenden Sie sich an den Webshop-Betreiber.",Ceres,Template.properties
+singleItemSetInfo,"Dieses Artikelset kann zur Zeit nicht über den Webshop bestellt werden. Bitte wende Dich an den Webshop-Betreiber.",Ceres,Template.properties
 singleItemShippingCosts,Versandkosten,Ceres,Template.properties
 singleItemTechnicalData,"Technische Daten",Ceres,Template.properties
 singleItemTechnicalDataAttribute,"Technisches Merkmal",Ceres,Template.properties
@@ -469,7 +469,7 @@ singleItemWishListAdded,"Der Artikel wurde der Wunschliste hinzugefügt.",Ceres,
 singleItemWishListRemove,"Von Wunschliste entfernen",Ceres,Template.properties
 singleItemWishListRemoved,"Der Artikel wurde von der Wunschliste entfernt.",Ceres,Template.properties
 itemSearchCategories,Kategorien,Ceres,Template.properties
-itemSearchDidYouMean,"Meinten Sie "":suggestionString""?",Ceres,Template.properties
+itemSearchDidYouMean,"Meintest Du "":suggestionString""?",Ceres,Template.properties
 itemSearchNoResults,"Keine Suchergebnisse für "":searchString"" gefunden.",Ceres,Template.properties
 itemSearchProducts,Artikel,Ceres,Template.properties
 itemSearchResults,"Suchergebnisse für:",Ceres,Template.properties
@@ -478,7 +478,7 @@ itemSearchSuggestion,Suchvorschläge,Ceres,Template.properties
 itemSearchSuggestionNoResults,"Keine Suchergebnisse gefunden.",Ceres,Template.properties
 orderConfirmation,Bestellbestätigung,Ceres,Template.properties
 orderConfirmationCustomerID,Kundennummer,Ceres,Template.properties
-orderConfirmationCustomerSign,"Ihr Zeichen",Ceres,Template.properties
+orderConfirmationCustomerSign,"Dein Zeichen",Ceres,Template.properties
 orderConfirmationDate,Auftragsdatum,Ceres,Template.properties
 orderConfirmationEstimatedShippingDate,"Voraussichtl. Versanddatum",Ceres,Template.properties
 orderConfirmationHomepage,Startseite,Ceres,Template.properties
@@ -514,7 +514,7 @@ orderConfirmationSubTotal,Zwischensumme,Ceres,Template.properties
 orderConfirmationThanks,"Vielen Dank!",Ceres,Template.properties
 orderConfirmationTotal,Gesamt,Ceres,Template.properties
 orderConfirmationVAT,MwSt.,Ceres,Template.properties
-orderConfirmationWillBeProcessed,"Ihre Bestellung wird bearbeitet. Hier finden Sie eine Zusammenfassung:",Ceres,Template.properties
+orderConfirmationWillBeProcessed,"Deine Bestellung wird bearbeitet. Hier findest Du eine Zusammenfassung:",Ceres,Template.properties
 orderHistory,Auftragshistorie,Ceres,Template.properties
 orderHistoryAgain,"Erneut bestellen",Ceres,Template.properties
 orderHistoryCancel,Abbrechen,Ceres,Template.properties
@@ -546,7 +546,7 @@ orderHistoryPaymentStatus_partlyPaid,"Teilweise bezahlt",Ceres,Template.properti
 orderHistoryPaymentStatus_prepaid,"Im Voraus bezahlt",Ceres,Template.properties
 orderHistoryPaymentStatus_unpaid,"Nicht bezahlt",Ceres,Template.properties
 orderHistoryPricePerPiece,Einzelpreis,Ceres,Template.properties
-orderHistoryProperties,"Ihre Zusatzoptionen:",Ceres,Template.properties
+orderHistoryProperties,"Deine Zusatzoptionen:",Ceres,Template.properties
 orderHistoryQuantity,Stückzahl,Ceres,Template.properties
 orderHistoryRebate,"Rabatt auf Warenwert",Ceres,Template.properties
 orderHistoryReturnSendBack,"Artikel zurücksenden",Ceres,Template.properties
@@ -569,18 +569,18 @@ orderHistoryVAT,MwSt.,Ceres,Template.properties
 orderHistoryValue,Warenwert,Ceres,Template.properties
 orderHistoryWarranty,"Gewährleistung zu Auftrag :id",Ceres,Template.properties
 notificationRemoveCouponMinimumOrderValueIsNotReached,"Der eingelöste Gutschein wurde entfernt. Der Mindestbestellwert wird nicht mehr erreicht.",Ceres,Template.properties
-notificationsBasketItemsRemoved,"Es wurden Artikel aus Ihrem Warenkorb entfernt, da diese aktuell nicht verfügbar sind.",Ceres,Template.properties
-notificationsBasketItemsRemovedForContactClass,"Es wurden Artikel aus Ihrem Warenkorb entfernt, da diese nicht für dieses Kundenkonto verfügbar sind.",Ceres,Template.properties
-notificationsBasketItemsRemovedForCurrency,"Es wurden Artikel aus Ihrem Warenkorb entfernt, da diese nicht in der ausgewählten Währung verfügbar sind.",Ceres,Template.properties
-notificationsBasketItemsRemovedForLanguage,"Es wurden Artikel aus Ihrem Warenkorb entfernt, da diese nicht in der ausgewählten Sprache verfügbar sind.",Ceres,Template.properties
-notificationsBasketItemsRemovedForShippingCountry,"Es wurden Artikel aus Ihrem Warenkorb entfernt, da diese nicht für das ausgewählte Lieferland verfügbar sind.",Ceres,Template.properties
-notificationsCalculateShippingFailed,"Bei der Versandkostenberechnung kam es zu einem Fehler. Bitte benachrichtigen Sie den Betreiber.",Ceres,Template.properties
+notificationsBasketItemsRemoved,"Es wurden Artikel aus Deinem Warenkorb entfernt, da diese aktuell nicht verfügbar sind.",Ceres,Template.properties
+notificationsBasketItemsRemovedForContactClass,"Es wurden Artikel aus Deinem Warenkorb entfernt, da diese nicht für dieses Kundenkonto verfügbar sind.",Ceres,Template.properties
+notificationsBasketItemsRemovedForCurrency,"Es wurden Artikel aus Deinem Warenkorb entfernt, da diese nicht in der ausgewählten Währung verfügbar sind.",Ceres,Template.properties
+notificationsBasketItemsRemovedForLanguage,"Es wurden Artikel aus Deinem Warenkorb entfernt, da diese nicht in der ausgewählten Sprache verfügbar sind.",Ceres,Template.properties
+notificationsBasketItemsRemovedForShippingCountry,"Es wurden Artikel aus Deinem Warenkorb entfernt, da diese nicht für das ausgewählte Lieferland verfügbar sind.",Ceres,Template.properties
+notificationsCalculateShippingFailed,"Bei der Versandkostenberechnung kam es zu einem Fehler. Bitte benachrichtige den Betreiber.",Ceres,Template.properties
 notificationsCheckPassword,"Die Passwörter stimmen nicht überein.",Ceres,Template.properties
 notificationsInvalidResetPasswordUrl,"Die angegebene URL ist ungültig oder abgelaufen.",Ceres,Template.properties
 notificationsItemBundleSplitted,"Artikelpaket wurde aufgeteilt.",Ceres,Template.properties
 notificationsItemNotAdded,"Der Artikel konnte nicht hinzugefügt werden",Ceres,Template.properties
 notificationsItemOutOfStock,"Kein ausreichender Warenbestand vorhanden",Ceres,Template.properties
-notificationsNoEmailEntered,"Bitte geben Sie eine gültige E-Mail-Adresse ein.",Ceres,Template.properties
+notificationsNoEmailEntered,"Bitte gib eine gültige E-Mail-Adresse ein.",Ceres,Template.properties
 notificationsNotEnoughStockItem,"Für die gewählte Artikelmenge ist nicht genügend Bestand verfügbar.",Ceres,Template.properties
 notificationsWarningOverselling,"Die gewählte Menge übersteigt den verfügbaren Warenbestand. :stock sind zur Zeit auf Lager; :oversellingAmount werden nachgeliefert.",Ceres,Template.properties
 privacyPolicy,Daten:hyphenschutz:hyphenerklärung,Ceres,Template.properties
@@ -606,7 +606,7 @@ footerOrderShippedBy,"Wir verschicken mit",Ceres,Template.properties
 footerPaymentMethods,Zahlungsarten,Ceres,Template.properties
 footerPrivacyPolicy,Daten:hyphenschutz:hyphenerklärung,Ceres,Template.properties
 footerStoreFeature1,"gleichtägiger Versand bis 14 Uhr",Ceres,Template.properties
-footerStoreFeature2,Handwerkerqualität,Ceres,Template.properties
+footerStoreFeature2,"Handwerkerqualität",Ceres,Template.properties
 footerStoreFeature3,"14 Tage Rückgaberecht",Ceres,Template.properties
 couponAlreadyFinalized,"Bearbeiten nicht möglich. Der Gutschein wurde bereits erstellt.",Ceres,Template.properties
 couponAlreadyUsedOrInvalidCouponCode,"Der Gutschein wurde bereits verwendet oder ist ungültig.",Ceres,Template.properties
@@ -623,14 +623,14 @@ couponEdit,"Gutschein bearbeiten",Ceres,Template.properties
 couponEnterCoupon,"Gutschein-Code eingeben",Ceres,Template.properties
 couponExpired,"Der Gutschein ist leider abgelaufen.",Ceres,Template.properties
 couponFinalize,"Gutschein erstellen",Ceres,Template.properties
-couponFinalizeConfirm,"Möchten Sie den Gutschein als PDF erzeugen? Texte können danach nicht mehr geändert werden!",Ceres,Template.properties
+couponFinalizeConfirm,"Möchtest Du den Gutschein als PDF erzeugen? Texte können danach nicht mehr geändert werden!",Ceres,Template.properties
 couponFinalizeConfirmNo,Abbrechen,Ceres,Template.properties
 couponFinalizeConfirmYes,"PDF erzeugen",Ceres,Template.properties
 couponFinalizeFailure,"Der Gutschein konnte nicht erstellt werden.",Ceres,Template.properties
 couponFinalizeSuccess,"Der Gutschein wurde erfolgreich erstellt.",Ceres,Template.properties
-couponIsEmpty,"Bitte geben Sie einen Gutschein-Code ein.",Ceres,Template.properties
+couponIsEmpty,"Bitte gib einen Gutschein-Code ein.",Ceres,Template.properties
 couponLabel,Gutschein,Ceres,Template.properties
-couponMinOrderValueNotReached,"Der Gutschein wurde leider wieder entfernt, da der hierfür nötige Warenwert unterschritten wurde. Bitte geben Sie den Code erneut ein, wenn der geforderte Warenwert erreicht ist.",Ceres,Template.properties
+couponMinOrderValueNotReached,"Der Gutschein wurde leider wieder entfernt, da der hierfür nötige Warenwert unterschritten wurde. Bitte gib den Code erneut ein, wenn der geforderte Warenwert erreicht ist.",Ceres,Template.properties
 couponNoCustomerGroupActivated,"Der Gutschein konnte nicht eingelöst werden. Keine Kundenklasse aktiviert.",Ceres,Template.properties
 couponNoCustomerTypeActivated,"Der Gutschein konnte nicht eingelöst werden. Kein Kundentyp aktiviert.",Ceres,Template.properties
 couponNoCustomerTypeProvided,"Der Gutschein konnte nicht eingelöst werden. Kundentyp nicht übergeben.",Ceres,Template.properties
@@ -657,9 +657,9 @@ couponWrongCustomerType,"Der Gutschein kann nur von Kunden mit einem anderen Kun
 couponnotUsableForSpecialOffer,"Der Gutschein konnte nicht eingelöst werden. Gutscheine können nicht für Sonderangebotsartikel verwendet werden.",Ceres,Template.properties
 headerBg,Bulgarisch,Ceres,Template.properties
 headerBreadcrumbHome,"Zur Startseite gehen",Ceres,Template.properties
-headerChangeDeliveryCountry,"Bitte ändern Sie Ihre Adresse, um das Lieferland zu wechseln.",Ceres,Template.properties
+headerChangeDeliveryCountry,"Bitte ändere Deine Adresse, um das Lieferland zu wechseln.",Ceres,Template.properties
 headerCn,Chinesisch,Ceres,Template.properties
-headerCompanyName,Schrauben-Hammer.de,Ceres,Template.properties
+headerCompanyName,"Schrauben-Hammer.de",Ceres,Template.properties
 headerCountry,Land,Ceres,Template.properties
 headerCurrency,Währung,Ceres,Template.properties
 headerCz,Tschechisch,Ceres,Template.properties
@@ -714,33 +714,33 @@ checkoutBasket,Warenkorb,Ceres,Template.properties
 checkoutBasketItemConsent,"Ich verzichte auf mein Widerrufsrecht für <b>:items</b>.",Ceres,Template.properties
 checkoutBasketItemConsentPlaceholder,"Ich verzichte auf mein Widerrufsrecht für Artikel, die mit der ausgewählten Eigenschaft verknüpft sind.",Ceres,Template.properties
 checkoutBuyNow,Kaufen,Ceres,Template.properties
-checkoutBuyNowTooltip,"Wir versenden nicht in das für die Lieferadresse ausgewählte Lieferland. Bitte wählen Sie eines der verfügbaren Länder für die Lieferaddresse aus.",Ceres,Template.properties
+checkoutBuyNowTooltip,"Wir versenden nicht in das für die Lieferadresse ausgewählte Lieferland. Bitte wähle eines der verfügbaren Länder für die Lieferaddresse aus.",Ceres,Template.properties
 checkoutCancelCheckout,"Kauf abbrechen",Ceres,Template.properties
 checkoutCancellationRight,Widerrufs:hyphenrecht,Ceres,Template.properties
 checkoutChangePaymentMethodHint,"Zahlungsart gewechselt.",Ceres,Template.properties
-checkoutChangePaymentMethodToHint,"Dieses Versandprofil steht für die ausgewählte Zahlungsart nicht zur Verfügung. Um dieses Versandprofil auszuwählen, wählen Sie eine der folgenden Zahlungsarten: :paymentMethodNames.",Ceres,Template.properties
+checkoutChangePaymentMethodToHint,"Dieses Versandprofil steht für die ausgewählte Zahlungsart nicht zur Verfügung. Um dieses Versandprofil auszuwählen, wähle eine der folgenden Zahlungsarten: :paymentMethodNames.",Ceres,Template.properties
 checkoutChangeShippingProfileHint,"Zahlungsart gewechselt.OK.",Ceres,Template.properties
-checkoutChangedMail,"Alle Informationen zum Auftrag werden an :newMail gesendet. Ihr Login erfolgt weiterhin mit :currMail.",Ceres,Template.properties
+checkoutChangedMail,"Alle Informationen zum Auftrag werden an :newMail gesendet. Dein Login erfolgt weiterhin mit :currMail.",Ceres,Template.properties
 checkoutCheckAcceptGtc,"Bitte die Checkbox zu AGB, Widerrufsrecht und Datenschutzerklärung bestätigen.",Ceres,Template.properties
-checkoutCheckAcceptNewsletterSubscription,"Bitte bestätigen Sie die Newsletter-Anmeldung.",Ceres,Template.properties
+checkoutCheckAcceptNewsletterSubscription,"Bitte bestätige die Newsletter-Anmeldung.",Ceres,Template.properties
 checkoutCheckAddressFormFields,"Bitte folgende Felder überprüfen: :fields.",Ceres,Template.properties
-checkoutCheckBasketItemConsent,"Bitte willigen Sie ein, auf Ihr Widerrufsrecht für <b>:items</b> zu verzichten.",Ceres,Template.properties
+checkoutCheckBasketItemConsent,"Bitte willige ein, auf Dein Widerrufsrecht für <b>:items</b> zu verzichten.",Ceres,Template.properties
 checkoutCheckInvoiceAddress,"Bitte Rechnungsadresse auswählen.",Ceres,Template.properties
 checkoutCheckOrder,"Bitte Bestellung prüfen.",Ceres,Template.properties
 checkoutCheckPaymentProvider,"Bitte Zahlungsart auswählen.",Ceres,Template.properties
 checkoutCheckShippingProfile,"Bitte Versanddienstleister auswählen.",Ceres,Template.properties
-checkoutChooseOur,"Es gelten unsere :gtc. Bitte nehmen Sie unser :cancellation und unsere :policy zur Kenntnis.",Ceres,Template.properties
+checkoutChooseOur,"Es gelten unsere :gtc. Bitte nimm unser :cancellation und unsere :policy zur Kenntnis.",Ceres,Template.properties
 checkoutContactWish,"Hinweise und Wünsche",Ceres,Template.properties
-checkoutContactWishMessage,"Geben Sie hier Ihre Nachricht an uns ein.",Ceres,Template.properties
+checkoutContactWishMessage,"Gib hier Deine Nachricht an uns ein.",Ceres,Template.properties
 checkoutCoupon,Gutschein,Ceres,Template.properties
-checkoutCustomerSign,"Ihr Zeichen",Ceres,Template.properties
+checkoutCustomerSign,"Dein Zeichen",Ceres,Template.properties
 checkoutGross,(Brutto),Ceres,Template.properties
 checkoutGtc,AGB,Ceres,Template.properties
 checkoutGtcAgree,"Checkbox zur Bestätigung der Annahme der Geschäftsbedingungen, des Widerrufsrechts und der Datenschutzbestimmungen.",Ceres,Template.properties
 checkoutInvalidShippingCountry,"Bitte gültiges Lieferland auswählen.",Ceres,Template.properties
-checkoutInvalidShippingCountryGeoblocking,"Wir versenden nicht in das ausgewählte Lieferland. Bitte wählen Sie eines der verfügbaren Länder für die Lieferadresse aus.",Ceres,Template.properties
+checkoutInvalidShippingCountryGeoblocking,"Wir versenden nicht in das ausgewählte Lieferland. Bitte wähle eines der verfügbaren Länder für die Lieferadresse aus.",Ceres,Template.properties
 checkoutInvoiceAddress,Rechnungsadresse,Ceres,Template.properties
-checkoutMethodOfPaymentChanged,"Die von Ihnen ausgewählte Zahlungsart ist nicht mehr verfügbar.",Ceres,Template.properties
+checkoutMethodOfPaymentChanged,"Die von Dir ausgewählte Zahlungsart ist nicht mehr verfügbar.",Ceres,Template.properties
 checkoutMethodOfPaymentListChanged,"Die Liste der Zahlungsarten hat sich geändert.",Ceres,Template.properties
 checkoutNet,(Netto),Ceres,Template.properties
 checkoutOpenAmount,"Zu zahlender Betrag",Ceres,Template.properties
@@ -751,9 +751,9 @@ checkoutPrivacyPolicy,Daten:hyphenschutz:hyphenerklärung,Ceres,Template.propert
 checkoutShippingAddress,Lieferadresse,Ceres,Template.properties
 checkoutShippingPrivacyHint,"Ich bin damit einverstanden, dass meine E-Mail-Adresse bzw. meine Telefonnummer an den gewählten Paketdienstleister weitergegeben wird, damit er vor der Zustellung der Ware zum Zwecke der Abstimmung eines Liefertermins per E-Mail oder Telefon Kontakt mit mir aufnehmen bzw. Statusinformationen zur Sendungszustellung übermitteln kann. Meine diesbezüglich erteilte Einwilligung kann ich jederzeit widerrufen.",Ceres,Template.properties
 checkoutShippingPrivacyHintAnd,und,Ceres,Template.properties
-checkoutShippingPrivacyReseted,"Sie haben den Versanddienstleister gewechselt. Überprüfen Sie die Checkbox.",Ceres,Template.properties
+checkoutShippingPrivacyReseted,"Du hast den Versanddienstleister gewechselt. Überprüfe die Checkbox.",Ceres,Template.properties
 checkoutShippingProfile,Versandart,Ceres,Template.properties
-checkoutShippingProfileChanged,"Die von Ihnen ausgewählte Versandart ist nicht mehr verfügbar.",Ceres,Template.properties
+checkoutShippingProfileChanged,"Die von Dir ausgewählte Versandart ist nicht mehr verfügbar.",Ceres,Template.properties
 checkoutShippingProfileListChanged,"Die Liste der Versandarten hat sich geändert.",Ceres,Template.properties
 checkoutShippingProfileMaxDeliveryDays,"Lieferung innerhalb von :days Tagen",Ceres,Template.properties
 checkoutShippingProfilePriceChanged,"Die Versandkosten haben sich geändert.",Ceres,Template.properties
@@ -761,14 +761,14 @@ checkoutSum,Summe,Ceres,Template.properties
 checkoutTotalSum,Gesamtsumme,Ceres,Template.properties
 checkoutValue,Warenwert,Ceres,Template.properties
 contact,Kontakt,Ceres,Template.properties
-contactAcceptFormPrivacyPolicy,"Bitte akzeptieren Sie die Daten:hyphenschutz:hyphenerklärung.",Ceres,Template.properties
+contactAcceptFormPrivacyPolicy,"Bitte akzeptiere die Daten:hyphenschutz:hyphenerklärung.",Ceres,Template.properties
 contactAcceptPrivacyPolicy,"Hiermit bestätige ich, dass ich die :policy gelesen habe.",Ceres,Template.properties
-contactAcceptRecaptchaCookie,"Um das Kontaktformular abzuschicken, müssen Sie den Google reCAPTCHA-Cookie akzeptieren. Öffnen Sie die Datenschutzeinstellungen links unten auf der Seite und klicken Sie auf ""Weitere Einstellungen"". Aktivieren Sie den reCAPTCHA-Cookie im Bereich ""Externe Medien"" und speichern Sie die Einstellungen.",Ceres,Template.properties
+contactAcceptRecaptchaCookie,"Um das Kontaktformular abzuschicken, musst Du den Google reCAPTCHA-Cookie akzeptieren. Öffne die Datenschutzeinstellungen links unten auf der Seite und klicke auf ""Weitere Einstellungen"". Aktiviere den reCAPTCHA-Cookie im Bereich ""Externe Medien"" und speichere die Einstellungen.",Ceres,Template.properties
 contactCheckEntries,"Bitte Eingaben prüfen.",Ceres,Template.properties
 contactCheckFormFields,"Bitte folgende Felder überprüfen: :fields.",Ceres,Template.properties
-contactEditMessage,"Bitte geben Sie eine Nachricht ein.",Ceres,Template.properties
-contactEditSubject,"Bitte geben Sie einen Betreff ein.",Ceres,Template.properties
-contactEnterConfirmEmail,"Bitte geben Sie eine gültige E-Mail-Adresse an.",Ceres,Template.properties
+contactEditMessage,"Bitte gib eine Nachricht ein.",Ceres,Template.properties
+contactEditSubject,"Bitte gib einen Betreff ein.",Ceres,Template.properties
+contactEnterConfirmEmail,"Bitte gib eine gültige E-Mail-Adresse an.",Ceres,Template.properties
 contactFileUploadFail,"Die Datei konnte nicht hochgeladen werden, da sie die maximale Dateigröße von 10 MB übersteigt.",Ceres,Template.properties
 contactHoneypotLabel,"Kontakt Honig",Ceres,Template.properties
 contactMail,E-Mail,Ceres,Template.properties
@@ -787,7 +787,7 @@ contactSendFail,"Deine Anfrage konnte leider nicht gesendet werden. Bitte versuc
 contactSendMeACopy,"Kopie an mich",Ceres,Template.properties
 contactSendSuccess,"Deine Anfrage wurde erfolgreich gesendet.",Ceres,Template.properties
 contactSenderMail,Absender-E-Mail,Ceres,Template.properties
-contactShopMessage,"Sie haben eine Frage oder ein Anliegen? Dann nehmen Sie mit uns Kontakt auf. Füllen Sie einfach das Formular aus und wir werden Ihre Anfrage schnellstmöglich bearbeiten.",Ceres,Template.properties
+contactShopMessage,"Du hast eine Frage oder ein Anliegen? Dann nimm mit uns Kontakt auf. Fülle einfach das Formular aus und wir werden Deine Anfrage schnellstmöglich bearbeiten.",Ceres,Template.properties
 contactSubject,Betreff,Ceres,Template.properties
 contactVatNumber,Umsatzsteuer-ID,Ceres,Template.properties
 liveShoppingBefore,"Statt: :price",Ceres,Template.properties
@@ -801,21 +801,21 @@ liveShoppingOfferBeginsIn,"Angebot startet in:",Ceres,Template.properties
 liveShoppingOfferClosed,"Angebot beendet",Ceres,Template.properties
 liveShoppingOfferEndsIn,"Angebot endet in:",Ceres,Template.properties
 liveShoppingOfferSoldOut,"Angebot ausverkauft",Ceres,Template.properties
-liveShoppingRebate,"Sie sparen :rebate%",Ceres,Template.properties
+liveShoppingRebate,"Du sparst :rebate%",Ceres,Template.properties
 liveShoppingRemainingStock,"Noch :quantityRemaining von :quantityMax verfügbar",Ceres,Template.properties
 liveShoppingRrp,"UVP: :price",Ceres,Template.properties
 liveShoppingSeconds,Sekunden,Ceres,Template.properties
 login,Anmelden,Ceres,Template.properties
 loginBackToLogin,Zurück,Ceres,Template.properties
-loginBlocked,"Ihr Kundenkonto wurde gesperrt. Bitte kontaktieren sie den Betreiber.",Ceres,Template.properties
-loginCallToAction,"Sie sind noch kein Kunde?",Ceres,Template.properties
+loginBlocked,"Dein Kundenkonto wurde gesperrt. Bitte kontaktiere den Betreiber.",Ceres,Template.properties
+loginCallToAction,"Du bist noch kein Kunde?",Ceres,Template.properties
 loginEmail,E-Mail,Ceres,Template.properties
-loginEmptyPassword,"Bitte geben Sie Ihr Passwort ein.",Ceres,Template.properties
-loginEnterConfirmEmail,"Bitte geben Sie eine gültige E-Mail-Adresse an.",Ceres,Template.properties
+loginEmptyPassword,"Bitte gib Dein Passwort ein.",Ceres,Template.properties
+loginEnterConfirmEmail,"Bitte gib eine gültige E-Mail-Adresse an.",Ceres,Template.properties
 loginFailed,"Die Anmeldedaten sind ungültig.",Ceres,Template.properties
 loginForgotPassword,"Passwort vergessen",Ceres,Template.properties
 loginForgotPasswordHoneypotLabel,"Passwort vergessen Honig",Ceres,Template.properties
-loginForgotPasswordInfo,"Bitte geben Sie die E-Mail-Adresse des Kontos ein, für das Sie das Passwort vergessen haben.",Ceres,Template.properties
+loginForgotPasswordInfo,"Bitte gib die E-Mail-Adresse des Kontos ein, für das Du das Passwort vergessen hast.",Ceres,Template.properties
 loginHello,"Hallo, :username",Ceres,Template.properties
 loginLogout,Ausloggen,Ceres,Template.properties
 loginMyAccount,"Mein Konto",Ceres,Template.properties
@@ -823,10 +823,10 @@ loginNext,Weiter,Ceres,Template.properties
 loginOrderAsGuest,"Als Gast bestellen",Ceres,Template.properties
 loginPassword,Passwort,Ceres,Template.properties
 loginRegister,Registrieren,Ceres,Template.properties
-loginResetPwDErrorOnSendEmail,"Die E-Mail konnte nicht gesendet werden. Bitte kontaktieren Sie den Shop-Betreiber.",Ceres,Template.properties
+loginResetPwDErrorOnSendEmail,"Die E-Mail konnte nicht gesendet werden. Bitte kontaktiere den Shop-Betreiber.",Ceres,Template.properties
 loginSend,Senden,Ceres,Template.properties
 loginSendEmailOk,"E-Mail versendet.",Ceres,Template.properties
-loginSuccessful,"Sie wurden erfolgreich eingeloggt.",Ceres,Template.properties
+loginSuccessful,"Du wurdest erfolgreich eingeloggt.",Ceres,Template.properties
 myAccount,"Mein Konto",Ceres,Template.properties
 myAccountAll,alle,Ceres,Template.properties
 myAccountBank,Kreditinstitut,Ceres,Template.properties
@@ -845,18 +845,18 @@ myAccountBankNoBankData,"Noch keine Bankdaten vorhanden",Ceres,Template.properti
 myAccountBankUpdateDataTitle,"Bankdaten bearbeiten",Ceres,Template.properties
 myAccountCancel,Abbrechen,Ceres,Template.properties
 myAccountChangeEmail,"E-Mail-Adresse ändern",Ceres,Template.properties
-myAccountChangeEmailConfirmationSent,"Eine E-Mail zur Bestätigung der Änderungen wurde an Ihre E-Mail-Adresse gesendet.",Ceres,Template.properties
+myAccountChangeEmailConfirmationSent,"Eine E-Mail zur Bestätigung der Änderungen wurde an Deine E-Mail-Adresse gesendet.",Ceres,Template.properties
 myAccountChangeEmailFailed,"Die E-Mail-Adresse konnte nicht geändert werden.",Ceres,Template.properties
-myAccountChangeEmailInfoText,"Bitte geben Sie Ihr Passwort ein, um den Vorgang abzuschließen.",Ceres,Template.properties
+myAccountChangeEmailInfoText,"Bitte gib Dein Passwort ein, um den Vorgang abzuschließen.",Ceres,Template.properties
 myAccountChangeEmailSuccessful,"Die E-Mail-Adresse wurde erfolgreich geändert.",Ceres,Template.properties
-myAccountChangeLoginData,"Ändern Sie Ihre Zugangsdaten",Ceres,Template.properties
+myAccountChangeLoginData,"Ändere Deine Zugangsdaten",Ceres,Template.properties
 myAccountChangePassword,"Passwort ändern",Ceres,Template.properties
 myAccountChangePasswordFailed,"Das Passwort konnte nicht geändert werden.",Ceres,Template.properties
 myAccountChangePasswordSuccessful,"Das Passwort wurde erfolgreich geändert.",Ceres,Template.properties
-myAccountChangePaymentInformation,"Ändern Sie Ihre Zahlungsinformationen",Ceres,Template.properties
+myAccountChangePaymentInformation,"Ändere Deine Zahlungsinformationen",Ceres,Template.properties
 myAccountCorrectEmail,"E-Mail-Adressen stimmen nicht überein.",Ceres,Template.properties
 myAccountCorrectPassword,"Passwörter stimmen nicht überein.",Ceres,Template.properties
-myAccountCustomerSign,"Ihr Zeichen",Ceres,Template.properties
+myAccountCustomerSign,"Dein Zeichen",Ceres,Template.properties
 myAccountDelete,Löschen,Ceres,Template.properties
 myAccountEdit,Bearbeiten,Ceres,Template.properties
 myAccountEmail,E-Mail,Ceres,Template.properties
@@ -866,7 +866,7 @@ myAccountInvoiceAddresses,Rechnungsadressen,Ceres,Template.properties
 myAccountLogout,Ausloggen,Ceres,Template.properties
 myAccountNewEmail,"Neue E-Mail-Adresse",Ceres,Template.properties
 myAccountNewPassword,"Neues Passwort",Ceres,Template.properties
-myAccountOldEmail,"Diese E-Mail-Adresse ist bereits für Ihr Nutzerkonto registriert.",Ceres,Template.properties
+myAccountOldEmail,"Diese E-Mail-Adresse ist bereits für Dein Nutzerkonto registriert.",Ceres,Template.properties
 myAccountOldPassword,"Altes Passwort",Ceres,Template.properties
 myAccountOrderDocumentsCorrectionDocument,Korrekturbeleg,Ceres,Template.properties
 myAccountOrderDocumentsCreditNote,Gutschrift,Ceres,Template.properties
@@ -892,20 +892,20 @@ myAccountShippingAddresses,Lieferadressen,Ceres,Template.properties
 newsletterHeadline,"Erhalte jetzt deinen 8€ Willkommensgutschein",Ceres,Homepage.properties
 newsletterText,"durch das Abonnieren unseres Newsletters.",Ceres,Homepage.properties
 newsletterAcceptPrivacyPolicy,"Hiermit bestätige ich, dass ich die :policy gelesen habe. Meine Einwilligung kann ich jederzeit widerrufen.",Ceres,Template.properties
-newsletterAcceptRecaptchaCookie,"Um die Newsletter Anmeldung abzuschicken, müssen Sie den Google reCAPTCHA-Cookie akzeptieren. Öffnen Sie die Datenschutzeinstellungen links unten auf der Seite und klicken Sie auf ""Weitere Einstellungen"". Aktivieren Sie den reCAPTCHA-Cookie im Bereich ""Externe Medien"" und speichern Sie die Einstellungen.",Ceres,Template.properties
+newsletterAcceptRecaptchaCookie,"Um die Newsletter Anmeldung abzuschicken, musst Du den Google reCAPTCHA-Cookie akzeptieren. Öffne die Datenschutzeinstellungen links unten auf der Seite und klicke auf ""Weitere Einstellungen"". Aktiviere den reCAPTCHA-Cookie im Bereich ""Externe Medien"" und speichere die Einstellungen.",Ceres,Template.properties
 newsletterCheckboxLabel,"Ja, ich möchte immer über aktuelle Produkte, Angebote und Neuigkeiten per Newsletter informiert werden.",Ceres,Template.properties
 newsletterEmail,E-Mail,Ceres,Template.properties
 newsletterErrorMessage,"Die Newsletter-Anmeldung war nicht erfolgreich.",Ceres,Template.properties
 newsletterFirstName,Vorname,Ceres,Template.properties
 newsletterHoneypotLabel,"Newsletter Honig",Ceres,Template.properties
-newsletterHoneypotWarning,"Die Newsletter-Anmeldung wurde nicht ausgeführt, da der Verdacht besteht, dass der Anmeldeversuch von einem Bot ausging. Bitte wenden Sie sich an den Webshop-Betreiber.",Ceres,Template.properties
+newsletterHoneypotWarning,"Die Newsletter-Anmeldung wurde nicht ausgeführt, da der Verdacht besteht, dass der Anmeldeversuch von einem Bot ausging. Bitte wende Dich an den Webshop-Betreiber.",Ceres,Template.properties
 newsletterIsRequired,"Hierbei handelt es sich um ein Pflichtfeld.",Ceres,Template.properties
 newsletterIsRequiredFootnote,**,Ceres,Template.properties
 newsletterLastName,Nachname,Ceres,Template.properties
 newsletterNotAllowedCharacters,"Das Feld "":name"" darf keine Sonderzeichen enthalten.",Ceres,Template.properties
-newsletterOptInMessage,"Ihre E-Mail-Adresse wurde bestätigt.",Ceres,Template.properties
-newsletterOptOutErrorMessage,"Sie wurden nicht vom Newsletter abgemeldet.",Ceres,Template.properties
-newsletterOptOutInfoText,"Bitte geben Sie Ihre E-Mail-Adresse ein, um sich vom Newsletter abzumelden.",Ceres,Template.properties
+newsletterOptInMessage,"Deine E-Mail-Adresse wurde bestätigt.",Ceres,Template.properties
+newsletterOptOutErrorMessage,"Du wurdest nicht vom Newsletter abgemeldet.",Ceres,Template.properties
+newsletterOptOutInfoText,"Bitte gib Deine E-Mail-Adresse ein, um Dich vom Newsletter abzumelden.",Ceres,Template.properties
 newsletterOptOutSuccessMessage,"Die Abmeldung vom Newsletter war erfolgreich.",Ceres,Template.properties
 newsletterOptOutTitle,Newsletter-Abmeldung,Ceres,Template.properties
 newsletterSubscribeButtonLabel,Abonnieren,Ceres,Template.properties
@@ -916,22 +916,22 @@ newsletterUsername,Benutzername,Ceres,Template.properties
 resetPwChangePasswordFailed,"Das Passwort konnte nicht geändert werden.",Ceres,Template.properties
 resetPwChangePasswordSuccessful,"Das Passwort wurde erfolgreich geändert.",Ceres,Template.properties
 resetPwCheckPassword,"Die Passwörter stimmen nicht überein.",Ceres,Template.properties
-resetPwInvalidPassword,"Ungültiges Format. Bitte beachten Sie die Vorgaben.",Ceres,Template.properties
-resetPwMail,"Sehr geehrte/r <firstname> <lastname>,<br><br>Sie haben für Ihr Benutzerkonto <email> ein neues Passwort angefordert.<br>Um den Prozess abzuschließen, klicken Sie bitte auf folgenden Link: <br><br><a href=""<url>"" target=""_blank"" rel=""noopener"" title=""Passwort zurücksetzen""><url></a><br><br>Mit freundlichen Grüßen,<br><shopname>"" ; deprecated",Ceres,Template.properties
-resetPwMailSubject,"Ändern Ihres Passworts"" ; deprecated",Ceres,Template.properties
+resetPwInvalidPassword,"Ungültiges Format. Bitte beachte die Vorgaben.",Ceres,Template.properties
+resetPwMail,"Hallo <firstname> <lastname>,<br><br>Du hast für Dein Benutzerkonto <email> ein neues Passwort angefordert.<br>Um den Prozess abzuschließen, klicke bitte auf folgenden Link: <br><br><a href=""<url>"" target=""_blank"" rel=""noopener"" title=""Passwort zurücksetzen""><url></a><br><br>Viele Grüße,<br><shopname>"" ; deprecated",Ceres,Template.properties
+resetPwMailSubject,"Ändern Deines Passworts"" ; deprecated",Ceres,Template.properties
 resetPwNewPassword,"Neues Passwort",Ceres,Template.properties
 resetPwPasswordHintChar,"Das Passwort muss mindestens einen Buchstaben enthalten.",Ceres,Template.properties
 resetPwPasswordHintDigit,"Das Passwort muss mindestens eine Ziffer enthalten.",Ceres,Template.properties
 resetPwPasswordHintLength,"Das Passwort muss mindestens 8 Zeichen enthalten.",Ceres,Template.properties
-resetPwPasswordHintTitle,"Wählen Sie ein sicheres Passwort.",Ceres,Template.properties
-resetPwRepeatNewPassword,"Bitte geben Sie Ihr Passwort erneut ein.",Ceres,Template.properties
+resetPwPasswordHintTitle,"Wähle ein sicheres Passwort.",Ceres,Template.properties
+resetPwRepeatNewPassword,"Bitte gib Dein Passwort erneut ein.",Ceres,Template.properties
 resetPwRepeatPassword,"Passwort wiederholen",Ceres,Template.properties
 resetPwResetPassword,"Passwort ändern",Ceres,Template.properties
 resetPwSave,Speichern,Ceres,Template.properties
-regContactInfoText1,"Wir bieten Ihnen die Speicherung Ihrer persönlichen Daten in einem passwortgeschützten Kundenkonto an, sodass Sie bei Ihrem nächsten Einkauf nicht erneut Ihren Namen und Ihre Anschrift eingeben müssen.",Ceres,Template.properties
-regContactInfoText2,"Durch die Registrierung werden Ihre Adressdaten gespeichert.",Ceres,Template.properties
-regContactInfoText3,"Sie können Ihr Kundenkonto jederzeit löschen, melden Sie sich dafür bei dem Betreiber dieser Seite.",Ceres,Template.properties
-regContactInfoText4,"Beim nächsten Besuch benötigen Sie zum Aufrufen Ihrer persönlichen Daten lediglich Ihre E-Mail und Ihr Passwort.",Ceres,Template.properties
+regContactInfoText1,"Wir bieten Dir die Speicherung Deiner persönlichen Daten in einem passwortgeschützten Kundenkonto an, sodass Du bei Deinem nächsten Einkauf nicht erneut Deinen Namen und Deine Anschrift eingeben musst.",Ceres,Template.properties
+regContactInfoText2,"Durch die Registrierung werden Deine Adressdaten gespeichert.",Ceres,Template.properties
+regContactInfoText3,"Du kannst Dein Kundenkonto jederzeit löschen, melde Dich dafür bei dem Betreiber dieser Seite.",Ceres,Template.properties
+regContactInfoText4,"Beim nächsten Besuch benötigst Du zum Aufrufen Deiner persönlichen Daten lediglich Deine E-Mail und Dein Passwort.",Ceres,Template.properties
 regContactInformations,"Hinweise zur Registrierung",Ceres,Template.properties
 regCreateAccount,"Jetzt registrieren",Ceres,Template.properties
 regEmail,E-Mail,Ceres,Template.properties
@@ -941,21 +941,21 @@ regPassword,Passwort,Ceres,Template.properties
 regPasswordHintChar,"Das Passwort muss mindestens einen Buchstaben enthalten.",Ceres,Template.properties
 regPasswordHintDigit,"Das Passwort muss mindestens eine Ziffer enthalten.",Ceres,Template.properties
 regPasswordHintLength,"Das Passwort muss mindestens 8 Zeichen enthalten.",Ceres,Template.properties
-regPasswordHintTitle,"Wählen Sie ein sicheres Passwort.",Ceres,Template.properties
+regPasswordHintTitle,"Wähle ein sicheres Passwort.",Ceres,Template.properties
 regRegister,Registrieren,Ceres,Template.properties
-regRegisterAccount,"Registrieren Sie sich",Ceres,Template.properties
+regRegisterAccount,"Registriere Dich",Ceres,Template.properties
 regRepeatPassword,"Passwort wiederholen",Ceres,Template.properties
-regSuccessful,"Sie wurden erfolgreich registriert.",Ceres,Template.properties
+regSuccessful,"Du wurdest erfolgreich registriert.",Ceres,Template.properties
 return,Retoure,Ceres,Template.properties
 returnCancel,Abbrechen,Ceres,Template.properties
 returnCenter,Retouren-Center,Ceres,Template.properties
 returnConfirm,Bestätigen,Ceres,Template.properties
-returnReason,"Bitte nennen Sie einen Grund für Ihre Rücksendung (optional)",Ceres,Template.properties
+returnReason,"Bitte nenne einen Grund für Deine Rücksendung (optional)",Ceres,Template.properties
 returnSelectAll,"Alle auswählen",Ceres,Template.properties
 returnSendBack,"Artikel zurücksenden",Ceres,Template.properties
 returnTrigger,"Retoure auslösen",Ceres,Template.properties
 returnConfirmationHomepage,Startseite,Ceres,Template.properties
-returnConfirmationInfo,"Wir haben Ihre Retoure erfasst. Wir informieren Sie über den weiteren Ablauf.",Ceres,Template.properties
+returnConfirmationInfo,"Wir haben Deine Retoure erfasst. Wir informieren Dich über den weiteren Ablauf.",Ceres,Template.properties
 returnConfirmationMyAccount,"Mein Konto",Ceres,Template.properties
 returnConfirmationThanks,"Vielen Dank!",Ceres,Template.properties
 returnConfirmationTitle,"Retoure erfasst",Ceres,Template.properties
@@ -985,7 +985,7 @@ homepageBack,Zurück,Ceres,Template.properties
 homepageMetaDescription,,Ceres,Template.properties
 homepageNext,Nächste,Ceres,Template.properties
 homepageShowAll,"Alle ansehen",Ceres,Template.properties
-accessKeyMailFailed,"Die E-Mail konnte nicht versendet werden, bitte kontaktieren Sie den Shopbetreiber.",Ceres,Template.properties
+accessKeyMailFailed,"Die E-Mail konnte nicht versendet werden, bitte kontaktiere den Shopbetreiber.",Ceres,Template.properties
 accessKeyMailSent,"E-Mail wurde versandt.",Ceres,Template.properties
 alreadyPaidPaymentMethodDescription,"Zu zahlender Betrag beträgt 0 :currency",Ceres,Template.properties
 alreadyPaidPaymentMethodName,"Bereits bezahlt",Ceres,Template.properties
@@ -994,7 +994,7 @@ consentConsentDescription,"Der Consent-Cookie speichert den Zustimmungsstatus de
 consentConsentLabel,Consent,Ceres,Template.properties
 consentCsrfDescription,"Der CSRF-Cookie dient dazu, Cross-Site Request Forgery-Angriffe zu verhindern.",Ceres,Template.properties
 consentCsrfLabel,CSRF,Ceres,Template.properties
-consentGoogleMapsBlockedHint,"Die Karte kann aufgrund ihrer Datenschutzeinstellungen nicht angezeigt werden. Bitte akzeptieren Sie die Verwendung von Google Maps, um die Karte zu verwenden.",Ceres,Template.properties
+consentGoogleMapsBlockedHint,"Die Karte kann aufgrund ihrer Datenschutzeinstellungen nicht angezeigt werden. Bitte akzeptiere die Verwendung von Google Maps, um die Karte zu verwenden.",Ceres,Template.properties
 consentGoogleMapsDescription,"Der Google Maps-Cookie wird zum Entsperren von Google Maps-Inhalten verwendet.",Ceres,Template.properties
 consentGoogleMapsLabel,"Google Maps",Ceres,Template.properties
 consentGoogleMapsLifespan,"6 Monate",Ceres,Template.properties
@@ -1002,7 +1002,7 @@ consentGoogleMapsPolicyUrl,https://policies.google.com/privacy,Ceres,Template.pr
 consentGoogleMapsProvider,Google,Ceres,Template.properties
 consentGroupConvenienceDescription,"Diese Cookies ermöglichen, dass die von Nutzern getroffenen Auswahlmöglichkeiten und bevorzugte Einstellungen (z.B. das Deaktivieren der Sprachweiterleitung) gespeichert werden können.",Ceres,Template.properties
 consentGroupConvenienceLabel,Funktional,Ceres,Template.properties
-consentGroupMarketingDescription,"Marketing-Cookies werden von Drittanbietern und Publishern verwendet, um personalisierte Werbung anzuzeigen. Sie tun dies, indem sie Besucher über Websites hinweg verfolgen.",Ceres,Template.properties
+consentGroupMarketingDescription,"Marketing-Cookies werden von Drittanbietern und Publishern verwendet, um personalisierte Werbung anzuzeigen. Diese tun dies, indem sie Besucher über Websites hinweg verfolgen.",Ceres,Template.properties
 consentGroupMarketingLabel,Marketing,Ceres,Template.properties
 consentGroupMediaDescription,"Inhalte von Videoplattformen und Social Media Plattformen werden standardmäßig blockiert. Wenn Cookies von externen Medien akzeptiert werden, bedarf der Zugriff auf diese Inhalte keiner manuellen Zustimmung mehr.",Ceres,Template.properties
 consentGroupMediaLabel,"Externe Medien",Ceres,Template.properties
@@ -1026,13 +1026,13 @@ consentSessionLabel,Session,Ceres,Template.properties
 cookieBarAcceptAll,"Alle akzeptieren",Ceres,Template.properties
 cookieBarBack,Zurück,Ceres,Template.properties
 cookieBarDenyAll,"Alle ablehnen",Ceres,Template.properties
-cookieBarHintText,"Wir verwenden Cookies und ähnliche Technologien auf unserer Website und verarbeiten personenbezogene Daten von Besucher:innen unserer Webseite (z.B. IP-Adresse), um z.B. Inhalte und Anzeigen zu personalisieren, Medien von Drittanbietern einzubinden oder Zugriffe auf unsere Website zu analysieren. Die Datenverarbeitung erfolgt erst durch gesetzte Cookies. Wir teilen diese Daten mit Dritten, die wir in den Einstellungen benennen.<br>Die Datenverarbeitung kann mit Einwilligung oder aufgrund eines berechtigten Interesses erfolgen. Die Zustimmung kann erteilt oder abgelehnt werden. Es besteht das Recht, nicht einzuwilligen und die Einwilligung zu einem späteren Zeitpunkt zu ändern oder zu widerrufen. Beachten Sie unser :legal und weitere Hinweise zur Verwendung personenbezogener Daten in unserer :policy.",Ceres,Template.properties
+cookieBarHintText,"Wir verwenden Cookies und ähnliche Technologien auf unserer Website und verarbeiten personenbezogene Daten von Besucher:innen unserer Webseite (z.B. IP-Adresse), um z.B. Inhalte und Anzeigen zu personalisieren, Medien von Drittanbietern einzubinden oder Zugriffe auf unsere Website zu analysieren. Die Datenverarbeitung erfolgt erst durch gesetzte Cookies. Wir teilen diese Daten mit Dritten, die wir in den Einstellungen benennen.<br>Die Datenverarbeitung kann mit Einwilligung oder aufgrund eines berechtigten Interesses erfolgen. Die Zustimmung kann erteilt oder abgelehnt werden. Es besteht das Recht, nicht einzuwilligen und die Einwilligung zu einem späteren Zeitpunkt zu ändern oder zu widerrufen. Beachte unser :legal und weitere Hinweise zur Verwendung personenbezogener Daten in unserer :policy.",Ceres,Template.properties
 cookieBarMoreSettings,"Weitere Einstellungen",Ceres,Template.properties
 cookieBarPrivacySettings,Datenschutzeinstellungen,Ceres,Template.properties
 cookieBarSave,"Auswahl akzeptieren",Ceres,Template.properties
 crossPriceRRP,"UVP :price",Ceres,Template.properties
 crossPriceSpecialOffer,:price,Ceres,Template.properties
-csrfTokenMismatch,"Sie wurden aus Sicherheitsgründen abgemeldet. Sie werden zur Login-Seite weitergeleitet.",Ceres,Template.properties
+csrfTokenMismatch,"Du wurdest aus Sicherheitsgründen abgemeldet. Du wirst zur Login-Seite weitergeleitet.",Ceres,Template.properties
 declarationOfAccessibility,Barrierefreiheitserklärung,Ceres,Template.properties
 declarationOfAccessibilityMetaDescription,,Ceres,Template.properties
 dynamicSetComponentPrice,"ab :price",Ceres,Template.properties
@@ -1048,11 +1048,11 @@ errorCreateOrderRetryTimeNotReached,"Beim Anlegen des Auftrags ist ein Fehler au
 errorGiftCardReturnQuantity,"Retoure konnte nicht angelegt werden. Alle im Auftrag enthaltenen Gutscheine müssen gemeinsam retourniert werden.",Ceres,Template.properties
 errorMinimumOrderValueNotReached,"Der Mindestbestellwert in Höhe von :minimumOrderValue :currency wurde nicht erreicht.",Ceres,Template.properties
 errorPostTooLarge,"Die erlaubte Dateigröße von :maxSize MB wurde überschritten.",Ceres,Template.properties
-errorVatNumberValidation,"Die Umsatzsteuer-Identifikationsnummer ist ungültig. Bitte entfernen Sie alle Leer- und Sonderzeichen sowie das Länderkürzel.",Ceres,Template.properties
-errorVatService,"Die Umsatzsteuer-Identifikationsnummer konnte nicht bestätigt werden. Bitte wenden Sie sich an den Shop-Betreiber.",Ceres,Template.properties
+errorVatNumberValidation,"Die Umsatzsteuer-Identifikationsnummer ist ungültig. Bitte entferne alle Leer- und Sonderzeichen sowie das Länderkürzel.",Ceres,Template.properties
+errorVatService,"Die Umsatzsteuer-Identifikationsnummer konnte nicht bestätigt werden. Bitte wende Dich an den Shop-Betreiber.",Ceres,Template.properties
 errorVatServiceFallback,"Die Umsatzsteuer-Identifikationsnummer konnte nicht bestätigt werden. Der Auftrag wird erneut geprüft.",Ceres,Template.properties
 languageDetectionButton,"Deutsche Website öffnen",Ceres,Template.properties
-languageDetectionText,"Klicken Sie auf die Schaltfläche, um deutsche Inhalte zu sehen.",Ceres,Template.properties
+languageDetectionText,"Klicke auf die Schaltfläche, um deutsche Inhalte zu sehen.",Ceres,Template.properties
 menuLabel,"Mobiles Navigationsmenü öffnen",Ceres,Template.properties
 modalTitle,"Modal titel",Ceres,Template.properties
 paginationFirstPage,"Zur ersten Seite",Ceres,Template.properties
@@ -1070,11 +1070,11 @@ privacySettingsMoreInformation,"Mehr Informationen",Ceres,Template.properties
 privacySettingsNecessary,Essenziell,Ceres,Template.properties
 privacySettingsPolicyUrl,Datenschutzerklärung,Ceres,Template.properties
 privacySettingsProvider,Anbieter,Ceres,Template.properties
-softLoginDescriptionName,"Bitte geben Sie den Nachnamen oder den Firmennamen ein, der am Auftrag hinterlegt ist, um die Auftragsdetails einzusehen.",Ceres,Template.properties
-softLoginDescriptionPostcode,"Bitte geben Sie die Postleitzahl einer Adresse ein, die am Auftrag hinterlegt ist, um die Auftragsdetails einzusehen.",Ceres,Template.properties
+softLoginDescriptionName,"Bitte gib den Nachnamen oder den Firmennamen ein, der am Auftrag hinterlegt ist, um die Auftragsdetails einzusehen.",Ceres,Template.properties
+softLoginDescriptionPostcode,"Bitte gib die Postleitzahl einer Adresse ein, die am Auftrag hinterlegt ist, um die Auftragsdetails einzusehen.",Ceres,Template.properties
 softLoginInputLabelName,Name,Ceres,Template.properties
 softLoginInputLabelPostcode,Postleitzahl,Ceres,Template.properties
-softLoginRegenerateDescription,"Klicken Sie auf den Button, um einen neuen Link per E-Mail zu erhalten.",Ceres,Template.properties
+softLoginRegenerateDescription,"Klicke auf den Button, um einen neuen Link per E-Mail zu erhalten.",Ceres,Template.properties
 softLoginRegenerateSubmitLabel,"Link generieren",Ceres,Template.properties
 softLoginRegenerateTitle,"Der Link zur Bestellbestätigung ist abgelaufen.",Ceres,Template.properties
 softLoginSubmitLabel,Prüfen,Ceres,Template.properties
@@ -1085,21 +1085,21 @@ tagSearchResults,"Mit Tag "":searchString"" verknüpfte Artikel",Ceres,Template.
 shippingInfoCosts,Versandkosten,Ceres,Template.properties
 basket,Warenkorb,Ceres,Template.properties
 basketAdditionalCosts,"Zusatzkosten (Preis pro Artikel)",Ceres,Template.properties
-basketAdditionalOptions,"Ihre Zusatzoptionen (Preis pro Artikel)",Ceres,Template.properties
-basketAdditionalOptionsWithoutPrice,"Ihre Zusatzoptionen:",Ceres,Template.properties
+basketAdditionalOptions,"Deine Zusatzoptionen (Preis pro Artikel)",Ceres,Template.properties
+basketAdditionalOptionsWithoutPrice,"Deine Zusatzoptionen:",Ceres,Template.properties
 basketAvailability,Verfügbarkeit,Ceres,Template.properties
 basketCheckout,Kasse,Ceres,Template.properties
 basketContent,Inhalt,Ceres,Template.properties
 basketCoupon,Gutschein,Ceres,Template.properties
 basketDelete,Löschen,Ceres,Template.properties
-basketExportDeliveryWarning,"Mit der Bestellung nehme ich zur Kenntnis, dass der Versand aus dem Land :from in das Zielland :to erfolgt. Die dortige Mehrwertsteuer, die Verzollungskosten und Zölle sind in der Endsumme der Bestellung nicht inbegriffen und sind Dritten zu bezahlen. Sie gehen zu meinen Lasten.",Ceres,Template.properties
+basketExportDeliveryWarning,"Mit der Bestellung nehme ich zur Kenntnis, dass der Versand aus dem Land :from in das Zielland :to erfolgt. Die dortige Mehrwertsteuer, die Verzollungskosten und Zölle sind in der Endsumme der Bestellung nicht inbegriffen und sind Dritten zu bezahlen. Die Kosten gehen zu meinen Lasten.",Ceres,Template.properties
 basketGross,(Brutto),Ceres,Template.properties
 basketIncludeAbbr,inkl.,Ceres,Template.properties
 basketItemId,Art.-ID,Ceres,Template.properties
 basketItemNumber,Artikelnummer,Ceres,Template.properties
 basketItemOverlayAdditionalCount,"+:count weitere(r) Artikel",Ceres,Template.properties
 basketNet,(Netto),Ceres,Template.properties
-basketNoItems,"Sie haben noch keine Artikel im Warenkorb.",Ceres,Template.properties
+basketNoItems,"Du hast noch keine Artikel im Warenkorb.",Ceres,Template.properties
 basketOops,"Ups, ein Fehler!",Ceres,Template.properties
 basketOpenAmount,"Zu zahlender Betrag",Ceres,Template.properties
 basketPlusAbbr,zzgl.,Ceres,Template.properties
@@ -1129,14 +1129,14 @@ wishListInactiveItemId,"Varianten ID",Ceres,Template.properties
 wishListInactiveItems,"Derzeit nicht verfügbar",Ceres,Template.properties
 wishListItemId,Art.-ID,Ceres,Template.properties
 wishListItemNumber,Artikelnummer,Ceres,Template.properties
-wishListNoItems,"Sie haben noch keine Artikel in der Wunschliste.",Ceres,Template.properties
+wishListNoItems,"Du hast noch keine Artikel in der Wunschliste.",Ceres,Template.properties
 wishListRemoved,"Der Artikel wurde von der Wunschliste entfernt.",Ceres,Template.properties
 cookieDescription,"YouTube Cookies. Die Cookies werden benötigt, um die integrierte YouTube Videos abspielen zu können.",ItemVideoPlugin,Template.properties
 cookieLifespan,"Verschiedene (bis max 2 Jahre)",ItemVideoPlugin,Template.properties
 cookiePolicieLink,https://policies.google.com/privacy,ItemVideoPlugin,Template.properties
 cookiePolicyLinkText,Cookie-Richtlinie,ItemVideoPlugin,Template.properties
 videoInfoPopupLinkText,"Cookies setzen erlauben und Video anschauen",ItemVideoPlugin,Template.properties
-videoInfoPopupText,"Dieses Video ist im erweiterten Datenschutzmodus von Youtube eingebunden, der das Setzen von Youtube-Cookies solange blockiert, bis ein aktiver Klick auf die Wiedergabe erfolgt. Mit Klick auf den Wiedergabe-Button erteilen Sie Ihre Einwilligung darin, dass YouTube auf dem von Ihnen verwendeten Endgerät Cookies setzt, die auch einer Analyse des Nutzungsverhaltens zu Marktforschungs- und Marketing-Zwecken dienen können. Näheres zur Cookie-Verwendung durch YouTube finden Sie in der :cookiepolicylink von Google",ItemVideoPlugin,Template.properties
+videoInfoPopupText,"Dieses Video ist im erweiterten Datenschutzmodus von Youtube eingebunden, der das Setzen von Youtube-Cookies solange blockiert, bis ein aktiver Klick auf die Wiedergabe erfolgt. Mit Klick auf den Wiedergabe-Button erteilst Du Deine Einwilligung darin, dass YouTube auf dem von Dir verwendeten Endgerät Cookies setzt, die auch einer Analyse des Nutzungsverhaltens zu Marktforschungs- und Marketing-Zwecken dienen können. Näheres zur Cookie-Verwendung durch YouTube findest Du in der :cookiepolicylink von Google",ItemVideoPlugin,Template.properties
 filterCollapse,"Weitere Filteroptionen",FilterDrop,Template.properties
 filterSubmitPrice,Übernehmen,FilterDrop,Template.properties
 selectedFilters,"Ausgewählte Filter:",FilterDrop,Template.properties
