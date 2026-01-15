@@ -2961,7 +2961,7 @@ shOnReady(function () {
       }
     }
     var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;max-width:640px;">' +
-     '<span>Bestellen Sie innerhalb ' + zeitHtml + ', damit Ihre Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
+     '<span>Bestelle innerhalb ' + zeitHtml + ', damit Deine Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
   '</div>';
     elem.innerHTML = 
       '<div style="display:flex;align-items:center;">' +

@@ -48,7 +48,7 @@
     </div>
     <div class="fh-header__actions">
       <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
-        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Ihr Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Dein Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
           <span class="fh-header__status-indicator" :class="{ 'is-logged-in': $store.getters.isLoggedIn }" aria-hidden="true"></span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
             <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"></path>
@@ -58,7 +58,7 @@
         <div id="fh-account-menu" data-fh-account-menu aria-hidden="true" class="fh-header__panel fh-header__panel--account">
           <div class="fh-header__panel-arrow"></div>
           <div v-if="!$store.getters.isLoggedIn">
-            <div class="fh-header__panel-title mb-3">Ihr Konto</div>
+            <div class="fh-header__panel-title mb-3">Dein Konto</div>
             <a href="#login" data-toggle="modal" data-target="#login" data-fh-login-trigger class="fh-header__account-login">Anmelden</a>
             <div class="fh-header__panel-inline my-3 fh-header__panel-text">
               <span>oder</span>
@@ -81,7 +81,7 @@
                 <span v-if="$store.state.user && $store.state.user.userData && $store.state.user.userData.lastName && (({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title)" v-cloak><span class="fh-account-greeting" data-default-greeting="Hallo,">Hallo,</span> <span v-text="((({ male: 'Herr', female: 'Frau', diverse: 'Divers' }[$store.state.user.userData.gender]) || $store.state.user.userData.formOfAddress || $store.state.user.userData.title) + ' ' + $store.state.user.userData.lastName)" v-cloak></span></span>
                 <span v-else v-cloak>Hallo</span>
               </div>
-              <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+              <div class="fh-header__panel-text">Schön, dass Du wieder da bist!</div>
               <div class="fh-header__price-toggle" data-fh-price-toggle-root v-if="$store.getters.isLoggedIn">
                 <div class="fh-header__price-toggle-row">
                   <button
@@ -119,7 +119,7 @@
                 v-else-if="Number($store.state.user.userData.classId) === 12"
                 v-cloak
               >
-                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-heading">Dein Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Ulrich Vorländer</div>
                 <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
                 <a href="/kundenbetreuer-ulrich-vorlaender" class="fh-header__contact-button">Direkt kontaktieren</a>
@@ -129,7 +129,7 @@
                 v-else-if="Number($store.state.user.userData.classId) === 16"
                 v-cloak
               >
-                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-heading">Dein Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Andreas Fischermann</div>
                 <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
                 <a href="/kundenbetreuer-andreas-fischermann" class="fh-header__contact-button">Direkt kontaktieren</a>
@@ -139,7 +139,7 @@
                 v-else-if="Number($store.state.user.userData.classId) === 21"
                 v-cloak
               >
-                <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+                <div class="fh-header__customer-contact-heading">Dein Ansprechpartner:</div>
                 <div class="fh-header__customer-contact-name">Gabriele Sprenger</div>
                 <div class="fh-header__customer-contact-role">Produktexpertin &amp; Kundenbetreuerin</div>
                 <a href="/kundenbetreuerin-gabriele-sprenger" class="fh-header__contact-button">Direkt kontaktieren</a>
@@ -150,7 +150,7 @@
               class="fh-header__panel-contact"
               v-if="!($store.state.user && $store.state.user.userData && [12, 16, 21].includes(Number($store.state.user.userData.classId)))"
             >
-              <div class="fh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
+              <div class="fh-header__panel-contact-label">Fragen? Du erreichst uns hier:</div>
               <div class="fh-header__panel-contact-line">
                 <a href="tel:02204910980" class="fh-header__panel-contact-chip">
                   <span class="fh-header__panel-contact-icon" aria-hidden="true">
@@ -609,7 +609,7 @@
             </div>
             <div class="fh-header__mobile-submenu-title">Schlösser</div>
             <nav class="fh-header__mobile-breadcrumb" aria-label="Breadcrumb" data-fh-mobile-breadcrumb></nav>
-            <p class="fh-header__mobile-submenu-description">Passende Lösungen für Haustüren, Wohnungstüren, Zimmer und Tore: Entdecken Sie robuste Schlösser, elektrische Türöffner sowie Profilzylinder inklusive Zubehör für maximale Sicherheit.</p>
+            <p class="fh-header__mobile-submenu-description">Passende Lösungen für Haustüren, Wohnungstüren, Zimmer und Tore: Entdecke robuste Schlösser, elektrische Türöffner sowie Profilzylinder inklusive Zubehör für maximale Sicherheit.</p>
             <div class="fh-header__mobile-submenu-cta">
               <a href="/schlossfinder" class="schlossfinder schlossfinder--mobile">Schlossfinder</a>
             </div>
