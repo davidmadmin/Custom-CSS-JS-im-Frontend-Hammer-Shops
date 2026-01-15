@@ -97,3 +97,4 @@ Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentySh
 * Beachte, dass beide Shops (FH & SH) synchron angepasst werden müssen. Änderungen in einem Shop dürfen den anderen nicht beschädigen.
 * Verwende für Shop-Verlinkungen immer relative Pfade (z. B. `/start` statt `https://www.fenster-hammer.de/start` oder `https://www.schraubenhammer.de/start`).
 * Halte README und begleitende Dokumentation aktuell, wenn du neue Features oder Abhängigkeiten ergänzt.
+* Verwende für die direkte Anrede konsequent die Du-Form und schreibe Du/Dir/Dich/Dein usw. immer mit großem Anfangsbuchstaben – unabhängig von der Position im Satz.
