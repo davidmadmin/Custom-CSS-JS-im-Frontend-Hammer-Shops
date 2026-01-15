@@ -15,7 +15,7 @@
           </span>
           <span v-else v-cloak>Hallo</span>
         </div>
-        <div class="fh-header__panel-text">Schön, dass Sie wieder da sind!</div>
+        <div class="fh-header__panel-text">Schön, dass Du wieder da bist!</div>
       </div>
       <div
         class="fh-header__customer-segment"
@@ -34,7 +34,7 @@
           v-else-if="Number($store.state.user.userData.classId) === 12"
           v-cloak
         >
-          <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+          <div class="fh-header__customer-contact-heading">Dein Ansprechpartner:</div>
           <div class="fh-header__customer-contact-name">Ulrich Vorländer</div>
           <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
           <a href="/kundenbetreuer-ulrich-vorlaender" class="fh-header__contact-button">Direkt kontaktieren</a>
@@ -44,7 +44,7 @@
           v-else-if="Number($store.state.user.userData.classId) === 16"
           v-cloak
         >
-          <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+          <div class="fh-header__customer-contact-heading">Dein Ansprechpartner:</div>
           <div class="fh-header__customer-contact-name">Andreas Fischermann</div>
           <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
           <a href="/kundenbetreuer-andreas-fischermann" class="fh-header__contact-button">Direkt kontaktieren</a>
@@ -54,7 +54,7 @@
           v-else-if="Number($store.state.user.userData.classId) === 21"
           v-cloak
         >
-          <div class="fh-header__customer-contact-heading">Ihr Ansprechpartner:</div>
+          <div class="fh-header__customer-contact-heading">Dein Ansprechpartner:</div>
           <div class="fh-header__customer-contact-name">Gabriele Sprenger</div>
           <div class="fh-header__customer-contact-role">Produktexperte &amp; Kundenbetreuer</div>
           <a href="/kundenbetreuer-gabriele-sprenger" class="fh-header__contact-button">Direkt kontaktieren</a>
@@ -66,7 +66,7 @@
       class="fh-header__panel-contact fh-account-nav__contact"
       v-if="!($store.state.user && $store.state.user.userData && [12, 16, 21].includes(Number($store.state.user.userData.classId)))"
     >
-      <div class="fh-header__panel-contact-label">Fragen? Sie erreichen uns hier:</div>
+      <div class="fh-header__panel-contact-label">Fragen? Du erreichst uns hier:</div>
       <div class="fh-header__panel-contact-line">
         <a href="tel:02204910980" class="fh-header__panel-contact-chip">
           <span class="fh-header__panel-contact-icon" aria-hidden="true">
