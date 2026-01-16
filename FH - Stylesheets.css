@@ -3245,6 +3245,14 @@ body.fh-search-overlay-open .brevo-conversations__iframe-wrapper {
 }
 /* End Section: Trustbadge ausblenden */
 
+/* Section: Trusted Shops Badge Position */
+div._1ggtbm9,
+div._1dqk8hp {
+  left: 20px !important;
+  right: auto !important;
+}
+/* End Section: Trusted Shops Badge Position */
+
 /* Section: Allgemeines Button-Styling für .btn-primary */
 .btn.btn-primary {
   background-color: #000000 !important; /* Tiefschwarz – kräftig */
