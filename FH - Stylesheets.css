@@ -90,6 +90,11 @@ body,
   order: 3;
   font-size: 0.85rem;
   color: #6b7280;
+  align-self: flex-end;
+}
+
+.widget-item-grid .cmp-product-thumb:hover .prices > .price-info {
+  display: none;
 }
 /* End Section: Artikel Preview Card Preis Layout */
 
