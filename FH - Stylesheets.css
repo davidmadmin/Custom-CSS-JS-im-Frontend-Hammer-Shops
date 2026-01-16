@@ -159,6 +159,16 @@ body,
 }
 /* End Section: Produktseite Variantenauswahl Box */
 
+/* Section: Produktseite Markenlogo */
+div.external-brand-logo img {
+  max-height: 30px;
+  height: auto;
+  max-width: 120px;
+  width: auto;
+  margin-top: 10px;
+}
+/* End Section: Produktseite Markenlogo */
+
 /* Section: Verfügbarkeitshinweis Produktseite */
 #kjvItemAvailabilityText,
 .availability .availability-text,
@@ -878,6 +888,12 @@ body,
   width: auto;
   height: 64px;
 }
+
+/* Section: Ceres Standard-Logo ausblenden */
+a.logo {
+  display: none !important;
+}
+/* End Section: Ceres Standard-Logo ausblenden */
 
 .fh-header__search-area {
   display: flex;
@@ -2352,6 +2368,16 @@ body,
   color: #475569;
 }
 
+/* Section: Breadcrumb-Startpunkt ausblenden */
+.breadcrumb > li:first-child {
+  display: none;
+}
+
+.breadcrumb > li:nth-child(2)::before {
+  display: none;
+}
+/* End Section: Breadcrumb-Startpunkt ausblenden */
+
 .fh-header__mobile-breadcrumb:empty {
   display: none;
 }
@@ -2387,6 +2413,12 @@ body,
   font-size: 14px;
   line-height: 1;
 }
+
+/* Section: reCAPTCHA Badge ausblenden */
+div.grecaptcha-badge {
+  display: none !important;
+}
+/* End Section: reCAPTCHA Badge ausblenden */
 
 .fh-header__mobile-submenu-title {
   margin: 0;
