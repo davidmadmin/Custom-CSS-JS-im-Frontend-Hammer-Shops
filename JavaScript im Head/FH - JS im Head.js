@@ -885,6 +885,105 @@ fhOnReady(function () {
 });
 // End Section: FH account menu toggle behaviour
 
+// Section: FH wishlist menu toggle behaviour
+fhOnReady(function () {
+  const container = document.querySelector('[data-fh-wishlist-menu-container]');
+
+  if (!container) return;
+
+  const toggleButton = container.querySelector('[data-fh-wishlist-menu-toggle]');
+  const menu = container.querySelector('[data-fh-wishlist-menu]');
+
+  if (!toggleButton || !menu) return;
+
+  let isOpen = false;
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function resolveStoreAction(store, actionNames) {
+    if (!store || !store._actions) return null;
+
+    for (let index = 0; index < actionNames.length; index += 1) {
+      const name = actionNames[index];
+
+      if (store._actions[name]) return name;
+    }
+
+    return null;
+  }
+
+  function refreshWishList() {
+    const store = getVueStore();
+
+    if (!store) return;
+
+    const actionName = resolveStoreAction(store, ['wishList/initWishListItems', 'initWishListItems']);
+
+    if (!actionName) return;
+
+    try {
+      const result = store.dispatch(actionName);
+
+      if (result && typeof result.catch === 'function') result.catch(function () {});
+    } catch (error) {
+      /* Ignore dispatch errors in the custom integration to avoid breaking the UI. */
+    }
+  }
+
+  function openMenu() {
+    if (isOpen) return;
+
+    refreshWishList();
+    menu.style.display = 'block';
+    menu.setAttribute('aria-hidden', 'false');
+    toggleButton.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeydown);
+    isOpen = true;
+  }
+
+  function closeMenu() {
+    if (!isOpen) return;
+
+    menu.style.display = 'none';
+    menu.setAttribute('aria-hidden', 'true');
+    toggleButton.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleKeydown);
+    isOpen = false;
+  }
+
+  function handleDocumentClick(event) {
+    if (!container.contains(event.target)) closeMenu();
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+      toggleButton.focus();
+    }
+  }
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isOpen) closeMenu(); else {
+      openMenu();
+    }
+  });
+
+  document.addEventListener('fh:wishlist-refresh', refreshWishList);
+});
+// End Section: FH wishlist menu toggle behaviour
+
+
 // Section: FH account page navigation
 fhOnReady(function () {
   const nav = document.querySelector('[data-fh-account-nav]');
