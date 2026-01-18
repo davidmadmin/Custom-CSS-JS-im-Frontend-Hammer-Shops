@@ -207,6 +207,22 @@
           </div>
         </div>
       </div>
+      <div class="sh-wishlist-menu-container position-relative" data-sh-wishlist-menu-container>
+        <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="sh-wishlist-menu" aria-label="{{ trans('Ceres::Template.wishList') }}" data-sh-wishlist-menu-toggle class="sh-header__icon-button">
+          <span class="sh-header__wishlist-count" aria-hidden="true">
+            <wish-list-count></wish-list-count>
+          </span>
+          <span class="sh-header__sr-only">{{ trans('Ceres::Template.wishList') }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="sh-header__icon">
+            <path d="M20.8 7.6c0 4.6-8.8 11.7-8.8 11.7S3.2 12.2 3.2 7.6a4.2 4.2 0 0 1 7.3-2.8L12 6.3l1.5-1.5a4.2 4.2 0 0 1 7.3 2.8Z"></path>
+          </svg>
+        </button>
+        <div id="sh-wishlist-menu" data-sh-wishlist-menu aria-hidden="true" class="sh-header__panel sh-header__panel--wishlist">
+          <div class="sh-header__panel-arrow"></div>
+          <div class="sh-header__panel-title mb-3">{{ trans('Ceres::Template.wishList') }}</div>
+          <wish-list></wish-list>
+        </div>
+      </div>
       <div class="sh-basket-preview sh-header__basket">
         <a v-toggle-basket-preview href="#" class="toggle-basket-preview sh-header__basket-link" aria-label="Warenkorb">
           <span class="sh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
