@@ -1032,16 +1032,21 @@ a.logo {
 
 .fh-header__badge wish-list-count,
 .fh-header__badge wish-list-count > * {
-  display: flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
 }
 
 .fh-wishlist-menu-container wish-list-count,
 .fh-wishlist-menu-container wish-list-count * {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: inherit !important;
+  font-size: inherit !important;
+}
+
+.fh-header__badge,
+.fh-header__badge * {
   opacity: 1 !important;
   visibility: visible !important;
 }

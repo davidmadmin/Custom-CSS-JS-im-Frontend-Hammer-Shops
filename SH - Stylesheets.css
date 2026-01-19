@@ -1040,16 +1040,21 @@ a.logo {
 
 .sh-header__badge wish-list-count,
 .sh-header__badge wish-list-count > * {
-  display: flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
 }
 
 .sh-wishlist-menu-container wish-list-count,
 .sh-wishlist-menu-container wish-list-count * {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: inherit !important;
+  font-size: inherit !important;
+}
+
+.sh-header__badge,
+.sh-header__badge * {
   opacity: 1 !important;
   visibility: visible !important;
 }
