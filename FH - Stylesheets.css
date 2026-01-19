@@ -1023,7 +1023,7 @@ a.logo {
   padding: 0;
   border-radius: 50%;
   background-color: var(--fh-color-bright-blue);
-  color: #ffffff;
+  color: #000000;
   opacity: 1 !important;
   visibility: visible !important;
   font-size: 11px;
