@@ -1032,6 +1032,15 @@ a.logo {
   line-height: 1;
 }
 
+.fh-header__badge wish-list-count,
+.fh-header__badge wish-list-count > * {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 .fh-header__panel {
   position: absolute;
   top: calc(100% + 16px);
@@ -2649,6 +2658,15 @@ div.grecaptcha-badge {
     opacity: 1 !important;
     visibility: visible !important;
     font-size: 10px;
+  }
+
+  .fh-header__badge wish-list-count,
+  .fh-header__badge wish-list-count > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   .fh-header__basket {
