@@ -868,6 +868,149 @@ shOnReady(function () {
 });
 // End Section: sh account menu toggle behaviour
 
+// Section: sh wishlist menu toggle behaviour
+shOnReady(function () {
+  const container = document.querySelector('[data-sh-wishlist-menu-container]');
+
+  if (!container) return;
+
+  const toggleButton = container.querySelector('[data-sh-wishlist-menu-toggle]');
+  const menu = container.querySelector('[data-sh-wishlist-menu]');
+
+  if (!toggleButton || !menu) return;
+
+  let isOpen = false;
+  let hasInstalledSubscription = false;
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function resolveStoreAction(store, actionNames) {
+    if (!store || !store._actions) return null;
+
+    for (let index = 0; index < actionNames.length; index += 1) {
+      const name = actionNames[index];
+
+      if (store._actions[name]) return name;
+    }
+
+    return null;
+  }
+
+  function refreshWishList() {
+    const store = getVueStore();
+
+    if (!store) return;
+
+    const actionName = resolveStoreAction(store, ['wishList/initWishListItems', 'initWishListItems']);
+
+    if (!actionName) return;
+
+    try {
+      const result = store.dispatch(actionName);
+
+      if (result && typeof result.catch === 'function') result.catch(function () {});
+    } catch (error) {
+      /* Ignore dispatch errors in the custom integration to avoid breaking the UI. */
+    }
+  }
+
+  function installWishListSubscription() {
+    if (hasInstalledSubscription) return;
+
+    const store = getVueStore();
+
+    if (!store || typeof store.subscribeAction !== 'function') return;
+
+    try {
+      store.subscribeAction({
+        after: function (action) {
+          if (!action || !action.type) return;
+
+          const actionType = String(action.type);
+          const isWishListAction = actionType.indexOf('wishList') !== -1 || actionType.indexOf('WishList') !== -1;
+          const isWishListChange = /add|remove/i.test(actionType);
+          const isDirectWishListAction = /addToWishList|removeWishListItem/i.test(actionType);
+
+          if ((isWishListAction && isWishListChange) || isDirectWishListAction) {
+            window.setTimeout(refreshWishList, 120);
+          }
+        },
+      });
+      hasInstalledSubscription = true;
+    } catch (error) {
+      /* Ignore subscription errors to avoid breaking the UI. */
+    }
+  }
+
+  function scheduleWishListSubscription() {
+    let attempts = 0;
+    const maxAttempts = 20;
+    const intervalId = window.setInterval(function () {
+      attempts += 1;
+      installWishListSubscription();
+
+      if (hasInstalledSubscription || attempts >= maxAttempts) {
+        window.clearInterval(intervalId);
+      }
+    }, 500);
+  }
+
+  function openMenu() {
+    if (isOpen) return;
+
+    installWishListSubscription();
+    refreshWishList();
+    menu.style.display = 'block';
+    menu.setAttribute('aria-hidden', 'false');
+    toggleButton.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeydown);
+    isOpen = true;
+  }
+
+  function closeMenu() {
+    if (!isOpen) return;
+
+    menu.style.display = 'none';
+    menu.setAttribute('aria-hidden', 'true');
+    toggleButton.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleKeydown);
+    isOpen = false;
+  }
+
+  function handleDocumentClick(event) {
+    if (!container.contains(event.target)) closeMenu();
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+      toggleButton.focus();
+    }
+  }
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isOpen) closeMenu(); else {
+      openMenu();
+    }
+  });
+
+  scheduleWishListSubscription();
+  document.addEventListener('sh:wishlist-refresh', refreshWishList);
+});
+// End Section: sh wishlist menu toggle behaviour
+
+
 // Section: sh account page navigation
 shOnReady(function () {
   const nav = document.querySelector('[data-sh-account-nav]');
