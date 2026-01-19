@@ -1049,6 +1049,24 @@ a.logo {
   visibility: visible !important;
 }
 
+.sh-header__badge wish-list-count a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.sh-header__badge wish-list-count .badge-right,
+.sh-header__badge wish-list-count .d-none {
+  display: flex !important;
+}
+
+.sh-header__badge wish-list-count .fa,
+.sh-header__badge wish-list-count .fa-heart,
+.sh-header__badge wish-list-count .fa-heart-o {
+  display: none !important;
+}
+
 .sh-header__panel {
   position: absolute;
   top: calc(100% + 16px);

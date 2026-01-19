@@ -1041,6 +1041,24 @@ a.logo {
   visibility: visible !important;
 }
 
+.fh-header__badge wish-list-count a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.fh-header__badge wish-list-count .badge-right,
+.fh-header__badge wish-list-count .d-none {
+  display: flex !important;
+}
+
+.fh-header__badge wish-list-count .fa,
+.fh-header__badge wish-list-count .fa-heart,
+.fh-header__badge wish-list-count .fa-heart-o {
+  display: none !important;
+}
+
 .fh-header__panel {
   position: absolute;
   top: calc(100% + 16px);
