@@ -1034,7 +1034,7 @@ a.logo {
 
 .fh-header__badge wish-list-count,
 .fh-header__badge wish-list-count > * {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   opacity: 1 !important;
@@ -2662,7 +2662,7 @@ div.grecaptcha-badge {
 
   .fh-header__badge wish-list-count,
   .fh-header__badge wish-list-count > * {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     opacity: 1 !important;
