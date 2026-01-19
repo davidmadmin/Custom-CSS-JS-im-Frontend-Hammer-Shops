@@ -952,9 +952,10 @@ fhOnReady(function () {
           const actionType = String(action.type);
           const isWishListAction = actionType.indexOf('wishList') !== -1 || actionType.indexOf('WishList') !== -1;
           const isWishListChange = /add|remove/i.test(actionType);
+          const isDirectWishListAction = /addToWishList|removeWishListItem/i.test(actionType);
 
-          if (isWishListAction && isWishListChange) {
-            window.setTimeout(refreshWishList, 50);
+          if ((isWishListAction && isWishListChange) || isDirectWishListAction) {
+            window.setTimeout(refreshWishList, 120);
           }
         },
       });
