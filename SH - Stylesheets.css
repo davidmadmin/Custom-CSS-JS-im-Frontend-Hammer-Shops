@@ -1040,11 +1040,9 @@ a.logo {
   line-height: 1;
 }
 
-.sh-header__badge wish-list-count,
-.sh-header__badge wish-list-count > * {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.sh-header__icon-button .sh-header__badge wish-list-count .badge-right,
+.sh-header__icon-button .sh-header__badge wish-list-count .count {
+  display: inline-flex !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
@@ -2641,14 +2639,6 @@ div.grecaptcha-badge {
     font-size: 10px;
   }
 
-  .sh-header__badge wish-list-count,
-  .sh-header__badge wish-list-count > * {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
 
   .sh-header__basket {
     justify-self: auto;
