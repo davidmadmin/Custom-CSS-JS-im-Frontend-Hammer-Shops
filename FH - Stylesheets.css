@@ -1046,11 +1046,19 @@ a.logo {
   align-items: center;
   justify-content: center;
   gap: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .fh-header__badge wish-list-count .badge-right,
 .fh-header__badge wish-list-count .d-none {
   display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #ffffff !important;
 }
 
 .fh-header__badge wish-list-count .fa,
