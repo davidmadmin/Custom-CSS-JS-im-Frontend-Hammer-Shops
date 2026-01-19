@@ -4,6 +4,10 @@
   More of this page was designed and coded by David M. Abdin.
   Contact me on LinkedIn for business inquires https://www.linkedin.com/in/david-m-abdin-5656aa367/
 -->
+{% set basket = services.basket.getBasketForTemplate() %}
+{% set wishListCount = services.wishList.getCountedItemWishList() %}
+{% set basketCurrency = basket.currency | default("EUR") %}
+{% set showNetPricesInitial = showNetPrices is defined ? showNetPrices : false %}
 <div class="sh-header" data-sh-header-root>
   <div class="sh-header__top-bar text-uppercase">
     <a href="https://www.trustedshops.de/bewertung/info_X4CF462881B5021CAFE701B0AADD7B797.html" target="_blank" rel="noopener" class="sh-header__top-link">
@@ -49,7 +53,7 @@
     <div class="sh-header__actions">
       <a href="/wish-list" aria-label="{{ trans('Ceres::Template.wishList') }}" class="sh-header__icon-button">
         <span class="sh-header__badge" aria-hidden="true">
-          <wish-list-count></wish-list-count>
+          <span v-text="$store.state.basket.isBasketInitiallyLoaded ? $store.getters.wishListCount : {{ wishListCount | default(0) }}">{{ wishListCount }}</span>
         </span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="sh-header__icon">
           <path d="M7 4h10a1 1 0 0 1 1 1v15l-6-3-6 3V5a1 1 0 0 1 1-1z"></path>
@@ -218,16 +222,47 @@
       </div>
       <div class="sh-basket-preview sh-header__basket">
         <a v-toggle-basket-preview href="#" class="toggle-basket-preview sh-header__basket-link" aria-label="Warenkorb">
-          <span class="sh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
+          <template v-if="$store.state.basket.isBasketInitiallyLoaded">
+            <span class="sh-header__basket-count" v-basket-item-quantity="$store.state.basket.data.itemQuantity">{{ basket.itemQuantity | default(0) }}</span>
+          </template>
+          <template v-else>
+            <span class="sh-header__basket-count">{{ basket.itemQuantity | default(0) }}</span>
+          </template>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="sh-header__basket-icon">
             <circle cx="9" cy="20" r="1.5" fill="currentColor"></circle>
             <circle cx="18" cy="20" r="1.5" fill="currentColor"></circle>
             <path d="M2.5 3h2l2.4 12.6a1.5 1.5 0 0 0 1.5 1.2H18a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
           </svg>
-          <span class="sh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-          <span class="sh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
-          <span class="sh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">0,00 €</span>
-          <span class="sh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">0,00 €</span>
+          <template v-if="$store.state.basket.isBasketInitiallyLoaded">
+            <span class="sh-header__basket-total" aria-hidden="true" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">
+              {{ basket.itemSum | default(0) | formatMonetary(basketCurrency) }}
+            </span>
+            <span class="sh-header__basket-total" aria-hidden="true" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">
+              {{ basket.itemSumNet | default(0) | formatMonetary(basketCurrency) }}
+            </span>
+            <span class="sh-header__sr-only" v-if="!$store.state.basket.showNetPrices" v-basket-item-sum="$store.state.basket.data.itemSum">
+              {{ basket.itemSum | default(0) | formatMonetary(basketCurrency) }}
+            </span>
+            <span class="sh-header__sr-only" v-else v-cloak v-basket-item-sum="$store.state.basket.data.itemSumNet">
+              {{ basket.itemSumNet | default(0) | formatMonetary(basketCurrency) }}
+            </span>
+          </template>
+          <template v-else>
+            <span class="sh-header__basket-total" aria-hidden="true">
+              {% if showNetPricesInitial %}
+                {{ basket.itemSumNet | default(0) | formatMonetary(basketCurrency) }}
+              {% else %}
+                {{ basket.itemSum | default(0) | formatMonetary(basketCurrency) }}
+              {% endif %}
+            </span>
+            <span class="sh-header__sr-only">
+              {% if showNetPricesInitial %}
+                {{ basket.itemSumNet | default(0) | formatMonetary(basketCurrency) }}
+              {% else %}
+                {{ basket.itemSum | default(0) | formatMonetary(basketCurrency) }}
+              {% endif %}
+            </span>
+          </template>
         </a>
         <basket-preview
           v-if="$store.state.lazyComponent.components['basket-preview']"
