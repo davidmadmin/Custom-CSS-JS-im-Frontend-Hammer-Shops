@@ -1049,6 +1049,25 @@ a.logo {
   visibility: visible !important;
 }
 
+.sh-header__icon-button wish-list-count .nav-link .badge-right {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #fff !important;
+}
+
+.sh-header__icon-button wish-list-count .nav-link:hover .badge-right {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #fff !important;
+}
+
+.sh-header__icon-button wish-list-count .nav-link .fa-heart,
+.sh-header__icon-button wish-list-count .nav-link .fa-heart-o {
+  display: none !important;
+}
+
 .sh-header__panel {
   position: absolute;
   top: calc(100% + 16px);
@@ -2648,6 +2667,25 @@ div.grecaptcha-badge {
     justify-content: center;
     opacity: 1 !important;
     visibility: visible !important;
+  }
+
+  .sh-header__icon-button wish-list-count .nav-link .badge-right {
+    display: inline-flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: #fff !important;
+  }
+
+  .sh-header__icon-button wish-list-count .nav-link:hover .badge-right {
+    display: inline-flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: #fff !important;
+  }
+
+  .sh-header__icon-button wish-list-count .nav-link .fa-heart,
+  .sh-header__icon-button wish-list-count .nav-link .fa-heart-o {
+    display: none !important;
   }
 
   .sh-header__basket {
