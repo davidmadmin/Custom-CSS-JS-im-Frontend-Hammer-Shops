@@ -1024,8 +1024,6 @@ a.logo {
   border-radius: 50%;
   background-color: var(--fh-color-bright-blue);
   color: #ffffff;
-  opacity: 1 !important;
-  visibility: visible !important;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.3px;
@@ -1035,6 +1033,13 @@ a.logo {
 .fh-header__badge wish-list-count,
 .fh-header__badge wish-list-count > * {
   display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fh-wishlist-menu-container wish-list-count,
+.fh-wishlist-menu-container wish-list-count * {
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
   opacity: 1 !important;
@@ -2655,8 +2660,6 @@ div.grecaptcha-badge {
     height: 18px;
     padding: 0;
     border-radius: 50%;
-    opacity: 1 !important;
-    visibility: visible !important;
     font-size: 10px;
   }
 
@@ -2665,8 +2668,6 @@ div.grecaptcha-badge {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1 !important;
-    visibility: visible !important;
   }
 
   .fh-header__basket {
