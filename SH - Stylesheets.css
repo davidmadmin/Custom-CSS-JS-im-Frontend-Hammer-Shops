@@ -197,6 +197,11 @@ div.external-brand-logo img {
   color: rgb(153, 27, 27);
 }
 
+#kjvItemAvailabilityText.is-sold-out + #smart,
+#kjvItemAvailabilityText.is-sold-out ~ #smart {
+  display: none !important;
+}
+
 #kjvItemAvailabilityIcon {
   display: none !important;
 }
