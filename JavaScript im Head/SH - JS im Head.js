@@ -2637,7 +2637,23 @@ shOnReady(function () {
     return null;
   }
 
-  function applyAvailabilityUi(isSalable) {
+  function resolveAvailabilityId(state) {
+    const variation = state && state.item ? state.item.variation : null;
+
+    if (!variation || typeof variation.availability !== 'object') return null;
+
+    const availabilityId = variation.availability.id;
+
+    return typeof availabilityId === 'number' ? availabilityId : null;
+  }
+
+  function updatePaypalSmartButtons(shouldHide) {
+    document.querySelectorAll('.paypal-smart-button').forEach(function (button) {
+      button.style.display = shouldHide ? 'none' : '';
+    });
+  }
+
+  function applyAvailabilityUi(isSalable, availabilityId) {
     const availabilityText = document.querySelector(availabilityTextSelector);
     const availabilityIcon = document.querySelector('#kjvItemAvailabilityIcon, .availability .availability-icon, [data-testing="availability-icon"]');
     const availabilityContainer = document.querySelector(availabilityContainerSelector);
@@ -2666,6 +2682,10 @@ shOnReady(function () {
     const countdown = document.getElementById('cutoff-countdown');
 
     if (countdown) countdown.style.display = isSalable ? '' : 'none';
+
+    if (typeof availabilityId === 'number') {
+      updatePaypalSmartButtons(availabilityId === 0);
+    }
   }
 
   function bootstrapAvailabilityWatcher() {
@@ -2680,10 +2700,11 @@ shOnReady(function () {
       const isSalable = resolveIsSalable(store.state);
       const domSalable = resolveIsSalableFromText();
       const resolved = typeof isSalable === 'boolean' ? isSalable : domSalable;
+      const availabilityId = resolveAvailabilityId(store.state);
 
       if (resolved === null) return;
 
-      applyAvailabilityUi(resolved);
+      applyAvailabilityUi(resolved, availabilityId);
     }, { immediate: true, deep: true });
   }
 
