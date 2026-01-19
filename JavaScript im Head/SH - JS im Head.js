@@ -932,7 +932,13 @@ shOnReady(function () {
         after: function (action) {
           if (!action || !action.type) return;
 
-          if (action.type.indexOf('addToWishList') !== -1) refreshWishList();
+          const actionType = String(action.type);
+          const isWishListAction = actionType.indexOf('wishList') !== -1 || actionType.indexOf('WishList') !== -1;
+          const isWishListChange = /add|remove/i.test(actionType);
+
+          if (isWishListAction && isWishListChange) {
+            window.setTimeout(refreshWishList, 50);
+          }
         },
       });
       hasInstalledSubscription = true;
