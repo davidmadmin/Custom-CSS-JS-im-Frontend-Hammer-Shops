@@ -1040,6 +1040,20 @@ a.logo {
   line-height: 1;
 }
 
+.sh-header__icon-button .sh-header__badge {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+.sh-header__icon-button .sh-header__badge wish-list-count,
+.sh-header__icon-button .sh-header__badge wish-list-count > * {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
 .sh-header__badge wish-list-count,
 .sh-header__badge wish-list-count > * {
   display: flex;

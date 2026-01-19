@@ -1032,6 +1032,20 @@ a.logo {
   line-height: 1;
 }
 
+.fh-header__icon-button .fh-header__badge {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+.fh-header__icon-button .fh-header__badge wish-list-count,
+.fh-header__icon-button .fh-header__badge wish-list-count > * {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
 .fh-header__badge wish-list-count,
 .fh-header__badge wish-list-count > * {
   display: flex;
