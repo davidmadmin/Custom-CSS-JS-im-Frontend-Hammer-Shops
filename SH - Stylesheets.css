@@ -1049,6 +1049,17 @@ a.logo {
   visibility: visible !important;
 }
 
+.sh-header__badge .nav-link,
+.sh-header__badge .badge-right,
+.sh-header__badge .badge-right.d-none {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 .sh-header__panel {
   position: absolute;
   top: calc(100% + 16px);

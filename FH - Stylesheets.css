@@ -1041,6 +1041,17 @@ a.logo {
   visibility: visible !important;
 }
 
+.fh-header__badge .nav-link,
+.fh-header__badge .badge-right,
+.fh-header__badge .badge-right.d-none {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 .fh-header__panel {
   position: absolute;
   top: calc(100% + 16px);
