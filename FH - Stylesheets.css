@@ -1023,7 +1023,7 @@ a.logo {
   padding: 0;
   border-radius: 50%;
   background-color: var(--fh-color-bright-blue);
-  color: #ffffff;
+  color: #000000;
   opacity: 1 !important;
   visibility: visible !important;
   font-size: 11px;
@@ -1037,6 +1037,17 @@ a.logo {
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.fh-header__badge .nav-link,
+.fh-header__badge .badge-right,
+.fh-header__badge .badge-right.d-none {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
   opacity: 1 !important;
   visibility: visible !important;
 }
