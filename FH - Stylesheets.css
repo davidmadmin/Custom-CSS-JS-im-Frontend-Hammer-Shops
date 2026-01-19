@@ -1018,10 +1018,10 @@ a.logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
+  width: 20px;
   height: 20px;
-  padding: 0 6px;
-  border-radius: 999px;
+  padding: 0;
+  border-radius: 50%;
   background-color: var(--fh-color-bright-blue);
   color: #ffffff;
   font-size: 11px;
@@ -2640,8 +2640,10 @@ div.grecaptcha-badge {
   }
 
   .fh-header__badge {
-    min-width: 18px;
+    width: 18px;
     height: 18px;
+    padding: 0;
+    border-radius: 50%;
     font-size: 10px;
   }
 

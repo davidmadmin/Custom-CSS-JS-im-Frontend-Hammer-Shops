@@ -880,6 +880,7 @@ shOnReady(function () {
   if (!toggleButton || !menu) return;
 
   let isOpen = false;
+  let hasInstalledSubscription = false;
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
@@ -919,9 +920,44 @@ shOnReady(function () {
     }
   }
 
+  function installWishListSubscription() {
+    if (hasInstalledSubscription) return;
+
+    const store = getVueStore();
+
+    if (!store || typeof store.subscribeAction !== 'function') return;
+
+    try {
+      store.subscribeAction({
+        after: function (action) {
+          if (!action || !action.type) return;
+
+          if (action.type.indexOf('addToWishList') !== -1) refreshWishList();
+        },
+      });
+      hasInstalledSubscription = true;
+    } catch (error) {
+      /* Ignore subscription errors to avoid breaking the UI. */
+    }
+  }
+
+  function scheduleWishListSubscription() {
+    let attempts = 0;
+    const maxAttempts = 20;
+    const intervalId = window.setInterval(function () {
+      attempts += 1;
+      installWishListSubscription();
+
+      if (hasInstalledSubscription || attempts >= maxAttempts) {
+        window.clearInterval(intervalId);
+      }
+    }, 500);
+  }
+
   function openMenu() {
     if (isOpen) return;
 
+    installWishListSubscription();
     refreshWishList();
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
@@ -962,6 +998,7 @@ shOnReady(function () {
     }
   });
 
+  scheduleWishListSubscription();
   document.addEventListener('sh:wishlist-refresh', refreshWishList);
 });
 // End Section: sh wishlist menu toggle behaviour
