@@ -705,15 +705,16 @@ div.external-brand-logo img {
 .fh-footer__trust-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 20px;
   justify-content: flex-end;
   margin-top: 8px;
 }
 
 .fh-footer__trust-badges img {
   width: auto;
-  height: auto;
-  max-width: 180px;
+  height: 72px;
+  max-width: 170px;
+  object-fit: contain;
   display: block;
 }
 
