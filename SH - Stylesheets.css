@@ -712,7 +712,7 @@ div.external-brand-logo img {
 .sh-footer__trust-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 26px;
+  gap: 32px;
   justify-content: flex-end;
 }
 
@@ -731,6 +731,7 @@ div.external-brand-logo img {
   gap: 24px;
   align-items: end;
   margin-top: 28px;
+  grid-column: 1 / -1;
 }
 
 .sh-footer__copyright {
