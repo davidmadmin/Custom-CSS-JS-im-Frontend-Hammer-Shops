@@ -709,6 +709,22 @@ div.external-brand-logo img {
   text-align: right;
 }
 
+.sh-footer__trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.sh-footer__trust-badges img {
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 12px 24px -18px rgba(15, 23, 42, 0.45);
+}
+
 .sh-footer__brand-logo,
 .fh-footer__brand-logo {
   max-height: 72px;
@@ -795,6 +811,10 @@ div.external-brand-logo img {
     width: min(100%, 420px);
     justify-items: center;
     text-align: center;
+  }
+
+  .sh-footer__trust-badges {
+    justify-content: center;
   }
 
   .sh-footer__shipping-item {
