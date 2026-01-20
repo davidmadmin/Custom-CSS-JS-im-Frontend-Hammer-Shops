@@ -2997,16 +2997,21 @@ shOnReady(function () {
     }
   ];
 
+  function normalizeShippingLabel(text) {
+    return (text || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
   function applyShippingIcons(root = document) {
     const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
     const labels = scope.querySelectorAll ? scope.querySelectorAll('.shipping-method-select label.provider-select-label') : [];
 
     Array.prototype.forEach.call(labels, function (label) {
       const content = label.querySelector('.content');
-      const labelText = ((content && content.textContent) || label.textContent || '')
-        .replace(/\s+/g, ' ')
-        .trim()
-        .toLowerCase();
+      const labelText = normalizeShippingLabel((content && content.textContent) || label.textContent);
 
       if (!labelText) return;
 
