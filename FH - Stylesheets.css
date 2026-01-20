@@ -194,6 +194,16 @@ div.external-brand-logo img {
   color: rgb(153, 27, 27);
 }
 
+#kjvItemAvailabilityText.is-sold-out:has(+ #smart.paypal-smart-button),
+#kjvItemAvailabilityText.is-sold-out:has(~ #smart.paypal-smart-button) {
+  display: none !important;
+}
+
+#kjvItemAvailabilityText.is-sold-out:has(+ #smart.paypal-smart-button) + #smart.paypal-smart-button,
+#kjvItemAvailabilityText.is-sold-out:has(~ #smart.paypal-smart-button) ~ #smart.paypal-smart-button {
+  display: none !important;
+}
+
 #kjvItemAvailabilityIcon {
   display: none !important;
 }
