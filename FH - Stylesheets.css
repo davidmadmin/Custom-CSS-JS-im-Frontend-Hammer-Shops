@@ -707,9 +707,6 @@ div.external-brand-logo img {
   flex-wrap: wrap;
   gap: 26px;
   justify-content: flex-end;
-  grid-column: 2 / 3;
-  justify-self: end;
-  margin-top: 28px;
 }
 
 .fh-footer__trust-badges img {
@@ -721,8 +718,16 @@ div.external-brand-logo img {
   filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.2));
 }
 
-.fh-footer__copyright {
-  grid-column: 1 / -1;
+.fh-footer__footer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: end;
+  margin-top: 28px;
+}
+
+.fh-footer__trust-badges {
+  justify-self: end;
 }
 
 .fh-footer__trust-badge--anniversary {
@@ -816,8 +821,15 @@ div.external-brand-logo img {
     text-align: center;
   }
 
+  .fh-footer__footer-row {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
   .fh-footer__trust-badges {
     justify-content: center;
+    justify-self: center;
   }
 
   .fh-footer__shipping-item {
