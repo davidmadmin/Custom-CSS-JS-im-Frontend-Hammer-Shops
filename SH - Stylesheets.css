@@ -714,12 +714,13 @@ div.external-brand-logo img {
   flex-wrap: wrap;
   gap: 32px;
   justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .sh-footer__trust-badges img {
   width: auto;
-  height: 72px;
-  max-width: 170px;
+  height: auto;
+  max-width: 220px;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.2));
@@ -745,7 +746,15 @@ div.external-brand-logo img {
 }
 
 .sh-footer__trust-badge--anniversary {
-  height: 82px;
+  height: 110px !important;
+}
+
+.sh-footer__trust-badge--company {
+  height: 60px !important;
+}
+
+.sh-footer__trust-badge--ssl {
+  height: 85px !important;
 }
 
 .sh-footer__brand-logo,
