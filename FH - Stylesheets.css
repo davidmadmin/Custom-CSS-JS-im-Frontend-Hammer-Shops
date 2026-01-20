@@ -726,7 +726,13 @@ div.external-brand-logo img {
   margin-top: 28px;
 }
 
+.fh-footer__copyright {
+  justify-self: start;
+  align-self: end;
+}
+
 .fh-footer__trust-badges {
+  align-self: end;
   justify-self: end;
 }
 
