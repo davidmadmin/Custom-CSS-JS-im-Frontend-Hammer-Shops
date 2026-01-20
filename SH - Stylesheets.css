@@ -697,8 +697,7 @@ div.external-brand-logo img {
 }
 
 .sh-footer__logistics {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 24px;
   align-content: start;
 }
@@ -715,10 +714,9 @@ div.external-brand-logo img {
   flex-wrap: wrap;
   gap: 26px;
   justify-content: flex-end;
-  margin-top: auto;
-  padding-top: 28px;
-  align-self: end;
-  transform: translateY(8px);
+  grid-column: 2 / 3;
+  justify-self: end;
+  margin-top: 28px;
 }
 
 .sh-footer__trust-badges img {
@@ -728,6 +726,10 @@ div.external-brand-logo img {
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.2));
+}
+
+.sh-footer__copyright {
+  grid-column: 1 / -1;
 }
 
 .sh-footer__trust-badge--anniversary {
