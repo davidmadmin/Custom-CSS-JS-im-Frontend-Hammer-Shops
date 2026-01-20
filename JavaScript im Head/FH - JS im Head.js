@@ -3016,46 +3016,76 @@ fhOnReady(function () {
 
 // Section: Versand Icons ändern & einfügen (läuft auf ALLEN Seiten inkl. Checkout)
 fhOnReady(function () {
-  const shippingIcons = {
-    'ShippingProfileID731': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png',
-    'ShippingProfileID745': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png',
-    'ShippingProfileID710': 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
-  };
+  const shippingIconRules = [
+    {
+      match: function (labelText) {
+        return labelText.includes('dhl');
+      },
+      src: 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png'
+    },
+    {
+      match: function (labelText) {
+        return labelText.includes('general overnight express') || labelText.includes('go express');
+      },
+      src: 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png'
+    },
+    {
+      match: function (labelText) {
+        return labelText.includes('selbstabholung');
+      },
+      src: 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
+    }
+  ];
+
+  function normalizeShippingLabel(text) {
+    return (text || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
   function applyShippingIcons(root = document) {
     const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
+    const labels = scope.querySelectorAll ? scope.querySelectorAll('.shipping-method-select label.provider-select-label') : [];
 
-    Object.keys(shippingIcons).forEach(function (profileId) {
-      const selector = `label[for="${profileId}"]`;
-      const labels = scope.querySelectorAll ? scope.querySelectorAll(selector) : [];
+    Array.prototype.forEach.call(labels, function (label) {
+      const content = label.querySelector('.content');
+      const labelText = normalizeShippingLabel((content && content.textContent) || label.textContent);
 
-      Array.prototype.forEach.call(labels, function (label) {
-        const iconContainers = label.querySelectorAll('.icon');
+      if (!labelText) return;
 
-        Array.prototype.forEach.call(iconContainers, function (iconContainer) {
-          const existingIcons = iconContainer.querySelectorAll('.shipping-icon');
+      const matchedRule = shippingIconRules.find(function (rule) {
+        return rule.match(labelText);
+      });
 
-          Array.prototype.forEach.call(existingIcons, function (existingIcon) {
-            if (existingIcon && existingIcon.parentNode) existingIcon.parentNode.removeChild(existingIcon);
-          });
+      if (!matchedRule) return;
 
-          const defaultIcons = iconContainer.querySelectorAll('img:not(.shipping-icon)');
+      const iconContainers = label.querySelectorAll('.icon');
 
-          Array.prototype.forEach.call(defaultIcons, function (defaultIcon) {
-            if (!defaultIcon) return;
+      Array.prototype.forEach.call(iconContainers, function (iconContainer) {
+        const existingIcons = iconContainer.querySelectorAll('.shipping-icon');
 
-            defaultIcon.classList.add('shipping-icon-hidden');
-            defaultIcon.setAttribute('aria-hidden', 'true');
-            defaultIcon.style.display = 'none';
-          });
-
-          const img = document.createElement('img');
-          img.src = shippingIcons[profileId];
-          img.alt = 'Versandart Icon';
-          img.className = 'shipping-icon';
-
-          iconContainer.appendChild(img);
+        Array.prototype.forEach.call(existingIcons, function (existingIcon) {
+          if (existingIcon && existingIcon.parentNode) existingIcon.parentNode.removeChild(existingIcon);
         });
+
+        const defaultIcons = iconContainer.querySelectorAll('img:not(.shipping-icon)');
+
+        Array.prototype.forEach.call(defaultIcons, function (defaultIcon) {
+          if (!defaultIcon) return;
+
+          defaultIcon.classList.add('shipping-icon-hidden');
+          defaultIcon.setAttribute('aria-hidden', 'true');
+          defaultIcon.style.display = 'none';
+        });
+
+        const img = document.createElement('img');
+        img.src = matchedRule.src;
+        img.alt = 'Versandart Icon';
+        img.className = 'shipping-icon';
+
+        iconContainer.appendChild(img);
       });
     });
   }
