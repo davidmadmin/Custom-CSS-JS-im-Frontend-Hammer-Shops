@@ -718,6 +718,7 @@ div.external-brand-logo img {
   margin-top: auto;
   padding-top: 28px;
   align-self: end;
+  transform: translateY(8px);
 }
 
 .sh-footer__trust-badges img {
@@ -726,7 +727,7 @@ div.external-brand-logo img {
   max-width: 170px;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 6px 6px rgba(15, 23, 42, 0.24));
+  filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.2));
 }
 
 .sh-footer__trust-badge--anniversary {
