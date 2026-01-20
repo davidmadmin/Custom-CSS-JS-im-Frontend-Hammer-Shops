@@ -3678,6 +3678,11 @@ button[data-testing="quantity-btn-decrease"] {
 /* End Section: Icon Visibility Adjustments */
 
 /* Section: Wishlist button styling */
+.widget-add-to-wish-list {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .widget-add-to-wish-list .btn {
   display: inline-flex;
   align-items: center;
@@ -3690,6 +3695,16 @@ button[data-testing="quantity-btn-decrease"] {
   font-weight: 600;
   text-decoration: none;
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.widget-add-to-wish-list .btn .loading-animation,
+.widget-add-to-wish-list .btn .loading,
+.widget-add-to-wish-list .btn .loader,
+.widget-add-to-wish-list .btn .spinner-border,
+.widget-add-to-wish-list .btn .fa-spinner,
+.widget-add-to-wish-list .btn .fa-circle-o-notch {
+  order: -1;
+  margin-right: 8px;
 }
 
 .widget-add-to-wish-list .btn::before {
