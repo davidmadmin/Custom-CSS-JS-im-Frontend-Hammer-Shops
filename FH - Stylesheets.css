@@ -702,6 +702,44 @@ div.external-brand-logo img {
   text-align: right;
 }
 
+.fh-footer__trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  justify-content: flex-end;
+}
+
+.fh-footer__trust-badges img {
+  width: auto;
+  height: 72px;
+  max-width: 170px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.2));
+}
+
+.fh-footer__footer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: end;
+  margin-top: 28px;
+}
+
+.fh-footer__copyright {
+  justify-self: start;
+  align-self: end;
+}
+
+.fh-footer__trust-badges {
+  align-self: end;
+  justify-self: end;
+}
+
+.fh-footer__trust-badge--anniversary {
+  height: 82px;
+}
+
 .fh-footer__brand-logo {
   max-height: 72px;
   width: auto;
@@ -787,6 +825,17 @@ div.external-brand-logo img {
     width: min(100%, 420px);
     justify-items: center;
     text-align: center;
+  }
+
+  .fh-footer__footer-row {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .fh-footer__trust-badges {
+    justify-content: center;
+    justify-self: center;
   }
 
   .fh-footer__shipping-item {
