@@ -3703,8 +3703,7 @@ button[data-testing="quantity-btn-decrease"] {
 .widget-add-to-wish-list .btn .spinner-border,
 .widget-add-to-wish-list .btn .fa-spinner,
 .widget-add-to-wish-list .btn .fa-circle-o-notch {
-  order: -1;
-  margin-right: 8px;
+  display: none;
 }
 
 .widget-add-to-wish-list .btn::before {
