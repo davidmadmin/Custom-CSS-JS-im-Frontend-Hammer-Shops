@@ -724,7 +724,6 @@ div.external-brand-logo img {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 24px;
   align-items: end;
-  margin-top: 28px;
   grid-column: 1 / -1;
 }
 
@@ -739,15 +738,15 @@ div.external-brand-logo img {
 }
 
 .fh-footer__trust-badge--anniversary {
-  height: 110px;
+  height: 110px !important;
 }
 
 .fh-footer__trust-badge--company {
-  height: 60px;
+  height: 60px !important;
 }
 
 .fh-footer__trust-badge--ssl {
-  height: 85px;
+  height: 85px !important;
 }
 
 .fh-footer__brand-logo {
