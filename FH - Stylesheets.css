@@ -705,7 +705,7 @@ div.external-brand-logo img {
 .fh-footer__trust-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 26px;
   justify-content: flex-end;
   margin-top: 8px;
 }
@@ -716,6 +716,11 @@ div.external-brand-logo img {
   max-width: 170px;
   object-fit: contain;
   display: block;
+  filter: drop-shadow(0 12px 16px rgba(15, 23, 42, 0.22));
+}
+
+.fh-footer__trust-badge--anniversary {
+  height: 82px;
 }
 
 .fh-footer__brand-logo {
