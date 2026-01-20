@@ -731,6 +731,7 @@ div.external-brand-logo img {
   gap: 24px;
   align-items: end;
   margin-top: 28px;
+  grid-column: 1 / -1;
 }
 
 .sh-footer__copyright {
