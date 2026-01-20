@@ -705,7 +705,7 @@ div.external-brand-logo img {
 .fh-footer__trust-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 26px;
+  gap: 32px;
   justify-content: flex-end;
 }
 
