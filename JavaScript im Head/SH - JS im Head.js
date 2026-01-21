@@ -8,6 +8,23 @@ function shOnReady(callback) {
   callback();
 }
 
+// Section: SH cookie settings link
+shOnReady(function () {
+  function handleCookieSettingsClick(event) {
+    const trigger = event.target.closest('[data-sh-cookie-settings]');
+
+    if (!trigger) return;
+
+    event.preventDefault();
+
+    if (window.__ucCmp && typeof window.__ucCmp.showSecondLayer === 'function') {
+      window.__ucCmp.showSecondLayer();
+    }
+  }
+
+  document.addEventListener('click', handleCookieSettingsClick);
+});
+
 // Section: sh account menu toggle behaviour
 shOnReady(function () {
   function resolveGreeting(defaultGreeting) {
