@@ -3687,6 +3687,13 @@ button[data-testing="quantity-btn-decrease"] {
 }
 /* End Section: Method list item label padding */
 
+/* Section: Payment method list item rounded corners */
+.page-checkout .widget-rounded-corners .payment-method-select .cmp-method-list .method-list-item:nth-child(2) {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+/* End Section: Payment method list item rounded corners */
+
 /* Section: Basket preview totals visibility */
 :root .cmp-totals dt,
 :root .cmp-totals dd {
