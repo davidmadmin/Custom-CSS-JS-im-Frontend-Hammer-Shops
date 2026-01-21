@@ -97,6 +97,7 @@ Die Version **5.0.78** der offiziellen plentyShop-LTS-Plugins (Ceres & IO) bilde
 * Der Header und Footer werden in PlentyLTS vollständig neu aufgebaut. Verwende dieses Repository, um die benötigten HTML-Gerüste (innerhalb der zulässigen Content-Boxen), CSS-Overrides und unterstützenden JavaScript-Hooks vorzubereiten.
 * Inline-CSS darf keine eigenen Skripte einbinden; dynamisches Verhalten wird über bestehende oder hier gepflegte JavaScript-Dateien gelöst.
 * Achte darauf, dass Anpassungen für **SH** und **FH** Shops parallel gepflegt werden und konsistent mit den Ceres-Vorlagen sind.
+* Im Basket-Preview müssen die Ceres-LayoutContainer-Slots (z. B. `Ceres::BasketPreview.BeforeCheckoutButton`) erhalten bleiben, damit Plugins wie PayPal Express ihre Buttons korrekt injizieren können.
 
 ## Ergänzende Features über Custom JS/CSS
 
