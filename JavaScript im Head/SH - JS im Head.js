@@ -2560,6 +2560,9 @@ shOnReady(function () {
   const BASKET_COMPONENT = 'basket-preview';
   const FOOTER_SELECTOR = '.basket-preview-footer';
   const FUNDING_SELECTOR = '[data-paypal-funding-source]';
+  const PAYPAL_CONTAINER_CLASS = 'basket-preview-paypal';
+  const PAYPAL_BUTTON_ID = 'smart-basket-preview';
+  const PAYPAL_FUNDING_FALLBACK = 'paypal';
   const PAYPAL_RENDERED_ATTR = 'data-paypal-rendered';
   const MAX_POLL_ATTEMPTS = 25;
   const POLL_INTERVAL = 200;
@@ -2584,23 +2587,52 @@ shOnReady(function () {
     return footer.getAttribute(PAYPAL_RENDERED_ATTR) === 'true';
   }
 
-  function hasFundingSource(footer) {
-    if (!footer) return false;
+  function resolveFundingSource() {
+    const fundingElement = document.querySelector(FUNDING_SELECTOR);
 
-    const fundingElement = footer.querySelector(FUNDING_SELECTOR);
+    if (fundingElement) {
+      const fundingValue = fundingElement.getAttribute('data-paypal-funding-source');
+      if (fundingValue) return fundingValue;
+    }
 
-    if (!fundingElement) return false;
+    return PAYPAL_FUNDING_FALLBACK;
+  }
 
-    const fundingValue = fundingElement.getAttribute('data-paypal-funding-source');
+  function ensurePayPalContainer(footer) {
+    if (!footer) return null;
 
-    return Boolean(fundingValue);
+    let container = footer.querySelector('.' + PAYPAL_CONTAINER_CLASS);
+
+    if (!container) {
+      container = document.createElement('div');
+      container.className = PAYPAL_CONTAINER_CLASS;
+      footer.appendChild(container);
+    }
+
+    let button = container.querySelector('#' + PAYPAL_BUTTON_ID);
+
+    if (!button) {
+      button = document.createElement('div');
+      button.id = PAYPAL_BUTTON_ID;
+      button.className = 'paypal-smart-button';
+      container.appendChild(button);
+    }
+
+    const fundingSource = resolveFundingSource();
+
+    if (fundingSource) {
+      button.setAttribute('data-paypal-funding-source', fundingSource);
+    }
+
+    return button;
   }
 
   function tryRender() {
     const footer = document.querySelector(FOOTER_SELECTOR);
+    const button = ensurePayPalContainer(footer);
 
-    if (!footer || hasRendered(footer) || !isPayPalReady()) return false;
-    if (!hasFundingSource(footer)) return false;
+    if (!footer || !button || hasRendered(footer) || !isPayPalReady()) return false;
+    if (!button.getAttribute('data-paypal-funding-source')) return false;
 
     window.renderPayPalButtons();
     markRendered(footer);
