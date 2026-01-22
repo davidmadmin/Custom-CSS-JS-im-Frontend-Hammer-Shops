@@ -3566,6 +3566,77 @@ shOnReady(function () {
 });
 // End Section: Trusted Shops Badge toggle during search overlay
 
+// Section: PayPal Smart Button in basket preview
+shOnReady(function () {
+  var PAYPAL_BUTTON_ID = 'basketPreview';
+  var CONTAINER_ID = 'paypal-button-container_' + PAYPAL_BUTTON_ID;
+  var CONTAINER_CLASS = 'paypalSmartButtons basket-preview-paypal';
+  var PREVIEW_SELECTOR = '.basket-preview';
+  var FOOTER_SELECTOR = '.basket-preview-footer';
+  var payPalListenerAttached = false;
+
+  function hasBasketItems(preview) {
+    return Boolean(preview.querySelector('.basket-preview-item, [data-basket-item]'));
+  }
+
+  function ensureContainer(footer) {
+    var existing = footer.querySelector('#' + CONTAINER_ID);
+
+    if (existing) return existing;
+
+    var container = document.createElement('div');
+    container.id = CONTAINER_ID;
+    container.className = CONTAINER_CLASS;
+    container.setAttribute('data-uuid', PAYPAL_BUTTON_ID);
+    footer.insertBefore(container, footer.firstChild);
+    return container;
+  }
+
+  function renderPayPalButton() {
+    var preview = document.querySelector(PREVIEW_SELECTOR);
+    if (!preview) return;
+
+    var footer = preview.querySelector(FOOTER_SELECTOR);
+    if (!footer) return;
+
+    var container = ensureContainer(footer);
+
+    if (!hasBasketItems(preview)) {
+      container.setAttribute('hidden', '');
+      return;
+    }
+
+    container.removeAttribute('hidden');
+
+    if (container.getAttribute('data-paypal-rendered') === 'true') return;
+
+    if (typeof renderPayPalButtons !== 'function') return;
+
+    renderPayPalButtons(PAYPAL_BUTTON_ID, 'paypal', 'checkout', 'pill', 'gold');
+    container.setAttribute('data-paypal-rendered', 'true');
+  }
+
+  function ensurePayPalListener() {
+    if (payPalListenerAttached) return;
+    document.addEventListener('payPalScriptInitialized', renderPayPalButton);
+    payPalListenerAttached = true;
+  }
+
+  var observer = new MutationObserver(function () {
+    renderPayPalButton();
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  renderPayPalButton();
+
+  if (typeof paypal_plenty_sdk === 'undefined' || typeof renderPayPalButtons !== 'function') {
+    ensurePayPalListener();
+  }
+});
+// End Section: PayPal Smart Button in basket preview
+
+
 
 
 // Section: Warenkorbvorschau "Warenkorb" zu "Weiter einkaufen" Funktion

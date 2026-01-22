@@ -3618,6 +3618,18 @@ button[data-testing="quantity-btn-decrease"] {
 
 /* End Section: Warenkorb->Weiter einkaufen Button Styling */
 
+/* Section: PayPal Smart Button in basket preview */
+.basket-preview-footer .basket-preview-paypal {
+  margin-top: 12px;
+  width: 100%;
+}
+
+.basket-preview-footer .basket-preview-paypal[hidden] {
+  display: none;
+}
+/* End Section: PayPal Smart Button in basket preview */
+
+
 /* Section: Controls List Icon Margin */
 #controlsList .fa {
   margin-right: 0px !important;

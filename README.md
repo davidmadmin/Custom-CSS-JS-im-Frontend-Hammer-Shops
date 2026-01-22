@@ -117,6 +117,9 @@ Variiert den Platzhaltertext im Suchfeld, solange das Feld sichtbar, aber nicht 
 ### „Weiter einkaufen“-Button im Warenkorb-Overlay
 Benennt die Schaltfläche „Warenkorb“ im Overlay um, ergänzt ein Pfeil-Icon und sorgt dafür, dass der Klick das Overlay schließt, statt auf die Warenkorbseite zu wechseln.
 
+### PayPal Smart Button in der Warenkorbvorschau
+Rendert die PayPal-Smart-Buttons im Warenkorb-Overlay, sobald der PayPal-Checkout geladen ist, und blendet sie aus, wenn keine Artikel im Warenkorb liegen.
+
 ## Weiterer Fahrplan
 
 * Bestehende Skripte dienen nur als Zwischenlösung – langfristig sollen daraus eigenständige, wartbare Plugins entstehen.
