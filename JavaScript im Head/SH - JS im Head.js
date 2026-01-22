@@ -2555,6 +2555,103 @@ shOnReady(function () {
 });
 // End Section: Basket preview attribute cleanup
 
+// Section: PayPal render after basket preview lazy load
+shOnReady(function () {
+  const BASKET_COMPONENT = 'basket-preview';
+  const FOOTER_SELECTOR = '.basket-preview-footer';
+  const PAYPAL_RENDERED_ATTR = 'data-paypal-rendered';
+  const MAX_POLL_ATTEMPTS = 25;
+  const POLL_INTERVAL = 200;
+
+  function getStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+    if (window.ceresStore) return window.ceresStore;
+    return null;
+  }
+
+  function isPayPalReady() {
+    return typeof window.renderPayPalButtons === 'function';
+  }
+
+  function markRendered(footer) {
+    if (!footer) return;
+    footer.setAttribute(PAYPAL_RENDERED_ATTR, 'true');
+  }
+
+  function hasRendered(footer) {
+    if (!footer) return false;
+    return footer.getAttribute(PAYPAL_RENDERED_ATTR) === 'true';
+  }
+
+  function tryRender() {
+    const footer = document.querySelector(FOOTER_SELECTOR);
+
+    if (!footer || hasRendered(footer) || !isPayPalReady()) return false;
+
+    window.renderPayPalButtons();
+    markRendered(footer);
+    return true;
+  }
+
+  let pollTimer = null;
+
+  function startPolling() {
+    if (pollTimer) return;
+
+    let attempts = 0;
+
+    pollTimer = window.setInterval(function () {
+      attempts += 1;
+
+      if (tryRender() || attempts >= MAX_POLL_ATTEMPTS) {
+        window.clearInterval(pollTimer);
+        pollTimer = null;
+      }
+    }, POLL_INTERVAL);
+  }
+
+  function handleLazyComponentLoaded() {
+    window.requestAnimationFrame(startPolling);
+  }
+
+  function subscribeLazyComponentLoaded() {
+    const store = getStore();
+
+    if (!store || typeof store.subscribe !== 'function') return false;
+
+    store.subscribe(function (mutation) {
+      if (!mutation) return;
+
+      const payload = mutation.payload || {};
+      const type = mutation.type || '';
+      const isSetComponent = type === 'setComponent' || type.endsWith('/setComponent');
+
+      if (!isSetComponent) return;
+
+      if (payload.component === BASKET_COMPONENT && payload.loaded) {
+        handleLazyComponentLoaded();
+      }
+    });
+
+    return true;
+  }
+
+  const store = getStore();
+  const alreadyLoaded =
+    store &&
+    store.state &&
+    store.state.lazyComponent &&
+    store.state.lazyComponent.components &&
+    store.state.lazyComponent.components[BASKET_COMPONENT];
+
+  if (alreadyLoaded) handleLazyComponentLoaded();
+
+  if (!subscribeLazyComponentLoaded()) {
+    startPolling();
+  }
+});
+// End Section: PayPal render after basket preview lazy load
+
 // Section: Ensure auth modals load their Vue components before opening
 shOnReady(function () {
   function getVueStore() {
