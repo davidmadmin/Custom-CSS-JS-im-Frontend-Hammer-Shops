@@ -3651,6 +3651,36 @@ fhOnReady(function () {
 
 })();
 
+// Section: FH availability text sync on item pages
+fhOnReady(function () {
+  if (!document.body || !document.body.classList.contains('page-singleitem')) return;
+
+  function syncAvailabilityText() {
+    var availabilityText = document.querySelector('#kjvItemAvailabilityText.is-sold-out');
+    if (!availabilityText) return false;
+
+    var badgeText = document.querySelector('.widget-availability .availability.is-sold-out > span');
+    if (!badgeText) return false;
+
+    var nextText = badgeText.textContent.trim();
+    if (!nextText) return false;
+
+    if (availabilityText.textContent !== nextText) {
+      availabilityText.textContent = nextText;
+    }
+
+    return true;
+  }
+
+  if (syncAvailabilityText()) return;
+
+  var observer = new MutationObserver(function () {
+    if (syncAvailabilityText()) observer.disconnect();
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+
 // Section: Signature console log by David M. Abdin
 (function fhSignatureLog() {
   var headingStyle = [
