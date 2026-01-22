@@ -3672,13 +3672,17 @@ fhOnReady(function () {
     return true;
   }
 
-  if (syncAvailabilityText()) return;
+  syncAvailabilityText();
 
   var observer = new MutationObserver(function () {
-    if (syncAvailabilityText()) observer.disconnect();
+    syncAvailabilityText();
   });
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
 });
 
 // Section: Signature console log by David M. Abdin
