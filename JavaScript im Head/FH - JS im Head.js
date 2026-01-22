@@ -3656,14 +3656,13 @@ fhOnReady(function () {
   if (!document.body || !document.body.classList.contains('page-singleitem')) return;
 
   function syncAvailabilityText() {
-    var availabilityText = document.querySelector('#kjvItemAvailabilityText.is-sold-out');
+    var availabilityText = document.querySelector('#kjvItemAvailabilityText');
     if (!availabilityText) return false;
 
-    var badgeText = document.querySelector('.widget-availability .availability.is-sold-out > span');
+    var badgeText = document.querySelector('.widget-availability .availability > span');
     if (!badgeText) return false;
 
-    var nextText = badgeText.textContent.trim();
-    if (!nextText) return false;
+    var nextText = badgeText.textContent ? badgeText.textContent.trim() : '';
 
     if (availabilityText.textContent !== nextText) {
       availabilityText.textContent = nextText;
