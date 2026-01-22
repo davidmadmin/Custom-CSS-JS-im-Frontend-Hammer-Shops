@@ -2559,6 +2559,7 @@ shOnReady(function () {
 shOnReady(function () {
   const BASKET_COMPONENT = 'basket-preview';
   const FOOTER_SELECTOR = '.basket-preview-footer';
+  const FUNDING_SELECTOR = '[data-paypal-funding-source]';
   const PAYPAL_RENDERED_ATTR = 'data-paypal-rendered';
   const MAX_POLL_ATTEMPTS = 25;
   const POLL_INTERVAL = 200;
@@ -2583,10 +2584,23 @@ shOnReady(function () {
     return footer.getAttribute(PAYPAL_RENDERED_ATTR) === 'true';
   }
 
+  function hasFundingSource(footer) {
+    if (!footer) return false;
+
+    const fundingElement = footer.querySelector(FUNDING_SELECTOR);
+
+    if (!fundingElement) return false;
+
+    const fundingValue = fundingElement.getAttribute('data-paypal-funding-source');
+
+    return Boolean(fundingValue);
+  }
+
   function tryRender() {
     const footer = document.querySelector(FOOTER_SELECTOR);
 
     if (!footer || hasRendered(footer) || !isPayPalReady()) return false;
+    if (!hasFundingSource(footer)) return false;
 
     window.renderPayPalButtons();
     markRendered(footer);
