@@ -3850,3 +3850,18 @@ button[data-testing="quantity-btn-decrease"] {
     margin-top: 30px
 }
 /* End Section: Paqato Track & Trace Styling */
+
+/* Section: PayPal Express Checkout */
+.paypalSmartButtons div {
+    margin-left: auto; /* fixes weird margin */
+}
+
+.page-checkout .widget-fast-checkout .fc-container_left-inner .cmp-method-list .method-list-item[data-id="6001"] {
+  display: none !important;
+}
+
+body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) #smart,
+body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .paypalSmartButtons {
+  display: none !important;
+}
+/* End Section: PayPal Express Checkout */
