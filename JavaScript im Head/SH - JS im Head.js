@@ -2658,6 +2658,7 @@ shOnReady(function () {
     const availabilityText = document.querySelector(availabilityTextSelector);
     const availabilityIcon = document.querySelector('#kjvItemAvailabilityIcon, .availability .availability-icon, [data-testing="availability-icon"]');
     const availabilityContainer = document.querySelector(availabilityContainerSelector);
+    const smartButton = document.querySelector('#smart.paypal-smart-button, #smart.widget.paypal-smart-button');
 
     if (availabilityText) {
       if (!availabilityText.id) availabilityText.id = 'kjvItemAvailabilityText';
@@ -2678,11 +2679,15 @@ shOnReady(function () {
       availabilityContainer.classList.toggle('is-available', !!isSalable);
     }
 
+    window.shAvailabilityIsSalable = !!isSalable;
+
     window.shAvailabilityHideCountdown = !isSalable;
 
     const countdown = document.getElementById('cutoff-countdown');
 
     if (countdown) countdown.style.display = isSalable ? '' : 'none';
+
+    if (smartButton) smartButton.style.display = isSalable ? '' : 'none';
   }
 
   function bootstrapAvailabilityWatcher() {
@@ -2768,6 +2773,18 @@ shOnReady(function () {
   }
 
   startAvailabilityHandling(6);
+
+  const smartButtonObserver = new MutationObserver(function () {
+    if (typeof window.shAvailabilityIsSalable !== 'boolean') return;
+
+    const smartButton = document.querySelector('#smart.paypal-smart-button, #smart.widget.paypal-smart-button');
+
+    if (!smartButton) return;
+
+    smartButton.style.display = window.shAvailabilityIsSalable ? '' : 'none';
+  });
+
+  smartButtonObserver.observe(document.body, { childList: true, subtree: true });
 });
 // End Section: Availability state handling for product page
 
