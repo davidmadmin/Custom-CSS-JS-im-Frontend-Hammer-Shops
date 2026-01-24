@@ -51,15 +51,35 @@
       </form>
     </div>
     <div class="sh-header__actions">
-      <a href="/wish-list" aria-label="{{ trans('Ceres::Template.wishList') }}" class="sh-header__icon-button">
-        <span class="sh-header__badge" aria-hidden="true">
-          <span v-text="$store.state.basket.isBasketInitiallyLoaded ? $store.getters.wishListCount : {{ wishListCount | default(0) }}">{{ wishListCount }}</span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="sh-header__icon">
-          <path d="M7 4h10a1 1 0 0 1 1 1v15l-6-3-6 3V5a1 1 0 0 1 1-1z"></path>
-        </svg>
-        <span class="sh-header__sr-only">{{ trans("Ceres::Template.wishList") }}</span>
-      </a>
+      <div class="sh-wishlist-menu-container position-relative" data-sh-wishlist-menu-container>
+        <button
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="sh-wishlist-menu"
+          aria-label="{{ trans('Ceres::Template.wishList') }}"
+          data-sh-wishlist-menu-toggle
+          class="sh-header__icon-button"
+        >
+          <span class="sh-header__badge" aria-hidden="true">
+            <span v-text="$store.state.basket.isBasketInitiallyLoaded ? $store.getters.wishListCount : {{ wishListCount | default(0) }}">{{ wishListCount }}</span>
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="sh-header__icon">
+            <path d="M7 4h10a1 1 0 0 1 1 1v15l-6-3-6 3V5a1 1 0 0 1 1-1z"></path>
+          </svg>
+          <span class="sh-header__sr-only">{{ trans("Ceres::Template.wishList") }}</span>
+        </button>
+        <div id="sh-wishlist-menu" data-sh-wishlist-menu aria-hidden="true" class="sh-header__panel sh-header__panel--wishlist">
+          <div class="sh-header__panel-arrow"></div>
+          <div class="sh-header__panel-header">
+            <div class="sh-header__panel-title">{{ trans("Ceres::Template.wishList") }}</div>
+            <a href="/wish-list" class="sh-header__panel-link sh-header__panel-link--wishlist">Zur Merkliste</a>
+          </div>
+          <div class="sh-header__wishlist-body" data-sh-wishlist-body>
+            <wish-list></wish-list>
+          </div>
+        </div>
+      </div>
       <div class="sh-account-menu-container position-relative" data-sh-account-menu-container>
         <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="sh-account-menu" aria-label="Dein Konto" data-sh-account-menu-toggle class="sh-header__icon-button">
           <span class="sh-header__status-indicator" :class="{ 'is-logged-in': $store.getters.isLoggedIn }" aria-hidden="true"></span>

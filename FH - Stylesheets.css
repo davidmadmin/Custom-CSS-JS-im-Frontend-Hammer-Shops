@@ -1145,6 +1145,25 @@ a.logo {
   width: 260px;
 }
 
+.fh-header__panel--wishlist {
+  width: 520px;
+}
+
+.fh-header__panel-link--wishlist {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fh-header__wishlist-body {
+  max-height: min(70vh, 540px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.fh-header__wishlist-body .vat {
+  display: none;
+}
+
 .fh-header__panel-arrow {
   position: absolute;
   top: -10px;

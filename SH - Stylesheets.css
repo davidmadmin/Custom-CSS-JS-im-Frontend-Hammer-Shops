@@ -1154,6 +1154,25 @@ a.logo {
   width: 260px;
 }
 
+.sh-header__panel--wishlist {
+  width: 520px;
+}
+
+.sh-header__panel-link--wishlist {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sh-header__wishlist-body {
+  max-height: min(70vh, 540px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.sh-header__wishlist-body .vat {
+  display: none;
+}
+
 .sh-header__panel-arrow {
   position: absolute;
   top: -10px;

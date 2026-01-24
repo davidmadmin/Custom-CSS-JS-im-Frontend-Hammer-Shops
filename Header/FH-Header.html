@@ -51,15 +51,35 @@
       </form>
     </div>
     <div class="fh-header__actions">
-      <a href="/wish-list" aria-label="{{ trans('Ceres::Template.wishList') }}" class="fh-header__icon-button">
-        <span class="fh-header__badge" aria-hidden="true">
-          <span v-text="$store.state.basket.isBasketInitiallyLoaded ? $store.getters.wishListCount : {{ wishListCount | default(0) }}">{{ wishListCount }}</span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
-          <path d="M7 4h10a1 1 0 0 1 1 1v15l-6-3-6 3V5a1 1 0 0 1 1-1z"></path>
-        </svg>
-        <span class="fh-header__sr-only">{{ trans("Ceres::Template.wishList") }}</span>
-      </a>
+      <div class="fh-wishlist-menu-container position-relative" data-fh-wishlist-menu-container>
+        <button
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="fh-wishlist-menu"
+          aria-label="{{ trans('Ceres::Template.wishList') }}"
+          data-fh-wishlist-menu-toggle
+          class="fh-header__icon-button"
+        >
+          <span class="fh-header__badge" aria-hidden="true">
+            <span v-text="$store.state.basket.isBasketInitiallyLoaded ? $store.getters.wishListCount : {{ wishListCount | default(0) }}">{{ wishListCount }}</span>
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="fh-header__icon">
+            <path d="M7 4h10a1 1 0 0 1 1 1v15l-6-3-6 3V5a1 1 0 0 1 1-1z"></path>
+          </svg>
+          <span class="fh-header__sr-only">{{ trans("Ceres::Template.wishList") }}</span>
+        </button>
+        <div id="fh-wishlist-menu" data-fh-wishlist-menu aria-hidden="true" class="fh-header__panel fh-header__panel--wishlist">
+          <div class="fh-header__panel-arrow"></div>
+          <div class="fh-header__panel-header">
+            <div class="fh-header__panel-title">{{ trans("Ceres::Template.wishList") }}</div>
+            <a href="/wish-list" class="fh-header__panel-link fh-header__panel-link--wishlist">Zur Merkliste</a>
+          </div>
+          <div class="fh-header__wishlist-body" data-fh-wishlist-body>
+            <wish-list></wish-list>
+          </div>
+        </div>
+      </div>
       <div class="fh-account-menu-container position-relative" data-fh-account-menu-container>
         <button type="button" aria-haspopup="true" aria-expanded="false" aria-controls="fh-account-menu" aria-label="Dein Konto" data-fh-account-menu-toggle class="fh-header__icon-button">
           <span class="fh-header__status-indicator" :class="{ 'is-logged-in': $store.getters.isLoggedIn }" aria-hidden="true"></span>

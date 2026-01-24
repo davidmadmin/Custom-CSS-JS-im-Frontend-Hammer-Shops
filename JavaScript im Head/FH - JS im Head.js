@@ -3701,6 +3701,137 @@ fhOnReady(function () {
   });
 });
 
+// Section: FH wishlist dropdown behaviour
+fhOnReady(function () {
+  const container = document.querySelector('[data-fh-wishlist-menu-container]');
+
+  if (!container) return;
+
+  const toggleButton = container.querySelector('[data-fh-wishlist-menu-toggle]');
+  const menu = container.querySelector('[data-fh-wishlist-menu]');
+
+  if (!toggleButton || !menu) return;
+
+  let isOpen = false;
+  let storeWatcherCleanup = null;
+  let refreshTimeout = null;
+  let storeRetryCount = 0;
+
+  function openMenu() {
+    if (isOpen) return;
+
+    menu.style.display = 'block';
+    menu.setAttribute('aria-hidden', 'false');
+    toggleButton.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeydown);
+    isOpen = true;
+
+    const store = getVueStore();
+
+    if (store) {
+      ensureStoreWatcher(store);
+      scheduleWishListRefresh(store);
+    }
+  }
+
+  function closeMenu() {
+    if (!isOpen) return;
+
+    menu.style.display = 'none';
+    menu.setAttribute('aria-hidden', 'true');
+    toggleButton.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleKeydown);
+    isOpen = false;
+  }
+
+  function handleDocumentClick(event) {
+    if (!container.contains(event.target)) closeMenu();
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+      toggleButton.focus();
+    }
+  }
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isOpen) closeMenu();
+    else openMenu();
+  });
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function scheduleWishListRefresh(store) {
+    if (!store) return;
+
+    if (refreshTimeout) {
+      window.clearTimeout(refreshTimeout);
+      refreshTimeout = null;
+    }
+
+    refreshTimeout = window.setTimeout(function () {
+      refreshTimeout = null;
+      forceWishListRefresh(store);
+    }, 150);
+  }
+
+  function forceWishListRefresh(store) {
+    if (!store || !store.state || !store.state.wishList) return;
+
+    if (store.state.wishList.isWishListInitiallyLoading) {
+      store.state.wishList.isWishListInitiallyLoading = false;
+    }
+
+    if (store._actions && store._actions.initWishListItems) {
+      store.dispatch('initWishListItems');
+    }
+  }
+
+  function ensureStoreWatcher(store) {
+    if (!store || typeof store.watch !== 'function' || storeWatcherCleanup) return;
+
+    storeWatcherCleanup = store.watch(
+      function (state) {
+        if (!state || !state.wishList || !Array.isArray(state.wishList.wishListIds)) return '';
+
+        return state.wishList.wishListIds.join(',');
+      },
+      function () {
+        scheduleWishListRefresh(store);
+      }
+    );
+  }
+
+  function resolveStore() {
+    const store = getVueStore();
+
+    if (store) {
+      ensureStoreWatcher(store);
+      if (isOpen) scheduleWishListRefresh(store);
+      return;
+    }
+
+    storeRetryCount += 1;
+    if (storeRetryCount < 20) {
+      window.setTimeout(resolveStore, 300);
+    }
+  }
+
+  resolveStore();
+});
+
 // Section: Signature console log by David M. Abdin
 (function fhSignatureLog() {
   var headingStyle = [
