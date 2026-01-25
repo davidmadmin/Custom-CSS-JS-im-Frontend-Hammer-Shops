@@ -3761,20 +3761,28 @@ shOnReady(function () {
 
     refreshTimeout = window.setTimeout(function () {
       refreshTimeout = null;
-      forceWishListRefresh(store);
+      refreshWishListItemsSilently(store);
     }, 150);
   }
 
-  function forceWishListRefresh(store) {
+  function refreshWishListItemsSilently(store) {
     if (!store || !store.state || !store.state.wishList) return;
-
-    if (store.state.wishList.isWishListInitiallyLoading) {
-      store.state.wishList.isWishListInitiallyLoading = false;
+    if (!window.ApiService || typeof window.ApiService.get !== 'function') {
+      if (store._actions && store._actions.initWishListItems && (!store.state.wishList.wishListItems || !store.state.wishList.wishListItems.length)) {
+        store.dispatch('initWishListItems');
+      }
+      return;
     }
 
-    if (store._actions && store._actions.initWishListItems) {
-      store.dispatch('initWishListItems');
-    }
+    window.ApiService.get('/rest/io/itemWishList')
+      .done(function (response) {
+        if (store._mutations && store._mutations.setInactiveVariationIds) {
+          store.commit('setInactiveVariationIds', response.inactiveVariationIds);
+        }
+        if (store._mutations && store._mutations.setWishListItems) {
+          store.commit('setWishListItems', response.documents);
+        }
+      });
   }
 
   function ensureStoreWatcher(store) {
@@ -3797,7 +3805,7 @@ shOnReady(function () {
 
     if (store) {
       ensureStoreWatcher(store);
-      if (isOpen) scheduleWishListRefresh(store);
+      scheduleWishListRefresh(store);
       return;
     }
 
