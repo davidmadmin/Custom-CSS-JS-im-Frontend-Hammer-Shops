@@ -117,6 +117,9 @@ Variiert den Platzhaltertext im Suchfeld, solange das Feld sichtbar, aber nicht 
 ### „Weiter einkaufen“-Button im Warenkorb-Overlay
 Benennt die Schaltfläche „Warenkorb“ im Overlay um, ergänzt ein Pfeil-Icon und sorgt dafür, dass der Klick das Overlay schließt, statt auf die Warenkorbseite zu wechseln.
 
+### Inhaltsverzeichnis für Rechtstexte (GTM-Snippet)
+Erzeugt für rechtliche Content-Seiten ein dynamisches Inhaltsverzeichnis aus allen `h1`, `h2` und `h3`-Elementen, sofern je Typ mehr als eine Überschrift vorhanden ist. Die Ausgabe wird per Google Tag Manager eingebunden und liegt unter `Javascript/GTM Snippets/Legal-Table-of-Contents.js`.
+
 ## Weiterer Fahrplan
 
 * Bestehende Skripte dienen nur als Zwischenlösung – langfristig sollen daraus eigenständige, wartbare Plugins entstehen.
