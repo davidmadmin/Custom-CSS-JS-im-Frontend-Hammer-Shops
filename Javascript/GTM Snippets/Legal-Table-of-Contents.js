@@ -85,6 +85,7 @@
 
   const placeholder = document.getElementById('legal-toc');
   if (!placeholder) {
+    console.error('Legal TOC placeholder with id "legal-toc" was not found.');
     return;
   }
 
