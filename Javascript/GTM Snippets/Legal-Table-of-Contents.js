@@ -257,6 +257,14 @@
       }
     });
 
+    var divider = document.createElement('hr');
+    nav.appendChild(divider);
+
+    var itkanzleiImage = document.createElement('img');
+    itkanzleiImage.id = 'itkanzleiI_img_copyright';
+    itkanzleiImage.alt = 'Datenschutzerklärung der IT-Recht Kanzlei';
+    nav.appendChild(itkanzleiImage);
+
     // Place it: replace placeholder if present, otherwise insert before container
     var placeholder = document.getElementById(TOC_PLACEHOLDER_ID);
     if (placeholder) {
