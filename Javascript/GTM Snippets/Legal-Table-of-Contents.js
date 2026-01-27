@@ -57,6 +57,7 @@
   };
 
   const nav = document.createElement('nav');
+  nav.id = 'legal-toc';
   nav.className = 'legal-toc';
   nav.setAttribute('aria-label', 'Inhaltsverzeichnis');
 
@@ -82,11 +83,10 @@
 
   nav.appendChild(list);
 
-  const main = document.querySelector('main') || document.body;
-  const insertBefore = main.querySelector(tocSelector) || main.firstChild;
-  if (!insertBefore) {
+  const placeholder = document.getElementById('legal-toc');
+  if (!placeholder) {
     return;
   }
 
-  main.insertBefore(nav, insertBefore);
+  placeholder.replaceWith(nav);
 })();
