@@ -257,6 +257,21 @@
       }
     });
 
+    var divider = document.createElement('hr');
+    nav.appendChild(divider);
+
+    var itkanzleiImage = document.createElement('img');
+    itkanzleiImage.id = 'itkanzleiI_img_copyright';
+    itkanzleiImage.alt = 'Datenschutzerklärung der IT-Recht Kanzlei';
+    itkanzleiImage.style.maxWidth = '100%';
+    itkanzleiImage.style.height = 'auto';
+    itkanzleiImage.style.display = 'block';
+    var sourceImage = document.getElementById('itkanzlei_img_copyright');
+    if (sourceImage && sourceImage.getAttribute('src')) {
+      itkanzleiImage.src = sourceImage.getAttribute('src');
+    }
+    nav.appendChild(itkanzleiImage);
+
     // Place it: replace placeholder if present, otherwise insert before container
     var placeholder = document.getElementById(TOC_PLACEHOLDER_ID);
     if (placeholder) {
