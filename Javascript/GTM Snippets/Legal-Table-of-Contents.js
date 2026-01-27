@@ -263,6 +263,10 @@
     var itkanzleiImage = document.createElement('img');
     itkanzleiImage.id = 'itkanzleiI_img_copyright';
     itkanzleiImage.alt = 'Datenschutzerklärung der IT-Recht Kanzlei';
+    var sourceImage = document.getElementById('itkanzlei_img_copyright');
+    if (sourceImage && sourceImage.getAttribute('src')) {
+      itkanzleiImage.src = sourceImage.getAttribute('src');
+    }
     nav.appendChild(itkanzleiImage);
 
     // Place it: replace placeholder if present, otherwise insert before container
