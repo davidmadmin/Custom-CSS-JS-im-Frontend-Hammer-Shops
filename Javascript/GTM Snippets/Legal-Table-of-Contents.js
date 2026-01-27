@@ -5,12 +5,31 @@
   var CONTAINER_SELECTOR = '.widget-legal-texts';
   var HEADING_SELECTOR = 'h1, h2, h3';
 
+  // Sticky header height (px) + a little breathing room
+  var HEADER_OFFSET_PX = 250;
+
+  function injectScrollOffsetCss() {
+    if (document.getElementById('legal-toc-scroll-offset-css')) return;
+
+    var style = document.createElement('style');
+    style.id = 'legal-toc-scroll-offset-css';
+    style.type = 'text/css';
+    style.textContent =
+      CONTAINER_SELECTOR + ' ' + HEADING_SELECTOR + ' {' +
+      '  scroll-margin-top: ' + HEADER_OFFSET_PX + 'px;' +
+      '}' +
+      // optional: if you ever land with a hash on initial load, help ensure offset is respected
+      'html { scroll-behavior: smooth; }';
+
+    document.head.appendChild(style);
+  }
+
   function slugify(text) {
     return (text || '')
       .trim()
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9\\s-]/g, '')
+      .replace(/\\s+/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '') || 'toc-heading';
   }
@@ -23,7 +42,9 @@
     if (!container) return;
 
     var headings = Array.prototype.slice.call(container.querySelectorAll(HEADING_SELECTOR));
-    if (headings.length < 2) return; // adjust if you want it with 1 heading
+    if (headings.length < 2) return;
+
+    injectScrollOffsetCss();
 
     // Ensure unique ids (global uniqueness)
     var slugCounts = Object.create(null);
@@ -77,8 +98,26 @@
       var a = document.createElement('a');
       a.href = '#' + id;
       a.textContent = heading.textContent.trim();
-      li.appendChild(a);
 
+      // JS fallback offset scroll (works even if CSS scroll-margin is ignored)
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById(id);
+        if (!target) return;
+
+        var y = target.getBoundingClientRect().top + window.pageYOffset - HEADER_OFFSET_PX;
+
+        // Update URL hash without jumping
+        if (history && history.pushState) {
+          history.pushState(null, '', '#' + id);
+        } else {
+          window.location.hash = id;
+        }
+
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+
+      li.appendChild(a);
       return li;
     }
 
@@ -106,9 +145,7 @@
 
       if (tag === 'H2') {
         // If no H1 exists before, create an implicit bucket under root
-        var parentForH2 = currentH1Item || rootList;
-        if (parentForH2 === rootList) {
-          // no H1 yet: append as level-1 item to keep structure valid
+        if (!currentH1Item) {
           var li2NoH1 = makeItem(heading, 1);
           rootList.appendChild(li2NoH1);
           currentH1Item = li2NoH1;
@@ -124,22 +161,18 @@
       }
 
       if (tag === 'H3') {
-        // Prefer nesting under the latest H2; fallback to latest H1; fallback root
         if (currentH2Item) {
           var ul3 = ensureChildList(currentH2Item, 3);
-          var li3 = makeItem(heading, 3);
-          ul3.appendChild(li3);
+          ul3.appendChild(makeItem(heading, 3));
           return;
         }
 
         if (currentH1Item) {
           var ul3UnderH1 = ensureChildList(currentH1Item, 2);
-          var li3UnderH1 = makeItem(heading, 2);
-          ul3UnderH1.appendChild(li3UnderH1);
+          ul3UnderH1.appendChild(makeItem(heading, 2));
           return;
         }
 
-        // no previous headings: just add to root
         rootList.appendChild(makeItem(heading, 1));
       }
     });
