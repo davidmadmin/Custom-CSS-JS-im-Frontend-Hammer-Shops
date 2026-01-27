@@ -263,6 +263,9 @@
     var itkanzleiImage = document.createElement('img');
     itkanzleiImage.id = 'itkanzleiI_img_copyright';
     itkanzleiImage.alt = 'Datenschutzerklärung der IT-Recht Kanzlei';
+    itkanzleiImage.style.maxWidth = '100%';
+    itkanzleiImage.style.height = 'auto';
+    itkanzleiImage.style.display = 'block';
     var sourceImage = document.getElementById('itkanzlei_img_copyright');
     if (sourceImage && sourceImage.getAttribute('src')) {
       itkanzleiImage.src = sourceImage.getAttribute('src');
