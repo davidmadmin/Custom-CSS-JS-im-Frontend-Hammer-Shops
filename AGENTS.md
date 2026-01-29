@@ -98,3 +98,132 @@ Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentySh
 * Verwende für Shop-Verlinkungen immer relative Pfade (z. B. `/start` statt `https://www.fenster-hammer.de/start` oder `https://www.schraubenhammer.de/start`).
 * Halte README und begleitende Dokumentation aktuell, wenn du neue Features oder Abhängigkeiten ergänzt.
 * Verwende für die direkte Anrede konsequent die Du-Form und schreibe Du/Dir/Dich/Dein usw. immer mit großem Anfangsbuchstaben – unabhängig von der Position im Satz.
+
+## Commit Message Convention (Conventional Commits)
+
+All commits MUST follow the Conventional Commits format:
+
+<type>(optional scope): short, imperative description
+
+Examples:
+- feat(auth): add password reset flow
+- fix: resolve checkout rounding error
+- refactor(ui): simplify header component
+- chore: update dependencies
+
+### Allowed Types
+
+Use ONLY the following types:
+
+### feat
+Introduce a new user-facing feature or capability.
+
+Examples:
+- feat: add wishlist support
+- feat(search): implement fuzzy matching
+
+---
+
+### fix
+Patch a bug or incorrect behavior.
+
+Examples:
+- fix: prevent crash on empty cart
+- fix(api): handle null response
+
+---
+
+### docs
+Documentation-only changes (README, comments, guides).
+
+Examples:
+- docs: update setup instructions
+- docs(api): clarify authentication flow
+
+---
+
+### style
+Formatting or stylistic changes that do NOT affect logic.
+(whitespace, linting, prettier, formatting)
+
+Examples:
+- style: format files with prettier
+- style(css): normalize spacing
+
+---
+
+### refactor
+Code changes that neither fix a bug nor add a feature.
+Behavior must remain the same; structure or clarity improves.
+
+Examples:
+- refactor: extract pricing logic into helper
+- refactor(core): simplify state handling
+
+---
+
+### perf
+Performance improvements without changing behavior.
+
+Examples:
+- perf: memoize expensive selectors
+- perf(images): optimize loading strategy
+
+---
+
+### test
+Add or modify tests only.
+
+Examples:
+- test: add unit tests for checkout
+- test(auth): improve coverage
+
+---
+
+### build
+Changes affecting build system or external dependencies.
+(e.g., bundlers, compilers, package managers)
+
+Examples:
+- build: update vite config
+- build: bump node version
+
+---
+
+### ci
+Changes to CI/CD configuration or pipelines.
+
+Examples:
+- ci: adjust GitHub Actions workflow
+- ci: add caching step
+
+---
+
+### chore
+Maintenance or housekeeping tasks that don’t modify app behavior.
+(updating deps, cleaning files, config tweaks)
+
+Examples:
+- chore: update npm dependencies
+- chore: remove unused assets
+
+---
+
+### revert
+Revert a previous commit.
+
+Examples:
+- revert: feat: add experimental checkout
+
+---
+
+### Rules
+
+- Use present tense, imperative mood (“add”, not “added”).
+- Keep the summary under ~72 characters.
+- Do NOT capitalize the first letter of the description.
+- Do NOT end the subject line with a period.
+- Use scopes when helpful (e.g., auth, ui, api).
+- Only ONE type per commit.
+
+This standard enables automated changelogs, clearer history, and semantic versioning.
