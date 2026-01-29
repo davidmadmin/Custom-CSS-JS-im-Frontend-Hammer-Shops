@@ -2089,6 +2089,34 @@ a.logo {
   flex-direction: column;
 }
 
+.sh-header__dropdown-column--preview {
+  align-items: flex-start;
+}
+
+.sh-header__dropdown-preview-link {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.sh-header__dropdown-preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  transform-origin: center;
+  filter: brightness(0.96);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.sh-header__dropdown-preview-link:hover .sh-header__dropdown-preview-image,
+.sh-header__dropdown-preview-link:focus .sh-header__dropdown-preview-image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
 .sh-header__dropdown-column > .sh-header__dropdown-group:first-child {
   margin-top: 0;
 }
