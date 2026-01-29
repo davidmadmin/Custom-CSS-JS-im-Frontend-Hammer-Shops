@@ -2131,6 +2131,68 @@ a.logo {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+/* Section: Start Highlight Category Nav */
+.fh-start-highlight-nav {
+  padding: 48px 0;
+}
+
+.fh-start-highlight-nav__inner {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.fh-start-highlight-nav__title {
+  margin-bottom: 24px;
+}
+
+.fh-start-highlight-nav__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fh-start-highlight-nav__card {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fh-start-highlight-nav__image {
+  display: block;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.fh-start-highlight-nav__label {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  text-align: center;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .fh-start-highlight-nav__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .fh-start-highlight-nav__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* End Section: Start Highlight Category Nav */
+
 .fh-header__dropdown-grid--brands {
   grid-template-columns: minmax(0, 1fr) 1px minmax(260px, 0.75fr);
   align-items: stretch;
