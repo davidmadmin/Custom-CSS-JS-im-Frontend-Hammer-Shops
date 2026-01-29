@@ -2170,14 +2170,23 @@ a.logo {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
+  border: 1px solid #e6e6e6;
+  background-color: #ffffff;
   text-decoration: none;
   color: inherit;
+}
+
+.sh-start-highlight-nav__media {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 3 / 1;
 }
 
 .sh-start-highlight-nav__image {
   display: block;
   width: 100%;
-  height: 120px;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
@@ -2188,7 +2197,7 @@ a.logo {
   padding: 10px 12px;
   background-color: #ffffff;
   text-align: left;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.3;
 }
