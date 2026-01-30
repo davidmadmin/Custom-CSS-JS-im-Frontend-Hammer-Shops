@@ -317,8 +317,8 @@ div.external-brand-logo img {
   margin: 0 auto;
   color: #1a1a1a;
   font-family: "Open Sans", Arial, sans-serif;
-  width: 1600px; /* Do not change this for Desktop viewport*/
-  max-width: 1600px; /* Do not change this for Desktop viewport*/
+  width: 100%;
+  max-width: 100%;
   --sh-top-bar-max-height: 72px;
   --sh-top-bar-padding-y: 14px;
 }
@@ -3372,7 +3372,8 @@ body.sh-mobile-menu-open {
 }
 
 #page-header > div {
-  max-width: 1600px;
+  width: 100%;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
