@@ -2131,6 +2131,126 @@ a.logo {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+/* Section: Start Highlight Category Nav */
+.fh-start-highlight-nav {
+  padding: 48px 0;
+}
+
+.fh-start-highlight-nav__inner {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.fh-start-highlight-nav__title {
+  margin-bottom: 24px;
+}
+
+.fh-start-highlight-nav__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  justify-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fh-start-highlight-nav__card {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e6e6e6;
+  background-color: #ffffff;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fh-start-highlight-nav__media {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  overflow: hidden;
+  aspect-ratio: 3 / 1;
+}
+
+.fh-start-highlight-nav__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.fh-start-highlight-nav__label {
+  display: block;
+  margin: 0;
+  padding: 10px 12px;
+  background-color: #ffffff;
+  text-align: left;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.fh-start-highlight-nav__intro {
+  display: block;
+  margin: 0;
+  padding: 0 12px 12px;
+  background-color: #ffffff;
+  text-align: left;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #2f2f2f;
+}
+
+@media (min-width: 1200px) {
+  .fh-start-highlight-nav__list {
+    align-items: stretch;
+  }
+
+  .fh-start-highlight-nav__item {
+    display: flex;
+    height: 100%;
+  }
+
+  .fh-start-highlight-nav__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .fh-start-highlight-nav__intro {
+    flex-grow: 1;
+  }
+}
+
+.fh-start-highlight-nav__card:hover .fh-start-highlight-nav__image,
+.fh-start-highlight-nav__card:focus .fh-start-highlight-nav__image {
+  transform: scale(1.06);
+}
+
+@media (max-width: 991.98px) {
+  .fh-start-highlight-nav__list {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .fh-start-highlight-nav__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .fh-start-highlight-nav__list {
+    grid-template-columns: 1fr;
+  }
+}
+/* End Section: Start Highlight Category Nav */
+
 .fh-header__dropdown-grid--brands {
   grid-template-columns: minmax(0, 1fr) 1px minmax(260px, 0.75fr);
   align-items: stretch;
