@@ -3715,6 +3715,8 @@ fhOnReady(function () {
   let isOpen = false;
   let storeWatcherCleanup = null;
   let refreshTimeout = null;
+  let apiServiceRetryCount = 0;
+  let apiServiceRetryTimeout = null;
   let storeRetryCount = 0;
 
   function openMenu() {
@@ -3787,12 +3789,38 @@ fhOnReady(function () {
     }, 150);
   }
 
+  function scheduleApiServiceRetry(store) {
+    if (!store) return;
+
+    if (window.ApiService && typeof window.ApiService.get === 'function') {
+      apiServiceRetryCount = 0;
+      return;
+    }
+
+    if (apiServiceRetryTimeout) return;
+
+    apiServiceRetryCount += 1;
+    if (apiServiceRetryCount > 20) return;
+
+    apiServiceRetryTimeout = window.setTimeout(function () {
+      apiServiceRetryTimeout = null;
+      refreshWishListItemsSilently(store);
+    }, 300);
+  }
+
   function refreshWishListItemsSilently(store) {
     if (!store || !store.state || !store.state.wishList) return;
     if (!window.ApiService || typeof window.ApiService.get !== 'function') {
-      if (store._actions && store._actions.initWishListItems && (!store.state.wishList.wishListItems || !store.state.wishList.wishListItems.length)) {
-        store.dispatch('initWishListItems');
+      if (store._actions && store._actions.initWishListItems) {
+        try {
+          const result = store.dispatch('initWishListItems');
+
+          if (result && typeof result.catch === 'function') result.catch(function () {});
+        } catch (error) {
+          /* Ignore dispatch errors in the custom integration to avoid breaking the UI. */
+        }
       }
+      scheduleApiServiceRetry(store);
       return;
     }
 
@@ -3805,6 +3833,23 @@ fhOnReady(function () {
           store.commit('setWishListItems', response.documents);
         }
       });
+  }
+
+  function handleWishListToggle(event) {
+    const trigger = event.target.closest('.widget-add-to-wish-list .btn');
+
+    if (!trigger) return;
+
+    window.setTimeout(function () {
+      const store = getVueStore();
+
+      if (store) {
+        ensureStoreWatcher(store);
+        scheduleWishListRefresh(store);
+      } else {
+        resolveStore();
+      }
+    }, 300);
   }
 
   function ensureStoreWatcher(store) {
@@ -3836,6 +3881,8 @@ fhOnReady(function () {
       window.setTimeout(resolveStore, 300);
     }
   }
+
+  document.addEventListener('click', handleWishListToggle);
 
   resolveStore();
 });
