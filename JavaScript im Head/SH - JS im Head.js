@@ -3855,6 +3855,8 @@ shOnReady(function () {
       : null;
     let didReload = false;
     let storeWatcherCleanup = null;
+    let fallbackTimeout = null;
+    let observer = null;
 
     if (store && typeof store.watch === 'function') {
       storeWatcherCleanup = store.watch(
@@ -3876,12 +3878,16 @@ shOnReady(function () {
       );
     }
 
-    const observer = new MutationObserver(function () {
+    observer = new MutationObserver(function () {
       const nextState = isWishListActive(button);
       if (nextState === initialState || didReload) return;
 
       didReload = true;
       observer.disconnect();
+      if (fallbackTimeout) {
+        window.clearTimeout(fallbackTimeout);
+        fallbackTimeout = null;
+      }
       if (window.sessionStorage) {
         window.sessionStorage.setItem(reloadStorageKey, '1');
       }
@@ -3890,11 +3896,28 @@ shOnReady(function () {
 
     observer.observe(button, { attributes: true, attributeFilter: attributeFilter });
 
+    fallbackTimeout = window.setTimeout(function () {
+      if (didReload) return;
+      didReload = true;
+      observer.disconnect();
+      if (typeof storeWatcherCleanup === 'function') {
+        storeWatcherCleanup();
+      }
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(reloadStorageKey, '1');
+      }
+      window.location.reload();
+    }, 1500);
+
     window.setTimeout(function () {
       if (!didReload) {
         observer.disconnect();
         if (typeof storeWatcherCleanup === 'function') {
           storeWatcherCleanup();
+        }
+        if (fallbackTimeout) {
+          window.clearTimeout(fallbackTimeout);
+          fallbackTimeout = null;
         }
       }
     }, 3000);
