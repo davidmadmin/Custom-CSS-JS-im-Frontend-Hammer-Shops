@@ -98,3 +98,4 @@ Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentySh
 * Verwende für Shop-Verlinkungen immer relative Pfade (z. B. `/start` statt `https://www.fenster-hammer.de/start` oder `https://www.schraubenhammer.de/start`).
 * Halte README und begleitende Dokumentation aktuell, wenn du neue Features oder Abhängigkeiten ergänzt.
 * Verwende für die direkte Anrede konsequent die Du-Form und schreibe Du/Dir/Dich/Dein usw. immer mit großem Anfangsbuchstaben – unabhängig von der Position im Satz.
+* Wenn Du mir Raw-URLs mit `cdn02.plentymarkets.com/nteqnk1xxnkn` gibst, konvertiere ich sie automatisch zu First-Party-Hosts: für FH zu `https://bilder.fenster-hammer.de/...`, für SH zu `https://bilder.schrauben-hammer.de/...` (Pfad bleibt identisch).
