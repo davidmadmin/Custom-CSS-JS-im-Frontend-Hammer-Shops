@@ -3709,13 +3709,16 @@ fhOnReady(function () {
 
   const toggleButton = container.querySelector('[data-fh-wishlist-menu-toggle]');
   const menu = container.querySelector('[data-fh-wishlist-menu]');
+  const itemsContainer = container.querySelector('[data-fh-wishlist-items]');
+  const emptyState = container.querySelector('[data-fh-wishlist-empty]');
+  const badgeCount = toggleButton ? toggleButton.querySelector('.fh-header__badge span') : null;
 
-  if (!toggleButton || !menu) return;
+  if (!toggleButton || !menu || !itemsContainer) return;
 
   let isOpen = false;
-  let storeWatcherCleanup = null;
   let refreshTimeout = null;
-  let storeRetryCount = 0;
+  let requestInFlight = false;
+  let pendingRefresh = false;
 
   function openMenu() {
     if (isOpen) return;
@@ -3727,12 +3730,7 @@ fhOnReady(function () {
     document.addEventListener('keydown', handleKeydown);
     isOpen = true;
 
-    const store = getVueStore();
-
-    if (store) {
-      ensureStoreWatcher(store);
-      scheduleWishListRefresh(store);
-    }
+    scheduleWishListRefresh();
   }
 
   function closeMenu() {
@@ -3765,17 +3763,7 @@ fhOnReady(function () {
     else openMenu();
   });
 
-  function getVueStore() {
-    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
-
-    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
-
-    return null;
-  }
-
-  function scheduleWishListRefresh(store) {
-    if (!store) return;
-
+  function scheduleWishListRefresh() {
     if (refreshTimeout) {
       window.clearTimeout(refreshTimeout);
       refreshTimeout = null;
@@ -3783,61 +3771,185 @@ fhOnReady(function () {
 
     refreshTimeout = window.setTimeout(function () {
       refreshTimeout = null;
-      refreshWishListItemsSilently(store);
+      refreshWishListItems();
     }, 150);
   }
 
-  function refreshWishListItemsSilently(store) {
-    if (!store || !store.state || !store.state.wishList) return;
-    if (!window.ApiService || typeof window.ApiService.get !== 'function') {
-      if (store._actions && store._actions.initWishListItems && (!store.state.wishList.wishListItems || !store.state.wishList.wishListItems.length)) {
-        store.dispatch('initWishListItems');
-      }
+  function refreshWishListItems() {
+    if (requestInFlight) {
+      pendingRefresh = true;
       return;
     }
 
-    window.ApiService.get('/rest/io/itemWishList')
-      .done(function (response) {
-        if (store._mutations && store._mutations.setInactiveVariationIds) {
-          store.commit('setInactiveVariationIds', response.inactiveVariationIds);
-        }
-        if (store._mutations && store._mutations.setWishListItems) {
-          store.commit('setWishListItems', response.documents);
+    requestInFlight = true;
+
+    getWishListItems()
+      .then(function (response) {
+        const documents = Array.isArray(response)
+          ? response
+          : (response && Array.isArray(response.documents) ? response.documents : []);
+
+        renderWishListItems(documents);
+      })
+      .catch(function () {
+        renderWishListItems([]);
+      })
+      .finally(function () {
+        requestInFlight = false;
+        if (pendingRefresh) {
+          pendingRefresh = false;
+          scheduleWishListRefresh();
         }
       });
   }
 
-  function ensureStoreWatcher(store) {
-    if (!store || typeof store.watch !== 'function' || storeWatcherCleanup) return;
+  function getWishListItems() {
+    if (window.ApiService && typeof window.ApiService.get === 'function') {
+      return new Promise(function (resolve, reject) {
+        window.ApiService.get('/rest/io/itemWishList')
+          .done(resolve)
+          .fail(reject);
+      });
+    }
 
-    storeWatcherCleanup = store.watch(
-      function (state) {
-        if (!state || !state.wishList || !Array.isArray(state.wishList.wishListIds)) return '';
-
-        return state.wishList.wishListIds.join(',');
-      },
-      function () {
-        scheduleWishListRefresh(store);
-      }
-    );
+    return window.fetch('/rest/io/itemWishList', { credentials: 'same-origin' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Wishlist request failed');
+        return response.json();
+      });
   }
 
-  function resolveStore() {
-    const store = getVueStore();
+  function renderWishListItems(items) {
+    itemsContainer.innerHTML = '';
 
-    if (store) {
-      ensureStoreWatcher(store);
-      scheduleWishListRefresh(store);
+    if (!Array.isArray(items) || items.length === 0) {
+      if (emptyState) emptyState.hidden = false;
+      if (badgeCount) badgeCount.textContent = '0';
       return;
     }
 
-    storeRetryCount += 1;
-    if (storeRetryCount < 20) {
-      window.setTimeout(resolveStore, 300);
-    }
+    if (emptyState) emptyState.hidden = true;
+    if (badgeCount) badgeCount.textContent = String(items.length);
+
+    const fragment = document.createDocumentFragment();
+
+    items.forEach(function (entry) {
+      const data = entry && entry.data ? entry.data : entry;
+      const itemElement = document.createElement('div');
+      itemElement.className = 'fh-header__wishlist-item';
+
+      const name = resolveWishListItemName(data);
+      const url = resolveWishListItemUrl(data);
+      const imageUrl = resolveWishListItemImage(data);
+
+      if (imageUrl) {
+        const image = document.createElement('img');
+        image.src = imageUrl;
+        image.alt = name;
+        image.className = 'fh-header__wishlist-image';
+        itemElement.appendChild(image);
+      }
+
+      const label = document.createElement(url ? 'a' : 'span');
+      if (url) label.href = url;
+      label.className = 'fh-header__wishlist-title';
+      label.textContent = name;
+      itemElement.appendChild(label);
+
+      fragment.appendChild(itemElement);
+    });
+
+    itemsContainer.appendChild(fragment);
   }
 
-  resolveStore();
+  function resolveWishListItemName(data) {
+    const nameCandidates = [
+      data && data.texts,
+      data && data.item && data.item.texts,
+      data && data.itemDescription,
+      data && data.variation && data.variation.item && data.variation.item.texts,
+    ];
+
+    for (let i = 0; i < nameCandidates.length; i += 1) {
+      const texts = nameCandidates[i];
+      if (texts && (texts.name1 || texts.name2)) {
+        return texts.name1 || texts.name2;
+      }
+    }
+
+    if (data && data.name) return data.name;
+    if (data && data.number) return 'Artikel ' + data.number;
+    return 'Artikel';
+  }
+
+  function resolveWishListItemUrl(data) {
+    if (!data) return '';
+    if (data.url) return data.url;
+    if (data.urls && data.urls.default) return data.urls.default;
+    if (data.urls && data.urls.base) return data.urls.base;
+    if (data.item && data.item.url) return data.item.url;
+    return '';
+  }
+
+  function resolveWishListItemImage(data) {
+    if (!data) return '';
+    const imageSets = [
+      data.images,
+      data.item && data.item.images,
+      data.variation && data.variation.images,
+    ];
+
+    for (let i = 0; i < imageSets.length; i += 1) {
+      const images = imageSets[i];
+      const candidate = resolveFirstImage(images);
+      if (candidate) return candidate;
+    }
+
+    return '';
+  }
+
+  function resolveFirstImage(images) {
+    if (!images) return '';
+    if (Array.isArray(images) && images.length) return resolveImageUrl(images[0]);
+    if (images.all && Array.isArray(images.all) && images.all.length) return resolveImageUrl(images.all[0]);
+    if (images.item && Array.isArray(images.item) && images.item.length) return resolveImageUrl(images.item[0]);
+    return '';
+  }
+
+  function resolveImageUrl(image) {
+    if (!image) return '';
+    return image.urlPreview || image.url || image.urlMiddle || image.urlSmall || image.path || '';
+  }
+
+  function handleWishListUpdate() {
+    scheduleWishListRefresh();
+  }
+
+  [
+    'wishlist-changed',
+    'wishlistChanged',
+    'ceres:wishlist:changed',
+    'ceres:wishlist-updated',
+  ].forEach(function (eventName) {
+    document.addEventListener(eventName, handleWishListUpdate);
+  });
+
+  document.addEventListener('click', function (event) {
+    const trigger = event.target.closest('[data-wishlist-add],[data-wishlist-remove],[data-wishlist-toggle],[data-wishlist]');
+    if (trigger) scheduleWishListRefresh();
+  });
+
+  if (badgeCount) {
+    const observer = new MutationObserver(function () {
+      scheduleWishListRefresh();
+    });
+
+    observer.observe(badgeCount, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  }
 });
 
 // Section: Signature console log by David M. Abdin
