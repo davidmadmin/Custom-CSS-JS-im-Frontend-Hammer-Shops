@@ -3701,6 +3701,253 @@ fhOnReady(function () {
   });
 });
 
+// Section: FH wishlist dropdown behaviour
+fhOnReady(function () {
+  const reloadStorageKey = 'fhWishlistAutoOpen';
+  const container = document.querySelector('[data-fh-wishlist-menu-container]');
+
+  if (!container) return;
+
+  const toggleButton = container.querySelector('[data-fh-wishlist-menu-toggle]');
+  const menu = container.querySelector('[data-fh-wishlist-menu]');
+
+  if (!toggleButton || !menu) return;
+
+  let isOpen = false;
+  let storeWatcherCleanup = null;
+  let refreshTimeout = null;
+  let storeRetryCount = 0;
+
+  function openMenu() {
+    if (isOpen) return;
+
+    menu.style.display = 'block';
+    menu.setAttribute('aria-hidden', 'false');
+    toggleButton.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeydown);
+    isOpen = true;
+
+    const store = getVueStore();
+
+    if (store) {
+      ensureStoreWatcher(store);
+      scheduleWishListRefresh(store);
+    }
+  }
+
+  function closeMenu() {
+    if (!isOpen) return;
+
+    menu.style.display = 'none';
+    menu.setAttribute('aria-hidden', 'true');
+    toggleButton.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleKeydown);
+    isOpen = false;
+  }
+
+  function handleDocumentClick(event) {
+    if (!container.contains(event.target)) closeMenu();
+  }
+
+  function handleKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      closeMenu();
+      toggleButton.focus();
+    }
+  }
+
+  toggleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isOpen) closeMenu();
+    else openMenu();
+  });
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+
+    return null;
+  }
+
+  function scheduleWishListRefresh(store) {
+    if (!store) return;
+
+    if (refreshTimeout) {
+      window.clearTimeout(refreshTimeout);
+      refreshTimeout = null;
+    }
+
+    refreshTimeout = window.setTimeout(function () {
+      refreshTimeout = null;
+      refreshWishListItemsSilently(store);
+    }, 150);
+  }
+
+  function refreshWishListItemsSilently(store) {
+    if (!store || !store.state || !store.state.wishList) return;
+    if (!window.ApiService || typeof window.ApiService.get !== 'function') {
+      if (store._actions && store._actions.initWishListItems && (!store.state.wishList.wishListItems || !store.state.wishList.wishListItems.length)) {
+        store.dispatch('initWishListItems');
+      }
+      return;
+    }
+
+    window.ApiService.get('/rest/io/itemWishList')
+      .done(function (response) {
+        if (store._mutations && store._mutations.setInactiveVariationIds) {
+          store.commit('setInactiveVariationIds', response.inactiveVariationIds);
+        }
+        if (store._mutations && store._mutations.setWishListItems) {
+          store.commit('setWishListItems', response.documents);
+        }
+      });
+  }
+
+  function ensureStoreWatcher(store) {
+    if (!store || typeof store.watch !== 'function' || storeWatcherCleanup) return;
+
+    storeWatcherCleanup = store.watch(
+      function (state) {
+        if (!state || !state.wishList || !Array.isArray(state.wishList.wishListIds)) return '';
+
+        return state.wishList.wishListIds.join(',');
+      },
+      function () {
+        scheduleWishListRefresh(store);
+      }
+    );
+  }
+
+  function resolveStore() {
+    const store = getVueStore();
+
+    if (store) {
+      ensureStoreWatcher(store);
+      scheduleWishListRefresh(store);
+      return;
+    }
+
+    storeRetryCount += 1;
+    if (storeRetryCount < 20) {
+      window.setTimeout(resolveStore, 300);
+    }
+  }
+
+  resolveStore();
+
+  if (window.sessionStorage && window.sessionStorage.getItem(reloadStorageKey)) {
+    window.sessionStorage.removeItem(reloadStorageKey);
+    openMenu();
+  }
+});
+
+// Section: FH add-to-wishlist reload after toggle
+fhOnReady(function () {
+  const reloadStorageKey = 'fhWishlistAutoOpen';
+  const wishlistButtonSelector = '.widget-add-to-wish-list .btn';
+  const attributeFilter = ['class', 'aria-pressed', 'data-original-title'];
+
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+    return null;
+  }
+
+  function isWishListActive(button) {
+    if (!button) return false;
+    if (button.classList.contains('is-active') || button.classList.contains('active')) return true;
+    if (button.getAttribute('aria-pressed') === 'true') return true;
+    const title = button.getAttribute('data-original-title');
+    return title && title.toLowerCase().includes('entfernen');
+  }
+
+  function handleWishListButtonClick(event) {
+    const button = event.target.closest(wishlistButtonSelector);
+    if (!button) return;
+
+    const store = getVueStore();
+    const initialState = isWishListActive(button);
+    const initialStoreIds = store && store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListIds)
+      ? store.state.wishList.wishListIds.join(',')
+      : null;
+    let didReload = false;
+    let storeWatcherCleanup = null;
+    let fallbackTimeout = null;
+    let observer = null;
+
+    if (store && typeof store.watch === 'function') {
+      storeWatcherCleanup = store.watch(
+        function (state) {
+          if (!state || !state.wishList || !Array.isArray(state.wishList.wishListIds)) return '';
+          return state.wishList.wishListIds.join(',');
+        },
+        function (nextValue) {
+          if (didReload || initialStoreIds === null || nextValue === initialStoreIds) return;
+          didReload = true;
+          if (typeof storeWatcherCleanup === 'function') {
+            storeWatcherCleanup();
+          }
+          if (window.sessionStorage) {
+            window.sessionStorage.setItem(reloadStorageKey, '1');
+          }
+          window.location.reload();
+        }
+      );
+    }
+
+    observer = new MutationObserver(function () {
+      const nextState = isWishListActive(button);
+      if (nextState === initialState || didReload) return;
+
+      didReload = true;
+      observer.disconnect();
+      if (fallbackTimeout) {
+        window.clearTimeout(fallbackTimeout);
+        fallbackTimeout = null;
+      }
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(reloadStorageKey, '1');
+      }
+      window.location.reload();
+    });
+
+    observer.observe(button, { attributes: true, attributeFilter: attributeFilter });
+
+    fallbackTimeout = window.setTimeout(function () {
+      if (didReload) return;
+      didReload = true;
+      observer.disconnect();
+      if (typeof storeWatcherCleanup === 'function') {
+        storeWatcherCleanup();
+      }
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(reloadStorageKey, '1');
+      }
+      window.location.reload();
+    }, 1500);
+
+    window.setTimeout(function () {
+      if (!didReload) {
+        observer.disconnect();
+        if (typeof storeWatcherCleanup === 'function') {
+          storeWatcherCleanup();
+        }
+        if (fallbackTimeout) {
+          window.clearTimeout(fallbackTimeout);
+          fallbackTimeout = null;
+        }
+      }
+    }, 3000);
+  }
+
+  document.addEventListener('click', handleWishListButtonClick);
+});
+
 // Section: Signature console log by David M. Abdin
 (function fhSignatureLog() {
   var headingStyle = [
