@@ -96,7 +96,8 @@ Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentySh
 * JavaScript-Erweiterungen sollen bestehende Ceres-Hooks nutzen; vermeide doppelte Event-Listener, wenn Ceres bereits Funktionen liefert.
 * Beachte, dass beide Shops (FH & SH) synchron angepasst werden müssen. Änderungen in einem Shop dürfen den anderen nicht beschädigen.
 * Verwende für Shop-Verlinkungen immer relative Pfade (z. B. `/start` statt `https://www.fenster-hammer.de/start` oder `https://www.schraubenhammer.de/start`).
-* Halte README und begleitende Dokumentation aktuell, wenn du neue Features oder Abhängigkeiten ergänzt.
+* Ersetze CDN-Hostnamen automatisch: sobald Du `//cdn02.plentymarkets.com/nteqnk1xxnkn` in FH-Dateien siehst oder von mir bekommst, wandelst Du ihn in `//bilder.fenster-hammer.de` um; in SH-Dateien in `//bilder.schrauben-hammer.de`. Behalte dabei Protokoll und Pfad bei, damit die Links first-party gehostet bleiben.
+* Halte README und begleitende Dokumentation aktuell, wenn Du neue Features oder Abhängigkeiten ergänzt.
 * Verwende für die direkte Anrede konsequent die Du-Form und schreibe Du/Dir/Dich/Dein usw. immer mit großem Anfangsbuchstaben – unabhängig von der Position im Satz.
 
 ## Commit Message Convention (Conventional Commits)
