@@ -2920,7 +2920,7 @@ shOnReady(function () {
     }
     return t + '</span>';
   }
-  var iconUrl = "https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/shipping_9288277.svg";
+  var iconUrl = "https://bilder.schrauben-hammer.de/frontend/shipping_9288277.svg";
   var iconHtml = '<img src="' + iconUrl + '" alt="" style="height:2.6em;width:auto;vertical-align:middle;display:block;">';
   function waitForCountdownDiv(){
     var elem = document.getElementById('cutoff-countdown');
@@ -3015,19 +3015,19 @@ shOnReady(function () {
       match: function (labelText) {
         return labelText.includes('dhl');
       },
-      src: 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/DHLVersand_Icon_D1.png'
+      src: 'https://bilder.schrauben-hammer.de/frontend/DHLVersand_Icon_D1.png'
     },
     {
       match: function (labelText) {
         return labelText.includes('general overnight express') || labelText.includes('go express');
       },
-      src: 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/GO_Express_Versand_Icon_D1.1.png'
+      src: 'https://bilder.schrauben-hammer.de/frontend/GO_Express_Versand_Icon_D1.1.png'
     },
     {
       match: function (labelText) {
         return labelText.includes('selbstabholung');
       },
-      src: 'https://cdn02.plentymarkets.com/nteqnk1xxnkn/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
+      src: 'https://bilder.schrauben-hammer.de/frontend/Selbstabholung_Lager_Versand_Icon_D1.1.png'
     }
   ];
 
