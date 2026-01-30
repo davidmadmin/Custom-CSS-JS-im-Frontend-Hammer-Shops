@@ -323,6 +323,12 @@ div.external-brand-logo img {
   --sh-top-bar-padding-y: 14px;
 }
 
+@media (max-width: 1599.98px) {
+  .sh-header {
+    width: 100%;
+  }
+}
+
 .sh-header__top-bar {
   position: relative;
   display: flex;

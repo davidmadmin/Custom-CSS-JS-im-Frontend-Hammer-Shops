@@ -320,6 +320,12 @@ div.external-brand-logo img {
   --fh-top-bar-padding-y: 14px;
 }
 
+@media (max-width: 1599.98px) {
+  .fh-header {
+    width: 100%;
+  }
+}
+
 .fh-header__top-bar {
   position: relative;
   display: flex;
@@ -3373,7 +3379,7 @@ body.fh-mobile-menu-open {
 
 /* Section: Page Header Background */
 #page-header-parent {
-  padding: 0 7px;
+  padding: 0;
 }
 
 #page-header {
