@@ -3830,6 +3830,12 @@ shOnReady(function () {
   const wishlistButtonSelector = '.widget-add-to-wish-list .btn';
   const attributeFilter = ['class', 'aria-pressed', 'data-original-title'];
 
+  function getVueStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+    if (window.ceresStore && typeof window.ceresStore.dispatch === 'function') return window.ceresStore;
+    return null;
+  }
+
   function isWishListActive(button) {
     if (!button) return false;
     if (button.classList.contains('is-active') || button.classList.contains('active')) return true;
@@ -3842,8 +3848,33 @@ shOnReady(function () {
     const button = event.target.closest(wishlistButtonSelector);
     if (!button) return;
 
+    const store = getVueStore();
     const initialState = isWishListActive(button);
+    const initialStoreIds = store && store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListIds)
+      ? store.state.wishList.wishListIds.join(',')
+      : null;
     let didReload = false;
+    let storeWatcherCleanup = null;
+
+    if (store && typeof store.watch === 'function') {
+      storeWatcherCleanup = store.watch(
+        function (state) {
+          if (!state || !state.wishList || !Array.isArray(state.wishList.wishListIds)) return '';
+          return state.wishList.wishListIds.join(',');
+        },
+        function (nextValue) {
+          if (didReload || initialStoreIds === null || nextValue === initialStoreIds) return;
+          didReload = true;
+          if (typeof storeWatcherCleanup === 'function') {
+            storeWatcherCleanup();
+          }
+          if (window.sessionStorage) {
+            window.sessionStorage.setItem(reloadStorageKey, '1');
+          }
+          window.location.reload();
+        }
+      );
+    }
 
     const observer = new MutationObserver(function () {
       const nextState = isWishListActive(button);
@@ -3862,6 +3893,9 @@ shOnReady(function () {
     window.setTimeout(function () {
       if (!didReload) {
         observer.disconnect();
+        if (typeof storeWatcherCleanup === 'function') {
+          storeWatcherCleanup();
+        }
       }
     }, 3000);
   }
