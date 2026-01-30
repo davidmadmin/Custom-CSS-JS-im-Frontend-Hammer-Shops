@@ -3373,7 +3373,7 @@ body.fh-mobile-menu-open {
 
 /* Section: Page Header Background */
 #page-header-parent {
-  padding: 0 7px;
+  padding: 0;
 }
 
 #page-header {
