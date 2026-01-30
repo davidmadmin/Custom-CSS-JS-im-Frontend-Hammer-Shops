@@ -2159,7 +2159,7 @@ a.logo {
 .fh-start-highlight-nav__card {
   display: block;
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #e6e6e6;
@@ -2171,7 +2171,7 @@ a.logo {
 .fh-start-highlight-nav__media {
   display: block;
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
   overflow: hidden;
   aspect-ratio: 3 / 1;
 }
