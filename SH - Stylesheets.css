@@ -2160,6 +2160,7 @@ a.logo {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
+  justify-items: center;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -2168,6 +2169,7 @@ a.logo {
 .sh-start-highlight-nav__card {
   display: block;
   width: 100%;
+  max-width: 360px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #e6e6e6;
@@ -2179,6 +2181,7 @@ a.logo {
 .sh-start-highlight-nav__media {
   display: block;
   width: 100%;
+  max-width: 360px;
   overflow: hidden;
   aspect-ratio: 3 / 1;
 }
