@@ -3703,6 +3703,7 @@ fhOnReady(function () {
 
 // Section: FH wishlist dropdown behaviour
 fhOnReady(function () {
+  const reloadStorageKey = 'fhWishlistAutoOpen';
   const container = document.querySelector('[data-fh-wishlist-menu-container]');
 
   if (!container) return;
@@ -3838,6 +3839,56 @@ fhOnReady(function () {
   }
 
   resolveStore();
+
+  if (window.sessionStorage && window.sessionStorage.getItem(reloadStorageKey)) {
+    window.sessionStorage.removeItem(reloadStorageKey);
+    openMenu();
+  }
+});
+
+// Section: FH add-to-wishlist reload after toggle
+fhOnReady(function () {
+  const reloadStorageKey = 'fhWishlistAutoOpen';
+  const wishlistButtonSelector = '.widget-add-to-wish-list .btn';
+  const attributeFilter = ['class', 'aria-pressed', 'data-original-title'];
+
+  function isWishListActive(button) {
+    if (!button) return false;
+    if (button.classList.contains('is-active') || button.classList.contains('active')) return true;
+    if (button.getAttribute('aria-pressed') === 'true') return true;
+    const title = button.getAttribute('data-original-title');
+    return title && title.toLowerCase().includes('entfernen');
+  }
+
+  function handleWishListButtonClick(event) {
+    const button = event.target.closest(wishlistButtonSelector);
+    if (!button) return;
+
+    const initialState = isWishListActive(button);
+    let didReload = false;
+
+    const observer = new MutationObserver(function () {
+      const nextState = isWishListActive(button);
+      if (nextState === initialState || didReload) return;
+
+      didReload = true;
+      observer.disconnect();
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(reloadStorageKey, '1');
+      }
+      window.location.reload();
+    });
+
+    observer.observe(button, { attributes: true, attributeFilter: attributeFilter });
+
+    window.setTimeout(function () {
+      if (!didReload) {
+        observer.disconnect();
+      }
+    }, 3000);
+  }
+
+  document.addEventListener('click', handleWishListButtonClick);
 });
 
 // Section: Signature console log by David M. Abdin
