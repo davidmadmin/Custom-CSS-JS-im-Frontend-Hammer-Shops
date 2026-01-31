@@ -3902,6 +3902,7 @@ fhOnReady(function () {
         function (nextValue) {
           if (didReload || initialStoreIds === null || nextValue === initialStoreIds) return;
           didReload = true;
+          setLoadingState(button, false);
           if (typeof storeWatcherCleanup === 'function') {
             storeWatcherCleanup();
           }
@@ -3918,6 +3919,7 @@ fhOnReady(function () {
       if (nextState === initialState || didReload) return;
 
       didReload = true;
+      setLoadingState(button, false);
       observer.disconnect();
       if (fallbackTimeout) {
         window.clearTimeout(fallbackTimeout);
@@ -3934,6 +3936,7 @@ fhOnReady(function () {
     fallbackTimeout = window.setTimeout(function () {
       if (didReload) return;
       didReload = true;
+      setLoadingState(button, false);
       observer.disconnect();
       if (typeof storeWatcherCleanup === 'function') {
         storeWatcherCleanup();
