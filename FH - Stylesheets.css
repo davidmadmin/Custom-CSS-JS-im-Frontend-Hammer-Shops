@@ -3950,6 +3950,22 @@ button[data-testing="quantity-btn-decrease"] {
   -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='black'%20d='M7%204h10a1%201%200%200%201%201%201v15l-6-3-6%203V5a1%201%200%200%201%201-1z'/%3E%3C/svg%3E") no-repeat center / contain;
   mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='black'%20d='M7%204h10a1%201%200%200%201%201%201v15l-6-3-6%203V5a1%201%200%200%201%201-1z'/%3E%3C/svg%3E") no-repeat center / contain;
 }
+
+.widget-add-to-wish-list .btn.is-loading {
+  color: #111827;
+}
+
+.widget-add-to-wish-list .btn.is-loading::before {
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='black'%20d='M12%202a10%2010%200%201%200%2010%2010V20a8%208%200%201%201-8-8H2z'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='black'%20d='M12%202a10%2010%200%201%200%2010%2010V20a8%208%200%201%201-8-8H2z'/%3E%3C/svg%3E") no-repeat center / contain;
+  animation: fh-wishlist-spinner 0.8s linear infinite;
+}
+
+@keyframes fh-wishlist-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
 /* End Section: Wishlist button styling */
 
 /* Section: Temporary hidden blocks until external functions added */

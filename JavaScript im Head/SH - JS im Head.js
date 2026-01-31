@@ -3829,6 +3829,7 @@ shOnReady(function () {
   const reloadStorageKey = 'shWishlistAutoOpen';
   const wishlistButtonSelector = '.widget-add-to-wish-list .btn';
   const attributeFilter = ['class', 'aria-pressed', 'data-original-title'];
+  const loadingClass = 'is-loading';
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
@@ -3844,9 +3845,21 @@ shOnReady(function () {
     return title && title.toLowerCase().includes('entfernen');
   }
 
+  function setLoadingState(button, isLoading) {
+    if (!button) return;
+    button.classList.toggle(loadingClass, isLoading);
+    if (isLoading) {
+      button.setAttribute('aria-busy', 'true');
+    } else {
+      button.removeAttribute('aria-busy');
+    }
+  }
+
   function handleWishListButtonClick(event) {
     const button = event.target.closest(wishlistButtonSelector);
     if (!button) return;
+
+    setLoadingState(button, true);
 
     const store = getVueStore();
     const initialState = isWishListActive(button);
@@ -3919,6 +3932,7 @@ shOnReady(function () {
           window.clearTimeout(fallbackTimeout);
           fallbackTimeout = null;
         }
+        setLoadingState(button, false);
       }
     }, 3000);
   }
