@@ -3929,6 +3929,10 @@ button[data-testing="quantity-btn-decrease"] {
   opacity: 1;
 }
 
+.widget-add-to-wish-list .btn.is-loading > * {
+  visibility: hidden;
+}
+
 .widget-add-to-wish-list .btn.is-loading .loading-animation,
 .widget-add-to-wish-list .btn.is-loading .loading,
 .widget-add-to-wish-list .btn.is-loading .loader,
