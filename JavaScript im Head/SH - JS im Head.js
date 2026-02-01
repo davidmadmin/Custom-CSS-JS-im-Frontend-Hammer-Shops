@@ -3859,6 +3859,7 @@ shOnReady(function () {
     const button = event.target.closest(wishlistButtonSelector);
     if (!button) return;
 
+    document.documentElement.classList.add('sh-wishlist-loading');
     setLoadingState(button, true);
 
     const store = getVueStore();

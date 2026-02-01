@@ -3881,6 +3881,7 @@ fhOnReady(function () {
     const button = event.target.closest(wishlistButtonSelector);
     if (!button) return;
 
+    document.documentElement.classList.add('fh-wishlist-loading');
     setLoadingState(button, true);
 
     const store = getVueStore();
