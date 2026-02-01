@@ -3866,9 +3866,20 @@ fhOnReady(function () {
     return title && title.toLowerCase().includes('entfernen');
   }
 
+  function setWishListLoadingState(button) {
+    if (!button) return;
+    button.classList.add('is-loading');
+    button.setAttribute('aria-busy', 'true');
+    if (document.body) {
+      document.body.classList.add('wishlist-is-loading');
+    }
+  }
+
   function handleWishListButtonClick(event) {
     const button = event.target.closest(wishlistButtonSelector);
     if (!button) return;
+
+    setWishListLoadingState(button);
 
     const store = getVueStore();
     const initialState = isWishListActive(button);
