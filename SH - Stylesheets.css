@@ -3888,6 +3888,14 @@ button[data-testing="quantity-btn-decrease"] {
   display: none;
 }
 
+.widget-add-to-wish-list .btn.is-loading::before {
+  display: none;
+}
+
+.widget-add-to-wish-list .btn.is-loading .fa-circle-o-notch {
+  display: inline-block;
+}
+
 .widget-add-to-wish-list .btn::before {
   content: "";
   width: 18px;

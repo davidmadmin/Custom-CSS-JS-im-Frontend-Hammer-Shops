@@ -3866,9 +3866,24 @@ fhOnReady(function () {
     return title && title.toLowerCase().includes('entfernen');
   }
 
+  function setWishListLoadingState(button) {
+    if (!button) return;
+    button.classList.add('is-loading');
+    button.setAttribute('aria-busy', 'true');
+
+    if (!button.querySelector('.fa-circle-o-notch')) {
+      const spinner = document.createElement('i');
+      spinner.className = 'fa fa-circle-o-notch fa-spin';
+      spinner.setAttribute('aria-hidden', 'true');
+      button.insertBefore(spinner, button.firstChild);
+    }
+  }
+
   function handleWishListButtonClick(event) {
     const button = event.target.closest(wishlistButtonSelector);
     if (!button) return;
+
+    setWishListLoadingState(button);
 
     const store = getVueStore();
     const initialState = isWishListActive(button);
