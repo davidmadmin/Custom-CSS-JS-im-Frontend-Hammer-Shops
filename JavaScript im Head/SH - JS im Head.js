@@ -3848,12 +3848,8 @@ shOnReady(function () {
     if (!button) return;
     button.classList.add('is-loading');
     button.setAttribute('aria-busy', 'true');
-
-    if (!button.querySelector('.fa-circle-o-notch')) {
-      const spinner = document.createElement('i');
-      spinner.className = 'fa fa-circle-o-notch fa-spin';
-      spinner.setAttribute('aria-hidden', 'true');
-      button.insertBefore(spinner, button.firstChild);
+    if (document.body) {
+      document.body.classList.add('wishlist-is-loading');
     }
   }
 

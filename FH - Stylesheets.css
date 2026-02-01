@@ -3924,6 +3924,25 @@ button[data-testing="quantity-btn-decrease"] {
   display: inline-block;
 }
 
+body.wishlist-is-loading .widget-add-to-wish-list .btn::before {
+  content: "\f1ce";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  font-family: "FontAwesome";
+  font-size: 16px;
+  line-height: 1;
+  color: currentColor;
+  animation: fa-spin 1s infinite linear;
+}
+
+body.wishlist-is-loading .widget-add-to-wish-list .btn i {
+  display: none;
+}
+
 .widget-add-to-wish-list .btn::before {
   content: "";
   width: 18px;
