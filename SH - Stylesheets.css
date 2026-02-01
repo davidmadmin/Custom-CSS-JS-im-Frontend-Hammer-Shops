@@ -3888,6 +3888,13 @@ button[data-testing="quantity-btn-decrease"] {
   display: none;
 }
 
+.widget-add-to-wish-list .btn.is-loading::after,
+.widget-add-to-wish-list .btn .loading-animation::before,
+.widget-add-to-wish-list .btn .loading-animation::after,
+.widget-add-to-wish-list .btn .plenty-loader {
+  display: none;
+}
+
 .widget-add-to-wish-list .btn.is-loading::before {
   display: none;
 }
