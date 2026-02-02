@@ -81,6 +81,10 @@ shOnReady(function () {
   function openMenu() {
     if (isOpen) return;
 
+    if (window.shWishlistMenu && typeof window.shWishlistMenu.close === 'function') {
+      window.shWishlistMenu.close();
+    }
+
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
@@ -2356,6 +2360,9 @@ shOnReady(function () {
       if (window.shAccountMenu && typeof window.shAccountMenu.close === 'function') {
         window.shAccountMenu.close();
       }
+      if (window.shWishlistMenu && typeof window.shWishlistMenu.close === 'function') {
+        window.shWishlistMenu.close();
+      }
     }
 
     const elements = document.querySelectorAll(focusableSelector);
@@ -3699,6 +3706,10 @@ shOnReady(function () {
   function openMenu() {
     if (isOpen) return;
 
+    if (window.shAccountMenu && typeof window.shAccountMenu.close === 'function') {
+      window.shAccountMenu.close();
+    }
+
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
@@ -3822,6 +3833,12 @@ shOnReady(function () {
     window.sessionStorage.removeItem(reloadStorageKey);
     openMenu();
   }
+
+  window.shWishlistMenu = window.shWishlistMenu || {};
+  window.shWishlistMenu.close = closeMenu;
+  window.shWishlistMenu.isOpen = function () {
+    return isOpen;
+  };
 });
 
 // Section: SH add-to-wishlist reload after toggle

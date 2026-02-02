@@ -81,6 +81,10 @@ fhOnReady(function () {
   function openMenu() {
     if (isOpen) return;
 
+    if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+      window.fhWishlistMenu.close();
+    }
+
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
@@ -2379,6 +2383,9 @@ fhOnReady(function () {
       if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
         window.fhAccountMenu.close();
       }
+      if (window.fhWishlistMenu && typeof window.fhWishlistMenu.close === 'function') {
+        window.fhWishlistMenu.close();
+      }
     }
 
     const elements = document.querySelectorAll(focusableSelector);
@@ -3721,6 +3728,10 @@ fhOnReady(function () {
   function openMenu() {
     if (isOpen) return;
 
+    if (window.fhAccountMenu && typeof window.fhAccountMenu.close === 'function') {
+      window.fhAccountMenu.close();
+    }
+
     menu.style.display = 'block';
     menu.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
@@ -3844,6 +3855,12 @@ fhOnReady(function () {
     window.sessionStorage.removeItem(reloadStorageKey);
     openMenu();
   }
+
+  window.fhWishlistMenu = window.fhWishlistMenu || {};
+  window.fhWishlistMenu.close = closeMenu;
+  window.fhWishlistMenu.isOpen = function () {
+    return isOpen;
+  };
 });
 
 // Section: FH add-to-wishlist reload after toggle
