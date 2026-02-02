@@ -3828,6 +3828,7 @@ shOnReady(function () {
 shOnReady(function () {
   const reloadStorageKey = 'shWishlistAutoOpen';
   const wishlistButtonSelector = '.widget-add-to-wish-list .btn';
+  const tooltipAttributes = ['data-original-title', 'data-bs-original-title', 'title', 'aria-label'];
   const attributeFilter = [
     'class',
     'aria-pressed',
@@ -3843,15 +3844,47 @@ shOnReady(function () {
     return null;
   }
 
-  function isWishListActive(button) {
+  function hasRemoveLabel(element) {
+    return tooltipAttributes.some(function (attributeName) {
+      const value = element.getAttribute(attributeName);
+      return value && value.toLowerCase().includes('entfernen');
+    });
+  }
+
+  function hasRemoveLabelInButton(button) {
+    if (hasRemoveLabel(button)) return true;
+    const selector = tooltipAttributes.map(function (attributeName) {
+      return '[' + attributeName + ']';
+    }).join(',');
+    const candidates = button.querySelectorAll(selector);
+    return Array.prototype.some.call(candidates, function (candidate) {
+      return hasRemoveLabel(candidate);
+    });
+  }
+
+  function getWishListActiveState(button) {
     if (!button) return false;
     if (button.classList.contains('is-active') || button.classList.contains('active')) return true;
     if (button.getAttribute('aria-pressed') === 'true') return true;
-    const attributeNames = ['data-original-title', 'data-bs-original-title', 'title', 'aria-label'];
-    return attributeNames.some(function (attributeName) {
-      const value = button.getAttribute(attributeName);
-      return value && value.toLowerCase().includes('entfernen');
-    });
+    return hasRemoveLabelInButton(button);
+  }
+
+  function syncWishListActiveAttribute(button) {
+    if (!button) return false;
+    const isActive = getWishListActiveState(button);
+    const current = button.getAttribute('data-wishlist-active');
+    if (isActive) {
+      if (current !== 'true') {
+        button.setAttribute('data-wishlist-active', 'true');
+      }
+    } else if (current !== null) {
+      button.removeAttribute('data-wishlist-active');
+    }
+    return isActive;
+  }
+
+  function isWishListActive(button) {
+    return syncWishListActiveAttribute(button);
   }
 
   function setWishListLoadingState(button) {
@@ -3870,7 +3903,7 @@ shOnReady(function () {
     setWishListLoadingState(button);
 
     const store = getVueStore();
-    const initialState = isWishListActive(button);
+    const initialState = syncWishListActiveAttribute(button);
     const initialStoreIds = store && store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListIds)
       ? store.state.wishList.wishListIds.join(',')
       : null;
@@ -3900,7 +3933,7 @@ shOnReady(function () {
     }
 
     observer = new MutationObserver(function () {
-      const nextState = isWishListActive(button);
+      const nextState = syncWishListActiveAttribute(button);
       if (nextState === initialState || didReload) return;
 
       didReload = true;
@@ -3915,7 +3948,7 @@ shOnReady(function () {
       window.location.reload();
     });
 
-    observer.observe(button, { attributes: true, attributeFilter: attributeFilter });
+    observer.observe(button, { attributes: true, subtree: true, attributeFilter: attributeFilter });
 
     fallbackTimeout = window.setTimeout(function () {
       if (didReload) return;
@@ -3944,6 +3977,10 @@ shOnReady(function () {
     }, 3000);
   }
 
+  Array.prototype.forEach.call(
+    document.querySelectorAll(wishlistButtonSelector),
+    syncWishListActiveAttribute
+  );
   document.addEventListener('click', handleWishListButtonClick);
 });
 
