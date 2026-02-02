@@ -3892,45 +3892,21 @@ button[data-testing="quantity-btn-decrease"] {
   display: none;
 }
 
-.widget-add-to-wish-list .btn.is-loading::after,
 .widget-add-to-wish-list .btn .loading-animation::before,
 .widget-add-to-wish-list .btn .loading-animation::after,
 .widget-add-to-wish-list .btn .plenty-loader {
   display: none;
 }
 
-.widget-add-to-wish-list .btn.is-loading::before {
-  content: "\f1ce";
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  -webkit-mask: none;
-  mask: none;
-  font-family: "FontAwesome";
-  font-size: 16px;
-  line-height: 1;
-  color: currentColor;
+.widget-add-to-wish-list .btn.is-loading::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
   animation: fa-spin 1s infinite linear;
-}
-
-body.wishlist-is-loading .widget-add-to-wish-list .btn::before {
-  content: "\f1ce";
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  -webkit-mask: none;
-  mask: none;
-  font-family: "FontAwesome";
-  font-size: 16px;
-  line-height: 1;
-  color: currentColor;
-  animation: fa-spin 1s infinite linear;
-}
-
-body.wishlist-is-loading .widget-add-to-wish-list .btn i {
-  display: none;
 }
 
 .widget-add-to-wish-list .btn::before {
