@@ -3964,6 +3964,12 @@ body.wishlist-is-loading .widget-add-to-wish-list .btn i {
   mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M7%204h10a1%201%200%200%201%201%201v15l-6-3-6%203V5a1%201%200%200%201%201-1z'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
+.widget-add-to-wish-list .btn:has(.text-appearance.text-danger)::before {
+  background-color: #dc2626;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='black'%3E%3Cpath%20d='M7%203.75h10A2.25%202.25%200%200%201%2019.25%206v14.25a.75.75%200%200%201-1.08.67L12%2017.79l-6.17%203.13A.75.75%200%200%201%204.75%2020.25V6A2.25%202.25%200%200%201%207%203.75Z'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='black'%3E%3Cpath%20d='M7%203.75h10A2.25%202.25%200%200%201%2019.25%206v14.25a.75.75%200%200%201-1.08.67L12%2017.79l-6.17%203.13A.75.75%200%200%201%204.75%2020.25V6A2.25%202.25%200%200%201%207%203.75Z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
 .widget-add-to-wish-list .btn:hover,
 .widget-add-to-wish-list .btn:focus-visible {
   border-color: #cbd5e1;
