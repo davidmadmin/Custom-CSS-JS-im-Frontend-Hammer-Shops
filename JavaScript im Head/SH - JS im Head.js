@@ -3828,7 +3828,7 @@ shOnReady(function () {
 shOnReady(function () {
   const reloadStorageKey = 'shWishlistAutoOpen';
   const wishlistButtonSelector = '.widget-add-to-wish-list .btn';
-  const attributeFilter = ['class', 'aria-pressed', 'data-original-title'];
+  const attributeFilter = ['class', 'aria-pressed', 'data-original-title', 'data-bs-original-title', 'title', 'aria-label'];
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
@@ -3840,8 +3840,11 @@ shOnReady(function () {
     if (!button) return false;
     if (button.classList.contains('is-active') || button.classList.contains('active')) return true;
     if (button.getAttribute('aria-pressed') === 'true') return true;
-    const title = button.getAttribute('data-original-title');
-    return title && title.toLowerCase().includes('entfernen');
+    const titleAttributes = ['data-original-title', 'data-bs-original-title', 'title', 'aria-label'];
+    return titleAttributes.some(function (attribute) {
+      const value = button.getAttribute(attribute);
+      return value && value.toLowerCase().includes('entfernen');
+    });
   }
 
   function setWishListLoadingState(button) {
