@@ -3944,28 +3944,6 @@ body.wishlist-is-loading .widget-add-to-wish-list .btn i {
   text-decoration: none;
 }
 
-.widget-add-to-wish-list .btn.is-active,
-.widget-add-to-wish-list .btn.active,
-.widget-add-to-wish-list .btn[aria-pressed="true"],
-.widget-add-to-wish-list .btn[data-original-title*="entfernen"],
-.widget-add-to-wish-list .btn[data-bs-original-title*="entfernen"],
-.widget-add-to-wish-list .btn[title*="entfernen"],
-.widget-add-to-wish-list .btn[aria-label*="entfernen"] {
-  border-color: #9ca3af;
-  background-color: #f1f5f9;
-  color: #111827;
-}
-
-.widget-add-to-wish-list .btn.is-active::before,
-.widget-add-to-wish-list .btn.active::before,
-.widget-add-to-wish-list .btn[aria-pressed="true"]::before,
-.widget-add-to-wish-list .btn[data-original-title*="entfernen"]::before,
-.widget-add-to-wish-list .btn[data-bs-original-title*="entfernen"]::before,
-.widget-add-to-wish-list .btn[title*="entfernen"]::before,
-.widget-add-to-wish-list .btn[aria-label*="entfernen"]::before {
-  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='black'%20d='M7%204h10a1%201%200%200%201%201%201v15l-6-3-6%203V5a1%201%200%200%201%201-1z'/%3E%3C/svg%3E") no-repeat center / contain;
-  mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='black'%20d='M7%204h10a1%201%200%200%201%201%201v15l-6-3-6%203V5a1%201%200%200%201%201-1z'/%3E%3C/svg%3E") no-repeat center / contain;
-}
 /* End Section: Wishlist button styling */
 
 /* Section: Temporary hidden blocks until external functions added */
