@@ -1204,7 +1204,7 @@ wishListInactiveItemId,"Varianten ID",Ceres,Template.properties
 wishListInactiveItems,"Derzeit nicht verfügbar",Ceres,Template.properties
 wishListItemId,Art.-ID,Ceres,Template.properties
 wishListItemNumber,Artikelnummer,Ceres,Template.properties
-wishListNoItems,"Du hast noch keine Artikel in der Wunschliste.",Ceres,Template.properties
+wishListNoItems,"Du hast noch keine Artikel in der Merkliste.",Ceres,Template.properties
 wishListRemoved,"Der Artikel wurde von der Wunschliste entfernt.",Ceres,Template.properties
 cookieDescription,"YouTube Cookies. Die Cookies werden benötigt, um die integrierte YouTube Videos abspielen zu können.",ItemVideoPlugin,Template.properties
 cookieLifespan,"Verschiedene (bis max 2 Jahre)",ItemVideoPlugin,Template.properties

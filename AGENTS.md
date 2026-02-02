@@ -99,6 +99,7 @@ Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentySh
 * Ersetze CDN-Hostnamen automatisch: sobald Du `//cdn02.plentymarkets.com/nteqnk1xxnkn` in FH-Dateien siehst oder von mir bekommst, wandelst Du ihn in `//bilder.fenster-hammer.de` um; in SH-Dateien in `//bilder.schrauben-hammer.de`. Behalte dabei Protokoll und Pfad bei, damit die Links first-party gehostet bleiben.
 * Halte README und begleitende Dokumentation aktuell, wenn Du neue Features oder Abhängigkeiten ergänzt.
 * Verwende für die direkte Anrede konsequent die Du-Form und schreibe Du/Dir/Dich/Dein usw. immer mit großem Anfangsbuchstaben – unabhängig von der Position im Satz.
+* Behandle die Begriffe Wunschliste, Merkliste und wishlist als synonym. PlentyLTS nutzt intern „Wish-list“, doch in der Kundenkommunikation verwenden wir ausschließlich „Merkliste“.
 
 ## Commit Message Convention (Conventional Commits)
 
