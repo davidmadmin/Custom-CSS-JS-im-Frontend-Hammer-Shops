@@ -3907,32 +3907,8 @@ button[data-testing="quantity-btn-decrease"] {
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-.widget-add-to-wish-list .btn .loading-animation,
-.widget-add-to-wish-list .btn .loading,
-.widget-add-to-wish-list .btn .loader,
-.widget-add-to-wish-list .btn .spinner-border,
-.widget-add-to-wish-list .btn .fa-spinner,
-.widget-add-to-wish-list .btn .fa-circle-o-notch {
-  display: none;
-}
-
 .widget-add-to-wish-list .btn i::before {
   display: none;
-}
-
-.widget-add-to-wish-list .btn.is-loading::after,
-.widget-add-to-wish-list .btn .loading-animation::before,
-.widget-add-to-wish-list .btn .loading-animation::after,
-.widget-add-to-wish-list .btn .plenty-loader {
-  display: none;
-}
-
-.widget-add-to-wish-list .btn.is-loading::before {
-  display: none;
-}
-
-.widget-add-to-wish-list .btn.is-loading .fa-circle-o-notch {
-  display: inline-block;
 }
 
 body.wishlist-is-loading .widget-add-to-wish-list .btn::before {
