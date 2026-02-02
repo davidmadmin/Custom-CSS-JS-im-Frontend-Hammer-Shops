@@ -3360,6 +3360,11 @@ body.sh-mobile-menu-open {
     max-width: 252px;
   }
 
+  .sh-header__panel--wishlist {
+    width: calc(100vw - 40px);
+    max-width: none;
+  }
+
   .sh-header__panel-arrow {
     left: 59%;
     right: auto;
