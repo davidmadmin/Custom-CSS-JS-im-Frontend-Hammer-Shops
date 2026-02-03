@@ -3959,7 +3959,7 @@ fhOnReady(function () {
     }
 
     var activeOverlay = null;
-    var updateOverlay = function (index) {
+    var activateOverlay = function (index) {
       var nextOverlay = null;
       var fallbackOverlay = overlayTexts[index] || null;
       overlayTexts.forEach(function (item) {
@@ -3973,26 +3973,28 @@ fhOnReady(function () {
         nextOverlay = fallbackOverlay;
       }
 
-      if (!nextOverlay || nextOverlay === activeOverlay) {
-        return;
-      }
-
       overlayTexts.forEach(function (item) {
         item.classList.remove('is-active', 'is-exiting');
       });
 
-      if (activeOverlay) {
-        activeOverlay.classList.add('is-exiting');
-        window.setTimeout(function () {
-          activeOverlay.classList.remove('is-exiting', 'is-active');
-        }, 320);
-      }
-
-      window.setTimeout(function () {
+      if (nextOverlay) {
         nextOverlay.classList.add('is-active');
-      }, 80);
+        activeOverlay = nextOverlay;
+      }
+    };
 
-      activeOverlay = nextOverlay;
+    var beginOverlayExit = function () {
+      if (!activeOverlay) {
+        return;
+      }
+      activeOverlay.classList.remove('is-active');
+      activeOverlay.classList.add('is-exiting');
+    };
+
+    var finishOverlayExit = function () {
+      overlayTexts.forEach(function (item) {
+        item.classList.remove('is-exiting');
+      });
     };
 
     var getActiveIndex = function () {
@@ -4002,22 +4004,22 @@ fhOnReady(function () {
       }
       return 0;
     };
-    updateOverlay(getActiveIndex());
+    activateOverlay(getActiveIndex());
 
-    slider.addEventListener('slide.bs.carousel', function (event) {
-      var nextIndex = typeof event.to === 'number' ? event.to : getActiveIndex();
-      updateOverlay(nextIndex);
+    slider.addEventListener('slide.bs.carousel', function () {
+      beginOverlayExit();
     });
     slider.addEventListener('slid.bs.carousel', function (event) {
       var nextIndex = typeof event.to === 'number' ? event.to : getActiveIndex();
-      updateOverlay(nextIndex);
+      finishOverlayExit();
+      activateOverlay(nextIndex);
     });
 
     if (window.MutationObserver) {
       var carouselInner = slider.querySelector('.carousel-inner');
       if (carouselInner) {
         var observer = new MutationObserver(function () {
-          updateOverlay(getActiveIndex());
+          activateOverlay(getActiveIndex());
         });
         observer.observe(carouselInner, {
           attributes: true,
