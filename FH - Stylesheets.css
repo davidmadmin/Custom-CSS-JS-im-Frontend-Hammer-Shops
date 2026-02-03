@@ -4050,3 +4050,83 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
   display: none !important;
 }
 /* End Section: PayPal Express Checkout */
+
+/* Section: FH Custom Slider */
+.fh-custom-slider {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+}
+
+.fh-custom-slider .carousel-inner,
+.fh-custom-slider .carousel-item,
+.fh-custom-slider .fh-custom-slider__link,
+.fh-custom-slider picture,
+.fh-custom-slider img {
+  height: clamp(260px, 35vw, 560px);
+}
+
+.fh-custom-slider .carousel-item {
+  position: relative;
+}
+
+.fh-custom-slider .fh-custom-slider__link {
+  display: block;
+}
+
+.fh-custom-slider__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fh-custom-slider__overlay {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 33.3333%;
+  min-width: 280px;
+  background: rgba(0, 0, 0, 0.78);
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  padding: clamp(24px, 4vw, 60px);
+}
+
+.fh-custom-slider__overlay-content {
+  max-width: 420px;
+  color: #fff;
+}
+
+.fh-custom-slider__eyebrow {
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+}
+
+.fh-custom-slider__title {
+  margin: 0 0 16px;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: 700;
+}
+
+.fh-custom-slider__text {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  line-height: 1.6;
+}
+
+@media (max-width: 991.98px) {
+  .fh-custom-slider__overlay {
+    width: 45%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .fh-custom-slider__overlay {
+    width: 60%;
+    min-width: 0;
+  }
+}
+/* End Section: FH Custom Slider */
