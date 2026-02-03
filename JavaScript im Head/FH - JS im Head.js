@@ -3945,6 +3945,47 @@ fhOnReady(function () {
   document.addEventListener('click', handleWishListButtonClick);
 });
 
+// Section: FH Custom Slider Overlay Text
+(function fhCustomSliderOverlayText() {
+  function initCustomSliderOverlay() {
+    var slider = document.getElementById('fh-custom-slider');
+    if (!slider) {
+      return;
+    }
+
+    var overlayTexts = slider.querySelectorAll('.fh-custom-slider__overlay-text');
+    if (!overlayTexts.length) {
+      return;
+    }
+
+    var updateOverlay = function (index) {
+      overlayTexts.forEach(function (item) {
+        var isActive = Number(item.getAttribute('data-slide-index')) === index;
+        item.classList.toggle('is-active', isActive);
+      });
+    };
+
+    var activeItem = slider.querySelector('.carousel-item.active');
+    var activeIndex = 0;
+    if (activeItem && activeItem.parentNode) {
+      activeIndex = Array.prototype.indexOf.call(activeItem.parentNode.children, activeItem);
+    }
+    updateOverlay(activeIndex);
+
+    slider.addEventListener('slid.bs.carousel', function (event) {
+      var nextIndex = typeof event.to === 'number' ? event.to : 0;
+      updateOverlay(nextIndex);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCustomSliderOverlay);
+  } else {
+    initCustomSliderOverlay();
+  }
+})();
+// End Section: FH Custom Slider Overlay Text
+
 // Section: Signature console log by David M. Abdin
 (function fhSignatureLog() {
   var headingStyle = [

@@ -74,25 +74,3 @@
     </a>
   </div>
 </div>
-
-<script>
-  (function () {
-    var slider = document.getElementById("fh-custom-slider");
-    if (!slider) {
-      return;
-    }
-
-    var overlayTexts = slider.querySelectorAll(".fh-custom-slider__overlay-text");
-    var updateOverlay = function (index) {
-      overlayTexts.forEach(function (item) {
-        var isActive = Number(item.getAttribute("data-slide-index")) === index;
-        item.classList.toggle("is-active", isActive);
-      });
-    };
-
-    slider.addEventListener("slid.bs.carousel", function (event) {
-      var activeIndex = typeof event.to === "number" ? event.to : 0;
-      updateOverlay(activeIndex);
-    });
-  })();
-</script>
