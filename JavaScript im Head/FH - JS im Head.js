@@ -3961,12 +3961,17 @@ fhOnReady(function () {
     var activeOverlay = null;
     var updateOverlay = function (index) {
       var nextOverlay = null;
+      var fallbackOverlay = overlayTexts[index] || null;
       overlayTexts.forEach(function (item) {
-        var isMatch = Number(item.getAttribute('data-slide-index')) === index;
+        var dataIndex = Number(item.getAttribute('data-slide-index'));
+        var isMatch = Number.isNaN(dataIndex) ? false : dataIndex === index;
         if (isMatch) {
           nextOverlay = item;
         }
       });
+      if (!nextOverlay) {
+        nextOverlay = fallbackOverlay;
+      }
 
       if (!nextOverlay || nextOverlay === activeOverlay) {
         return;
@@ -3990,15 +3995,17 @@ fhOnReady(function () {
       activeOverlay = nextOverlay;
     };
 
-    var activeItem = slider.querySelector('.carousel-item.active');
-    var activeIndex = 0;
-    if (activeItem && activeItem.parentNode) {
-      activeIndex = Array.prototype.indexOf.call(activeItem.parentNode.children, activeItem);
-    }
-    updateOverlay(activeIndex);
+    var getActiveIndex = function () {
+      var activeItem = slider.querySelector('.carousel-item.active');
+      if (activeItem && activeItem.parentNode) {
+        return Array.prototype.indexOf.call(activeItem.parentNode.children, activeItem);
+      }
+      return 0;
+    };
+    updateOverlay(getActiveIndex());
 
     slider.addEventListener('slid.bs.carousel', function (event) {
-      var nextIndex = typeof event.to === 'number' ? event.to : 0;
+      var nextIndex = typeof event.to === 'number' ? event.to : getActiveIndex();
       updateOverlay(nextIndex);
     });
   }
