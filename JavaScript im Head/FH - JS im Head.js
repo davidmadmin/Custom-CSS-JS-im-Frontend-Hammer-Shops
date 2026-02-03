@@ -3945,6 +3945,99 @@ fhOnReady(function () {
   document.addEventListener('click', handleWishListButtonClick);
 });
 
+// Section: FH Custom Slider Overlay Text
+(function fhCustomSliderOverlayText() {
+  function initCustomSliderOverlay() {
+    var slider = document.getElementById('fh-custom-slider');
+    if (!slider) {
+      return;
+    }
+
+    var overlayTexts = slider.querySelectorAll('.fh-custom-slider__overlay-text');
+    if (!overlayTexts.length) {
+      return;
+    }
+
+    var activeOverlay = null;
+    var activateOverlay = function (index) {
+      var nextOverlay = null;
+      var fallbackOverlay = overlayTexts[index] || null;
+      overlayTexts.forEach(function (item) {
+        var dataIndex = Number(item.getAttribute('data-slide-index'));
+        var isMatch = Number.isNaN(dataIndex) ? false : dataIndex === index;
+        if (isMatch) {
+          nextOverlay = item;
+        }
+      });
+      if (!nextOverlay) {
+        nextOverlay = fallbackOverlay;
+      }
+
+      overlayTexts.forEach(function (item) {
+        item.classList.remove('is-active', 'is-exiting');
+      });
+
+      if (nextOverlay) {
+        nextOverlay.classList.add('is-active');
+        activeOverlay = nextOverlay;
+      }
+    };
+
+    var beginOverlayExit = function () {
+      if (!activeOverlay) {
+        return;
+      }
+      activeOverlay.classList.remove('is-active');
+      activeOverlay.classList.add('is-exiting');
+    };
+
+    var finishOverlayExit = function () {
+      overlayTexts.forEach(function (item) {
+        item.classList.remove('is-exiting');
+      });
+    };
+
+    var getActiveIndex = function () {
+      var activeItem = slider.querySelector('.carousel-item.active');
+      if (activeItem && activeItem.parentNode) {
+        return Array.prototype.indexOf.call(activeItem.parentNode.children, activeItem);
+      }
+      return 0;
+    };
+    activateOverlay(getActiveIndex());
+
+    slider.addEventListener('slide.bs.carousel', function () {
+      beginOverlayExit();
+    });
+    slider.addEventListener('slid.bs.carousel', function (event) {
+      var nextIndex = typeof event.to === 'number' ? event.to : getActiveIndex();
+      finishOverlayExit();
+      activateOverlay(nextIndex);
+    });
+
+    if (window.MutationObserver) {
+      var carouselInner = slider.querySelector('.carousel-inner');
+      if (carouselInner) {
+        var observer = new MutationObserver(function () {
+          activateOverlay(getActiveIndex());
+        });
+        observer.observe(carouselInner, {
+          attributes: true,
+          subtree: true,
+          attributeFilter: ['class'],
+        });
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCustomSliderOverlay);
+  } else {
+    initCustomSliderOverlay();
+  }
+})();
+// End Section: FH Custom Slider Overlay Text
+
 // Section: Signature console log by David M. Abdin
 (function fhSignatureLog() {
   var headingStyle = [
