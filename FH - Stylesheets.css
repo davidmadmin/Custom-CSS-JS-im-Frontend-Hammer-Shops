@@ -4085,7 +4085,8 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
   inset: 0 auto 0 0;
   width: 33.3333%;
   min-width: 280px;
-  background: rgba(0, 0, 0, 0.78);
+  background: #000;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
   z-index: 3;
   pointer-events: none;
   display: flex;
@@ -4106,6 +4107,11 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
   transition: opacity 300ms ease, transform 300ms ease;
   position: absolute;
   inset: 0;
+}
+
+.fh-custom-slider__overlay-text.is-exiting {
+  opacity: 0;
+  transform: translateY(-12px);
 }
 
 .fh-custom-slider__overlay-text.is-active {

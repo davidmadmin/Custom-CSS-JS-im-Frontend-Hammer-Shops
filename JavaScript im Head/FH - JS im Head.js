@@ -3958,11 +3958,36 @@ fhOnReady(function () {
       return;
     }
 
+    var activeOverlay = null;
     var updateOverlay = function (index) {
+      var nextOverlay = null;
       overlayTexts.forEach(function (item) {
-        var isActive = Number(item.getAttribute('data-slide-index')) === index;
-        item.classList.toggle('is-active', isActive);
+        var isMatch = Number(item.getAttribute('data-slide-index')) === index;
+        if (isMatch) {
+          nextOverlay = item;
+        }
       });
+
+      if (!nextOverlay || nextOverlay === activeOverlay) {
+        return;
+      }
+
+      overlayTexts.forEach(function (item) {
+        item.classList.remove('is-active', 'is-exiting');
+      });
+
+      if (activeOverlay) {
+        activeOverlay.classList.add('is-exiting');
+        window.setTimeout(function () {
+          activeOverlay.classList.remove('is-exiting', 'is-active');
+        }, 320);
+      }
+
+      window.setTimeout(function () {
+        nextOverlay.classList.add('is-active');
+      }, 80);
+
+      activeOverlay = nextOverlay;
     };
 
     var activeItem = slider.querySelector('.carousel-item.active');
