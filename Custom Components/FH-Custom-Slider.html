@@ -1,17 +1,28 @@
 <div class="widget widget-image-carousel widget-primary widget-proportional widget-prop-2-1 fh-custom-slider">
   <div id="fh-custom-slider" data-ride="carousel" class="widget-inner carousel slide">
+    <div class="fh-custom-slider__overlay" aria-hidden="true">
+      <div class="fh-custom-slider__overlay-content">
+        <div class="fh-custom-slider__overlay-text is-active" data-slide-index="0">
+          <p class="fh-custom-slider__eyebrow">Lorem ipsum</p>
+          <h2 class="fh-custom-slider__title">Slide A</h2>
+          <p class="fh-custom-slider__text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+        <div class="fh-custom-slider__overlay-text" data-slide-index="1">
+          <p class="fh-custom-slider__eyebrow">Lorem ipsum</p>
+          <h2 class="fh-custom-slider__title">Slide B2</h2>
+          <p class="fh-custom-slider__text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <div class="fh-custom-slider__overlay" aria-hidden="true">
-          <div class="fh-custom-slider__overlay-content">
-            <p class="fh-custom-slider__eyebrow">Lorem ipsum</p>
-            <h2 class="fh-custom-slider__title">Slide A</h2>
-            <p class="fh-custom-slider__text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-        </div>
         <a href="#" class="fh-custom-slider__link" aria-label="Slide A">
           <picture data-picture-class="img-cover" data-alt="" data-loaded="true">
             <source
@@ -25,16 +36,6 @@
         </a>
       </div>
       <div class="carousel-item">
-        <div class="fh-custom-slider__overlay" aria-hidden="true">
-          <div class="fh-custom-slider__overlay-content">
-            <p class="fh-custom-slider__eyebrow">Lorem ipsum</p>
-            <h2 class="fh-custom-slider__title">Slide B2</h2>
-            <p class="fh-custom-slider__text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-        </div>
         <a href="#" class="fh-custom-slider__link" aria-label="Slide B2">
           <picture data-picture-class="img-cover" data-alt="" data-loaded="true">
             <source
@@ -73,3 +74,25 @@
     </a>
   </div>
 </div>
+
+<script>
+  (function () {
+    var slider = document.getElementById("fh-custom-slider");
+    if (!slider) {
+      return;
+    }
+
+    var overlayTexts = slider.querySelectorAll(".fh-custom-slider__overlay-text");
+    var updateOverlay = function (index) {
+      overlayTexts.forEach(function (item) {
+        var isActive = Number(item.getAttribute("data-slide-index")) === index;
+        item.classList.toggle("is-active", isActive);
+      });
+    };
+
+    slider.addEventListener("slid.bs.carousel", function (event) {
+      var activeIndex = typeof event.to === "number" ? event.to : 0;
+      updateOverlay(activeIndex);
+    });
+  })();
+</script>
