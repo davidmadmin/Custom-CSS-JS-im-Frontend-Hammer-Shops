@@ -4004,10 +4004,28 @@ fhOnReady(function () {
     };
     updateOverlay(getActiveIndex());
 
+    slider.addEventListener('slide.bs.carousel', function (event) {
+      var nextIndex = typeof event.to === 'number' ? event.to : getActiveIndex();
+      updateOverlay(nextIndex);
+    });
     slider.addEventListener('slid.bs.carousel', function (event) {
       var nextIndex = typeof event.to === 'number' ? event.to : getActiveIndex();
       updateOverlay(nextIndex);
     });
+
+    if (window.MutationObserver) {
+      var carouselInner = slider.querySelector('.carousel-inner');
+      if (carouselInner) {
+        var observer = new MutationObserver(function () {
+          updateOverlay(getActiveIndex());
+        });
+        observer.observe(carouselInner, {
+          attributes: true,
+          subtree: true,
+          attributeFilter: ['class'],
+        });
+      }
+    }
   }
 
   if (document.readyState === 'loading') {
