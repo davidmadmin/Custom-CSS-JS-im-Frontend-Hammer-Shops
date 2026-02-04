@@ -4187,4 +4187,10 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
     min-width: 0;
   }
 }
+
+@media (max-width: 575.98px) {
+  .fh-custom-slider {
+    margin-bottom: 0;
+  }
+}
 /* End Section: FH Custom Slider */
