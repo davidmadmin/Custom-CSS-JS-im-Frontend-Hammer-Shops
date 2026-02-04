@@ -3958,7 +3958,23 @@ fhOnReady(function () {
       return;
     }
 
+    var navItems = slider.querySelectorAll('.fh-custom-slider__nav-item');
     var activeOverlay = null;
+    var setActiveNav = function (index) {
+      if (!navItems.length) {
+        return;
+      }
+      navItems.forEach(function (item) {
+        var itemIndex = Number(item.getAttribute('data-slide-to'));
+        var isMatch = Number.isNaN(itemIndex) ? false : itemIndex === index;
+        item.classList.toggle('is-active', isMatch);
+        if (isMatch) {
+          item.setAttribute('aria-current', 'true');
+        } else {
+          item.removeAttribute('aria-current');
+        }
+      });
+    };
     var activateOverlay = function (index) {
       var nextOverlay = null;
       var fallbackOverlay = overlayTexts[index] || null;
@@ -4004,7 +4020,9 @@ fhOnReady(function () {
       }
       return 0;
     };
-    activateOverlay(getActiveIndex());
+    var initialIndex = getActiveIndex();
+    activateOverlay(initialIndex);
+    setActiveNav(initialIndex);
 
     slider.addEventListener('slide.bs.carousel', function () {
       beginOverlayExit();
@@ -4013,6 +4031,7 @@ fhOnReady(function () {
       var nextIndex = typeof event.to === 'number' ? event.to : getActiveIndex();
       finishOverlayExit();
       activateOverlay(nextIndex);
+      setActiveNav(nextIndex);
     });
 
     if (window.MutationObserver) {
