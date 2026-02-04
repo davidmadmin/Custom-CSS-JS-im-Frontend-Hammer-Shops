@@ -3958,10 +3958,10 @@ fhOnReady(function () {
       return;
     }
 
-    var sliderWrapper = slider.closest('.fh-custom-slider');
-    var navLinks = sliderWrapper
-      ? sliderWrapper.querySelectorAll('.fh-custom-slider__nav-link')
-      : [];
+    var navContainer = document.querySelector(
+      '.fh-custom-slider__nav[data-target="#' + slider.id + '"]',
+    );
+    var navLinks = navContainer ? navContainer.querySelectorAll('.fh-custom-slider__nav-link') : [];
 
     var setActiveNav = function (index) {
       if (!navLinks.length) {

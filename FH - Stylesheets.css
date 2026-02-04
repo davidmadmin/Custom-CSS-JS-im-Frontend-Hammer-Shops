@@ -4141,9 +4141,12 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
 .fh-custom-slider__nav {
   margin: 0;
   padding: 0;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   display: flex;
   flex-wrap: wrap;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .fh-custom-slider__nav-link {
