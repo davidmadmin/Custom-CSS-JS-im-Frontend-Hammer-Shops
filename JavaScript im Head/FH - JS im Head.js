@@ -3958,7 +3958,10 @@ fhOnReady(function () {
       return;
     }
 
-    var navItems = slider.querySelectorAll('.fh-custom-slider__nav-item');
+    var sliderWrapper = slider.closest('.fh-custom-slider');
+    var navItems = sliderWrapper
+      ? sliderWrapper.querySelectorAll('.fh-custom-slider__nav-item')
+      : [];
     var activeOverlay = null;
     var setActiveNav = function (index) {
       if (!navItems.length) {
