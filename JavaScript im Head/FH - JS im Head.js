@@ -3958,6 +3958,22 @@ fhOnReady(function () {
       return;
     }
 
+    var navContainer = document.querySelector(
+      '.fh-custom-slider__nav[data-target="#' + slider.id + '"]',
+    );
+    var navLinks = navContainer ? navContainer.querySelectorAll('.fh-custom-slider__nav-link') : [];
+
+    var setActiveNav = function (index) {
+      if (!navLinks.length) {
+        return;
+      }
+      navLinks.forEach(function (link) {
+        var dataIndex = Number(link.getAttribute('data-slide-index'));
+        var isMatch = Number.isNaN(dataIndex) ? false : dataIndex === index;
+        link.classList.toggle('is-active', isMatch);
+      });
+    };
+
     var activeOverlay = null;
     var activateOverlay = function (index) {
       var nextOverlay = null;
@@ -3981,6 +3997,8 @@ fhOnReady(function () {
         nextOverlay.classList.add('is-active');
         activeOverlay = nextOverlay;
       }
+
+      setActiveNav(index);
     };
 
     var beginOverlayExit = function () {
