@@ -4138,6 +4138,43 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
   line-height: 1.6;
 }
 
+.fh-custom-slider__nav {
+  margin: -1px 0 0;
+  padding: 0;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  display: flex;
+  flex-wrap: wrap;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.fh-custom-slider__nav-link {
+  flex: 1 1 0;
+  min-width: 140px;
+  padding: 12px 16px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+  color: #fff;
+  opacity: 0.7;
+  text-decoration: none;
+  transition: opacity 200ms ease, background-color 200ms ease;
+}
+
+.fh-custom-slider__nav-link:hover,
+.fh-custom-slider__nav-link:focus {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.fh-custom-slider__nav-link.is-active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
 @media (max-width: 991.98px) {
   .fh-custom-slider__overlay {
     width: 45%;
@@ -4148,6 +4185,12 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
   .fh-custom-slider__overlay {
     width: 60%;
     min-width: 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .widget.widget-image-carousel.fh-custom-slider {
+    margin-bottom: 0 !important;
   }
 }
 /* End Section: FH Custom Slider */
