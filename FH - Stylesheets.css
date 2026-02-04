@@ -4139,7 +4139,7 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
 }
 
 .fh-custom-slider__nav {
-  margin: 0;
+  margin: -1px 0 0;
   padding: 0;
   width: 100vw;
   margin-left: calc(50% - 50vw);
