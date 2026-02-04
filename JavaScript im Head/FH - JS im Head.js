@@ -4038,7 +4038,9 @@ fhOnReady(function () {
       var carouselInner = slider.querySelector('.carousel-inner');
       if (carouselInner) {
         var observer = new MutationObserver(function () {
-          activateOverlay(getActiveIndex());
+          var activeIndex = getActiveIndex();
+          activateOverlay(activeIndex);
+          setActiveNav(activeIndex);
         });
         observer.observe(carouselInner, {
           attributes: true,
