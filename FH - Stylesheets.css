@@ -4200,7 +4200,7 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
   }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 767.98px) {
   .widget.widget-image-carousel.fh-custom-slider {
     margin-bottom: 0 !important;
   }
