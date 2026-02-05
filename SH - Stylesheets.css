@@ -1178,6 +1178,10 @@ a.logo {
   display: none;
 }
 
+.sh-header__wishlist-body .mt-5.mb-0 {
+  display: none !important;
+}
+
 .sh-header__panel-arrow {
   position: absolute;
   top: -10px;
