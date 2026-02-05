@@ -3113,7 +3113,7 @@ div.grecaptcha-badge {
     box-sizing: border-box;
   }
 
-  #page-header .row .position-relative {
+  #page-header .container-max .row .flex-row-reverse .position-relative {
     margin: 0;
   }
 
