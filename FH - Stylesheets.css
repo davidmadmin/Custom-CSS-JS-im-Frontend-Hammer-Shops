@@ -3504,8 +3504,8 @@ body.fh-mobile-menu-open .brevo-conversations__iframe-wrapper {
   display: none !important;
 }
 
-body:has([data-dfd-screen="ai-fullscreen-initial"]:not([style*="display: none"]), [data-dfd-view="Search"].dfd-ai_fullscreen:not([style*="display: none"])) div[id^="trustbadge-container-"],
-body:has([data-dfd-screen="ai-fullscreen-initial"]:not([style*="display: none"]), [data-dfd-view="Search"].dfd-ai_fullscreen:not([style*="display: none"])) .brevo-conversations__iframe-wrapper {
+body:has([data-dfd-screen="ai-fullscreen-initial"]:not([style*="display:none" i]):not([style*="display: none" i]), [data-dfd-view="Search"].dfd-ai_fullscreen:not([style*="display:none" i]):not([style*="display: none" i])) div[id^="trustbadge-container-"],
+body:has([data-dfd-screen="ai-fullscreen-initial"]:not([style*="display:none" i]):not([style*="display: none" i]), [data-dfd-view="Search"].dfd-ai_fullscreen:not([style*="display:none" i]):not([style*="display: none" i])) .brevo-conversations__iframe-wrapper {
   display: none !important;
 }
 
