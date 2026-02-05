@@ -1,0 +1,34 @@
+<!--
+Custom Code Widget: Merkliste-Button
+Hinweis:
+- Nur HTML mit Inline-Styles, keine <style>/<script>-Tags.
+- Die Funktionalität wird über das Head-JS in diesem Repository bereitgestellt.
+- Der native Plenty-Merkliste-Button muss auf der Produktseite weiterhin vorhanden sein,
+  damit der Klick technisch korrekt verarbeitet werden kann.
+-->
+<div data-hammer-merkliste-widget style="display:flex;justify-content:flex-end;">
+  <button
+    type="button"
+    data-hammer-merkliste-button
+    aria-label="Merkliste"
+    aria-pressed="false"
+    aria-busy="false"
+    style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid #d9d9d9;border-radius:10px;background:#fff;color:#1a1a1a;font-weight:600;line-height:1.2;min-height:36px;cursor:pointer;text-decoration:none;"
+  >
+    <span data-merkliste-icon-default aria-hidden="true" style="display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 4H17C17.55 4 18 4.45 18 5V20L12 17L6 20V5C6 4.45 6.45 4 7 4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+
+    <span data-merkliste-icon-active aria-hidden="true" style="display:none;width:18px;height:18px;align-items:center;justify-content:center;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 4H17C17.55 4 18 4.45 18 5V20L12 17L6 20V5C6 4.45 6.45 4 7 4Z"/>
+      </svg>
+    </span>
+
+    <span data-merkliste-icon-loading aria-hidden="true" style="display:none;width:18px;height:18px;align-items:center;justify-content:center;font-size:16px;line-height:1;">⟳</span>
+
+    <span data-merkliste-label>Merkliste</span>
+  </button>
+</div>

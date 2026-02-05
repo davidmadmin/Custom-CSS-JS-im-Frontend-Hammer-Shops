@@ -120,6 +120,10 @@ Benennt die Schaltfläche „Warenkorb“ im Overlay um, ergänzt ein Pfeil-Icon
 ### Custom Startseiten-Slider (FH & SH)
 Stellt für beide Shops eine eigene Carousel-Komponente mit schwarzem Overlay-Panel, synchronisierter Schnellnavigation und animierten Overlay-Texten bereit. Die Markup-Vorlagen liegen unter `Custom Components/FH-Custom-Slider.html` und `Custom Components/SH-Custom-Slider.html`, die zugehörigen Styles in den shop-spezifischen Stylesheets sowie die Overlay-Synchronisierung in den jeweiligen Head-JavaScript-Dateien.
 
+
+### Custom Merkliste-Button (Code-Widget kompatibel)
+Für Produktseiten steht ein eigener Merkliste-Button als reine HTML-Komponente zur Verfügung (`Custom Components/FH-SH Merkliste Button Widget.html`). Die Vorlage enthält ausschließlich HTML mit Inline-Styles (ohne `<style>`/`<script>`-Tags) und wird über die Head-JavaScript-Dateien funktional mit dem nativen Plenty-Merkliste-Button gekoppelt. Dabei bleibt der native Button als technischer Hook bestehen, während das sichtbare UI vollständig durch die Custom-Komponente gesteuert wird.
+
 ### Inhaltsverzeichnis für Rechtstexte (GTM-Snippet)
 Erzeugt für rechtliche Content-Seiten ein dynamisches Inhaltsverzeichnis aus allen `h1`, `h2` und `h3`-Elementen, sofern je Typ mehr als eine Überschrift vorhanden ist. Die Ausgabe wird per Google Tag Manager eingebunden und liegt unter `Javascript/GTM Snippets/Legal-Table-of-Contents.js`.
 

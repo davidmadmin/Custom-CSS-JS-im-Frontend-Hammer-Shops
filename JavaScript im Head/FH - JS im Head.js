@@ -3866,7 +3866,8 @@ fhOnReady(function () {
 // Section: FH add-to-wishlist reload after toggle
 fhOnReady(function () {
   const reloadStorageKey = 'fhWishlistAutoOpen';
-  const wishlistButtonSelector = '.widget-add-to-wish-list .btn';
+  const nativeButtonSelector = '.widget-add-to-wish-list .btn';
+  const customButtonSelector = '[data-hammer-merkliste-button]';
 
   function getVueStore() {
     if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
@@ -3874,20 +3875,85 @@ fhOnReady(function () {
     return null;
   }
 
-  function setWishListLoadingState(button) {
+  function findButtonParts(button) {
+    if (!button) return {};
+    return {
+      iconDefault: button.querySelector('[data-merkliste-icon-default]'),
+      iconActive: button.querySelector('[data-merkliste-icon-active]'),
+      iconLoading: button.querySelector('[data-merkliste-icon-loading]'),
+      label: button.querySelector('[data-merkliste-label]')
+    };
+  }
+
+  function applyCustomButtonState(button, state) {
     if (!button) return;
-    button.classList.add('is-loading');
-    button.setAttribute('aria-busy', 'true');
-    if (document.body) {
-      document.body.classList.add('wishlist-is-loading');
+    const parts = findButtonParts(button);
+    const isLoading = state === 'loading';
+    const isActive = state === 'active';
+
+    if (parts.iconDefault) parts.iconDefault.style.display = (!isLoading && !isActive) ? 'inline-flex' : 'none';
+    if (parts.iconActive) parts.iconActive.style.display = (!isLoading && isActive) ? 'inline-flex' : 'none';
+    if (parts.iconLoading) parts.iconLoading.style.display = isLoading ? 'inline-flex' : 'none';
+
+    button.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    if (parts.label) {
+      parts.label.textContent = 'Merkliste';
     }
   }
 
-  function handleWishListButtonClick(event) {
-    const button = event.target.closest(wishlistButtonSelector);
-    if (!button) return;
+  function isNativeButtonActive(button) {
+    if (!button) return false;
+    const title = (button.getAttribute('data-original-title') || button.getAttribute('title') || '').toLowerCase();
+    if (title.indexOf('entfernen') !== -1) return true;
 
-    setWishListLoadingState(button);
+    const icon = button.querySelector('i');
+    if (!icon) return false;
+    return icon.classList.contains('text-danger') || icon.classList.contains('fa-heart');
+  }
+
+  function syncCustomButtonsFromNative() {
+    const nativeButton = document.querySelector(nativeButtonSelector);
+    const isActive = isNativeButtonActive(nativeButton);
+    const customButtons = document.querySelectorAll(customButtonSelector);
+
+    customButtons.forEach(function (customButton) {
+      applyCustomButtonState(customButton, isActive ? 'active' : 'default');
+    });
+  }
+
+  function bindCustomButtons() {
+    const customButtons = document.querySelectorAll(customButtonSelector);
+    customButtons.forEach(function (customButton) {
+      if (customButton.dataset.merklisteBound === '1') return;
+      customButton.dataset.merklisteBound = '1';
+
+      applyCustomButtonState(customButton, 'default');
+
+      customButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const nativeButton = document.querySelector(nativeButtonSelector);
+        if (!nativeButton) return;
+
+        applyCustomButtonState(customButton, 'loading');
+        nativeButton.click();
+      });
+    });
+
+    syncCustomButtonsFromNative();
+  }
+
+  function handleWishListButtonClick(event) {
+    const customButton = event.target.closest(customButtonSelector);
+    const nativeButton = event.target.closest(nativeButtonSelector);
+
+    if (!customButton && !nativeButton) return;
+
+    if (customButton) {
+      applyCustomButtonState(customButton, 'loading');
+    }
 
     const store = getVueStore();
     const initialStoreIds = store && store.state && store.state.wishList && Array.isArray(store.state.wishList.wishListIds)
@@ -3938,10 +4004,12 @@ fhOnReady(function () {
           window.clearTimeout(fallbackTimeout);
           fallbackTimeout = null;
         }
+        syncCustomButtonsFromNative();
       }
     }, 3000);
   }
 
+  bindCustomButtons();
   document.addEventListener('click', handleWishListButtonClick);
 });
 
