@@ -3105,8 +3105,12 @@ div.grecaptcha-badge {
     position: relative;
     width: 100vw;
     max-width: 100vw;
-    padding: 0 30px;
+    padding: 0 20px;
     box-sizing: border-box;
+  }
+
+  #page-header .row .position-relative {
+    margin: 0;
   }
 
   .fh-header .container,
@@ -3184,7 +3188,7 @@ div.grecaptcha-badge {
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    padding: 0 30px;
+    padding: 0 20px;
     max-width: none;
   }
 
