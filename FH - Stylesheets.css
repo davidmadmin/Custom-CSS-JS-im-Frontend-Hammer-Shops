@@ -2125,6 +2125,14 @@ a.logo {
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
+.fh-header__dropdown-preview-intro {
+  display: block;
+  margin: 12px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #2f2f2f;
+}
+
 .fh-header__dropdown-preview-link:hover .fh-header__dropdown-preview-image,
 .fh-header__dropdown-preview-link:focus .fh-header__dropdown-preview-image {
   transform: scale(1.05);
@@ -2157,7 +2165,7 @@ a.logo {
 
 /* Section: Start Highlight Category Nav */
 .fh-start-highlight-nav {
-  padding: 48px 0;
+  padding: 0;
 }
 
 .fh-start-highlight-nav__inner {
