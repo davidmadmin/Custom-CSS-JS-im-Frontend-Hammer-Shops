@@ -4199,7 +4199,7 @@ body:has(.invoice-addresses-select .dropdown.items > div:first-child.disabled) .
 
 @media (max-width: 767.98px) {
   .sh-custom-slider__overlay {
-    width: 60%;
+    width: 50%;
     min-width: 0;
   }
 }
