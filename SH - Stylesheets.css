@@ -3508,6 +3508,11 @@ body.sh-mobile-menu-open .brevo-conversations__iframe-wrapper {
   display: none !important;
 }
 
+body:has([data-dfd-screen="ai-fullscreen-initial"]:not([style*="display: none"]), [data-dfd-view="Search"].dfd-ai_fullscreen:not([style*="display: none"])) div[id^="trustbadge-container-"],
+body:has([data-dfd-screen="ai-fullscreen-initial"]:not([style*="display: none"]), [data-dfd-view="Search"].dfd-ai_fullscreen:not([style*="display: none"])) .brevo-conversations__iframe-wrapper {
+  display: none !important;
+}
+
 body.sh-search-overlay-open div[id^="trustbadge-container-"],
 body.sh-search-overlay-open .brevo-conversations__iframe-wrapper {
   display: none !important;

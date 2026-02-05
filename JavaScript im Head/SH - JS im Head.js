@@ -3539,7 +3539,7 @@ shOnReady(function () {
 // End Section: Animierte Suchplatzhalter Vorschläge
 
 
-// Section: Trusted Shops Badge toggle during search overlay
+// Section: Trusted Shops Badge toggle during search overlay (JS fallback for browsers without reliable :has() support)
 shOnReady(function () {
   var BODY_CLASS = 'sh-search-overlay-open';
   var OVERLAY_SELECTORS = ['[data-dfd-screen="mobile-initial"]', '[data-dfd-screen="embedded"]'];
@@ -3588,7 +3588,7 @@ shOnReady(function () {
     observer.disconnect();
   });
 });
-// End Section: Trusted Shops Badge toggle during search overlay
+// End Section: Trusted Shops Badge toggle during search overlay (JS fallback for browsers without reliable :has() support)
 
 
 

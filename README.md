@@ -114,6 +114,9 @@ Visualisiert den Fortschritt zur Versandkostenbefreiung ab 150 € Einkaufswer
 ### Animierter Suchplatzhalter
 Variiert den Platzhaltertext im Suchfeld, solange das Feld sichtbar, aber nicht fokussiert ist. Während der Eingabe oder wenn das Feld unsichtbar ist, pausiert die Animation.
 
+### Trusted Shops Badge bei Doofinder-AI-Overlay
+Blendet Trustbadge-Container primär über CSS `body:has(...)` aus, sobald der Doofinder-AI-Overlay-Container sichtbar ist. Das JavaScript hält dafür einen Legacy-Fallback für Browser ohne verlässliche `:has()`-Unterstützung aktiv.
+
 ### „Weiter einkaufen“-Button im Warenkorb-Overlay
 Benennt die Schaltfläche „Warenkorb“ im Overlay um, ergänzt ein Pfeil-Icon und sorgt dafür, dass der Klick das Overlay schließt, statt auf die Warenkorbseite zu wechseln.
 
