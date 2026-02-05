@@ -3912,12 +3912,100 @@ fhOnReady(function () {
     return icon.classList.contains('text-danger') || icon.classList.contains('fa-heart');
   }
 
+  function getDomDistance(fromElement, toElement) {
+    if (!fromElement || !toElement) return Number.POSITIVE_INFINITY;
+    if (fromElement === toElement) return 0;
+
+    const visited = new Map();
+    let current = fromElement;
+    let depth = 0;
+    while (current) {
+      visited.set(current, depth);
+      current = current.parentElement;
+      depth += 1;
+    }
+
+    current = toElement;
+    depth = 0;
+    while (current) {
+      if (visited.has(current)) {
+        return depth + visited.get(current);
+      }
+      current = current.parentElement;
+      depth += 1;
+    }
+
+    return Number.POSITIVE_INFINITY;
+  }
+
+  function resolveNativeButton(customButton) {
+    if (!customButton) return null;
+
+    const nativeId = customButton.getAttribute('data-merkliste-native-id');
+    if (nativeId) {
+      const nativeById = document.getElementById(nativeId);
+      if (nativeById && nativeById.matches(nativeButtonSelector)) {
+        return nativeById;
+      }
+    }
+
+    const nativeSelector = customButton.getAttribute('data-merkliste-native-selector');
+    if (nativeSelector) {
+      const nativeBySelector = document.querySelector(nativeSelector);
+      if (nativeBySelector && nativeBySelector.matches(nativeButtonSelector)) {
+        return nativeBySelector;
+      }
+    }
+
+    let ancestor = customButton.parentElement;
+    while (ancestor) {
+      const nativeButtons = ancestor.querySelectorAll(nativeButtonSelector);
+      if (nativeButtons.length === 1) {
+        return nativeButtons[0];
+      }
+
+      if (nativeButtons.length > 1) {
+        let nearestButton = null;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+        nativeButtons.forEach(function (nativeButton) {
+          const distance = getDomDistance(customButton, nativeButton);
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearestButton = nativeButton;
+          }
+        });
+
+        if (nearestButton) {
+          return nearestButton;
+        }
+      }
+
+      ancestor = ancestor.parentElement;
+    }
+
+    const allNativeButtons = document.querySelectorAll(nativeButtonSelector);
+    if (!allNativeButtons.length) return null;
+    if (allNativeButtons.length === 1) return allNativeButtons[0];
+
+    let nearestButton = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+    allNativeButtons.forEach(function (nativeButton) {
+      const distance = getDomDistance(customButton, nativeButton);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestButton = nativeButton;
+      }
+    });
+
+    return nearestButton;
+  }
+
   function syncCustomButtonsFromNative() {
-    const nativeButton = document.querySelector(nativeButtonSelector);
-    const isActive = isNativeButtonActive(nativeButton);
     const customButtons = document.querySelectorAll(customButtonSelector);
 
     customButtons.forEach(function (customButton) {
+      const nativeButton = resolveNativeButton(customButton);
+      const isActive = isNativeButtonActive(nativeButton);
       applyCustomButtonState(customButton, isActive ? 'active' : 'default');
     });
   }
@@ -3934,7 +4022,7 @@ fhOnReady(function () {
         event.preventDefault();
         event.stopPropagation();
 
-        const nativeButton = document.querySelector(nativeButtonSelector);
+        const nativeButton = resolveNativeButton(customButton);
         if (!nativeButton) return;
 
         applyCustomButtonState(customButton, 'loading');
