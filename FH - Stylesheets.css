@@ -3109,7 +3109,7 @@ div.grecaptcha-badge {
     box-sizing: border-box;
   }
 
-  #page-header .container-max .row .flex-row-reverse .position-relative {
+  #page-header .container-max .row.flex-row-reverse.position-relative {
     margin: 0;
   }
 
