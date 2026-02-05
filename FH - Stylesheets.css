@@ -3508,6 +3508,11 @@ body.fh-search-overlay-open div[id^="trustbadge-container-"],
 body.fh-search-overlay-open .brevo-conversations__iframe-wrapper {
   display: none !important;
 }
+
+body:has(div[data-dfd-view="Search"].dfd-root:not([hidden])) div[id^="trustbadge-container-"],
+body:has(div[data-dfd-view="Search"].dfd-root:not([hidden])) .brevo-conversations__iframe-wrapper {
+  display: none !important;
+}
 /* End Section: Trustbadge ausblenden */
 
 /* Section: Trusted Shops Badge Position */
