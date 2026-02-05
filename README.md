@@ -117,6 +117,9 @@ Variiert den Platzhaltertext im Suchfeld, solange das Feld sichtbar, aber nicht 
 ### „Weiter einkaufen“-Button im Warenkorb-Overlay
 Benennt die Schaltfläche „Warenkorb“ im Overlay um, ergänzt ein Pfeil-Icon und sorgt dafür, dass der Klick das Overlay schließt, statt auf die Warenkorbseite zu wechseln.
 
+### Custom Startseiten-Slider (FH & SH)
+Stellt für beide Shops eine eigene Carousel-Komponente mit schwarzem Overlay-Panel, synchronisierter Schnellnavigation und animierten Overlay-Texten bereit. Die Markup-Vorlagen liegen unter `Custom Components/FH-Custom-Slider.html` und `Custom Components/SH-Custom-Slider.html`, die zugehörigen Styles in den shop-spezifischen Stylesheets sowie die Overlay-Synchronisierung in den jeweiligen Head-JavaScript-Dateien.
+
 ### Inhaltsverzeichnis für Rechtstexte (GTM-Snippet)
 Erzeugt für rechtliche Content-Seiten ein dynamisches Inhaltsverzeichnis aus allen `h1`, `h2` und `h3`-Elementen, sofern je Typ mehr als eine Überschrift vorhanden ist. Die Ausgabe wird per Google Tag Manager eingebunden und liegt unter `Javascript/GTM Snippets/Legal-Table-of-Contents.js`.
 
