@@ -98,6 +98,12 @@ Die Version **5.0.78** der offiziellen plentyShop-LTS-Plugins (Ceres & IO) bilde
 * Inline-CSS darf keine eigenen Skripte einbinden; dynamisches Verhalten wird über bestehende oder hier gepflegte JavaScript-Dateien gelöst.
 * Achte darauf, dass Anpassungen für **SH** und **FH** Shops parallel gepflegt werden und konsistent mit den Ceres-Vorlagen sind.
 
+## Shop-Konfiguration / Einbindung
+
+* Lade die Produktdetail-Dateien jeweils direkt im Anschluss an die globalen CSS/JS-Snippets, damit Produktseiten ihr Verhalten beibehalten:
+  * **FH:** `FH - Produktdetail.html`, `FH - Produktdetail.css`, `JavaScript im Head/FH - Produktdetail.js`.
+  * **SH:** `SH - Produktdetail.html`, `SH - Produktdetail.css`, `JavaScript im Head/SH - Produktdetail.js`.
+
 ## Ergänzende Features über Custom JS/CSS
 
 Neben Header und Footer stellen wir temporäre Funktions-Erweiterungen bereit. Diese sollen später in dedizierte Plugins überführt werden, dienen aber aktuell als Referenzimplementierung.
