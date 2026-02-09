@@ -101,6 +101,19 @@ Die folgende Übersicht fasst alle relevanten Versionen der offiziellen plentySh
 * Verwende für die direkte Anrede konsequent die Du-Form und schreibe Du/Dir/Dich/Dein usw. immer mit großem Anfangsbuchstaben – unabhängig von der Position im Satz.
 * Behandle die Begriffe Wunschliste, Merkliste und wishlist als synonym. PlentyLTS nutzt intern „Wish-list“, doch in der Kundenkommunikation verwenden wir ausschließlich „Merkliste“.
 
+## Aktuelle Repo-Struktur (Kurzüberblick)
+
+* `Header/HTML`, `Header/CSS`, `Header/JS`: Shop-spezifische Header-Snippets.
+* `Footer/HTML`: Shop-spezifische Footer-Snippets.
+* `Components/HTML`: Wiederverwendbare HTML-Komponenten (z. B. Slider, Konto-Navigation).
+* `Produktdetailseiten/HTML`, `Produktdetailseiten/CSS`, `Produktdetailseiten/JS`: Produktdetail-spezifische Snippets pro Shop.
+* `Checkout/CSS`, `Checkout/JS`: Checkout-spezifische Anpassungen pro Shop.
+* `Global/JS`: Globale JavaScript-Snippets inkl. Head-Skripte und `GTM Snippets`.
+* `Kontaktseiten/HTML`: Statische Kontaktseiten-Layouts.
+* `Base CSS/CSS`: Basis-Stylesheets pro Shop.
+* `Documentation/`: Technische Zusatzdokumentation.
+* `Custom CSS/`: Platzhalter für zusätzliche Custom-CSS-Ablagen (aktuell ohne Dateien).
+
 ## Commit Message Convention (Conventional Commits)
 
 All commits MUST follow the Conventional Commits format:

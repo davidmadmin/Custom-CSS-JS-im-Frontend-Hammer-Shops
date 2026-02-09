@@ -98,11 +98,26 @@ Die Version **5.0.78** der offiziellen plentyShop-LTS-Plugins (Ceres & IO) bilde
 * Inline-CSS darf keine eigenen Skripte einbinden; dynamisches Verhalten wird über bestehende oder hier gepflegte JavaScript-Dateien gelöst.
 * Achte darauf, dass Anpassungen für **SH** und **FH** Shops parallel gepflegt werden und konsistent mit den Ceres-Vorlagen sind.
 
+## Aktuelle Repo-Struktur
+
+| Ordner | Inhalt |
+| --- | --- |
+| `Header/HTML`, `Header/CSS`, `Header/JS` | Shop-spezifische Header-Snippets. |
+| `Footer/HTML` | Shop-spezifische Footer-Snippets. |
+| `Components/HTML` | Wiederverwendbare HTML-Komponenten (z. B. Slider, Konto-Navigation). |
+| `Produktdetailseiten/HTML`, `Produktdetailseiten/CSS`, `Produktdetailseiten/JS` | Produktdetail-spezifische Snippets pro Shop. |
+| `Checkout/CSS`, `Checkout/JS` | Checkout-spezifische Anpassungen pro Shop. |
+| `Global/JS` | Globale JavaScript-Snippets inkl. Head-Skripte und `GTM Snippets`. |
+| `Kontaktseiten/HTML` | Statische Kontaktseiten-Layouts. |
+| `Base CSS/CSS` | Basis-Stylesheets pro Shop. |
+| `Documentation/` | Technische Zusatzdokumentation. |
+| `Custom CSS/` | Platzhalter für zusätzliche Custom-CSS-Ablagen (aktuell ohne Dateien). |
+
 ## Shop-Konfiguration / Einbindung
 
 * Lade die Produktdetail-Dateien jeweils direkt im Anschluss an die globalen CSS/JS-Snippets, damit Produktseiten ihr Verhalten beibehalten:
-  * **FH:** `FH - Produktdetail.html`, `FH - Produktdetail.css`, `JavaScript im Head/FH - Produktdetail.js`.
-  * **SH:** `SH - Produktdetail.html`, `SH - Produktdetail.css`, `JavaScript im Head/SH - Produktdetail.js`.
+  * **FH:** `Produktdetailseiten/HTML/FH - Produktdetail.html`, `Produktdetailseiten/CSS/FH - Produktdetail.css`, `Produktdetailseiten/JS/FH - Produktdetail.js`.
+  * **SH:** `Produktdetailseiten/HTML/SH - Produktdetail.html`, `Produktdetailseiten/CSS/SH - Produktdetail.css`, `Produktdetailseiten/JS/SH - Produktdetail.js`.
 
 ## Ergänzende Features über Custom JS/CSS
 
@@ -124,10 +139,10 @@ Variiert den Platzhaltertext im Suchfeld, solange das Feld sichtbar, aber nicht 
 Benennt die Schaltfläche „Warenkorb“ im Overlay um, ergänzt ein Pfeil-Icon und sorgt dafür, dass der Klick das Overlay schließt, statt auf die Warenkorbseite zu wechseln.
 
 ### Custom Startseiten-Slider (FH & SH)
-Stellt für beide Shops eine eigene Carousel-Komponente mit schwarzem Overlay-Panel, synchronisierter Schnellnavigation und animierten Overlay-Texten bereit. Die Markup-Vorlagen liegen unter `Custom Components/FH-Custom-Slider.html` und `Custom Components/SH-Custom-Slider.html`, die zugehörigen Styles in den shop-spezifischen Stylesheets sowie die Overlay-Synchronisierung in den jeweiligen Head-JavaScript-Dateien.
+Stellt für beide Shops eine eigene Carousel-Komponente mit schwarzem Overlay-Panel, synchronisierter Schnellnavigation und animierten Overlay-Texten bereit. Die Markup-Vorlagen liegen unter `Components/HTML/FH-Custom-Slider.html` und `Components/HTML/SH-Custom-Slider.html`, die zugehörigen Styles in den shop-spezifischen Stylesheets sowie die Overlay-Synchronisierung in den jeweiligen Head-JavaScript-Dateien.
 
 ### Inhaltsverzeichnis für Rechtstexte (GTM-Snippet)
-Erzeugt für rechtliche Content-Seiten ein dynamisches Inhaltsverzeichnis aus allen `h1`, `h2` und `h3`-Elementen, sofern je Typ mehr als eine Überschrift vorhanden ist. Die Ausgabe wird per Google Tag Manager eingebunden und liegt unter `Javascript/GTM Snippets/Legal-Table-of-Contents.js`.
+Erzeugt für rechtliche Content-Seiten ein dynamisches Inhaltsverzeichnis aus allen `h1`, `h2` und `h3`-Elementen, sofern je Typ mehr als eine Überschrift vorhanden ist. Die Ausgabe wird per Google Tag Manager eingebunden und liegt unter `Global/JS/GTM Snippets/Legal-Table-of-Contents.js`.
 
 ## Weiterer Fahrplan
 
