@@ -776,6 +776,10 @@ a.logo {
   background-color: var(--fh-color-success-green);
 }
 
+html[data-fh-auth-state='in'] .fh-header__status-indicator {
+  background-color: var(--fh-color-success-green);
+}
+
 .fh-header__icon {
   display: block;
   width: 22px;

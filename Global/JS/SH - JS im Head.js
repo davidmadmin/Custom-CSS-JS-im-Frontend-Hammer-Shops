@@ -8,6 +8,85 @@ function shOnReady(callback) {
   callback();
 }
 
+
+// Section: SH auth indicator state bridge
+(function () {
+  const authStorageKey = 'shAuthIndicatorState';
+  const authAttributeName = 'data-sh-auth-state';
+  const root = document.documentElement;
+
+  if (!root) return;
+
+  function applyAuthState(nextState) {
+    if (nextState !== 'in' && nextState !== 'out') return;
+    root.setAttribute(authAttributeName, nextState);
+  }
+
+  function readStoredState() {
+    if (!window.sessionStorage) return null;
+
+    const value = window.sessionStorage.getItem(authStorageKey);
+
+    return value === 'in' || value === 'out' ? value : null;
+  }
+
+  function persistState(nextState) {
+    if (!window.sessionStorage || (nextState !== 'in' && nextState !== 'out')) return;
+    window.sessionStorage.setItem(authStorageKey, nextState);
+  }
+
+  function resolveStore() {
+    if (window.vueApp && window.vueApp.$store) return window.vueApp.$store;
+    if (window.ceresStore && typeof window.ceresStore.watch === 'function') return window.ceresStore;
+    return null;
+  }
+
+  function installStoreWatcher(store) {
+    if (!store || typeof store.watch !== 'function') return false;
+
+    let lastState = null;
+
+    store.watch(
+      function (state, getters) {
+        if (getters && typeof getters.isLoggedIn !== 'undefined') return !!getters.isLoggedIn;
+        if (store.getters && typeof store.getters.isLoggedIn !== 'undefined') return !!store.getters.isLoggedIn;
+        if (state && state.user && state.user.userData && state.user.userData.id) return true;
+        return false;
+      },
+      function (isLoggedIn) {
+        const nextState = isLoggedIn ? 'in' : 'out';
+
+        if (nextState === lastState) return;
+
+        lastState = nextState;
+        applyAuthState(nextState);
+        persistState(nextState);
+      },
+      { immediate: true }
+    );
+
+    return true;
+  }
+
+  const storedState = readStoredState();
+  if (storedState) applyAuthState(storedState);
+
+  let retries = 0;
+  const maxRetries = 40;
+
+  function tryBindStore() {
+    const store = resolveStore();
+
+    if (installStoreWatcher(store)) return;
+
+    retries += 1;
+    if (retries < maxRetries) window.setTimeout(tryBindStore, 100);
+  }
+
+  tryBindStore();
+})();
+// End Section: SH auth indicator state bridge
+
 // Section: SH cookie settings link
 shOnReady(function () {
   function handleCookieSettingsClick(event) {

@@ -782,6 +782,10 @@ a.logo {
   background-color: var(--sh-color-success-green);
 }
 
+html[data-sh-auth-state='in'] .sh-header__status-indicator {
+  background-color: var(--sh-color-success-green);
+}
+
 .sh-header__icon {
   display: block;
   width: 22px;
