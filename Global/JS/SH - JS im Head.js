@@ -412,29 +412,26 @@ shOnReady(function () {
     window.shAvailabilityHideCountdown = true;
   }
 
+  var berlinFormatter = new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  });
+
   function getBerlinTime() {
-    const now = new Date();
-    const berlinParts = new Intl.DateTimeFormat('de-DE', {
-      timeZone: 'Europe/Berlin',
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-    }).formatToParts(now);
-    const dateObj = {};
-    berlinParts.forEach(({type, value}) => { dateObj[type] = value; });
-    return new Date(`${dateObj.year}-${dateObj.month}-${dateObj.day}T${dateObj.hour}:${dateObj.minute}:${dateObj.second}`);
+    var berlinParts = berlinFormatter.formatToParts(new Date());
+    var dateObj = {};
+    berlinParts.forEach(function (part) { dateObj[part.type] = part.value; });
+    return new Date(dateObj.year + '-' + dateObj.month + '-' + dateObj.day + 'T' + dateObj.hour + ':' + dateObj.minute + ':' + dateObj.second);
   }
-  function pad2(n){ return n < 10 ? '0'+n : n; }
+
+  function pad2(n) { return n < 10 ? '0' + n : n; }
 
   var holidayCache = {};
+  var weekdays = [ 'Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag' ];
 
   function formatDateKey(date) {
-    return (
-      date.getFullYear() +
-      '-' +
-      pad2(date.getMonth() + 1) +
-      '-' +
-      pad2(date.getDate())
-    );
+    return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
   }
 
   function calculateEasterSunday(year) {
@@ -470,42 +467,33 @@ shOnReady(function () {
     }
 
     [
-      [0, 1],   // Neujahr
-      [4, 1],   // Tag der Arbeit
-      [9, 3],   // Tag der Deutschen Einheit
-      [11, 25], // 1. Weihnachtsfeiertag
-      [11, 26]  // 2. Weihnachtsfeiertag
+      [0, 1],
+      [4, 1],
+      [9, 3],
+      [11, 25],
+      [11, 26]
     ].forEach(function (parts) {
       add(new Date(year, parts[0], parts[1]));
     });
 
     var easterSunday = calculateEasterSunday(year);
-    [
-      -2, // Karfreitag
-      1,  // Ostermontag
-      39, // Christi Himmelfahrt
-      50, // Pfingstmontag
-      60  // Fronleichnam (NRW)
-    ].forEach(function (offset) {
+    [-2, 1, 39, 50, 60].forEach(function (offset) {
       add(addDays(easterSunday, offset));
     });
 
-    add(new Date(year, 10, 1)); // Allerheiligen (NRW)
+    add(new Date(year, 10, 1));
 
     holidayCache[year] = holidays;
     return holidays;
   }
 
   function isHoliday(date) {
-    var set = getHolidaySet(date.getFullYear());
-    return set.has(formatDateKey(date));
+    return getHolidaySet(date.getFullYear()).has(formatDateKey(date));
   }
 
   function isWorkday(date) {
     var day = date.getDay();
-    if (day === 0 || day === 6) return false;
-    if (isHoliday(date)) return false;
-    return true;
+    return day !== 0 && day !== 6 && !isHoliday(date);
   }
 
   function getNextWorkday(date) {
@@ -515,114 +503,168 @@ shOnReady(function () {
     } while (!isWorkday(next));
     return next;
   }
+
   function pluralize(n, singular, plural) {
-    return (n === 1) ? singular : plural;
+    return n === 1 ? singular : plural;
   }
-  function formatTime(h, m, s, showSeconds, color) {
-    let t = '<span style="font-weight:bold;color:' + color + ';">';
+
+  function formatTime(h, m, s, showSeconds) {
     if (h >= 24) {
-      const days = Math.floor(h / 24);
-      const remainingHours = h % 24;
-      t += days + ' ' + pluralize(days, 'Tag', 'Tage');
-      if (remainingHours > 0) {
-        t += ' ' + remainingHours + ' ' + pluralize(remainingHours, 'Stunde', 'Stunden');
-      } else if (m > 0) {
-        t += ' ' + m + ' ' + pluralize(m, 'Minute', 'Minuten');
-      }
-    } else {
-      if(h > 0) {
-        t += h + ' ' + pluralize(h, 'Stunde', 'Stunden') + ' ';
-      }
-      t += m + ' ' + pluralize(m, 'Minute', 'Minuten');
-      if(showSeconds) t += ' ' + s + ' ' + pluralize(s, 'Sekunde', 'Sekunden');
+      var days = Math.floor(h / 24);
+      var remainingHours = h % 24;
+      var daysText = days + ' ' + pluralize(days, 'Tag', 'Tage');
+      if (remainingHours > 0) return daysText + ' ' + remainingHours + ' ' + pluralize(remainingHours, 'Stunde', 'Stunden');
+      if (m > 0) return daysText + ' ' + m + ' ' + pluralize(m, 'Minute', 'Minuten');
+      return daysText;
     }
-    return t + '</span>';
+
+    var timeText = '';
+    if (h > 0) timeText += h + ' ' + pluralize(h, 'Stunde', 'Stunden') + ' ';
+    timeText += m + ' ' + pluralize(m, 'Minute', 'Minuten');
+    if (showSeconds) timeText += ' ' + s + ' ' + pluralize(s, 'Sekunde', 'Sekunden');
+    return timeText;
   }
+
+  function getColor(hours) {
+    if (hours < 1) return '#dc2626';
+    if (hours < 3) return '#eab308';
+    return '#13a10e';
+  }
+
   var iconUrl = "https://bilder.schrauben-hammer.de/frontend/shipping_9288277.svg";
-  var iconHtml = '<img src="' + iconUrl + '" alt="" style="height:2.6em;width:auto;vertical-align:middle;display:block;">';
-  function waitForCountdownDiv(){
-    var elem = document.getElementById('cutoff-countdown');
-    if (!elem) return setTimeout(waitForCountdownDiv, 300);
+  var widget = null;
+  var currentTickMs = null;
+  var intervalId = null;
 
-    if (window.shAvailabilityHideCountdown) {
-      elem.style.display = "none";
-      return setTimeout(waitForCountdownDiv, 1000);
-    }
+  function buildWidget(elem) {
+    if (widget) return widget;
 
-    elem.style.display = "flex";
-    elem.style.alignItems = "flex-start";
-    elem.style.gap = "0.85em";
+    elem.style.display = 'flex';
+    elem.style.alignItems = 'flex-start';
+    elem.style.gap = '0.85em';
     elem.style.color = '';
     elem.style.setProperty('color', '', 'important');
-    var now = getBerlinTime();
-    var day = now.getDay();
-    var hour = now.getHours();
-    var cutoff = new Date(now);
-    cutoff.setHours(13, 0, 0, 0);
-    var ms, h, m, s, color, dateLabel, showSeconds, zeitHtml;
-    var weekdays = [ "Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag" ];
-    function getColor(hours){
-      if (hours < 1) return "#dc2626";
-      if (hours < 3) return "#eab308";
-      return "#13a10e";
+
+    var iconWrap = document.createElement('div');
+    iconWrap.style.display = 'flex';
+    iconWrap.style.alignItems = 'center';
+
+    var icon = document.createElement('img');
+    icon.src = iconUrl;
+    icon.alt = '';
+    icon.style.height = '2.6em';
+    icon.style.width = 'auto';
+    icon.style.verticalAlign = 'middle';
+    icon.style.display = 'block';
+    iconWrap.appendChild(icon);
+
+    var textWrap = document.createElement('div');
+    textWrap.style.display = 'flex';
+    textWrap.style.flexDirection = 'column';
+    textWrap.style.justifyContent = 'center';
+    textWrap.style.lineHeight = '1.45';
+    textWrap.style.maxWidth = '640px';
+
+    var sentence = document.createElement('span');
+    sentence.appendChild(document.createTextNode('Bestelle innerhalb '));
+
+    var timeSpan = document.createElement('span');
+    timeSpan.style.fontWeight = 'bold';
+    sentence.appendChild(timeSpan);
+
+    sentence.appendChild(document.createTextNode(', damit Deine Ware '));
+
+    var dateSpan = document.createElement('span');
+    dateSpan.style.fontWeight = '700';
+    dateSpan.style.color = '#000';
+    sentence.appendChild(dateSpan);
+
+    sentence.appendChild(document.createTextNode(' unser Lager verlässt.'));
+
+    textWrap.appendChild(sentence);
+    elem.innerHTML = '';
+    elem.appendChild(iconWrap);
+    elem.appendChild(textWrap);
+
+    widget = { elem: elem, timeSpan: timeSpan, dateSpan: dateSpan };
+    return widget;
+  }
+
+  function formatDateLabel(now, nextWorkday) {
+    var startOfToday = new Date(now);
+    startOfToday.setHours(0, 0, 0, 0);
+
+    var startOfNext = new Date(nextWorkday);
+    startOfNext.setHours(0, 0, 0, 0);
+
+    var diffDays = Math.round((startOfNext - startOfToday) / 86400000);
+    var tomorrow = new Date(startOfToday);
+    tomorrow.setDate(startOfToday.getDate() + 1);
+    var isTomorrow = startOfNext.getTime() === tomorrow.getTime();
+
+    var dayName = weekdays[nextWorkday.getDay()];
+    var dayNum = pad2(nextWorkday.getDate());
+    var monthNum = pad2(nextWorkday.getMonth() + 1);
+    var datum = dayNum + '.' + monthNum;
+
+    if (isTomorrow) return 'Morgen, ' + dayName + ' den ' + datum;
+    if (diffDays === 2) return 'Übermorgen, ' + dayName + ' den ' + datum;
+    if (diffDays > 2 && dayName === 'Montag') return 'nächsten Montag, den ' + datum;
+    return dayName + ' den ' + datum;
+  }
+
+  function updateCountdown() {
+    var elem = document.getElementById('cutoff-countdown');
+    if (!elem) return;
+
+    if (window.shAvailabilityHideCountdown) {
+      elem.style.display = 'none';
+      return;
     }
-    if (isWorkday(now) && hour >= 1 && hour < 13) {
-      ms = cutoff - now;
-      h = Math.floor(ms / (1000 * 60 * 60));
-      m = Math.floor((ms / (1000 * 60)) % 60);
-      s = Math.floor((ms / 1000) % 60);
-      showSeconds = (h === 0);
-      color = getColor(h);
-      zeitHtml = formatTime(h, m, s, showSeconds, color);
-      var todayName = weekdays[now.getDay()];
+
+    var nodes = buildWidget(elem);
+    var now = getBerlinTime();
+    var hour = now.getHours();
+    var isInTodayWindow = isWorkday(now) && hour >= 1 && hour < 13;
+
+    var target = new Date(now);
+    if (isInTodayWindow) {
+      target.setHours(13, 0, 0, 0);
       var todayNum = pad2(now.getDate());
       var todayMonth = pad2(now.getMonth() + 1);
-      var todayDate = todayNum + '.' + todayMonth;
-      dateLabel = '<span style="font-weight:700;color:#000;">Heute</span>, <span style="font-weight:700;color:#000;">' + todayName + ' den ' + todayDate + '</span>';
+      var todayName = weekdays[now.getDay()];
+      nodes.dateSpan.textContent = 'Heute, ' + todayName + ' den ' + todayNum + '.' + todayMonth;
     } else {
       var nextWorkday = getNextWorkday(now);
-      var nextCutoff = new Date(nextWorkday);
-      nextCutoff.setHours(13, 0, 0, 0);
-      ms = nextCutoff - now;
-      h = Math.floor(ms / (1000 * 60 * 60));
-      m = Math.floor((ms / (1000 * 60)) % 60);
-      s = Math.floor((ms / 1000) % 60);
-      showSeconds = (h === 0);
-      color = getColor(h);
-      zeitHtml = formatTime(h, m, s, showSeconds, color);
-      var startOfToday = new Date(now);
-      startOfToday.setHours(0, 0, 0, 0);
-      var startOfNext = new Date(nextWorkday);
-      startOfNext.setHours(0, 0, 0, 0);
-      var diffDays = Math.round((startOfNext - startOfToday) / (1000 * 60 * 60 * 24));
-      var tomorrow = new Date(startOfToday);
-      tomorrow.setDate(startOfToday.getDate() + 1);
-      var isTomorrow = startOfNext.getTime() === tomorrow.getTime();
-      var dayName = weekdays[nextWorkday.getDay()];
-      var dayNum = pad2(nextWorkday.getDate());
-      var monthNum = pad2(nextWorkday.getMonth()+1);
-      var datum = dayNum + '.' + monthNum;
-      if (isTomorrow) {
-        dateLabel = '<span style="font-weight:700;color:#000;">Morgen</span>, <span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
-      } else if (diffDays === 2) {
-        dateLabel = '<span style="font-weight:700;color:#000;">Übermorgen</span>, <span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
-      } else if (diffDays > 2 && dayName === "Montag") {
-        dateLabel = '<span style="font-weight:700;color:#000;">nächsten Montag</span>, <span style="font-weight:700;color:#000;">den ' + datum + '</span>';
-      } else {
-        dateLabel = '<span style="font-weight:700;color:#000;">' + dayName + ' den ' + datum + '</span>';
-      }
+      target = new Date(nextWorkday);
+      target.setHours(13, 0, 0, 0);
+      nodes.dateSpan.textContent = formatDateLabel(now, nextWorkday);
     }
-    var textHtml = '<div style="display:flex;flex-direction:column;justify-content:center;line-height:1.45;max-width:640px;">' +
-     '<span>Bestelle innerhalb ' + zeitHtml + ', damit Deine Ware ' + dateLabel + ' unser Lager verlässt.   </span>' +
-  '</div>';
-    elem.innerHTML = 
-      '<div style="display:flex;align-items:center;">' +
-        iconHtml +
-      '</div>' +
-      textHtml;
+
+    var ms = target - now;
+    var h = Math.floor(ms / 3600000);
+    var m = Math.floor((ms / 60000) % 60);
+    var s = Math.floor((ms / 1000) % 60);
+    var showSeconds = h === 0;
+
+    nodes.timeSpan.textContent = formatTime(h, m, s, showSeconds);
+    nodes.timeSpan.style.color = getColor(h);
+
+    var nextTickMs = showSeconds ? 1000 : 60000;
+    if (nextTickMs !== currentTickMs) {
+      currentTickMs = nextTickMs;
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(updateCountdown, currentTickMs);
+    }
   }
+
+  function waitForCountdownDiv() {
+    var elem = document.getElementById('cutoff-countdown');
+    if (!elem) return setTimeout(waitForCountdownDiv, 300);
+    updateCountdown();
+  }
+
   waitForCountdownDiv();
-  setInterval(waitForCountdownDiv, 1000);
 })();
 // End Section: Bestell-Versand Countdown Code
 
